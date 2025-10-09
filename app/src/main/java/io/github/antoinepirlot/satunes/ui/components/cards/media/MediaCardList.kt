@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -95,27 +94,33 @@ internal fun MediaCardList(
                 when (sortOption) {
                     SortOptions.GENRE -> {
                         if (mediaImpl is Music) {
-                            FirstGenre(
-                                map = groupMap!!,
-                                mediaImpl = mediaImpl,
-                                mediaImplList = mediaImplList,
-                            )
+                            FirstElementCard {
+                                FirstGenre(
+                                    map = groupMap!!,
+                                    mediaImpl = mediaImpl,
+                                    mediaImplList = mediaImplList,
+                                )
+                            }
                         }
                     }
 
-                    SortOptions.YEAR -> FirstYear(
-                        map = groupMap!!,
-                        mediaImpl = mediaImpl,
-                        mediaImplList = mediaImplList
-                    )
-
-                    else -> {
-                        FirstLetter(
+                    SortOptions.YEAR -> FirstElementCard {
+                        FirstYear(
                             map = groupMap!!,
                             mediaImpl = mediaImpl,
-                            mediaImplList = mediaImplList,
-                            sortOption = sortOption
+                            mediaImplList = mediaImplList
                         )
+                    }
+
+                    else -> {
+                        FirstElementCard {
+                            FirstLetter(
+                                map = groupMap!!,
+                                mediaImpl = mediaImpl,
+                                mediaImplList = mediaImplList,
+                                sortOption = sortOption
+                            )
+                        }
                     }
                 }
             }
@@ -150,7 +155,9 @@ internal fun MediaCardList(
                     showMediaOptions = true
                 }
             )
-            HorizontalDivider(modifier = modifier)
+
+            //TODO add option to show hide divider?
+            
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(

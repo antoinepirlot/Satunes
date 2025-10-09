@@ -50,7 +50,7 @@ fun FirstGenre(
         map[mediaImplToCompare] = mediaImplList.first { (it as Music).genre == mediaImplToCompare }
     if (mediaImpl == map[mediaImplToCompare]) {
         Title(
-            modifier = Modifier.padding(start = 34.dp),
+            modifier = Modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,

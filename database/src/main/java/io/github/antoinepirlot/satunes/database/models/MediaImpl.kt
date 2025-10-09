@@ -137,7 +137,7 @@ abstract class MediaImpl(
 
     open fun musicCount(): Int = this.musicSortedSet.size
 
-    override fun isMusic(): Boolean {
+    open fun isMusic(): Boolean {
         return false
     }
 }

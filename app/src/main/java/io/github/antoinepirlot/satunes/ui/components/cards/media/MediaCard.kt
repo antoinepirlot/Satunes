@@ -95,7 +95,7 @@ internal fun MediaCard(
     } else modifier
     Box(modifier = boxModifier) {
         ListItem(
-            colors = ListItemDefaults.colors(containerColor = Color.Unspecified), //Without unspecified, in that specific case it's white
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent), //Without Transparent, in that specific case it's white
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp

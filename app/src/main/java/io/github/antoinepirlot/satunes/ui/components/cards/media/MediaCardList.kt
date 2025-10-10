@@ -154,8 +154,6 @@ internal fun MediaCardList(
                 }
             )
 
-            //TODO add option to show hide divider?
-
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(

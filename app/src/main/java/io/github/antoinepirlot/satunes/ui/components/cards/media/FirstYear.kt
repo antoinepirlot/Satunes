@@ -62,7 +62,7 @@ fun FirstYear(
         }
     if (mediaImpl == map[yearToCompare]) {
         Title(
-            modifier = Modifier.padding(start = 34.dp),
+            modifier = Modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,

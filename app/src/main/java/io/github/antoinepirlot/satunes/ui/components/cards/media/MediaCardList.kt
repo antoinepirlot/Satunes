@@ -90,34 +90,35 @@ internal fun MediaCardList(
 
             if (showFirstLetter) {
                 when (sortOption) {
-                    SortOptions.GENRE -> {
-                        if (mediaImpl is Music) {
-                            FirstElementCard {
-                                FirstGenre(
-                                    map = groupMap!!,
-                                    mediaImpl = mediaImpl,
-                                    mediaImplList = mediaImplList,
-                                )
-                            }
+                    SortOptions.TITLE -> {
+                        FirstElementCard {
+                            FirstLetter(
+                                map = groupMap,
+                                mediaImpl = mediaImpl,
+                                mediaImplList = mediaImplList,
+                                sortOption = sortOption
+                            )
                         }
                     }
 
                     SortOptions.YEAR -> FirstElementCard {
                         FirstYear(
-                            map = groupMap!!,
+                            map = groupMap,
                             mediaImpl = mediaImpl,
                             mediaImplList = mediaImplList
                         )
                     }
 
                     else -> {
-                        FirstElementCard {
-                            FirstLetter(
-                                map = groupMap!!,
-                                mediaImpl = mediaImpl,
-                                mediaImplList = mediaImplList,
-                                sortOption = sortOption
-                            )
+                        if (mediaImpl is Music) {
+                            FirstElementCard {
+                                FirstMedia(
+                                    map = groupMap,
+                                    mediaImpl = mediaImpl,
+                                    mediaImplList = mediaImplList,
+                                    sortOptions = sortOption
+                                )
+                            }
                         }
                     }
                 }

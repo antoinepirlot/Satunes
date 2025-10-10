@@ -30,6 +30,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * Show the first [Genre]'s title of the [MediaImpl] if it is the first occurrence in the list.
@@ -40,14 +41,28 @@ import io.github.antoinepirlot.satunes.database.models.Music
  * @author Antoine Pirlot 27/01/2025
  */
 @Composable
-fun FirstGenre(
+fun FirstMedia(
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: Music,
-    mediaImplList: Collection<MediaImpl>
+    mediaImplList: Collection<MediaImpl>,
+    sortOptions: SortOptions
 ) {
-    val mediaImplToCompare: Genre = mediaImpl.genre
+    val mediaImplToCompare: MediaImpl = when (sortOptions) {
+        SortOptions.ARTIST -> mediaImpl.artist
+        SortOptions.ALBUM -> mediaImpl.album
+        SortOptions.GENRE -> mediaImpl.genre
+        else -> throw IllegalArgumentException("${sortOptions.name} not accepted.")
+    }
     if (!map.containsKey(mediaImplToCompare))
-        map[mediaImplToCompare] = mediaImplList.first { (it as Music).genre == mediaImplToCompare }
+        map[mediaImplToCompare] = mediaImplList.first {
+            val media: MediaImpl = when (sortOptions) {
+                SortOptions.ARTIST -> (it as Music).artist
+                SortOptions.ALBUM -> (it as Music).album
+                SortOptions.GENRE -> (it as Music).genre
+                else -> throw IllegalArgumentException("${sortOptions.name} not accepted.")
+            }
+            media == mediaImplToCompare
+        }
     if (mediaImpl == map[mediaImplToCompare]) {
         Title(
             modifier = Modifier.padding(vertical = 15.dp),

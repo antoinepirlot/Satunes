@@ -62,7 +62,6 @@ internal fun MediaListView(
     collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
-    showGroupIndication: Boolean = true,
     sort: Boolean = true,
     /**
      * Overrides the base onClick on media behavior
@@ -74,6 +73,8 @@ internal fun MediaListView(
     val lazyListState = rememberLazyListState()
     var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
     val sortOption: SortOptions = dataViewModel.sortOption
+    val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
+    var previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
 
     LaunchedEffect(key1 = collectionChanged) {
         // Prevent doing twice the same thing at launching and showing empty text temporarily
@@ -81,8 +82,8 @@ internal fun MediaListView(
         listToShow = mediaImplCollection.toMutableList()
     }
 
-    LaunchedEffect(key1 = sortOption, key2 = collectionChanged) {
-        if (sort && sortOption != dataUiState.appliedSortOption || collectionChanged) {
+    LaunchedEffect(key1 = sortOption, key2 = reverseOrder, key3 = collectionChanged) {
+        if (sort && (sortOption != dataUiState.appliedSortOption || collectionChanged || reverseOrder != previousReverseOrder)) {
             dataViewModel.sort(
                 satunesUiState = satunesUiState,
                 list = listToShow,
@@ -96,6 +97,8 @@ internal fun MediaListView(
                 ) //Prevent scroll to anywhere else when back gesture
             }
         }
+        if (reverseOrder != previousReverseOrder)
+            dataViewModel.orderChanged()
         dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
     }
 
@@ -108,7 +111,6 @@ internal fun MediaListView(
             mediaImplList = listToShow,
             lazyListState = lazyListState,
             header = header,
-            showGroupIndication = showGroupIndication,
             onMediaClick = onMediaClick
         )
     } else {

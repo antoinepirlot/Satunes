@@ -31,9 +31,9 @@ import java.util.Date
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByAddedDateComparator : Comparator<MediaImpl> {
+object SortByAddedDateComparator : MediaComparator<MediaImpl>() {
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
-        val cmp: Int =
+        var cmp: Int =
             when (o1) {
                 is Music -> when (o2) {
                     is Music -> this.getCmp(date1 = o1.addedDate, date2 = o2.addedDate)
@@ -51,7 +51,8 @@ object SortByAddedDateComparator : Comparator<MediaImpl> {
 
                 else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
             }
-        return if (cmp == 0) o1.compareTo(o2) else cmp
+        cmp = if (cmp == 0) o1.compareTo(o2) else cmp
+        return this.getFinalCmp(cmp = cmp)
     }
 
     private fun getCmp(date1: Date?, date2: Date?): Int {

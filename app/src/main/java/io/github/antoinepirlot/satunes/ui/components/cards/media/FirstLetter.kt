@@ -43,6 +43,7 @@ import java.text.Normalizer
 @Suppress("NAME_SHADOWING")
 @Composable
 fun FirstLetter(
+    modifier: Modifier = Modifier,
     map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>,

@@ -63,7 +63,10 @@ class Music(
     val album: Album,
     val genre: Genre,
     uri: Uri? = null,
-) : MediaImpl(id = id, title = title.ifBlank { displayName }) {
+) : MediaImpl(
+    id = id,
+    title = if (title.isBlank() || SettingsManager.isMusicTitleDisplayName) displayName else title
+) {
 
     /**
      * Remember in which order music has been added to playlists

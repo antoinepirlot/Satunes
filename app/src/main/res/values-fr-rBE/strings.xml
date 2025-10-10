@@ -3,7 +3,6 @@
 <resources>
     <string name="play_all">Lire en mode aléatoire</string>
     <string name="navigation_bar_settings_title">Barre de navigation</string>
-    <string name="this_device">Cet Appareil</string>
     <string name="external_storage">Stockage Externe</string>
     <string name="playback_settings">Lecture</string>
     <string name="playback_when_paused">Lecture si Satunes est fermée</string>
@@ -145,4 +144,6 @@
     <string name="file_extension_menu">Extensions de fichier</string>
     <string name="ask_select_music_root_path">Veux tu remplacer le chemin racine des musiques? (Par exemple: /storage/emulated/0/chemin/vers/music.mp3 le chemin racine est \'/storage/emulated/0\')</string>
     <string name="export_multiple_files_text">Un fichier par playlist?</string>
+    <string name="reverse_order">Inverser l\'ordre</string>
+    <string name="is_music_title_display_name_text">Utiliser le nom du fichier comme titre de la musique?</string>
 </resources>

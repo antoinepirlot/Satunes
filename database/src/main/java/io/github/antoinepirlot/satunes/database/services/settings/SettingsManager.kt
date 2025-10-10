@@ -125,6 +125,9 @@ object SettingsManager {
     val showFirstLetter: Boolean
         get() = DesignSettings.showFirstLetter
 
+    val isMusicTitleDisplayName: Boolean
+        get() = LibrarySettings.isMusicTitleDisplayName
+
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
             _logger?.info("Settings already loaded")
@@ -240,6 +243,10 @@ object SettingsManager {
 
     suspend fun switchArtistReplacement(context: Context) {
         LibrarySettings.switchArtistReplacement(context = context)
+    }
+
+    suspend fun switchIsMusicTitleDisplayName(context: Context) {
+        LibrarySettings.switchIsMusicTitleDisplayName(context = context)
     }
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {

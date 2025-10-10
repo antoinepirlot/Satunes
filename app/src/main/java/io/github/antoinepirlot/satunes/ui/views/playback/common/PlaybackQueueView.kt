@@ -53,7 +53,6 @@ internal fun PlaybackQueueView(
         mediaImplList = musicsQueue,
         scrollToMusicPlaying = true,
         header = { Title(text = stringResource(id = R.string.playback_queue)) },
-        showGroupIndication = false,
     )
 }
 

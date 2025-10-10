@@ -49,6 +49,7 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -98,6 +99,13 @@ class DataViewModel : ViewModel() {
     var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
         private set
 
+    var reverseSortedOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)
+        private set
+
+    var previousReverseOrder: Boolean by mutableStateOf(this.reverseSortedOrder)
+        private set
+
+
     val isLoaded: Boolean by _isLoaded
 
     /**
@@ -128,7 +136,8 @@ class DataViewModel : ViewModel() {
         this.listSetUpdatedProcessed = true
     }
 
-    fun getRootFolderSet(): Set<Folder> = DataManager.getRootFolderSet()
+    fun getRootRootFolder(): Folder = DataManager.getRootRootFolder()
+    fun getBackFolder(): Folder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
@@ -894,6 +903,10 @@ class DataViewModel : ViewModel() {
         this.sortOption = sortOption
     }
 
+    fun setReverseOrder(reverseOrder: Boolean) {
+        this.reverseSortedOrder = reverseOrder
+    }
+
     fun switchShowFirstLetter(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState
@@ -941,11 +954,17 @@ class DataViewModel : ViewModel() {
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
             val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
             list.sortBy { mediaImpl: MediaImpl ->
-                -(mediaImpl as Music).getOrder(playlist = playlist)
+                if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
+                else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
+            sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
             list.sortWith(comparator = sortOption.comparator!!)
         }
+    }
+
+    fun orderChanged() {
+        this.previousReverseOrder = this.reverseSortedOrder
     }
 
     fun resetListsSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {

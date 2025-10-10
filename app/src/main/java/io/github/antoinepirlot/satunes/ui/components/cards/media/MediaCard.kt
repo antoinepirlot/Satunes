@@ -59,7 +59,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -79,8 +79,8 @@ internal fun MediaCard(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val title: String =
-        if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
-            getRootFolderName(title = mediaImpl.title)
+        if (mediaImpl is Folder && mediaImpl.isRoot()) {
+            getFirstFolderNameInChain(title = mediaImpl.title)
         } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)
         } else {
@@ -95,7 +95,7 @@ internal fun MediaCard(
     } else modifier
     Box(modifier = boxModifier) {
         ListItem(
-            colors = ListItemDefaults.colors(containerColor = Color.Unspecified), //Without unspecified, in that specific case it's white
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent), //Without Transparent, in that specific case it's white
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp

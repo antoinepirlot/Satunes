@@ -651,6 +651,31 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    fun switchIsMusicTitleDisplayName(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        try {
+            runBlocking {
+                SettingsManager.switchIsMusicTitleDisplayName(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(isMusicTitleDisplayName = SettingsManager.isMusicTitleDisplayName)
+                }
+            }
+        } catch (_: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.switchIsMusicTitleDisplayName(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
     fun switchArtworkAnimation() {
         CoroutineScope(Dispatchers.IO).launch {
             try {

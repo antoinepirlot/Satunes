@@ -21,39 +21,38 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.forms.playlists
+package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
+import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 
 /**
- * @author Antoine Pirlot 17/08/2025
+ * @author Antoine Pirlot 10/10/2025
  */
 @Composable
-fun ExportMultipleFiles(
-    modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel()
-) {
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
-
-    SwitchSetting(
-        modifier = modifier,
-        setting = SwitchSettings.EXPORT_MULTIPLE_FILES,
-        checked = dataUiState.multipleFiles,
-        onCheckedChange = { dataViewModel.switchMultipleFiles() }
-    )
+fun FirstElementCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(fraction = 0.9f)
+        ) {
+            content()
+        }
+    }
 }
 
 @Preview
 @Composable
-private fun ExportMultipleFilesPreview() {
-    ExportMultipleFiles()
+private fun FirstElementContentPreview() {
+    FirstElementCard { Title(text = "Hello World!") }
 }

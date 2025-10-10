@@ -35,6 +35,11 @@ class Folder(
     title: String,
     var parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
+
+    companion object {
+        var nextId: Long = 1
+    }
+
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
 
     val absolutePath: String = if (parentFolder == null) {
@@ -44,10 +49,6 @@ class Folder(
     }
 
     public override var addedDate: Date? = null
-
-    companion object {
-        var nextId: Long = 1
-    }
 
     init {
         nextId++
@@ -92,7 +93,7 @@ class Folder(
      *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
+    fun createSubFolders(subFolderNameChainList: Collection<String>) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
@@ -180,7 +181,10 @@ class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this.parentFolder == null) return this
+        if (this.isRoot()) return this
         return this.parentFolder!!.getRoot()
     }
+
+    fun isRoot(): Boolean = this.parentFolder === DataManager.getRootRootFolder()
+    fun isBackFolder(): Boolean = this === DataManager.getBackFolder()
 }

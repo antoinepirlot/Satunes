@@ -20,12 +20,12 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
@@ -36,16 +36,17 @@ class SortListViewModel : ViewModel() {
     /**
      * The current selected radio button.
      */
-    private val _selectedSortOption: MutableState<SortOptions> =
-        mutableStateOf(defaultSortingOptions)
+    var selectedSortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+        private set
 
-    /**
-     * The current selected radio button.
-     */
-    var selectedSortOption: SortOptions by _selectedSortOption
+    var reverseOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)
         private set
 
     fun selectSortOption(sortRadioButton: SortOptions) {
         this.selectedSortOption = sortRadioButton
+    }
+
+    fun switchReverseOrder() {
+        this.reverseOrder = !this.reverseOrder
     }
 }

@@ -27,9 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * Show the first [Genre]'s title of the [MediaImpl] if it is the first occurrence in the list.
@@ -40,17 +42,59 @@ import io.github.antoinepirlot.satunes.database.models.Music
  * @author Antoine Pirlot 27/01/2025
  */
 @Composable
-fun FirstGenre(
+fun FirstMedia(
     map: MutableMap<Any?, MediaImpl>,
-    mediaImpl: Music,
-    mediaImplList: Collection<MediaImpl>
+    mediaImpl: MediaImpl,
+    mediaImplList: Collection<MediaImpl>,
+    sortOptions: SortOptions
 ) {
-    val mediaImplToCompare: Genre = mediaImpl.genre
+    if (mediaImpl !is Music && mediaImpl !is Album)
+        throw IllegalArgumentException("mediaImpl must be music or album.")
+    val mediaImplToCompare: MediaImpl = when (sortOptions) {
+        SortOptions.ARTIST -> {
+            if (mediaImpl is Music) mediaImpl.artist
+            else if (mediaImpl is Album) mediaImpl.artist
+            else throw IllegalArgumentException()
+        }
+
+        SortOptions.ALBUM -> {
+            if (mediaImpl is Music) mediaImpl.album
+            else throw IllegalArgumentException("mediaImpl must be a Music")
+        }
+
+        SortOptions.GENRE -> {
+            if (mediaImpl is Music) mediaImpl.genre
+            else throw IllegalArgumentException("mediaImpl must be a Music")
+        }
+
+        else -> throw IllegalArgumentException("${sortOptions.name} not accepted.")
+    }
     if (!map.containsKey(mediaImplToCompare))
-        map[mediaImplToCompare] = mediaImplList.first { (it as Music).genre == mediaImplToCompare }
+        map[mediaImplToCompare] = mediaImplList.first {
+            val media: MediaImpl = when (sortOptions) {
+                SortOptions.ARTIST -> {
+                    if (it is Music) it.artist
+                    else if (it is Album) it.artist
+                    else throw IllegalArgumentException()
+                }
+
+                SortOptions.ALBUM -> {
+                    if (it is Music) it.album
+                    else throw IllegalArgumentException("mediaImpl must be a Music")
+                }
+
+                SortOptions.GENRE -> {
+                    if (it is Music) it.genre
+                    else throw IllegalArgumentException("mediaImpl must be a Music")
+                }
+
+                else -> throw IllegalArgumentException("${sortOptions.name} not accepted.")
+            }
+            media == mediaImplToCompare
+        }
     if (mediaImpl == map[mediaImplToCompare]) {
         Title(
-            modifier = Modifier.padding(start = 34.dp),
+            modifier = Modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,

@@ -39,7 +39,6 @@ import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
 import io.github.antoinepirlot.satunes.ui.views.media.folder.FolderView
-import io.github.antoinepirlot.satunes.ui.views.media.folder.RootFolderView
 import io.github.antoinepirlot.satunes.ui.views.media.genre.AllGenresListView
 import io.github.antoinepirlot.satunes.ui.views.media.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.media.music.AllMusicsListView
@@ -64,7 +63,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            RootFolderView(satunesViewModel = satunesViewModel) //(for all all media list) send view model needed to avoid not showing extra buttons on first launch
+            FolderView(folder = dataViewModel.getRootRootFolder())
         }
     }
 

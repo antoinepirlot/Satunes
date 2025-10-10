@@ -63,4 +63,5 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
+    val isMusicTitleDisplayName: Boolean = SettingsManager.isMusicTitleDisplayName
 )

@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +44,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
@@ -65,7 +65,6 @@ internal fun MediaCardList(
     mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
-    showGroupIndication: Boolean = true,
     onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -81,8 +80,7 @@ internal fun MediaCardList(
         state = lazyListState
     ) {
         //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
-        val groupMap: MutableMap<Any?, MediaImpl>? =
-            if (showGroupIndication) mutableMapOf() else null
+        val groupMap: MutableMap<Any?, MediaImpl> = mutableMapOf()
 
         items(
             items = mediaImplList,
@@ -90,31 +88,36 @@ internal fun MediaCardList(
         ) { mediaImpl: MediaImpl ->
             if (mediaImpl == mediaImplList.first()) header?.invoke()
 
-            if (showFirstLetter && showGroupIndication) {
+            if (showFirstLetter) {
                 when (sortOption) {
-                    SortOptions.GENRE -> {
-                        if (mediaImpl is Music) {
-                            FirstGenre(
-                                map = groupMap!!,
+                    SortOptions.TITLE -> {
+                        FirstElementCard {
+                            FirstLetter(
+                                map = groupMap,
                                 mediaImpl = mediaImpl,
                                 mediaImplList = mediaImplList,
+                                sortOption = sortOption
                             )
                         }
                     }
 
-                    SortOptions.YEAR -> FirstYear(
-                        map = groupMap!!,
-                        mediaImpl = mediaImpl,
-                        mediaImplList = mediaImplList
-                    )
+                    SortOptions.YEAR -> FirstElementCard {
+                        FirstYear(
+                            map = groupMap,
+                            mediaImpl = mediaImpl,
+                            mediaImplList = mediaImplList
+                        )
+                    }
 
                     else -> {
-                        FirstLetter(
-                            map = groupMap!!,
-                            mediaImpl = mediaImpl,
-                            mediaImplList = mediaImplList,
-                            sortOption = sortOption
-                        )
+                        FirstElementCard {
+                            FirstMedia(
+                                map = groupMap,
+                                mediaImpl = mediaImpl,
+                                mediaImplList = mediaImplList,
+                                sortOptions = sortOption
+                            )
+                        }
                     }
                 }
             }
@@ -126,6 +129,10 @@ internal fun MediaCardList(
                     if (onMediaClick != null) {
                         onMediaClick.invoke(mediaImpl)
                     } else {
+                        if (mediaImpl is Folder && mediaImpl.isBackFolder()) {
+                            navController.popBackStack()
+                            return@MediaCard
+                        }
                         if (mediaImpl is Music && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
@@ -140,11 +147,12 @@ internal fun MediaCardList(
                     }
                 },
                 onLongClick = {
+                    if (mediaImpl is Folder && mediaImpl.isBackFolder()) return@MediaCard
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     showMediaOptions = true
                 }
             )
-            HorizontalDivider(modifier = modifier)
+
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(

@@ -38,30 +38,41 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
  *   @author Antoine Pirlot 06/03/2024
  */
 
-// TODO rename for Switch SwitchSettings enum class
-internal enum class SwitchSettings(val stringId: Int, val navBarSection: NavBarSection? = null) {
+internal enum class SwitchSettings(
+    val stringId: Int,
+    val navBarSection: NavBarSection? = null,
+    val needRestart: Boolean = false,
+    val needReloadLibrary: Boolean = false
+) {
     ALBUMS_NAVBAR(stringId = albums, navBarSection = NavBarSection.ALBUMS),
     ALBUMS_FILTER(stringId = albums),
     ARTISTS_NAVBAR(stringId = artists, navBarSection = NavBarSection.ARTISTS),
     ARTISTS_FILTER(stringId = artists),
     ARTWORK_ANIMATION(stringId = R.string.artwork_animation_switch_button),
     ARTWORK_CIRCLE_SHAPE(stringId = R.string.artwork_circle_shape_switch_button),
-    AUDIO_OFFLOAD(stringId = audio_offload),
+    AUDIO_OFFLOAD(stringId = audio_offload, needRestart = true),
     FOLDERS_NAVBAR(stringId = folders, navBarSection = NavBarSection.FOLDERS),
     FOLDERS_FILTER(stringId = folders),
     GENRES_NAVBAR(stringId = genres, navBarSection = NavBarSection.GENRES),
     GENRES_FILTER(stringId = genres),
+    IS_MUSIC_TITLE_DISPLAY_NAME(
+        stringId = R.string.is_music_title_display_name_text,
+        needReloadLibrary = true
+    ),
     MUSICS_FILTER(stringId = musics),
     LOGS(stringId = R.string.logs_activation_button),
-    PAUSE_IF_NOISY(stringId = pause_if_noisy),
+    PAUSE_IF_NOISY(stringId = pause_if_noisy, needRestart = true),
     PLAYBACK_WHEN_CLOSED(stringId = playback_when_paused),
     PLAYLISTS_FILTER(stringId = playlists),
     PLAYLISTS_NAVBAR(stringId = playlists, navBarSection = NavBarSection.PLAYLISTS),
-    PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback),
-    COMPILATION_MUSIC(stringId = compilation_music_setting_text),
-    ARTIST_REPLACEMENT(stringId = R.string.artist_replacement_setting_content),
+    PAUSE_IF_ANOTHER_PLAYBACK(stringId = pause_if_another_playback, needRestart = true),
+    COMPILATION_MUSIC(stringId = compilation_music_setting_text, needReloadLibrary = true),
+    ARTIST_REPLACEMENT(
+        stringId = R.string.artist_replacement_setting_content,
+        needReloadLibrary = true
+    ),
     SHOW_FIRST_LETTER(stringId = R.string.show_first_letter_setting_content),
     CHANGE_ROOT_PATH(stringId = R.string.ask_select_music_root_path),
     EXPORT_MULTIPLE_FILES(stringId = R.string.export_multiple_files_text),
-
+    REVER_ORDER(stringId = R.string.reverse_order)
 }

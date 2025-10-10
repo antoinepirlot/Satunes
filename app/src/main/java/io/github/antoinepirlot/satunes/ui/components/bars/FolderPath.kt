@@ -24,25 +24,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
 
 @Composable
 internal fun FolderPath(folder: Folder) {
-    if (folder.parentFolder == null) {
-        Title(
-            text = '/' + getRootFolderName(title = folder.title),
-            fontSize = 20.sp,
-            maxLines = 2
-        )
-    } else {
-        val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
-        // Wrong issue. Remove first is available before API 35, you can ignore error from Android Studio.
-        allPath.removeFirst()
-        allPath[0] = getRootFolderName(title = allPath[0])
-        var path = ""
-        for (s: String in allPath) {
-            path += "/${s}"
-        }
-        Title(text = path, fontSize = 20.sp, maxLines = 2)
+    val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
+    allPath.removeAt(index = 0)
+    allPath.removeAt(index = 0) // remove "root" folder
+    allPath[0] = getFirstFolderNameInChain(title = allPath[0])
+    var path = ""
+    for (s: String in allPath) {
+        path += "/$s"
     }
+    Title(text = path, fontSize = 20.sp, maxLines = 2)
 }

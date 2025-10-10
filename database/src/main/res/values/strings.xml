@@ -65,4 +65,5 @@
     <string name="beta_channel_button_text" translatable="false">Beta</string>
     <string name="stable_channel_button_text" translatable="false">Stable</string>
     <string name="preview_channel_button_text" translatable="false">Preview</string>
+    <string name="this_device">This Device</string>
 </resources>

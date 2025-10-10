@@ -110,15 +110,13 @@ internal fun MediaCardList(
                     }
 
                     else -> {
-                        if (mediaImpl is Music) {
-                            FirstElementCard {
-                                FirstMedia(
-                                    map = groupMap,
-                                    mediaImpl = mediaImpl,
-                                    mediaImplList = mediaImplList,
-                                    sortOptions = sortOption
-                                )
-                            }
+                        FirstElementCard {
+                            FirstMedia(
+                                map = groupMap,
+                                mediaImpl = mediaImpl,
+                                mediaImplList = mediaImplList,
+                                sortOptions = sortOption
+                            )
                         }
                     }
                 }

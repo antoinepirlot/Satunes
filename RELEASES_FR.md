@@ -2,6 +2,25 @@
 
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.3.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Lorsque vous triez des médias dans un autre type de média, le titre de l'autre média s'affiche à
+  la place de la première lettre. (Par exemple, lorsque vous triez la musique par albums, le titre
+  de l'album s'affiche pour chaque album.)
+* Mise à jour de l'interface de la liste des médias
+* Ajout d'un dossier ".." pour revenir en arrière
+* Nouveau paramètre dans la bibliothèque pour choisir si le titre de la musique est le nom du
+  fichier ou la balise dans les métadonnées.
+* Nouvelle option pour inverser le tri
+
+Améliorations, optimisations et corrections de bogues :
+
+* Quelques optimisations
+
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 3.2.3

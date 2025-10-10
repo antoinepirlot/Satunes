@@ -2,6 +2,23 @@
 
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.3 (Android 5.1.1 Lollipop and later)
+
+### 3.3.0-beta-1
+
+New features:
+
+* When sorting media into another media type, it shows the other media's title instead of first
+  letter. (For example, sorting music by albums for each album you'll see the album title.)
+* Update design of media list
+* Add a ".." folder to go back
+* New setting in library to choose if the music's title is the file name of tag in metadata.
+* Option to reverse sorting
+
+Improvements, optimisations and bug fixes:
+
+* Some optimisation
+
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
 ### 3.2.3

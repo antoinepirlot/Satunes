@@ -9,3 +9,4 @@ New features:
 Improvements, optimisations and bug fixes:
 
 * Some optimisation
+* Update libraries

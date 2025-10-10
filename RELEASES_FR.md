@@ -20,6 +20,7 @@ Nouvelles fonctionnalités :
 Améliorations, optimisations et corrections de bogues :
 
 * Quelques optimisations
+* Mise à jour des librairies
 
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 

@@ -18,6 +18,7 @@ New features:
 Improvements, optimisations and bug fixes:
 
 * Some optimisation
+* Update libraries
 
 ## 3.2 (Android 5.1.1 Lollipop and later)
 

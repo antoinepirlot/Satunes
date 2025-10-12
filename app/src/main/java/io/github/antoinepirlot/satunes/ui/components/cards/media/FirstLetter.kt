@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.getTitleToCompare
@@ -44,10 +46,13 @@ import java.text.Normalizer
 @Composable
 fun FirstLetter(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>,
     sortOption: SortOptions
 ) {
+    if (mediaImpl == dataViewModel.getBackFolder()) return
+
     val titleToCompare: String =
         getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
 

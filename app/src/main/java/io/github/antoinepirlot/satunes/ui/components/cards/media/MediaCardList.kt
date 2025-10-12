@@ -20,6 +20,8 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -36,6 +38,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
@@ -83,10 +86,14 @@ internal fun MediaCardList(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { mediaImpl: MediaImpl ->
-            if (mediaImpl == mediaImplList.first()) header?.invoke()
+            val isFirst: Boolean = mediaImpl == mediaImplList.first()
+            if (isFirst) header?.invoke()
 
-            if (showFirstLetter && showGroupIndication)
+            if (showFirstLetter && showGroupIndication) {
+                if (isFirst)
+                    Spacer(Modifier.size(size = 16.dp))
                 Indicator(mediaImpl = mediaImpl, mediaImplList = mediaImplList)
+            }
 
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(

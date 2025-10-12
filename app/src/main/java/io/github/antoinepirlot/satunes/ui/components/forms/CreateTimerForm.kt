@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
@@ -179,35 +178,6 @@ internal fun CreateTimerForm(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun Field(
-    modifier: Modifier = Modifier,
-    farLeft: Boolean = false,
-    farRight: Boolean = false,
-    enabled: Boolean,
-    value: MutableIntState,
-    label: String,
-    maxValue: Int
-) {
-    val fieldModifier: Modifier =
-        if (farLeft)
-            Modifier.padding(end = 4.dp)
-        else if (farRight)
-            Modifier.padding(start = 4.dp)
-        else
-            Modifier.padding(horizontal = 4.dp)
-
-    Box(modifier = modifier) {
-        OutlinedNumberField(
-            modifier = fieldModifier,
-            enabled = enabled,
-            value = value,
-            label = label,
-            maxValue = maxValue
-        )
     }
 }
 

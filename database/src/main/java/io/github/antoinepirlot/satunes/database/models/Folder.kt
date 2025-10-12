@@ -41,6 +41,7 @@ class Folder(
     }
 
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
+    private val _depth: Int = this.parentFolder?.getDepth() ?: 0
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
@@ -64,6 +65,8 @@ class Folder(
     }
 
     override fun isNotEmpty(): Boolean = !isEmpty()
+
+    fun getDepth(): Int = this._depth
 
     /**
      * Get the list of subfolder

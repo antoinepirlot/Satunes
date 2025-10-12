@@ -26,22 +26,17 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.folders
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
+import kotlin.math.absoluteValue
 
 /**
  * @author Antoine Pirlot 12/10/2025
  */
 @Composable
-fun FoldersPathRow(
-    modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
-    endFolder: Folder
-) {
+fun FoldersPathRow(modifier: Modifier = Modifier, endFolder: Folder) {
     val navController: NavHostController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
     Row(modifier = modifier) {
@@ -51,8 +46,8 @@ fun FoldersPathRow(
                 onClick = {
                     goBackTo(
                         navController = navController,
+                        currentFolder = endFolder,
                         target = folder,
-                        satunesViewModel = satunesViewModel
                     )
                 }
             NormalText(text = "/")
@@ -66,13 +61,7 @@ fun FoldersPathRow(
  * @param navController
  * @param target the folder where to go.
  */
-private fun goBackTo(
-    navController: NavHostController,
-    target: Folder,
-    satunesViewModel: SatunesViewModel
-) {
-    val currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    if (currentRoute == null || satunesViewModel.uiState.value.currentMediaImpl == target) return
-    navController.popBackStack()
-    goBackTo(navController = navController, target = target, satunesViewModel = satunesViewModel)
+private fun goBackTo(navController: NavHostController, currentFolder: Folder, target: Folder) {
+    val distance: Int = (currentFolder.getDepth() - target.getDepth()).absoluteValue
+    for (i: Int in 0..<distance) navController.popBackStack()
 }

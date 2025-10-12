@@ -27,7 +27,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
  * @author Antoine Pirlot on 30/11/2024
  */
 
-internal val defaultSortingOptions: SortOptions = SortOptions.TITLE
+internal val defaultSortingOption: SortOptions = SortOptions.TITLE
 
 private val albumsSortOptions: List<SortOptions> = listOf(
     SortOptions.TITLE,

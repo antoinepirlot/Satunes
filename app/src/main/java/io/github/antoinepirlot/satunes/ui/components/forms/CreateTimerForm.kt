@@ -105,6 +105,8 @@ internal fun CreateTimerForm(
             hoursIntField = hoursIntField
         )
 
+        Spacer(modifier = Modifier.size(16.dp))
+
         StartTimerButton(
             onFinished = onFinished,
             isTimerRunning = isTimerRunning,

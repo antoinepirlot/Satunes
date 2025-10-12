@@ -107,7 +107,7 @@ internal fun CreateTimerForm(
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        StartTimerButton(
+        TimerButtons(
             onFinished = onFinished,
             isTimerRunning = isTimerRunning,
             secondsIntField = secondsIntField,
@@ -160,7 +160,7 @@ private fun TimerFields(
 }
 
 @Composable
-private fun StartTimerButton(
+private fun TimerButtons(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     onFinished: (() -> Unit)? = null,

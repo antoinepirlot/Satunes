@@ -65,6 +65,7 @@ internal fun MediaCardList(
     mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
+    showGroupIndication: Boolean = true,
     onMediaClick: ((MediaImpl) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -88,7 +89,7 @@ internal fun MediaCardList(
         ) { mediaImpl: MediaImpl ->
             if (mediaImpl == mediaImplList.first()) header?.invoke()
 
-            if (showFirstLetter) {
+            if (showFirstLetter && showGroupIndication) {
                 when (sortOption) {
                     SortOptions.TITLE -> {
                         FirstElementCard {
@@ -121,6 +122,7 @@ internal fun MediaCardList(
                     }
                 }
             }
+
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
                 modifier = modifier,

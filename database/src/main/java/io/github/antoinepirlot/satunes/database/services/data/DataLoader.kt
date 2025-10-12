@@ -418,10 +418,11 @@ object DataLoader {
                     else splitList[i]
                 } else splitList[i]
 
-            val isExternalStorage: Boolean =
-                folderName == "storage" && splitList[i + 1] != "emulated"
             if (canAddPath) splitPathToReturn.add(folderName)
-            else if (folderName == "emulated" || isExternalStorage) {
+            else if (
+                folderName == "emulated"
+                || folderName == "storage" && splitList[i + 1] != "emulated" //isExternalStorage
+            ) {
                 canAddPath = true
                 storageNameCanBeProcessed = true
             }

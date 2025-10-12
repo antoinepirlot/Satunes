@@ -410,7 +410,7 @@ object DataLoader {
         val splitList: List<String> = absolutePath.split("/")
         var canAddPath: Boolean = false
         var storageNameCanBeProcessed: Boolean = false
-        for (i: Int in splitList.indices) {
+        for (i: Int in 0..<splitList.size - 1) { //Do not process the final file which is the music.
             val folderName: String =
                 if (storageNameCanBeProcessed) {
                     storageNameCanBeProcessed = false

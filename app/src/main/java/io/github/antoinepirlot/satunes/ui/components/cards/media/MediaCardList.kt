@@ -71,7 +71,6 @@ internal fun MediaCardList(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
-    val sortOption: SortOptions = dataViewModel.sortOption
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
@@ -80,48 +79,14 @@ internal fun MediaCardList(
         modifier = modifier,
         state = lazyListState
     ) {
-        //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
-        val groupMap: MutableMap<Any?, MediaImpl> = mutableMapOf()
-
         items(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { mediaImpl: MediaImpl ->
             if (mediaImpl == mediaImplList.first()) header?.invoke()
 
-            if (showFirstLetter && showGroupIndication) {
-                when (sortOption) {
-                    SortOptions.TITLE -> {
-                        FirstElementCard {
-                            FirstLetter(
-                                map = groupMap,
-                                mediaImpl = mediaImpl,
-                                mediaImplList = mediaImplList,
-                                sortOption = sortOption
-                            )
-                        }
-                    }
-
-                    SortOptions.YEAR -> FirstElementCard {
-                        FirstYear(
-                            map = groupMap,
-                            mediaImpl = mediaImpl,
-                            mediaImplList = mediaImplList
-                        )
-                    }
-
-                    else -> {
-                        FirstElementCard {
-                            FirstMedia(
-                                map = groupMap,
-                                mediaImpl = mediaImpl,
-                                mediaImplList = mediaImplList,
-                                sortOptions = sortOption
-                            )
-                        }
-                    }
-                }
-            }
+            if (showFirstLetter && showGroupIndication)
+                Indicator(mediaImpl = mediaImpl, mediaImplList = mediaImplList)
 
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
@@ -171,6 +136,53 @@ internal fun MediaCardList(
             lazyListState.scrollToItem(
                 playbackViewModel.getMusicPlayingIndexPosition()
             )
+        }
+    }
+}
+
+/**
+ * Show the indicator for the filtered list.
+ *
+ * For example, if sorting by letters, it will show each first different letter on screen.
+ *
+ * (Sorry, I don't know what to call it... that's the hardest part of a developer's job: naming things).
+ */
+@Composable
+private fun Indicator(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>
+) {
+    val sortOption: SortOptions = dataViewModel.sortOption
+
+    FirstElementCard {
+        when (sortOption) {
+            SortOptions.ARTIST, SortOptions.ALBUM, SortOptions.GENRE -> {
+                FirstMedia(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList,
+                    sortOptions = sortOption
+                )
+            }
+
+            SortOptions.YEAR -> {
+                FirstYear(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList
+                )
+            }
+
+            else -> {
+                FirstLetter(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList,
+                    sortOption = sortOption
+                )
+            }
         }
     }
 }

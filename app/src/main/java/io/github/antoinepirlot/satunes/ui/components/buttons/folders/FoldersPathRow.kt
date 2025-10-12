@@ -37,7 +37,7 @@ fun FoldersPathRow(
     modifier: Modifier = Modifier,
     endFolder: Folder
 ) {
-    val folders: Collection<Folder> = endFolder.getParentFolders()
+    val folders: Collection<Folder> = endFolder.getPathAsFolderList()
     Row(modifier = modifier) {
         for (folder: Folder in folders) {
             var onClick: (() -> Unit)? = null

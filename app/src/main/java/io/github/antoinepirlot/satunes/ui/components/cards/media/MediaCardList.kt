@@ -91,13 +91,13 @@ internal fun MediaCardList(
 
             if (showFirstLetter && showGroupIndication) {
                 when (sortOption) {
-                    SortOptions.TITLE -> {
+                    SortOptions.ARTIST, SortOptions.ALBUM, SortOptions.GENRE -> {
                         FirstElementCard {
-                            FirstLetter(
+                            FirstMedia(
                                 map = groupMap,
                                 mediaImpl = mediaImpl,
                                 mediaImplList = mediaImplList,
-                                sortOption = sortOption
+                                sortOptions = sortOption
                             )
                         }
                     }
@@ -112,11 +112,11 @@ internal fun MediaCardList(
 
                     else -> {
                         FirstElementCard {
-                            FirstMedia(
+                            FirstLetter(
                                 map = groupMap,
                                 mediaImpl = mediaImpl,
                                 mediaImplList = mediaImplList,
-                                sortOptions = sortOption
+                                sortOption = sortOption
                             )
                         }
                     }

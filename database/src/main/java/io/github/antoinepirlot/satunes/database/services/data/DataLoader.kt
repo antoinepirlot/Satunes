@@ -410,15 +410,18 @@ object DataLoader {
         val splitList: List<String> = absolutePath.split("/")
         var canAddPath: Boolean = false
         var storageNameCanBeProcessed: Boolean = false
-        splitList.forEach { element: String ->
+        for (i: Int in splitList.indices) {
             val folderName: String =
                 if (storageNameCanBeProcessed) {
                     storageNameCanBeProcessed = false
-                    if (element == "0") context.getString(R.string.this_device)
-                    else element
-                } else element
+                    if (splitList[i] == "0") context.getString(R.string.this_device)
+                    else splitList[i]
+                } else splitList[i]
+
+            val isExternalStorage: Boolean =
+                folderName == "storage" && splitList[i + 1] != "emulated"
             if (canAddPath) splitPathToReturn.add(folderName)
-            else if (folderName == "emulated") {
+            else if (folderName == "emulated" || isExternalStorage) {
                 canAddPath = true
                 storageNameCanBeProcessed = true
             }

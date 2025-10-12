@@ -26,7 +26,11 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.folders
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 
 /**
@@ -35,16 +39,40 @@ import io.github.antoinepirlot.satunes.database.models.Folder
 @Composable
 fun FoldersPathRow(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     endFolder: Folder
 ) {
+    val navController: NavHostController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
     Row(modifier = modifier) {
         for (folder: Folder in folders) {
             var onClick: (() -> Unit)? = null
-            if (folder != endFolder) onClick = { print("Hello World!") }
-
+            if (folder != endFolder)
+                onClick = {
+                    goBackTo(
+                        navController = navController,
+                        target = folder,
+                        satunesViewModel = satunesViewModel
+                    )
+                }
             NormalText(text = "/")
             FolderPathButton(folder = folder, onClick = onClick)
         }
     }
+}
+
+/**
+ * Navigate back to the [target].
+ * @param navController
+ * @param target the folder where to go.
+ */
+private fun goBackTo(
+    navController: NavHostController,
+    target: Folder,
+    satunesViewModel: SatunesViewModel
+) {
+    val currentRoute: String? = navController.currentBackStackEntry?.destination?.route
+    if (currentRoute == null || satunesViewModel.uiState.value.currentMediaImpl == target) return
+    navController.popBackStack()
+    goBackTo(navController = navController, target = target, satunesViewModel = satunesViewModel)
 }

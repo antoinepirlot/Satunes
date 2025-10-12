@@ -44,33 +44,32 @@ import java.text.Normalizer
 @Composable
 fun FirstLetter(
     modifier: Modifier = Modifier,
-    map: MutableMap<Any?, MediaImpl>,
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>,
     sortOption: SortOptions
 ) {
     val titleToCompare: String =
         getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
+
     val charToCompare: Char = Normalizer
         .normalize(titleToCompare.first().uppercase(), Normalizer.Form.NFD)
         .first()
-    if (!map.containsKey(charToCompare)) {
-        map[charToCompare] = mediaImplList.first { mediaImpl: MediaImpl ->
-            val itTitle: String =
-                getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
-            Normalizer.normalize(
-                itTitle.first().uppercase(),
-                Normalizer.Form.NFD
-            ).first() == charToCompare
-        }
+
+    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first { mediaImpl: MediaImpl ->
+        val itTitle: String =
+            getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
+        Normalizer.normalize(
+            itTitle.first().uppercase(),
+            Normalizer.Form.NFD
+        ).first() == charToCompare
     }
-    if (mediaImpl == map[charToCompare]) {
+
+    if (mediaImpl == firstWithLetterMediaImpl)
         Title(
-            modifier = Modifier.padding(vertical = 15.dp),
+            modifier = modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             text = charToCompare.toString()
         )
-    }
 }

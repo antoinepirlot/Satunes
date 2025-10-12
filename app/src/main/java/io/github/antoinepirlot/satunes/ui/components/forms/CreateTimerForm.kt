@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
@@ -99,115 +98,123 @@ internal fun CreateTimerForm(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        TimerFields(
+            isTimerRunning = isTimerRunning,
+            secondsIntField = secondsIntField,
+            minutesIntField = minutesIntField,
+            hoursIntField = hoursIntField
+        )
 
-    val scope: CoroutineScope = LocalMainScope.current
-        val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+        Spacer(modifier = Modifier.size(16.dp))
 
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Field(
-                    modifier = Modifier.fillMaxWidth(fraction = 1f / 3f),
-                    enabled = !isTimerRunning,
-                    farLeft = true,
-                    value = hoursIntField,
-                    label = stringResource(R.string.hours_text_field_label),
-                    maxValue = MAX_HOURS
-                )
-                Field(
-                    modifier = Modifier.fillMaxWidth(fraction = 1f / 2f),
-                    enabled = !isTimerRunning,
-                    value = minutesIntField,
-                    label = stringResource(R.string.minutes_text_field_label),
-                    maxValue = MAX_MINUTES
-                )
-                Field(
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isTimerRunning,
-                    farRight = true,
-                    value = secondsIntField,
-                    label = stringResource(R.string.seconds_text_field_label),
-                    maxValue = MAX_SECONDS
-                )
-            }
-        }
+        TimerButtons(
+            onFinished = onFinished,
+            isTimerRunning = isTimerRunning,
+            secondsIntField = secondsIntField,
+            minutesIntField = minutesIntField,
+            hoursIntField = hoursIntField
+        )
+    }
+}
+
+@Composable
+private fun TimerFields(
+    modifier: Modifier = Modifier,
+    isTimerRunning: Boolean,
+    secondsIntField: MutableIntState,
+    minutesIntField: MutableIntState,
+    hoursIntField: MutableIntState
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
         ) {
-            if (isTimerRunning) {
-                Button(
-                    onClick = {
-                        playbackViewModel.cancelTimer(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                        )
-                        secondsIntField.intValue = 0
-                        minutesIntField.intValue = 0
-                        hoursIntField.intValue = 0
-                        onFinished?.invoke()
-                    }
-                ) {
-                    NormalText(text = stringResource(R.string.cancel))
-                }
-
-                Spacer(modifier = Modifier.size(5.dp))
-            } else {
-                Button(
-                    onClick = {
-                        computeTime(
-                            secondsIntField = secondsIntField,
-                            minutesIntField = minutesIntField,
-                            hoursIntField = hoursIntField
-                        )
-                        playbackViewModel.setTimer(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            hours = hoursIntField.intValue,
-                            minutes = minutesIntField.intValue,
-                            seconds = secondsIntField.intValue
-                        )
-                        onFinished?.invoke()
-                    }
-                ) {
-
-                    NormalText(text = stringResource(R.string.start_timer_button_content))
-                }
-            }
+            Field(
+                modifier = Modifier.fillMaxWidth(fraction = 1f / 3f),
+                enabled = !isTimerRunning,
+                farLeft = true,
+                value = hoursIntField,
+                label = stringResource(R.string.hours_text_field_label),
+                maxValue = MAX_HOURS
+            )
+            Field(
+                modifier = Modifier.fillMaxWidth(fraction = 1f / 2f),
+                enabled = !isTimerRunning,
+                value = minutesIntField,
+                label = stringResource(R.string.minutes_text_field_label),
+                maxValue = MAX_MINUTES
+            )
+            Field(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isTimerRunning,
+                farRight = true,
+                value = secondsIntField,
+                label = stringResource(R.string.seconds_text_field_label),
+                maxValue = MAX_SECONDS
+            )
         }
     }
 }
 
 @Composable
-private fun Field(
+private fun TimerButtons(
     modifier: Modifier = Modifier,
-    farLeft: Boolean = false,
-    farRight: Boolean = false,
-    enabled: Boolean,
-    value: MutableIntState,
-    label: String,
-    maxValue: Int
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    onFinished: (() -> Unit)? = null,
+    isTimerRunning: Boolean,
+    secondsIntField: MutableIntState,
+    minutesIntField: MutableIntState,
+    hoursIntField: MutableIntState
 ) {
-    val fieldModifier: Modifier =
-        if (farLeft)
-            Modifier.padding(end = 4.dp)
-        else if (farRight)
-            Modifier.padding(start = 4.dp)
-        else
-            Modifier.padding(horizontal = 4.dp)
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    Box(modifier = modifier) {
-        OutlinedNumberField(
-            modifier = fieldModifier,
-            enabled = enabled,
-            value = value,
-            label = label,
-            maxValue = maxValue
-        )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        if (isTimerRunning) {
+            Button(
+                onClick = {
+                    playbackViewModel.cancelTimer(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                    )
+                    secondsIntField.intValue = 0
+                    minutesIntField.intValue = 0
+                    hoursIntField.intValue = 0
+                    onFinished?.invoke()
+                }
+            ) {
+                NormalText(text = stringResource(R.string.cancel))
+            }
+
+            Spacer(modifier = Modifier.size(5.dp))
+        } else {
+            Button(
+                onClick = {
+                    computeTime(
+                        secondsIntField = secondsIntField,
+                        minutesIntField = minutesIntField,
+                        hoursIntField = hoursIntField
+                    )
+                    playbackViewModel.setTimer(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        hours = hoursIntField.intValue,
+                        minutes = minutesIntField.intValue,
+                        seconds = secondsIntField.intValue
+                    )
+                    onFinished?.invoke()
+                }
+            ) {
+
+                NormalText(text = stringResource(R.string.start_timer_button_content))
+            }
+        }
     }
 }
 

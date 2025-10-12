@@ -59,11 +59,13 @@ internal fun SortListDialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
         title = stringResource(R.string.sort_list_title),
-        onDismissRequest = { satunesViewModel.hideSortDialog() },
+        onDismissRequest = {
+            satunesViewModel.hideSortDialog()
+            sortListViewModel.reset()
+        },
         onConfirmRequest = {
             satunesViewModel.hideSortDialog()
-            dataViewModel.setReverseOrder(reverseOrder = sortListViewModel.reverseOrder)
-            dataViewModel.setSorting(sortOption = sortListViewModel.selectedSortOption)
+            sortListViewModel.apply(dataViewModel = dataViewModel)
         },
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),

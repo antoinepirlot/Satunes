@@ -33,7 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
@@ -96,7 +96,7 @@ class DataViewModel : ViewModel() {
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
 
-    var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+    var sortOption: SortOptions by mutableStateOf(defaultSortingOption)
         private set
 
     var reverseSortedOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)

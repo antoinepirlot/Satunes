@@ -135,6 +135,23 @@ class Folder(
     }
 
     /**
+     * Get the list of parents in order from this to the parent.
+     * For example if the absolute path is: "/Music/Artist/Album.
+     * Then the function will returns the list: "Album", "Artist", "Music". In this order.
+     */
+    fun getParentFolders(): Collection<Folder> {
+        val folders: MutableCollection<Folder> = mutableListOf()
+        this.getParentFolders(folders = folders)
+        return folders
+    }
+
+    private fun getParentFolders(folders: MutableCollection<Folder>) {
+        if (this == this.getRoot()) return //It's the root folder and don't need to be added.
+        folders.add(element = this) //Do not switch this line with the next one to preserve the order.
+        this.parentFolder!!.getParentFolders(folders = folders) //Do not switch this line with the previous one to preserve the order.
+    }
+
+    /**
      * Create a mutable map that contains all folder's music and subfolders' musics in this order:
      * #1 musics from this current folder sorted by name
      * #2 musics from each subfolder sorted by name and by folder

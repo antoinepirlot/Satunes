@@ -24,9 +24,14 @@
 package io.github.antoinepirlot.satunes.ui.components.buttons.folders
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.database.models.Folder
 
@@ -39,11 +44,18 @@ fun FolderPathButton(
     folder: Folder,
     onClick: (() -> Unit)?
 ) {
+    val fontSize: TextUnit = 20.sp
+    val padding: Dp = 5.dp
     val boxModifier: Modifier =
         if (onClick != null) modifier.clickable(onClick = onClick)
         else modifier
 
-    Box(modifier = boxModifier) {
-        NormalText(text = folder.title)
+    Card(modifier = boxModifier) {
+        NormalText(
+            modifier = Modifier.padding(all = padding),
+            text = "/${folder.title}",
+            fontSize = fontSize,
+            maxLines = 2
+        )
     }
 }

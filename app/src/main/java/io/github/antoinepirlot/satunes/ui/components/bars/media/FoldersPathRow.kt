@@ -24,11 +24,12 @@
 package io.github.antoinepirlot.satunes.ui.components.bars.media
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -46,19 +47,17 @@ fun FoldersPathRow(
 ) {
     val navController: NavController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
-    Row(modifier = modifier) {
+    Row(modifier = modifier.padding(horizontal = 16.dp)) {
         for (folder: Folder in folders) {
             var onClick: (() -> Unit)? = null
-            if (folder != endFolder)
-                onClick = {
-                    goBackTo(
-                        navigationViewModel = navigationViewModel,
-                        navController = navController,
-                        currentFolder = endFolder,
-                        target = folder,
-                    )
-                }
-            NormalText(text = "/")
+            if (folder != endFolder) onClick = {
+                goBackTo(
+                    navigationViewModel = navigationViewModel,
+                    navController = navController,
+                    currentFolder = endFolder,
+                    target = folder,
+                )
+            }
             FolderPathButton(folder = folder, onClick = onClick)
         }
     }

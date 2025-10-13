@@ -105,7 +105,7 @@ internal fun MediaCardList(
                         onMediaClick.invoke(mediaImpl)
                     } else {
                         if (mediaImpl is Folder && mediaImpl.isBackFolder()) {
-                            navController.popBackStack()
+                            navigationViewModel.popBackStack(navController = navController)
                             return@MediaCard
                         }
                         if (mediaImpl is Music && !isInPlaybackView)

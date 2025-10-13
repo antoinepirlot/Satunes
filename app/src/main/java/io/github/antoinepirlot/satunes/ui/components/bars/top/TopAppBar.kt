@@ -149,7 +149,7 @@ private fun onSearchButtonClick(
     navigationViewModel: NavigationViewModel
 ) {
     when (uiState.currentDestination) {
-        Destination.SEARCH -> navController.popBackStack()
+        Destination.SEARCH -> navigationViewModel.popBackStack(navController = navController)
         else -> navigationViewModel.navigate(
             navController = navController,
             destination = Destination.SEARCH
@@ -167,7 +167,7 @@ private fun onPlaybackQueueButtonClick(
             navController = navController,
             destination = Destination.PLAYBACK_QUEUE
         )
-        Destination.PLAYBACK_QUEUE -> navController.popBackStack()
+        Destination.PLAYBACK_QUEUE -> navigationViewModel.popBackStack(navController = navController)
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }
 }
@@ -187,7 +187,7 @@ private fun onSettingButtonClick(
     }
     val currentDestination: Destination = uiState.currentDestination
     if (currentDestination.category == DestinationCategory.SETTING) {
-        navController.popBackStack()
+        navigationViewModel.popBackStack(navController = navController)
         if (navController.currentBackStackEntry == null) {
             navigationViewModel.navigate(
                 navController = navController,

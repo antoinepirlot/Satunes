@@ -26,9 +26,11 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.folders
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import kotlin.math.absoluteValue
 
@@ -36,8 +38,12 @@ import kotlin.math.absoluteValue
  * @author Antoine Pirlot 12/10/2025
  */
 @Composable
-fun FoldersPathRow(modifier: Modifier = Modifier, endFolder: Folder) {
-    val navController: NavHostController = LocalNavController.current
+fun FoldersPathRow(
+    modifier: Modifier = Modifier,
+    navigationViewModel: NavigationViewModel = viewModel(),
+    endFolder: Folder
+) {
+    val navController: NavController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
     Row(modifier = modifier) {
         for (folder: Folder in folders) {
@@ -45,6 +51,7 @@ fun FoldersPathRow(modifier: Modifier = Modifier, endFolder: Folder) {
             if (folder != endFolder)
                 onClick = {
                     goBackTo(
+                        navigationViewModel = navigationViewModel,
                         navController = navController,
                         currentFolder = endFolder,
                         target = folder,
@@ -61,7 +68,12 @@ fun FoldersPathRow(modifier: Modifier = Modifier, endFolder: Folder) {
  * @param navController
  * @param target the folder where to go.
  */
-private fun goBackTo(navController: NavHostController, currentFolder: Folder, target: Folder) {
+private fun goBackTo(
+    navigationViewModel: NavigationViewModel,
+    navController: NavController,
+    currentFolder: Folder,
+    target: Folder
+) {
     val distance: Int = (currentFolder.getDepth() - target.getDepth()).absoluteValue
-    for (i: Int in 0..<distance) navController.popBackStack()
+    for (i: Int in 0..<distance) navigationViewModel.popBackStack(navController = navController)
 }

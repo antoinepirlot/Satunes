@@ -24,7 +24,7 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -43,30 +43,37 @@ import java.util.Stack
 class NavigationViewModel : ViewModel() {
     companion object {
         private val routesStack: Stack<Pair<Destination, MediaImpl?>> = Stack()
-    }
 
-    private fun push(destination: Destination, mediaImpl: MediaImpl?) {
-        routesStack.push(Pair(first = destination, second = mediaImpl))
+        private fun push(destination: Destination, mediaImpl: MediaImpl?) {
+            routesStack.push(Pair(first = destination, second = mediaImpl))
+        }
+
+        private fun pop(): Pair<Destination, MediaImpl?> = routesStack.pop()
     }
 
     fun navigate(
-        navController: NavHostController,
+        navController: NavController,
         destination: Destination
     ) {
-        this.push(destination = destination, mediaImpl = null)
+        push(destination = destination, mediaImpl = null)
         navController.navigate(route = destination.link)
     }
 
     fun navigate(
-        navController: NavHostController,
+        navController: NavController,
         mediaImpl: MediaImpl?
     ) {
         val destination: Destination = this.getDestinationOf(mediaImpl = mediaImpl)
-        this.push(destination = destination, mediaImpl = mediaImpl)
+        push(destination = destination, mediaImpl = mediaImpl)
         val route: String =
             if (mediaImpl == null || destination == Destination.PLAYBACK) destination.link
             else this.getRoute(destination = destination, mediaImpl = mediaImpl)
         navController.navigate(route = route)
+    }
+
+    fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?> {
+        navController.popBackStack()
+        return pop()
     }
 
     /**
@@ -77,12 +84,12 @@ class NavigationViewModel : ViewModel() {
      */
     fun backToRoot(
         rootRoute: Destination,
-        navController: NavHostController
+        navController: NavController
     ) {
         var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
         if (currentRoute == rootRoute.link) return
         while (currentRoute != null) {
-            navController.popBackStack()
+            this.popBackStack(navController = navController)
             currentRoute = navController.currentBackStackEntry?.destination?.route
         }
         this.navigate(navController = navController, destination = rootRoute)
@@ -123,7 +130,7 @@ class NavigationViewModel : ViewModel() {
     fun openMedia(
         playbackViewModel: PlaybackViewModel,
         media: MediaImpl? = null,
-        navController: NavHostController?,
+        navController: NavController?,
         reset: Boolean = false
     ) {
         if (media == null || media is Music)
@@ -139,7 +146,7 @@ class NavigationViewModel : ViewModel() {
      *
      * @throws IllegalStateException if there's no music playing
      */
-    fun openCurrentMusic(playbackViewModel: PlaybackViewModel, navController: NavHostController) {
+    fun openCurrentMusic(playbackViewModel: PlaybackViewModel, navController: NavController) {
         val musicPlaying: Music? = playbackViewModel.musicPlaying
         if (musicPlaying == null) {
             val message = "No music is currently playing, this button can be accessible"

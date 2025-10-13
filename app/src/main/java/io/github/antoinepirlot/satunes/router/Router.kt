@@ -20,8 +20,10 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -56,6 +58,8 @@ import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -85,17 +89,8 @@ internal fun Router(
 
     if (defaultDestination == null) return
 
-    val backPressedDispatcher: OnBackPressedDispatcher? =
-        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-
-    LaunchedEffect(key1 = Unit) {
-        backPressedDispatcher?.addCallback(
-            onBackPressedCallback = OnBackPressedListener(
-                navigationViewModel = navigationViewModel,
-                navController = navController
-            )
-        )
-    }
+    HandleBackButtonPressed()
+    HandleSwipeBack()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (
@@ -178,6 +173,32 @@ internal fun Router(
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = { /* Nothing */ }
+        )
+    }
+}
+
+@Composable
+private fun HandleSwipeBack(navigationViewModel: NavigationViewModel = viewModel()) {
+    val navController = LocalNavController.current
+
+    PredictiveBackHandler(onBack = { event: @JvmSuppressWildcards Flow<BackEventCompat> ->
+        event.collect()
+        navigationViewModel.popBackStack(navController = navController)
+    })
+}
+
+@Composable
+private fun HandleBackButtonPressed(navigationViewModel: NavigationViewModel = viewModel()) {
+    val navController = LocalNavController.current
+    val backPressedDispatcher: OnBackPressedDispatcher? =
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(key1 = Unit) {
+        backPressedDispatcher?.addCallback(
+            onBackPressedCallback = OnBackPressedListener(
+                navigationViewModel = navigationViewModel,
+                navController = navController
+            )
         )
     }
 }

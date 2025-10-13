@@ -34,14 +34,17 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
+import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.util.ArrayDeque
 import java.util.Deque
 
@@ -54,17 +57,30 @@ class NavigationViewModel : ViewModel() {
             MutableStateFlow(NavigationUiState())
 
         private var _initialised: Boolean = false
-        private val routesStack: Deque<Pair<Destination, MediaImpl?>> = ArrayDeque()
+        private val routesStack: Deque<Pair<Destination, MediaImpl?>> =
+            ArrayDeque() //TODO change structure as it add at first place
 
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
             routesStack.push(Pair(first = destination, second = mediaImpl))
+            updateUiState()
             OnDestinationChangedListener.incrementDepth()
         }
 
         private fun pop(): Pair<Destination, MediaImpl?>? {
             if (this.routesStack.isEmpty()) return null //To avoid crashing app if leaving with back gesture
             OnDestinationChangedListener.decrementDepth()
-            return routesStack.pop()
+            val popped: Pair<Destination, MediaImpl?> = routesStack.pop()
+            updateUiState()
+            return popped
+        }
+
+        private fun updateUiState() {
+            _uiState.update { currentState: NavigationUiState ->
+                currentState.copy(
+                    currentMediaImpl = getCurrentMediaImpl(),
+                    currentDestination = getCurrentDestination()
+                )
+            }
         }
 
         private fun contains(destination: Destination, mediaImpl: MediaImpl?): Boolean {
@@ -72,6 +88,15 @@ class NavigationViewModel : ViewModel() {
                 if (pair.first == destination && pair.second == mediaImpl)
                     return true
             return false
+        }
+
+        private fun getCurrentDestination(): Destination {
+            return this.routesStack.peekFirst()?.first
+                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
+        }
+
+        private fun getCurrentMediaImpl(): MediaImpl? {
+            return this.routesStack.peekFirst()?.second
         }
     }
 

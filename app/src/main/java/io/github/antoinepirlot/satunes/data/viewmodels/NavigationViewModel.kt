@@ -51,7 +51,8 @@ class NavigationViewModel : ViewModel() {
             OnDestinationChangedListener.incrementDepth()
         }
 
-        private fun pop(): Pair<Destination, MediaImpl?> {
+        private fun pop(): Pair<Destination, MediaImpl?>? {
+            if (this.routesStack.isEmpty()) return null //To avoid crashing app if leaving with back gesture
             OnDestinationChangedListener.decrementDepth()
             return routesStack.pop()
         }
@@ -86,7 +87,7 @@ class NavigationViewModel : ViewModel() {
         navController.navigate(route = route)
     }
 
-    fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?> {
+    fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?>? {
         navController.popBackStack()
         return pop()
     }

@@ -32,8 +32,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.ui.components.bars.media.FoldersPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
-import io.github.antoinepirlot.satunes.ui.components.buttons.folders.FoldersPathRow
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**

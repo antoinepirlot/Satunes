@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.buttons.folders
+package io.github.antoinepirlot.satunes.ui.components.bars.media
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -32,6 +32,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.ui.components.buttons.folders.FolderPathButton
 import kotlin.math.absoluteValue
 
 /**

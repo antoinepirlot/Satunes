@@ -33,7 +33,7 @@ import java.util.SortedSet
 
 class Folder(
     title: String,
-    var parentFolder: Folder? = null,
+    val parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
 
     companion object {
@@ -46,7 +46,7 @@ class Folder(
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
     } else {
-        parentFolder!!.absolutePath + "/$title"
+        parentFolder.absolutePath + "/$title"
     }
 
     public override var addedDate: Date? = null

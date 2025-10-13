@@ -44,8 +44,7 @@ class OnDestinationChangedListener(
         }
 
         fun decrementDepth() {
-            if (this._depth == 0)
-                throw IllegalStateException("Can't decrease depth below 0.")
+            //Depth < 0 means leaving app
             this._depth--
         }
     }

@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.Stack
@@ -42,13 +43,27 @@ import java.util.Stack
  */
 class NavigationViewModel : ViewModel() {
     companion object {
+        private var _initialised: Boolean = false
         private val routesStack: Stack<Pair<Destination, MediaImpl?>> = Stack()
 
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
             routesStack.push(Pair(first = destination, second = mediaImpl))
+            OnDestinationChangedListener.incrementDepth()
         }
 
-        private fun pop(): Pair<Destination, MediaImpl?> = routesStack.pop()
+        private fun pop(): Pair<Destination, MediaImpl?> {
+            OnDestinationChangedListener.decrementDepth()
+            return routesStack.pop()
+        }
+    }
+
+    fun stackSize(): Int = routesStack.size
+
+    fun init(defaultDestination: Destination) {
+        if (_initialised)
+            throw IllegalStateException("Can't initialise the NavigationViewModel twice")
+        push(destination = defaultDestination, mediaImpl = null)
+        _initialised = true
     }
 
     fun navigate(

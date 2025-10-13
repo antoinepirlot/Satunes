@@ -20,6 +20,8 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,6 +48,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.listeners.OnBackPressedListener
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
@@ -77,9 +80,22 @@ internal fun Router(
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+        navigationViewModel.init(defaultDestination = defaultDestination!!)
     }
 
     if (defaultDestination == null) return
+
+    val backPressedDispatcher: OnBackPressedDispatcher? =
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(key1 = Unit) {
+        backPressedDispatcher?.addCallback(
+            onBackPressedCallback = OnBackPressedListener(
+                navigationViewModel = navigationViewModel,
+                navController = navController
+            )
+        )
+    }
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (

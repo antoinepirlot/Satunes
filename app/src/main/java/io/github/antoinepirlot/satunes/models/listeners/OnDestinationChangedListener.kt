@@ -35,11 +35,28 @@ import io.github.antoinepirlot.satunes.models.Destination
 class OnDestinationChangedListener(
     private val navigationViewModel: NavigationViewModel
 ) : NavController.OnDestinationChangedListener {
+
+    companion object {
+        private var _depth: Int = 0
+
+        fun incrementDepth() {
+            this._depth++
+        }
+
+        fun decrementDepth() {
+            if (this._depth == 0)
+                throw IllegalStateException("Can't decrease depth below 0.")
+            this._depth--
+        }
+    }
+
     override fun onDestinationChanged(
         controller: NavController,
         destination: NavDestination,
         arguments: SavedState?
     ) {
+        if (navigationViewModel.stackSize() != _depth)
+            throw IllegalStateException("You didn't push the destination on stack. Be sure to use NavigationViewModel to navigate.")
         if (controller.previousBackStackEntry != null && destination == controller.previousBackStackEntry!!.destination) {
             if (Destination.getDestination(destination = destination.route!!) != Destination.FOLDER) {
                 navigationViewModel.popBackStack(navController = controller)

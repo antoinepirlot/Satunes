@@ -41,7 +41,7 @@ class Folder(
     }
 
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
-    private val _depth: Int = this.parentFolder?.getDepth() ?: 0
+    private val _depth: Int = if (this.parentFolder == null) 0 else this.parentFolder.getDepth() + 1
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"

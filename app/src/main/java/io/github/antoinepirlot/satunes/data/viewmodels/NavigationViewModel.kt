@@ -224,6 +224,6 @@ class NavigationViewModel : ViewModel() {
     }
 
     fun isInPlaybackView(): Boolean {
-        return routesStack.last.first.category == DestinationCategory.PLAYBACK
+        return getCurrentDestination().category == DestinationCategory.PLAYBACK
     }
 }

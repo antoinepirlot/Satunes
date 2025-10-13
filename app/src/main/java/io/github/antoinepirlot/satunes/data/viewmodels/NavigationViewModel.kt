@@ -32,11 +32,14 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import java.util.Stack
+import java.util.ArrayDeque
+import java.util.Deque
 
 /**
  * @author Antoine Pirlot 13/10/2025
@@ -44,7 +47,7 @@ import java.util.Stack
 class NavigationViewModel : ViewModel() {
     companion object {
         private var _initialised: Boolean = false
-        private val routesStack: Stack<Pair<Destination, MediaImpl?>> = Stack()
+        private val routesStack: Deque<Pair<Destination, MediaImpl?>> = ArrayDeque()
 
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
             routesStack.push(Pair(first = destination, second = mediaImpl))
@@ -70,7 +73,10 @@ class NavigationViewModel : ViewModel() {
     fun init(defaultDestination: Destination) {
         if (_initialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
-        push(destination = defaultDestination, mediaImpl = null)
+        if (defaultDestination == Destination.FOLDERS)
+            push(destination = defaultDestination, mediaImpl = DataManager.getRootRootFolder())
+        else
+            push(destination = defaultDestination, mediaImpl = null)
         _initialised = true
     }
 
@@ -181,5 +187,13 @@ class NavigationViewModel : ViewModel() {
             throw IllegalStateException(message)
         }
         this.navigate(navController = navController, mediaImpl = musicPlaying)
+    }
+
+    fun isInPlaybackView(): Boolean {
+        return routesStack.last.first.category == DestinationCategory.PLAYBACK
+    }
+
+    fun getCurrentMediaImpl(): MediaImpl? {
+        return routesStack.last.second
     }
 }

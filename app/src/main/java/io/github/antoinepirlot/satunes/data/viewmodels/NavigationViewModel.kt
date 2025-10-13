@@ -56,6 +56,13 @@ class NavigationViewModel : ViewModel() {
             OnDestinationChangedListener.decrementDepth()
             return routesStack.pop()
         }
+
+        private fun contains(destination: Destination, mediaImpl: MediaImpl?): Boolean {
+            for (pair: Pair<Destination, MediaImpl?> in this.routesStack)
+                if (pair.first == destination && pair.second == mediaImpl)
+                    return true
+            return false
+        }
     }
 
     fun stackSize(): Int = routesStack.size
@@ -90,6 +97,10 @@ class NavigationViewModel : ViewModel() {
     fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?>? {
         navController.popBackStack()
         return pop()
+    }
+
+    fun contains(destination: Destination, mediaImpl: MediaImpl?): Boolean {
+        return Companion.contains(destination = destination, mediaImpl = mediaImpl)
     }
 
     /**

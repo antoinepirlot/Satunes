@@ -96,7 +96,11 @@ internal fun Satunes(
             val scope: CoroutineScope = rememberCoroutineScope()
             val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
-            navController.addOnDestinationChangedListener(listener = OnDestinationChangedListener)
+            navController.addOnDestinationChangedListener(
+                listener = OnDestinationChangedListener(
+                    navigationViewModel = navigationViewModel
+                )
+            )
 
             CompositionLocalProvider(
                 values = arrayOf(

@@ -35,8 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
@@ -58,6 +60,7 @@ internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
@@ -70,6 +73,7 @@ internal fun MediaListView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
     var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
     val sortOption: SortOptions = dataViewModel.sortOption
@@ -85,7 +89,7 @@ internal fun MediaListView(
     LaunchedEffect(key1 = sortOption, key2 = reverseOrder, key3 = collectionChanged) {
         if (sort && (sortOption != dataUiState.appliedSortOption || collectionChanged || reverseOrder != previousReverseOrder)) {
             dataViewModel.sort(
-                satunesUiState = satunesUiState,
+                navigationUiState = navigationUiState,
                 list = listToShow,
             )
             if (!collectionChanged)

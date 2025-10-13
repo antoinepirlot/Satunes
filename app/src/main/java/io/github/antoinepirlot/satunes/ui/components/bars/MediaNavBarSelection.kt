@@ -33,9 +33,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
@@ -48,13 +47,12 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 @Composable
 internal fun RowScope.MediaNavBarSelection(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     navBarSection: NavBarSection,
     navigationViewModel: NavigationViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val currentDestination: Destination = satunesUiState.currentDestination
+    val currentDestination: Destination = navigationUiState.currentDestination
     val selectedCanBeShown: Boolean = currentDestination.category == DestinationCategory.MEDIA
 
     NavigationBarItem(

@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
@@ -77,6 +78,7 @@ internal fun Router(
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
@@ -117,16 +119,6 @@ internal fun Router(
 
     // Start handle destination change
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember {
-        derivedStateOf {
-            currentBackStackEntry?.destination?.route ?: defaultDestination!!.link
-        }
-    }
-
-    LaunchedEffect(key1 = currentRoute) {
-        satunesViewModel.setCurrentDestination(destination = currentRoute)
-        satunesViewModel.clearCurrentMediaImpl()
-    }
 
     NavHost(
         modifier = modifier,
@@ -140,10 +132,10 @@ internal fun Router(
             dataViewModel = dataViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
-                    navigationViewModel = navigationViewModel
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
@@ -151,10 +143,10 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
-                    navigationViewModel = navigationViewModel
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
@@ -163,10 +155,10 @@ internal fun Router(
             playbackViewModel = playbackViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
-                    navigationViewModel = navigationViewModel
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
@@ -215,12 +207,12 @@ private fun HandleBackButtonPressed(navigationViewModel: NavigationViewModel = v
  * @return true if it is allowed, false otherwise
  */
 private fun checkIfAllowed(
-    satunesUiState: SatunesUiState,
     isAudioAllowed: Boolean,
     navController: NavHostController,
+    navigationUiState: NavigationUiState,
     navigationViewModel: NavigationViewModel
 ): Boolean {
-    if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
+    if (!isAudioAllowed && navigationUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
         navigationViewModel.backToRoot(
             rootRoute = Destination.PERMISSIONS_SETTINGS,
             navController = navController

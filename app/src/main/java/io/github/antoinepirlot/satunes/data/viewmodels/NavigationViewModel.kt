@@ -25,6 +25,7 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
@@ -38,6 +39,9 @@ import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.ArrayDeque
 import java.util.Deque
 
@@ -46,6 +50,9 @@ import java.util.Deque
  */
 class NavigationViewModel : ViewModel() {
     companion object {
+        private val _uiState: MutableStateFlow<NavigationUiState> =
+            MutableStateFlow(NavigationUiState())
+
         private var _initialised: Boolean = false
         private val routesStack: Deque<Pair<Destination, MediaImpl?>> = ArrayDeque()
 
@@ -67,6 +74,8 @@ class NavigationViewModel : ViewModel() {
             return false
         }
     }
+
+    val uiState: StateFlow<NavigationUiState> = _uiState.asStateFlow()
 
     fun stackSize(): Int = routesStack.size
 
@@ -191,9 +200,5 @@ class NavigationViewModel : ViewModel() {
 
     fun isInPlaybackView(): Boolean {
         return routesStack.last.first.category == DestinationCategory.PLAYBACK
-    }
-
-    fun getCurrentMediaImpl(): MediaImpl? {
-        return routesStack.last.second
     }
 }

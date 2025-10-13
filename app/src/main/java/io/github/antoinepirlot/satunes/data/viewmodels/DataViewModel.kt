@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
@@ -947,12 +947,12 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    internal fun sort(satunesUiState: SatunesUiState, list: MutableList<MediaImpl>) {
+    fun sort(navigationUiState: NavigationUiState, list: MutableList<MediaImpl>) {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
             list.sortBy { mediaImpl: MediaImpl ->
                 if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
                 else -(mediaImpl as Music).getOrder(playlist = playlist)

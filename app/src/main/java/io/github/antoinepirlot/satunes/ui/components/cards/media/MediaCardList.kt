@@ -43,11 +43,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
@@ -61,7 +60,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDi
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
@@ -72,12 +70,12 @@ internal fun MediaCardList(
     showGroupIndication: Boolean = true,
     onMediaClick: ((MediaImpl) -> Unit)? = null,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
-    val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
+    val isInPlaybackView: Boolean = navigationViewModel.isInPlaybackView()
 
     LazyColumn(
         modifier = modifier,
@@ -111,7 +109,7 @@ internal fun MediaCardList(
                         if (mediaImpl is Music && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
-                                currentDestination = satunesUiState.currentDestination,
+                                currentDestination = navigationUiState.currentDestination,
                                 musicToPlay = mediaImpl
                             )
                         navigationViewModel.openMedia(

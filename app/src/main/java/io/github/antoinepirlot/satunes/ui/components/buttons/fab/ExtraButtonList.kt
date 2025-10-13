@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
@@ -57,6 +58,7 @@ internal fun ExtraButtonList(
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListOnScreen
@@ -70,7 +72,7 @@ internal fun ExtraButtonList(
             onClick = {
                 playbackViewModel.loadMusicFromMedias(
                     medias = mediaImplCollection,
-                    currentDestination = satunesUiState.currentDestination
+                    currentDestination = navigationUiState.currentDestination
                 )
                 navigationViewModel.openMedia(
                     playbackViewModel = playbackViewModel,
@@ -86,7 +88,7 @@ internal fun ExtraButtonList(
                 onClick = {
                     playbackViewModel.loadMusicFromMedias(
                         medias = mediaImplCollection,
-                        currentDestination = satunesUiState.currentDestination,
+                        currentDestination = navigationUiState.currentDestination,
                         shuffleMode = true
                     )
                     navigationViewModel.openMedia(

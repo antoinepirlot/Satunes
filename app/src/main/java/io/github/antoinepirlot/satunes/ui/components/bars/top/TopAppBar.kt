@@ -45,7 +45,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -65,12 +65,12 @@ internal fun TopAppBar(
     satunesViewModel: SatunesViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: Destination = satunesUiState.currentDestination
+    val currentDestination: Destination = navigationUiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -88,7 +88,7 @@ internal fun TopAppBar(
                     icon = SatunesIcons.PLAYBACK,
                     onClick = {
                         onPlaybackQueueButtonClick(
-                            uiState = satunesUiState,
+                            uiState = navigationUiState,
                             navController = navController,
                             navigationViewModel = navigationViewModel
                         )
@@ -96,7 +96,7 @@ internal fun TopAppBar(
                 )
             } else if (
                 currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = satunesUiState.currentDestination).size > 1
+                getSortOptions(destination = navigationUiState.currentDestination).size > 1
             ) {
                 IconButton(
                     icon = SatunesIcons.SORT,
@@ -118,7 +118,7 @@ internal fun TopAppBar(
                     icon = SatunesIcons.SEARCH,
                     onClick = {
                         onSearchButtonClick(
-                            uiState = satunesUiState,
+                            uiState = navigationUiState,
                             navController = navController,
                             navigationViewModel = navigationViewModel
                         )
@@ -131,7 +131,7 @@ internal fun TopAppBar(
                 icon = SatunesIcons.SETTINGS,
                 onClick = {
                     onSettingButtonClick(
-                        uiState = satunesUiState,
+                        uiState = navigationUiState,
                         satunesViewModel = satunesViewModel,
                         navController = navController,
                         navigationViewModel = navigationViewModel
@@ -144,7 +144,7 @@ internal fun TopAppBar(
 }
 
 private fun onSearchButtonClick(
-    uiState: SatunesUiState,
+    uiState: NavigationUiState,
     navController: NavHostController,
     navigationViewModel: NavigationViewModel
 ) {
@@ -158,7 +158,7 @@ private fun onSearchButtonClick(
 }
 
 private fun onPlaybackQueueButtonClick(
-    uiState: SatunesUiState,
+    uiState: NavigationUiState,
     navController: NavHostController,
     navigationViewModel: NavigationViewModel
 ) {
@@ -177,7 +177,7 @@ private fun onPlaybackQueueButtonClick(
  * Otherwise navigate to settings
  */
 private fun onSettingButtonClick(
-    uiState: SatunesUiState,
+    uiState: NavigationUiState,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel,
     navigationViewModel: NavigationViewModel

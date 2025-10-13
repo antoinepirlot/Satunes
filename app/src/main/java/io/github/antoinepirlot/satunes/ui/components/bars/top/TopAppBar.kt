@@ -46,6 +46,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
@@ -62,6 +63,7 @@ internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
@@ -87,7 +89,8 @@ internal fun TopAppBar(
                     onClick = {
                         onPlaybackQueueButtonClick(
                             uiState = satunesUiState,
-                            navController = navController
+                            navController = navController,
+                            navigationViewModel = navigationViewModel
                         )
                     }
                 )
@@ -116,7 +119,8 @@ internal fun TopAppBar(
                     onClick = {
                         onSearchButtonClick(
                             uiState = satunesUiState,
-                            navController = navController
+                            navController = navController,
+                            navigationViewModel = navigationViewModel
                         )
                     }
                 )
@@ -129,7 +133,8 @@ internal fun TopAppBar(
                     onSettingButtonClick(
                         uiState = satunesUiState,
                         satunesViewModel = satunesViewModel,
-                        navController = navController
+                        navController = navController,
+                        navigationViewModel = navigationViewModel
                     )
                 }
             )
@@ -138,16 +143,30 @@ internal fun TopAppBar(
     )
 }
 
-private fun onSearchButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+private fun onSearchButtonClick(
+    uiState: SatunesUiState,
+    navController: NavHostController,
+    navigationViewModel: NavigationViewModel
+) {
     when (uiState.currentDestination) {
         Destination.SEARCH -> navController.popBackStack()
-        else -> navController.navigate(Destination.SEARCH.link)
+        else -> navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.SEARCH
+        )
     }
 }
 
-private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+private fun onPlaybackQueueButtonClick(
+    uiState: SatunesUiState,
+    navController: NavHostController,
+    navigationViewModel: NavigationViewModel
+) {
     when (uiState.currentDestination) {
-        Destination.PLAYBACK -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
+        Destination.PLAYBACK -> navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.PLAYBACK_QUEUE
+        )
         Destination.PLAYBACK_QUEUE -> navController.popBackStack()
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }
@@ -161,6 +180,7 @@ private fun onSettingButtonClick(
     uiState: SatunesUiState,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel,
+    navigationViewModel: NavigationViewModel
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         satunesViewModel.resetUpdatesStatus()
@@ -169,11 +189,20 @@ private fun onSettingButtonClick(
     if (currentDestination.category == DestinationCategory.SETTING) {
         navController.popBackStack()
         if (navController.currentBackStackEntry == null) {
-            navController.navigate(Destination.FOLDERS.link)
-            navController.navigate(Destination.SETTINGS.link)
+            navigationViewModel.navigate(
+                navController = navController,
+                destination = Destination.FOLDERS
+            )
+            navigationViewModel.navigate(
+                navController = navController,
+                destination = Destination.SETTINGS
+            )
         }
     } else {
-        navController.navigate(Destination.SETTINGS.link)
+        navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.SETTINGS
+        )
     }
 }
 

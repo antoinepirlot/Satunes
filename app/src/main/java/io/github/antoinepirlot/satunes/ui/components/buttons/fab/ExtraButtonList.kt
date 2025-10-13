@@ -32,11 +32,11 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 
 /**
  * Extra Button list to show on scaffold.
@@ -53,7 +53,8 @@ internal fun ExtraButtonList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel()
+    dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
@@ -71,7 +72,7 @@ internal fun ExtraButtonList(
                     medias = mediaImplCollection,
                     currentDestination = satunesUiState.currentDestination
                 )
-                openMedia(
+                navigationViewModel.openMedia(
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )
@@ -88,7 +89,7 @@ internal fun ExtraButtonList(
                         currentDestination = satunesUiState.currentDestination,
                         shuffleMode = true
                     )
-                    openMedia(
+                    navigationViewModel.openMedia(
                         playbackViewModel = playbackViewModel,
                         navController = navController
                     )

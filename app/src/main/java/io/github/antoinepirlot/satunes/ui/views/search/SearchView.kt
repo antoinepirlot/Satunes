@@ -55,6 +55,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
@@ -62,7 +63,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import kotlinx.coroutines.CoroutineScope
@@ -81,6 +81,7 @@ internal fun SearchView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
@@ -155,7 +156,7 @@ internal fun SearchView(
                         currentDestination = satunesUiState.currentDestination,
                         musicToPlay = mediaImpl
                     )
-                openMedia(
+                navigationViewModel.openMedia(
                     playbackViewModel = playbackViewModel,
                     media = mediaImpl,
                     navController = navController

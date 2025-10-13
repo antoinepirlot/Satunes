@@ -41,6 +41,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
@@ -50,7 +51,6 @@ import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
-import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -64,6 +64,7 @@ internal fun Router(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     SatunesLogger.getLogger()?.info("Router Composable")
 
@@ -91,9 +92,13 @@ internal fun Router(
             if (satunesViewModel.defaultPlaylistId >= 0) {
                 val playlist: Playlist =
                     dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
-                backToRoot(rootRoute = defaultDestination!!, navController = navController)
-                navController.navigate(
-                    route = Destination.PLAYLISTS.link + "/${playlist.id}"
+                navigationViewModel.backToRoot(
+                    rootRoute = defaultDestination!!,
+                    navController = navController
+                )
+                navigationViewModel.navigate(
+                    navController = navController,
+                    mediaImpl = playlist
                 )
             }
         }
@@ -126,7 +131,8 @@ internal fun Router(
                 checkIfAllowed(
                     satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel
                 )
             }
         )
@@ -136,7 +142,8 @@ internal fun Router(
                 checkIfAllowed(
                     satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel
                 )
             }
         )
@@ -147,7 +154,8 @@ internal fun Router(
                 checkIfAllowed(
                     satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel
                 )
             }
         )
@@ -172,10 +180,14 @@ internal fun Router(
 private fun checkIfAllowed(
     satunesUiState: SatunesUiState,
     isAudioAllowed: Boolean,
-    navController: NavHostController
+    navController: NavHostController,
+    navigationViewModel: NavigationViewModel
 ): Boolean {
     if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
-        backToRoot(rootRoute = Destination.PERMISSIONS_SETTINGS, navController = navController)
+        navigationViewModel.backToRoot(
+            rootRoute = Destination.PERMISSIONS_SETTINGS,
+            navController = navController
+        )
         return false
     }
     return true

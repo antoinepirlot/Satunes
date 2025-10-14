@@ -19,7 +19,7 @@ Nous sommes trop dépendants des américains, j'encourage donc chaque citoyen eu
 L'Europe est unie dans la diversité, ne les laissons pas nous diviser!<br/><br/>
 Longue vie à l'Union Européenne 🇪🇺, Хай живе Україна 🇺🇦 et à la démocratie.</h1>
 
-Satunes est un lecteur de musique pour Android. 
+Satunes est un lecteur de musique pour Android developpé par une intelligence organique. 
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android Lollipop 5.1.1 et plus récent).
 
 L'entierté du projet est sous la licence GNU/GPL v3 et s'applique à toutes les versions de ce projet y compris le code ajouté avant l'introduction de la licence.

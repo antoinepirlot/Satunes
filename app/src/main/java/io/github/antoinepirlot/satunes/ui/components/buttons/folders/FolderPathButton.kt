@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot 12/10/2025
@@ -60,10 +62,9 @@ fun FolderPathButton(
             Modifier
 
     Row(modifier = modifier) {
-        NormalText(
-            modifier = Modifier.padding(vertical = padding),
-            text = "/",
-            fontSize = fontSize
+        Icon(
+            Modifier.padding(vertical = padding),
+            icon = SatunesIcons.RIGHT_ARROW
         )
         Box(
             modifier = boxModifier

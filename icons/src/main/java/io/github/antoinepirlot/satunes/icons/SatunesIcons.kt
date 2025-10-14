@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.icons
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowRight
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
@@ -157,6 +158,7 @@ enum class SatunesIcons(
     REPEAT_ONE(imageVector = Icons.Rounded.RepeatOne, description = "Repeat One On Icon"),
     RESET_SETTINGS(imageVector = Icons.Rounded.Emergency, description = "Reset Icon"),
     REWIND(imageVector = Icons.Rounded.FastRewind, description = "Rewind Icon"),
+    RIGHT_ARROW(imageVector = Icons.AutoMirrored.Rounded.ArrowRight, description = "Right Arrow"),
     SEARCH(imageVector = Icons.Rounded.Search, description = "Search Icon"),
     SETTINGS(imageVector = Icons.Rounded.Settings, description = "Settings Icon"),
     SETTING_INTERFACE(imageVector = Icons.Rounded.Palette, description = "Interface Setting"),

@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
@@ -49,6 +50,7 @@ fun FolderPathButton(
     onClick: (() -> Unit)?
 ) {
     val padding: Dp = 5.dp
+    val fontSize: TextUnit = 20.sp
     val boxModifier: Modifier =
         if (onClick != null)
             Modifier
@@ -58,7 +60,11 @@ fun FolderPathButton(
             Modifier
 
     Row(modifier = modifier) {
-        NormalText(modifier = Modifier.padding(vertical = padding), text = "/")
+        NormalText(
+            modifier = Modifier.padding(vertical = padding),
+            text = "/",
+            fontSize = fontSize
+        )
         Box(
             modifier = boxModifier
                 .background(
@@ -70,7 +76,7 @@ fun FolderPathButton(
             NormalText(
                 text = folder.title,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 20.sp,
+                fontSize = fontSize,
                 maxLines = 2
             )
         }

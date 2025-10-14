@@ -138,7 +138,7 @@ class DataViewModel : ViewModel() {
         this.listSetUpdatedProcessed = true
     }
 
-    fun getRootRootFolder(): RootFolder = DataManager.getRootFolder()
+    fun getRootFolder(): RootFolder = DataManager.getRootFolder()
     fun getBackFolder(): BackFolder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()

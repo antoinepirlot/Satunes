@@ -61,7 +61,7 @@ internal fun FolderView(
     }
 
     Column(modifier = modifier) {
-        if (folder !== dataViewModel.getRootRootFolder())
+        if (folder !== dataViewModel.getRootFolder())
             FoldersPathRow(endFolder = folder)
         MediaListView(
             mediaImplCollection = subFolders,

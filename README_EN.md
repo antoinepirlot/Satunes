@@ -19,7 +19,7 @@ We are too dependent on the Americans, I encourage every European citizen to use
 Europe is united in diversity, let's not let them divide us!<br/><br/>
 Long live the European Union 🇪🇺, Хай живе Україна 🇺🇦 and democracy.</h1>
 
-Satunes is an mp3 player on Android developed by an organic intelligence. 
+Satunes is an mp3 player on Android and developed by an organic intelligence. 
 Use it to listen your music from your audio files stored in your Android phone (Android Lollipop 5.1.1 and later).
 
 This entire project is under GNU/GPL v3 and it's applied on all versions of this project (even the

@@ -21,7 +21,7 @@
 package io.github.antoinepirlot.satunes.database.models.comparators
 
 import io.github.antoinepirlot.satunes.database.exceptions.NotInAlbumException
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot on 18/10/2024

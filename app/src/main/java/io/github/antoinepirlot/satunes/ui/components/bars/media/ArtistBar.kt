@@ -50,7 +50,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.Icon

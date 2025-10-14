@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.Date
@@ -31,7 +31,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Folder(
+open class Folder(
     title: String,
     val parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
@@ -200,10 +200,7 @@ class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this.isRoot()) return this
+        if (this is RootFolder) return this
         return this.parentFolder!!.getRoot()
     }
-
-    fun isRoot(): Boolean = this.parentFolder === DataManager.getRootRootFolder()
-    fun isBackFolder(): Boolean = this === DataManager.getBackFolder()
 }

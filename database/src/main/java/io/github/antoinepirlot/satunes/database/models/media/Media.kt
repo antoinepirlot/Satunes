@@ -18,20 +18,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.data.states
-
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+package io.github.antoinepirlot.satunes.database.models.media
 
 /**
- * @author Antoine Pirlot on 23/07/2024
+ * @author Antoine Pirlot on 11/07/2024
  */
-data class SearchUiState(
-    val musicsFilter: Boolean = SettingsManager.musicsFilter,
-    val albumsFilter: Boolean = SettingsManager.albumsFilter,
-    val artistsFilter: Boolean = SettingsManager.artistsFilter,
-    val genresFilter: Boolean = SettingsManager.genresFilter,
-    val foldersFilter: Boolean = SettingsManager.foldersFilter,
-    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val mediaImplCollection: Collection<MediaImpl> = listOf()
-)
+internal interface Media {
+    val id: Long
+    var title: String
+}

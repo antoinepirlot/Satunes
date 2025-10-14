@@ -26,13 +26,13 @@ package io.github.antoinepirlot.satunes.data.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -108,7 +108,7 @@ class NavigationViewModel : ViewModel() {
         if (_initialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
         if (defaultDestination == Destination.FOLDERS)
-            push(destination = defaultDestination, mediaImpl = DataManager.getRootRootFolder())
+            push(destination = defaultDestination, mediaImpl = DataManager.getRootFolder())
         else
             push(destination = defaultDestination, mediaImpl = null)
         _initialised = true

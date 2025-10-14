@@ -23,7 +23,7 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination

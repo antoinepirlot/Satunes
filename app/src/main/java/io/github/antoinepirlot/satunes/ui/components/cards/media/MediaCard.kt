@@ -48,13 +48,14 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
@@ -79,7 +80,7 @@ internal fun MediaCard(
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
     val title: String =
-        if (mediaImpl is Folder && mediaImpl.isRoot()) {
+        if (mediaImpl is RootFolder) {
             getFirstFolderNameInChain(title = mediaImpl.title)
         } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)

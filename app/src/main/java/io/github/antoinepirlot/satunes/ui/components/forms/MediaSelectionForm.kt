@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.Destination
 
 /**

@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTIONS_O
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_LIKE
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_REPEAT
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SHUFFLE
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.icons.R
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager

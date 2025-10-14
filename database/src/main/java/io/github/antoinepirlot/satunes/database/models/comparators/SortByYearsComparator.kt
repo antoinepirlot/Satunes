@@ -20,9 +20,9 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot 30/01/2025

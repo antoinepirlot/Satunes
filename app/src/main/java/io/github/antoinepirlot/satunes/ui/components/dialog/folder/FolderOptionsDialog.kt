@@ -29,7 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
@@ -58,7 +59,7 @@ internal fun FolderOptionsDialog(
             Icon(imageVector = icon.imageVector, contentDescription = icon.description)
         },
         title = {
-            val title: String = if (folder.isRoot()) {
+            val title: String = if (folder is RootFolder) {
                 getFirstFolderNameInChain(title = folder.title)
             } else {
                 folder.title

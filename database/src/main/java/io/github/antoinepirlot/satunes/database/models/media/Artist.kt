@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

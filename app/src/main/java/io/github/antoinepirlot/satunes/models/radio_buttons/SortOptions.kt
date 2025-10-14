@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAddedDateComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAlbumComparator
@@ -29,6 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.comparators.SortByArtistC
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByGenreComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByTitleComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByYearsComparator
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.database.R as RDb
 

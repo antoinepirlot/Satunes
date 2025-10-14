@@ -28,11 +28,11 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
@@ -397,7 +397,7 @@ object DataLoader {
     private fun loadFolder(context: Context, absolutePath: String): Folder {
         val splitPath: Collection<String> =
             this.getPathList(context = context, absolutePath = absolutePath)
-        val rootFolder: Folder = DataManager.getRootRootFolder()
+        val rootFolder: Folder = DataManager.getRootFolder()
         rootFolder.createSubFolders(splitPath)
         return rootFolder.getSubFolder(splitPath.toMutableList())!!
     }

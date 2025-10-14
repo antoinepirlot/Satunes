@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager

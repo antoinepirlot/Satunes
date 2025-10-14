@@ -39,7 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.database.models.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.ui.components.buttons.folders.FolderPathButton
 import io.github.antoinepirlot.satunes.utils.utils.lastIndex
 import kotlin.math.absoluteValue

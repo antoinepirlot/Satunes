@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.customActionsMap
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot on 01/06/2024

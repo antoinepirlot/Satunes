@@ -4,6 +4,25 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.0-beta-2
+
+New features:
+
+* Path in folder view is clickable to navigate
+
+Improvements, optimisations and bug fixes:
+
+* Fix updates check other channel than stable.
+* Remove the letter separator in the playback list view and album view
+* Fix sorting crash by dates
+* Added a space between the form and the button in the timer form dialog
+* Fix sorting options when leaving sort dialog without applying modification, previous values are
+  restored
+* Music in different storage are no more on the first folder alongside the "This device" folder
+* Improve design of list
+* No more folder associated to the file name created
+* The back folder can be clicked once by view (it prevents going to blank view if clicked too fast)
+
 ### 3.3.0-beta-1
 
 New features:

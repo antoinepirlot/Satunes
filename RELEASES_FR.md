@@ -4,6 +4,28 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.0-beta-2
+
+Nouvelles fonctionnalités :
+
+* Le chemin d'accès dans la vue des dossiers est cliquable pour naviguer
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour sur d'autres canaux que le canal stable.
+* Suppression du séparateur de lettres dans la vue de la liste de lecture et la vue de l'album
+* Correction du plantage du tri par date
+* Ajout d'un espace entre le formulaire et le bouton dans la boîte de dialogue du formulaire de
+  minuterie
+* Correction des options de tri lorsque vous quittez la boîte de dialogue de tri sans appliquer les
+  modifications, les valeurs précédentes sont restaurées
+* Les musiques stockées sur des espaces de stockage externes n'apparaissent plus dans le premier
+  dossier à côté du dossier « Cet appareil »
+* Amélioration du design de la liste
+* Plus aucun dossier associé au nom de fichier créé
+* Le dossier précédent peut être cliqué une fois par affichage (cela empêche d'accéder à un
+  affichage vide si vous cliquez trop rapidement)
+
 ### 3.3.0-beta-1
 
 Nouvelles fonctionnalités :

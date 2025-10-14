@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -47,7 +48,8 @@ fun FoldersPathRow(
 ) {
     val navController: NavController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
-    Row(modifier = modifier.padding(horizontal = 16.dp)) {
+    val rowPadding: Dp = 16.dp
+    Row(modifier = modifier.padding(start = rowPadding, top = rowPadding, end = rowPadding)) {
         for (folder: Folder in folders) {
             var onClick: (() -> Unit)? = null
             if (folder != endFolder) onClick = {

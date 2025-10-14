@@ -88,7 +88,8 @@ internal fun AlbumView(
         header = {
             Header(album = album)
         },
-        emptyViewText = stringResource(id = R.string.no_music)
+        emptyViewText = stringResource(id = R.string.no_music),
+        showGroupIndication = false
     )
 }
 

@@ -23,8 +23,13 @@
 
 package io.github.antoinepirlot.satunes.ui.components.bars.media
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -49,7 +54,14 @@ fun FoldersPathRow(
     val navController: NavController = LocalNavController.current
     val folders: Collection<Folder> = endFolder.getPathAsFolderList()
     val rowPadding: Dp = 16.dp
-    Row(modifier = modifier.padding(start = rowPadding, top = rowPadding, end = rowPadding)) {
+    val spacerSize: Dp = rowPadding
+    val scrollState: ScrollState = rememberScrollState()
+
+    Row(
+        modifier = modifier
+            .padding(top = rowPadding)
+            .horizontalScroll(state = scrollState)
+    ) {
         for (folder: Folder in folders) {
             var onClick: (() -> Unit)? = null
             if (folder != endFolder) onClick = {
@@ -60,7 +72,11 @@ fun FoldersPathRow(
                     target = folder,
                 )
             }
+            if (folder == folders.first())
+                Spacer(modifier = Modifier.size(size = spacerSize))
             FolderPathButton(folder = folder, onClick = onClick)
+            if (folder == folders.last())
+                Spacer(modifier = Modifier.size(size = spacerSize))
         }
     }
 }

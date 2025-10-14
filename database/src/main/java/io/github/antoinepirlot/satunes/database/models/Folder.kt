@@ -141,8 +141,8 @@ class Folder(
      * Get the list of parents in order from the top parent to this.
      * This list respect the order of the absolute path.
      */
-    fun getPathAsFolderList(): Collection<Folder> {
-        val folders: MutableCollection<Folder> = mutableListOf()
+    fun getPathAsFolderList(): List<Folder> {
+        val folders: MutableList<Folder> = mutableListOf()
         this.getPathAsFolderList(folders = folders)
         return folders
     }

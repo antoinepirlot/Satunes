@@ -23,14 +23,15 @@
 
 package io.github.antoinepirlot.satunes.ui.components.bars.media
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.ui.components.buttons.folders.FolderPathButton
+import io.github.antoinepirlot.satunes.utils.utils.lastIndex
 import kotlin.math.absoluteValue
 
 /**
@@ -52,17 +54,19 @@ fun FoldersPathRow(
     endFolder: Folder
 ) {
     val navController: NavController = LocalNavController.current
-    val folders: Collection<Folder> = endFolder.getPathAsFolderList()
+    val folders: List<Folder> = endFolder.getPathAsFolderList()
     val rowPadding: Dp = 16.dp
     val spacerSize: Dp = rowPadding
-    val scrollState: ScrollState = rememberScrollState()
+    val lazyListState: LazyListState = rememberLazyListState()
 
-    Row(
-        modifier = modifier
-            .padding(top = rowPadding)
-            .horizontalScroll(state = scrollState)
+    LazyRow(
+        modifier = modifier.padding(top = rowPadding),
+        state = lazyListState
     ) {
-        for (folder: Folder in folders) {
+        items(
+            items = folders,
+            key = { it.id },
+        ) { folder: Folder ->
             var onClick: (() -> Unit)? = null
             if (folder != endFolder) onClick = {
                 goBackTo(
@@ -78,6 +82,10 @@ fun FoldersPathRow(
             if (folder == folders.last())
                 Spacer(modifier = Modifier.size(size = spacerSize))
         }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        if (folders.isNotEmpty()) lazyListState.animateScrollToItem(index = folders.lastIndex)
     }
 }
 

@@ -1,1 +1,1 @@
-Satunes is a mp3 player compatible Android Auto.
+Satunes is a mp3 player Android Auto compatible.

@@ -23,13 +23,17 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.folders
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
@@ -44,18 +48,31 @@ fun FolderPathButton(
     folder: Folder,
     onClick: (() -> Unit)?
 ) {
-    val fontSize: TextUnit = 20.sp
     val padding: Dp = 5.dp
     val boxModifier: Modifier =
-        if (onClick != null) modifier.clickable(onClick = onClick)
-        else modifier
+        if (onClick != null)
+            Modifier
+                .clip(shape = CircleShape)
+                .clickable(onClick = onClick) //Do not use clip after clickable as it will be ignored
+        else
+            Modifier
 
-    Card(modifier = boxModifier) {
-        NormalText(
-            modifier = Modifier.padding(all = padding),
-            text = "/${folder.title}",
-            fontSize = fontSize,
-            maxLines = 2
-        )
+    Row(modifier = modifier) {
+        NormalText(modifier = Modifier.padding(vertical = padding), text = "/")
+        Box(
+            modifier = boxModifier
+                .background(
+                    color = MaterialTheme.colorScheme.inversePrimary,
+                    shape = CircleShape
+                )
+                .padding(all = padding)
+        ) {
+            NormalText(
+                text = folder.title,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp,
+                maxLines = 2
+            )
+        }
     }
 }

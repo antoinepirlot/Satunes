@@ -33,7 +33,7 @@ import java.util.SortedSet
 
 class Folder(
     title: String,
-    var parentFolder: Folder? = null,
+    val parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
 
     companion object {
@@ -41,11 +41,12 @@ class Folder(
     }
 
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
+    private val _depth: Int = if (this.parentFolder == null) 0 else this.parentFolder.getDepth() + 1
 
     val absolutePath: String = if (parentFolder == null) {
         "/$title"
     } else {
-        parentFolder!!.absolutePath + "/$title"
+        parentFolder.absolutePath + "/$title"
     }
 
     public override var addedDate: Date? = null
@@ -64,6 +65,8 @@ class Folder(
     }
 
     override fun isNotEmpty(): Boolean = !isEmpty()
+
+    fun getDepth(): Int = this._depth
 
     /**
      * Get the list of subfolder
@@ -132,6 +135,22 @@ class Folder(
         }
 
         return null
+    }
+
+    /**
+     * Get the list of parents in order from the top parent to this.
+     * This list respect the order of the absolute path.
+     */
+    fun getPathAsFolderList(): List<Folder> {
+        val folders: MutableList<Folder> = mutableListOf()
+        this.getPathAsFolderList(folders = folders)
+        return folders
+    }
+
+    private fun getPathAsFolderList(folders: MutableCollection<Folder>) {
+        if (this == this.getRoot()) return //It's the root folder and don't need to be added.
+        this.parentFolder!!.getPathAsFolderList(folders = folders) //Do not switch this line with the next one to preserve the order.
+        folders.add(element = this) //Do not switch this line with the previous one to preserve the order.
     }
 
     /**

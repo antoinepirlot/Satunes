@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.models.Destination
@@ -53,12 +53,12 @@ import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 @Composable
 internal fun AlbumOptionsDialog(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     album: Album,
     onDismissRequest: () -> Unit,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
     AlertDialog(
         modifier = modifier,
@@ -100,7 +100,7 @@ internal fun AlbumOptionsDialog(
                 /**
                  * Redirections
                  */
-                if (satunesUiState.currentDestination != Destination.ARTIST)
+                if (navigationUiState.currentDestination != Destination.ARTIST)
                     NavigateToMediaMusicOption(mediaImpl = album.artist)
             }
         }

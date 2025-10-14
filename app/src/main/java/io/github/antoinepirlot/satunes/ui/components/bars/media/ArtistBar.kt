@@ -48,10 +48,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.artist.ArtistOptionsDialog
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
@@ -63,6 +63,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 fun ArtistBar(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     artist: Artist,
     title: String = artist.title
 ) {
@@ -78,7 +79,7 @@ fun ArtistBar(
             .combinedClickable(
                 onClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    openMedia(
+                    navigationViewModel.openMedia(
                         playbackViewModel = playbackViewModel,
                         media = artist,
                         navController = navController

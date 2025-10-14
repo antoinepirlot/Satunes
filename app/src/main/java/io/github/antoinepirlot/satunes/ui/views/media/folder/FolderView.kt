@@ -32,7 +32,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
+import io.github.antoinepirlot.satunes.ui.components.bars.media.FoldersPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -61,7 +61,7 @@ internal fun FolderView(
 
     Column(modifier = modifier) {
         if (folder !== dataViewModel.getRootRootFolder())
-            FolderPath(folder)
+            FoldersPathRow(endFolder = folder)
         MediaListView(
             mediaImplCollection = subFolders,
             emptyViewText = stringResource(id = R.string.no_music)

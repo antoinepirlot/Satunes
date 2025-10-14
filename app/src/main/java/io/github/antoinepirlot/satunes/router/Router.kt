@@ -20,6 +20,10 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import androidx.activity.BackEventCompat
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,20 +43,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.listeners.OnBackPressedListener
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
-import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -64,11 +72,13 @@ internal fun Router(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     SatunesLogger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
@@ -76,9 +86,13 @@ internal fun Router(
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+        navigationViewModel.init(defaultDestination = defaultDestination!!)
     }
 
     if (defaultDestination == null) return
+
+    HandleBackButtonPressed()
+    HandleSwipeBack()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (
@@ -91,9 +105,13 @@ internal fun Router(
             if (satunesViewModel.defaultPlaylistId >= 0) {
                 val playlist: Playlist =
                     dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
-                backToRoot(rootRoute = defaultDestination!!, navController = navController)
-                navController.navigate(
-                    route = Destination.PLAYLISTS.link + "/${playlist.id}"
+                navigationViewModel.backToRoot(
+                    rootRoute = defaultDestination!!,
+                    navController = navController
+                )
+                navigationViewModel.navigate(
+                    navController = navController,
+                    mediaImpl = playlist
                 )
             }
         }
@@ -101,16 +119,6 @@ internal fun Router(
 
     // Start handle destination change
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember {
-        derivedStateOf {
-            currentBackStackEntry?.destination?.route ?: defaultDestination!!.link
-        }
-    }
-
-    LaunchedEffect(key1 = currentRoute) {
-        satunesViewModel.setCurrentDestination(destination = currentRoute)
-        satunesViewModel.clearCurrentMediaImpl()
-    }
 
     NavHost(
         modifier = modifier,
@@ -124,9 +132,10 @@ internal fun Router(
             dataViewModel = dataViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
@@ -134,9 +143,10 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
@@ -145,15 +155,42 @@ internal fun Router(
             playbackViewModel = playbackViewModel,
             onStart = {
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
             onStart = { /* Nothing */ }
+        )
+    }
+}
+
+@Composable
+private fun HandleSwipeBack(navigationViewModel: NavigationViewModel = viewModel()) {
+    val navController = LocalNavController.current
+
+    PredictiveBackHandler(onBack = { event: @JvmSuppressWildcards Flow<BackEventCompat> ->
+        event.collect()
+        navigationViewModel.popBackStack(navController = navController)
+    })
+}
+
+@Composable
+private fun HandleBackButtonPressed(navigationViewModel: NavigationViewModel = viewModel()) {
+    val navController = LocalNavController.current
+    val backPressedDispatcher: OnBackPressedDispatcher? =
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(key1 = Unit) {
+        backPressedDispatcher?.addCallback(
+            onBackPressedCallback = OnBackPressedListener(
+                navigationViewModel = navigationViewModel,
+                navController = navController
+            )
         )
     }
 }
@@ -170,12 +207,16 @@ internal fun Router(
  * @return true if it is allowed, false otherwise
  */
 private fun checkIfAllowed(
-    satunesUiState: SatunesUiState,
     isAudioAllowed: Boolean,
-    navController: NavHostController
+    navController: NavHostController,
+    navigationUiState: NavigationUiState,
+    navigationViewModel: NavigationViewModel
 ): Boolean {
-    if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
-        backToRoot(rootRoute = Destination.PERMISSIONS_SETTINGS, navController = navController)
+    if (!isAudioAllowed && navigationUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
+        navigationViewModel.backToRoot(
+            rootRoute = Destination.PERMISSIONS_SETTINGS,
+            navController = navController
+        )
         return false
     }
     return true

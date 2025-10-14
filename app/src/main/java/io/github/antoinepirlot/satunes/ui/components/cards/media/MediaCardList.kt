@@ -43,15 +43,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
 /**
@@ -61,22 +60,22 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDi
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
-    onMediaClick: ((MediaImpl) -> Unit)? = null
+    onMediaClick: ((MediaImpl) -> Unit)? = null,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
-    val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
+    val isInPlaybackView: Boolean = navigationViewModel.isInPlaybackView()
 
     LazyColumn(
         modifier = modifier,
@@ -104,16 +103,16 @@ internal fun MediaCardList(
                         onMediaClick.invoke(mediaImpl)
                     } else {
                         if (mediaImpl is Folder && mediaImpl.isBackFolder()) {
-                            navController.popBackStack()
+                            navigationViewModel.popBackStack(navController = navController)
                             return@MediaCard
                         }
                         if (mediaImpl is Music && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
-                                currentDestination = satunesUiState.currentDestination,
+                                currentDestination = navigationUiState.currentDestination,
                                 musicToPlay = mediaImpl
                             )
-                        openMedia(
+                        navigationViewModel.openMedia(
                             playbackViewModel = playbackViewModel,
                             media = mediaImpl,
                             navController = if (isInPlaybackView) null else navController

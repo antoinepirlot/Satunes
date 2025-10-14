@@ -35,15 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -58,11 +60,13 @@ internal fun MediaListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>,
     collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
     sort: Boolean = true,
+    showGroupIndication: Boolean = true,
     /**
      * Overrides the base onClick on media behavior
      */
@@ -70,6 +74,7 @@ internal fun MediaListView(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
     var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
     val sortOption: SortOptions = dataViewModel.sortOption
@@ -85,7 +90,7 @@ internal fun MediaListView(
     LaunchedEffect(key1 = sortOption, key2 = reverseOrder, key3 = collectionChanged) {
         if (sort && (sortOption != dataUiState.appliedSortOption || collectionChanged || reverseOrder != previousReverseOrder)) {
             dataViewModel.sort(
-                satunesUiState = satunesUiState,
+                navigationUiState = navigationUiState,
                 list = listToShow,
             )
             if (!collectionChanged)
@@ -111,7 +116,8 @@ internal fun MediaListView(
             mediaImplList = listToShow,
             lazyListState = lazyListState,
             header = header,
-            onMediaClick = onMediaClick
+            onMediaClick = onMediaClick,
+            showGroupIndication = showGroupIndication
         )
     } else {
         EmptyView(

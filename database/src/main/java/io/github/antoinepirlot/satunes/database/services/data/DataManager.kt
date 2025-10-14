@@ -24,13 +24,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataManager.ROOT_FOLDER_TITLE
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -39,16 +40,14 @@ import java.util.SortedSet
  */
 
 object DataManager {
-    private const val ROOT_FOLDER_TITLE: String = "root"
-    private const val BACK_FOLDER_TITLE: String = "../"
-
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicMapById: MutableMap<Long, Music> = mutableMapOf()
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
 
-    private var rootFolder: Folder = Folder(title = ROOT_FOLDER_TITLE)
-    private var backFolder: Folder = Folder(title = BACK_FOLDER_TITLE)
+    private var _rootFolder: RootFolder = RootFolder()
+    private val _backFolder: BackFolder
+        get() = BackFolder()
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
 
@@ -73,7 +72,7 @@ object DataManager {
             return musicMapById[id]!!
         } catch (_: NullPointerException) {
             //That means the music is not more present in the phone storage
-            //Happens when the database is loaded with old informations.
+            //Happens when the database is loaded with old information.
             throw MusicNotFoundException(id = id)
         }
     }
@@ -96,11 +95,11 @@ object DataManager {
     }
 
     /**
-     * Returns the very first folder in chain the folder with the [ROOT_FOLDER_TITLE].
+     * Returns the very first folder in chain.
      */
-    fun getRootRootFolder(): Folder = this.rootFolder
+    fun getRootFolder(): RootFolder = this._rootFolder
 
-    fun getBackFolder(): Folder = this.backFolder
+    fun getBackFolder(): BackFolder = this._backFolder
 
     fun getFolderSet(): Set<Folder> {
         return this.folderSortedSet
@@ -227,7 +226,7 @@ object DataManager {
         musicSortedSet.clear()
         musicMapById.clear()
         musicMapByAbsolutePath.clear()
-        this.rootFolder = Folder(title = ROOT_FOLDER_TITLE)
+        this._rootFolder = RootFolder()
         folderMapById.clear()
         folderSortedSet.clear()
         artistMapById.clear()

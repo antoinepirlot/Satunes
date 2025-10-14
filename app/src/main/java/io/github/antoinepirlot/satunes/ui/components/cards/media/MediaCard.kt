@@ -44,17 +44,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
@@ -70,16 +71,16 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
     val title: String =
-        if (mediaImpl is Folder && mediaImpl.isRoot()) {
+        if (mediaImpl is RootFolder) {
             getFirstFolderNameInChain(title = mediaImpl.title)
         } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
             stringResource(id = RDb.string.likes_playlist_title)
@@ -123,7 +124,7 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    if (satunesUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null) {
+                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null) {
                         NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
                     } else {
                         NormalText(text = title)

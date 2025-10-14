@@ -28,11 +28,11 @@ import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
@@ -397,7 +397,7 @@ object DataLoader {
     private fun loadFolder(context: Context, absolutePath: String): Folder {
         val splitPath: Collection<String> =
             this.getPathList(context = context, absolutePath = absolutePath)
-        val rootFolder: Folder = DataManager.getRootRootFolder()
+        val rootFolder: Folder = DataManager.getRootFolder()
         rootFolder.createSubFolders(splitPath)
         return rootFolder.getSubFolder(splitPath.toMutableList())!!
     }
@@ -410,15 +410,19 @@ object DataLoader {
         val splitList: List<String> = absolutePath.split("/")
         var canAddPath: Boolean = false
         var storageNameCanBeProcessed: Boolean = false
-        splitList.forEach { element: String ->
+        for (i: Int in 0..<splitList.lastIndex) { //Do not process the final file which is the music.
             val folderName: String =
                 if (storageNameCanBeProcessed) {
                     storageNameCanBeProcessed = false
-                    if (element == "0") context.getString(R.string.this_device)
-                    else element
-                } else element
+                    if (splitList[i] == "0") context.getString(R.string.this_device)
+                    else splitList[i]
+                } else splitList[i]
+
             if (canAddPath) splitPathToReturn.add(folderName)
-            else if (folderName == "emulated") {
+            else if (
+                folderName == "emulated"
+                || folderName == "storage" && splitList[i + 1] != "emulated" //isExternalStorage
+            ) {
                 canAddPath = true
                 storageNameCanBeProcessed = true
             }

@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 
 /**
  * @author Antoine Pirlot on 22/12/2024

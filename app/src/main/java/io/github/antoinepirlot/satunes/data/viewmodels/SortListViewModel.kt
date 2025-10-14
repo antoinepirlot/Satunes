@@ -24,7 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
@@ -36,11 +36,15 @@ class SortListViewModel : ViewModel() {
     /**
      * The current selected radio button.
      */
-    var selectedSortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+    var selectedSortOption: SortOptions by mutableStateOf(defaultSortingOption)
         private set
+
+    private var previousSelectedSortOption: SortOptions = this.selectedSortOption
 
     var reverseOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)
         private set
+
+    private var previousReverseOrder: Boolean = this.reverseOrder
 
     fun selectSortOption(sortRadioButton: SortOptions) {
         this.selectedSortOption = sortRadioButton
@@ -48,5 +52,20 @@ class SortListViewModel : ViewModel() {
 
     fun switchReverseOrder() {
         this.reverseOrder = !this.reverseOrder
+    }
+
+    fun apply(dataViewModel: DataViewModel) {
+        this.previousReverseOrder = this.reverseOrder
+        this.previousSelectedSortOption = this.selectedSortOption
+        dataViewModel.setReverseOrder(reverseOrder = this.reverseOrder)
+        dataViewModel.setSorting(sortOption = this.selectedSortOption)
+    }
+
+    /**
+     * Reset form value to the state before opening dialog.
+     */
+    fun reset() {
+        this.reverseOrder = this.previousReverseOrder
+        this.selectedSortOption = this.previousSelectedSortOption
     }
 }

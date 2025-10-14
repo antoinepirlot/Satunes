@@ -30,13 +30,13 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SKIP_TO_PREVI
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.CoroutineScope
@@ -93,10 +93,6 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
             context = SatunesCarMusicService.instance.applicationContext,
             musicToPlay = musicToPlay
         )
-    }
-
-    override fun onPlayFromSearch(query: String?, extras: Bundle?) {
-        super.onPlayFromSearch(query, extras)
     }
 
     override fun onSkipToNext() {

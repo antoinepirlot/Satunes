@@ -18,23 +18,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.bars
+package io.github.antoinepirlot.satunes.database.models.media
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.sp
-import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
-
-@Composable
-internal fun FolderPath(folder: Folder) {
-    val allPath: MutableList<String> = folder.absolutePath.split("/").toMutableList()
-    allPath.removeAt(index = 0)
-    allPath.removeAt(index = 0) // remove "root" folder
-    allPath[0] = getFirstFolderNameInChain(title = allPath[0])
-    var path = ""
-    for (s: String in allPath) {
-        path += "/$s"
-    }
-    Title(text = path, fontSize = 20.sp, maxLines = 2)
+/**
+ * @author Antoine Pirlot on 11/07/2024
+ */
+internal interface Media {
+    val id: Long
+    var title: String
 }

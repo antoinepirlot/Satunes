@@ -31,8 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
@@ -52,27 +53,30 @@ internal fun SortListDialog(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     sortListViewModel: SortListViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
     Dialog(
         modifier = modifier,
         icon = SatunesIcons.SORT,
         title = stringResource(R.string.sort_list_title),
-        onDismissRequest = { satunesViewModel.hideSortDialog() },
+        onDismissRequest = {
+            satunesViewModel.hideSortDialog()
+            sortListViewModel.reset()
+        },
         onConfirmRequest = {
             satunesViewModel.hideSortDialog()
-            dataViewModel.setReverseOrder(reverseOrder = sortListViewModel.reverseOrder)
-            dataViewModel.setSorting(sortOption = sortListViewModel.selectedSortOption)
+            sortListViewModel.apply(dataViewModel = dataViewModel)
         },
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
     ) {
         Column(modifier = Modifier.selectableGroup()) {
             val sortOptions: List<SortOptions> =
-                getSortOptions(destination = satunesUiState.currentDestination)
+                getSortOptions(destination = navigationUiState.currentDestination)
             if (sortOptions.isEmpty()) {
-                val message = "Can't sort in ${satunesUiState.currentDestination.link}"
+                val message = "Can't sort in ${navigationUiState.currentDestination.link}"
                 SatunesLogger.getLogger()?.severe(message)
                 throw UnsupportedOperationException(message)
             }

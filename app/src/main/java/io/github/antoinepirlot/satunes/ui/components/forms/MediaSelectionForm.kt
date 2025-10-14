@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.Destination
 
 /**
@@ -49,11 +49,11 @@ import io.github.antoinepirlot.satunes.models.Destination
 @Composable
 internal fun MediaSelectionForm(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImplCollection: Collection<MediaImpl>
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyState = rememberLazyListState()
     val mediaList: List<MediaImpl> =
         try {
@@ -65,7 +65,7 @@ internal fun MediaSelectionForm(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (satunesUiState.currentDestination != Destination.PLAYLISTS)
+        if (navigationUiState.currentDestination != Destination.PLAYLISTS)
             TextButton(
                 modifier = modifier,
                 onClick = { mediaSelectionViewModel.setShowPlaylistCreation(value = true) }) {

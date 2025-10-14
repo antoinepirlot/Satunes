@@ -40,7 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar

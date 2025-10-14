@@ -30,9 +30,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.ui.components.bars.FolderPath
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
+import io.github.antoinepirlot.satunes.ui.components.bars.media.FoldersPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -49,8 +50,8 @@ internal fun FolderView(
     folder: Folder,
 ) {
     val subFolders: MutableList<MediaImpl> = mutableListOf()
-    if (folder !== dataViewModel.getRootRootFolder()) subFolders.add(dataViewModel.getBackFolder())
-    subFolders.addAll(folder.getSubFolderListWithMusics())
+    if (folder !is RootFolder) subFolders.add(dataViewModel.getBackFolder())
+    subFolders.addAll(elements = folder.getSubFolderListWithMusics())
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (folder.isNotEmpty())
@@ -60,8 +61,8 @@ internal fun FolderView(
     }
 
     Column(modifier = modifier) {
-        if (folder !== dataViewModel.getRootRootFolder())
-            FolderPath(folder)
+        if (folder !== dataViewModel.getRootFolder())
+            FoldersPathRow(endFolder = folder)
         MediaListView(
             mediaImplCollection = subFolders,
             emptyViewText = stringResource(id = R.string.no_music)

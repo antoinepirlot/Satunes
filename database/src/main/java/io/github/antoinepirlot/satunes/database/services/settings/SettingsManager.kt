@@ -79,9 +79,9 @@ object SettingsManager {
         get() = PlaybackSettings.pauseIfAnotherPlayback
     val audioOffloadChecked: Boolean
         get() = PlaybackSettings.audioOffloadChecked
-    val forwardMs: Long
+    val forwardMs: MutableLongState
         get() = PlaybackSettings.forwardMs
-    val rewindMs: Long
+    val rewindMs: MutableLongState
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 

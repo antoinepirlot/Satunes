@@ -239,7 +239,7 @@ class PlaybackViewModel : ViewModel() {
     fun getNextMusic(): Music? {
         return try {
             PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Can't get the next music in queue")
             null
         }
@@ -527,7 +527,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

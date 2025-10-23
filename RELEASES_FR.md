@@ -4,6 +4,16 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.0-preview-1
+
+Améliorations, optimisations et corrections de bugs :
+
+* Cliquer sur le bouton « chemin » permet désormais d'avancer au lieu de revenir en arrière
+* Correction des modifications apportées à l'avance et aux recul, elles prennent directement effet
+* Correction du crash lors de la rotation de l'écran
+* Correction de la mise en surbrillance incorrecte de la barre de navigation dans certaines vues
+* Corrections éventuelles d'autres bugs inconnus
+
 ### 3.3.0-beta-2
 
 Nouvelles fonctionnalités :

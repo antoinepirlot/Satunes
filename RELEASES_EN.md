@@ -4,6 +4,16 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.0-preview-1
+
+Improvements, optimisations and bug fixes:
+
+* Click on path button will now go ahead instead of going back
+* Fix forward and reward modification takes directly effect
+* Fix crash when rotating screen
+* Fix wrong bottom bar highlight in certain views
+* Maybe some other unknown bugs fixed
+
 ### 3.3.0-beta-2
 
 New features:

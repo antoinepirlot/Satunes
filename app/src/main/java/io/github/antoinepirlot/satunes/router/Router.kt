@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -80,11 +79,10 @@ internal fun Router(
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
-    var isInitialisation: Boolean by rememberSaveable { mutableStateOf(true) }
+
     LaunchedEffect(key1 = Unit) {
         defaultDestination =
             getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
-        navigationViewModel.init(defaultDestination = defaultDestination!!)
     }
 
     if (defaultDestination == null) return
@@ -93,24 +91,22 @@ internal fun Router(
     HandleSwipeBack()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (
-            defaultDestination == Destination.PLAYLISTS &&
-            dataViewModel.isLoaded &&
-            isInitialisation
-        ) {
-            isInitialisation = false
-            checkDefaultPlaylistSetting(context = context)
-            if (satunesViewModel.defaultPlaylistId >= 0) {
-                val playlist: Playlist =
-                    dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
-                navigationViewModel.backToRoot(
-                    rootRoute = defaultDestination!!,
-                    navController = navController
-                )
-                navigationViewModel.navigate(
-                    navController = navController,
-                    mediaImpl = playlist
-                )
+        if(!navigationViewModel.isInitialised) {
+            navigationViewModel.init(defaultDestination = defaultDestination!!)
+            if (defaultDestination == Destination.PLAYLISTS && dataViewModel.isLoaded) {
+                checkDefaultPlaylistSetting(context = context)
+                if (satunesViewModel.defaultPlaylistId >= 0) {
+                    val playlist: Playlist =
+                        dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
+                    navigationViewModel.backToRoot(
+                        rootRoute = defaultDestination!!,
+                        navController = navController
+                    )
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        mediaImpl = playlist
+                    )
+                }
             }
         }
     }

@@ -23,6 +23,10 @@
 
 package io.github.antoinepirlot.satunes.data.viewmodels
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
@@ -56,9 +60,10 @@ class NavigationViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<NavigationUiState> =
             MutableStateFlow(NavigationUiState())
 
-        private var _initialised: Boolean = false
         private val routesStack: Deque<Pair<Destination, MediaImpl?>> =
             ArrayDeque() //TODO change structure as it add at first place
+
+        private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
             routesStack.push(Pair(first = destination, second = mediaImpl))
@@ -101,17 +106,19 @@ class NavigationViewModel : ViewModel() {
     }
 
     val uiState: StateFlow<NavigationUiState> = _uiState.asStateFlow()
+    var isInitialised: Boolean by _isInitialised
+        private set
 
     fun stackSize(): Int = routesStack.size
 
     fun init(defaultDestination: Destination) {
-        if (_initialised)
+        if (isInitialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
         if (defaultDestination == Destination.FOLDERS)
             push(destination = defaultDestination, mediaImpl = DataManager.getRootFolder())
         else
             push(destination = defaultDestination, mediaImpl = null)
-        _initialised = true
+        isInitialised = true
     }
 
     fun navigate(

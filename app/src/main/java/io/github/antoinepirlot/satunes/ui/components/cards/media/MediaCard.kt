@@ -124,17 +124,16 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null) {
+                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null)
                         NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
-                    } else {
+                    else
                         NormalText(text = title)
-                    }
+
                     //Use these as for the same thing the builder doesn't like in one
-                    if (mediaImpl is Album) {
+                    if (mediaImpl is Album)
                         Subtitle(text = mediaImpl.artist.title)
-                    } else if (mediaImpl is Music) {
+                    else if (mediaImpl is Music)
                         Subtitle(text = mediaImpl.album.title + " - " + mediaImpl.artist.title)
-                    }
                 }
             },
             trailingContent = {

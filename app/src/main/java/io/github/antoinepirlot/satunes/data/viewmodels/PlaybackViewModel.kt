@@ -107,6 +107,9 @@ class PlaybackViewModel : ViewModel() {
     private var _currentPositionProgression: MutableFloatState =
         PlaybackManager.currentPositionProgression
     private var _repeatMode: MutableIntState = PlaybackManager.repeatMode
+
+    private val _forwardMs: MutableState<Long> = SettingsManager.forwardMs
+    private val _rewindMs: MutableState<Long> = SettingsManager.rewindMs
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
@@ -122,8 +125,11 @@ class PlaybackViewModel : ViewModel() {
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
     val isInitialized: Boolean by _isInitialed
-    val forwardMs: Long = SettingsManager.forwardMs
-    val rewindMs: Long = SettingsManager.rewindMs
+
+    val forwardMs: Long by this._forwardMs
+
+    val rewindMs: Long by this._rewindMs
+
     val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder
 
     init {
@@ -498,7 +504,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

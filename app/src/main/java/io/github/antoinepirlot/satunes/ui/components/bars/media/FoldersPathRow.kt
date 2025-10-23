@@ -66,20 +66,18 @@ fun FoldersPathRow(
         items(
             items = folders,
             key = { it.id },
-        ) { folder: Folder ->
+        ) { targetFolder: Folder ->
             var onClick: (() -> Unit)? = null
-            if (folder != endFolder) onClick = {
-                goBackTo(
-                    navigationViewModel = navigationViewModel,
+            if (targetFolder != endFolder) onClick = {
+                navigationViewModel.navigate(
                     navController = navController,
-                    currentFolder = endFolder,
-                    target = folder,
+                    mediaImpl = targetFolder
                 )
             }
-            if (folder == folders.first())
+            if (targetFolder == folders.first())
                 Spacer(modifier = Modifier.size(size = spacerSize))
-            FolderPathButton(folder = folder, onClick = onClick)
-            if (folder == folders.last())
+            FolderPathButton(folder = targetFolder, onClick = onClick)
+            if (targetFolder == folders.last())
                 Spacer(modifier = Modifier.size(size = spacerSize))
         }
     }

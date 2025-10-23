@@ -85,9 +85,7 @@ internal fun AlbumView(
         modifier = modifier,
         mediaImplCollection = musicSet,
         collectionChanged = setChanged,
-        header = {
-            Header(album = album)
-        },
+        header = { Header(album = album) },
         emptyViewText = stringResource(id = R.string.no_music),
         showGroupIndication = false
     )

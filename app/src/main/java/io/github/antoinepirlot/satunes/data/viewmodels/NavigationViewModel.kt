@@ -171,6 +171,7 @@ class NavigationViewModel : ViewModel() {
 
     /**
      * Return the destination of mediaImpl (folder, artists or music).
+     * If [mediaImpl] is null returns [Destination.PLAYBACK]
      *
      * @param mediaImpl the mediaImpl to get the destination
      *
@@ -178,17 +179,17 @@ class NavigationViewModel : ViewModel() {
      */
     private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
         return when (mediaImpl) {
-            is Folder -> Destination.FOLDERS
-            is Artist -> Destination.ARTISTS
-            is Album -> Destination.ALBUMS
-            is Genre -> Destination.GENRES
-            is Playlist -> Destination.PLAYLISTS
+            is Folder -> Destination.FOLDER
+            is Artist -> Destination.ARTIST
+            is Album -> Destination.ALBUM
+            is Genre -> Destination.GENRE
+            is Playlist -> Destination.PLAYLIST
             else -> Destination.PLAYBACK
         }
     }
 
     private fun getRoute(destination: Destination, mediaImpl: MediaImpl): String {
-        return "${destination.link}/${mediaImpl.id}"
+        return "${destination.link.removeSuffix("/{id}")}/${mediaImpl.id}"
     }
 
     /**

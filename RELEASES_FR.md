@@ -4,6 +4,15 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.0-preview-2
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction des boutons des vues multimédia qui s'affichent là où ils ne devaient pas
+* Affichage de « Stockage externe : [nom du stockage] » dans la vue des dossiers pour les stockages
+  tels que les cartes SD
+* Correction du retour à la vue par défaut lors de la rotation ou du changement de mode clair/foncé
+
 ### 3.3.0-preview-1
 
 Améliorations, optimisations et corrections de bugs :

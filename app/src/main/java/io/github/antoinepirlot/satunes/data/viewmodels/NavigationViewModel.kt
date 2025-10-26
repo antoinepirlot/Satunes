@@ -171,6 +171,7 @@ class NavigationViewModel : ViewModel() {
     ) {
         while (this.popBackStack(navController = navController) != null);
         navController.popBackStack()
+        pop()
         this.navigate(navController = navController, destination = rootRoute)
     }
 

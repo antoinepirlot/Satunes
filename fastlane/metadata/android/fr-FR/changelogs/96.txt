@@ -1,0 +1,5 @@
+Améliorations, optimisations et corrections de bugs :
+
+* Correction des boutons des vues multimédia qui s'affichent là où ils ne devaient pas
+* Affichage de « Stockage externe : [nom du stockage] » dans la vue des dossiers pour les stockages tels que les cartes SD
+* Correction du retour à la vue par défaut lors de la rotation ou du changement de mode clair/foncé

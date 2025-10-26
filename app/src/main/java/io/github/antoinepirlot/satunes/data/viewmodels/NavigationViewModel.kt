@@ -60,21 +60,27 @@ class NavigationViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<NavigationUiState> =
             MutableStateFlow(NavigationUiState())
 
-        private val routesStack: Deque<Pair<Destination, MediaImpl?>> =
+        private val _routesStack: Deque<Pair<Destination, MediaImpl?>> =
             ArrayDeque() //TODO change structure as it add at first place
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
+        fun reset() {
+            _isInitialised.value = false
+            _routesStack.clear()
+            OnDestinationChangedListener.resetDepth()
+            updateUiState()
+        }
+
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
-            routesStack.push(Pair(first = destination, second = mediaImpl))
+            _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
             OnDestinationChangedListener.incrementDepth()
         }
 
         private fun pop(): Pair<Destination, MediaImpl?>? {
-            if (this.routesStack.isEmpty()) return null //To avoid crashing app if leaving with back gesture
             OnDestinationChangedListener.decrementDepth()
-            val popped: Pair<Destination, MediaImpl?> = routesStack.pop()
+            val popped: Pair<Destination, MediaImpl?> = _routesStack.pop()
             updateUiState()
             return popped
         }
@@ -89,19 +95,19 @@ class NavigationViewModel : ViewModel() {
         }
 
         private fun contains(destination: Destination, mediaImpl: MediaImpl?): Boolean {
-            for (pair: Pair<Destination, MediaImpl?> in this.routesStack)
+            for (pair: Pair<Destination, MediaImpl?> in this._routesStack)
                 if (pair.first == destination && pair.second == mediaImpl)
                     return true
             return false
         }
 
         private fun getCurrentDestination(): Destination {
-            return this.routesStack.peekFirst()?.first
+            return this._routesStack.peekFirst()?.first
                 ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
         }
 
         private fun getCurrentMediaImpl(): MediaImpl? {
-            return this.routesStack.peekFirst()?.second
+            return this._routesStack.peekFirst()?.second
         }
     }
 
@@ -109,7 +115,9 @@ class NavigationViewModel : ViewModel() {
     var isInitialised: Boolean by _isInitialised
         private set
 
-    fun stackSize(): Int = routesStack.size
+    fun stackSize(): Int = _routesStack.size
+
+    fun isRoot(): Boolean = stackSize() == 1
 
     fun init(defaultDestination: Destination) {
         if (isInitialised)
@@ -142,6 +150,7 @@ class NavigationViewModel : ViewModel() {
     }
 
     fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?>? {
+        if(this.isRoot()) return null
         navController.popBackStack()
         return pop()
     }
@@ -160,12 +169,8 @@ class NavigationViewModel : ViewModel() {
         rootRoute: Destination,
         navController: NavController
     ) {
-        var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-        if (currentRoute == rootRoute.link) return
-        while (currentRoute != null) {
-            this.popBackStack(navController = navController)
-            currentRoute = navController.currentBackStackEntry?.destination?.route
-        }
+        while (this.popBackStack(navController = navController) != null);
+        navController.popBackStack()
         this.navigate(navController = navController, destination = rootRoute)
     }
 

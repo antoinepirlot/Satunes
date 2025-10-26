@@ -88,7 +88,6 @@ internal fun Router(
     if (defaultDestination == null) return
 
     HandleBackButtonPressed()
-    HandleSwipeBack()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if(!navigationViewModel.isInitialised) {
@@ -160,16 +159,6 @@ internal fun Router(
             onStart = { /* Nothing */ }
         )
     }
-}
-
-@Composable
-private fun HandleSwipeBack(navigationViewModel: NavigationViewModel = viewModel()) {
-    val navController = LocalNavController.current
-
-    PredictiveBackHandler(onBack = { event: @JvmSuppressWildcards Flow<BackEventCompat> ->
-        event.collect()
-        navigationViewModel.popBackStack(navController = navController)
-    })
 }
 
 @Composable

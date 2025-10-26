@@ -60,10 +60,11 @@ class OnDestinationChangedListener(
     ) {
         if (navigationViewModel.stackSize() != _depth)
             throw IllegalStateException("You didn't push the destination on stack. Be sure to use NavigationViewModel to navigate.")
-        if (controller.previousBackStackEntry != null && destination == controller.previousBackStackEntry!!.destination) {
-            if (Destination.getDestination(destination = destination.route!!) != Destination.FOLDER) {
-                navigationViewModel.popBackStack(navController = controller)
-            }
+        if (
+            destination == controller.previousBackStackEntry?.destination
+            && Destination.getDestination(destination = destination.route!!) != Destination.FOLDER
+        ) {
+            navigationViewModel.popBackStack(navController = controller)
         }
     }
 }

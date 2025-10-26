@@ -1,0 +1,5 @@
+Improvements, optimisations and bug fixes:
+
+* Fix buttons from media list showing where it should not
+* Show "External Storage: [storage name]" in folder view for storage like sd cards
+* Fix going back to the default view when rotating or changing light/dark mode

@@ -4,6 +4,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.0-preview-2
+
+Improvements, optimisations and bug fixes:
+
+* Fix buttons from media list showing where it should not
+* Show "External Storage: [storage name]" in folder view for storage like sd cards
+* Fix going back to the default view when rotating or changing light/dark mode
+
 ### 3.3.0-preview-1
 
 Improvements, optimisations and bug fixes:

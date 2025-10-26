@@ -297,7 +297,6 @@ internal class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         WidgetPlaybackManager.refreshWidgets()
-        NavigationViewModel.reset()
     }
 
     fun musicHandled() {

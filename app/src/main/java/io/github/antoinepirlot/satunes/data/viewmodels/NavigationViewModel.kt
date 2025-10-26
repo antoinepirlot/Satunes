@@ -65,13 +65,6 @@ class NavigationViewModel : ViewModel() {
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
-        fun reset() {
-            _isInitialised.value = false
-            _routesStack.clear()
-            OnDestinationChangedListener.resetDepth()
-            updateUiState()
-        }
-
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
             _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
@@ -127,6 +120,13 @@ class NavigationViewModel : ViewModel() {
         else
             push(destination = defaultDestination, mediaImpl = null)
         isInitialised = true
+    }
+
+    fun reset() {
+        this.isInitialised = false
+        _routesStack.clear()
+        OnDestinationChangedListener.resetDepth()
+        updateUiState()
     }
 
     fun navigate(

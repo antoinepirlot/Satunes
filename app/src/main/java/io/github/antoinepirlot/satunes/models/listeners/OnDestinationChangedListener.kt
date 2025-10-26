@@ -47,6 +47,10 @@ class OnDestinationChangedListener(
             //Depth < 0 means leaving app
             this._depth--
         }
+
+        fun resetDepth() {
+            this._depth = 0
+        }
     }
 
     override fun onDestinationChanged(

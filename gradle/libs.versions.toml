@@ -5,7 +5,7 @@ android-compileSdk = "36"
 android-minSdk = "22"
 #noinspection OldTargetApi
 android-targetSdk = "35"
-composeBom = "2025.01.01" #Need kotlin upgrade
+composeBom = "2025.01.01" #Needs kotlin upgrade
 composeUiVersion = "1.9.3"
 core = "1.7.0"
 coreKtx = "1.17.0"
@@ -28,8 +28,8 @@ mockitoKotlin = "6.1.0"
 mockk = "1.14.6"
 mp3agic = "0.9.1"
 navVersion = "2.9.5"
-okhttp = "4.12.0" # Update cause error
-roomVersion = "2.6.1" #Need kotlin upgrade
+okhttp = "4.12.0" # Update causes error
+roomVersion = "2.6.1" #Needs kotlin upgrade
 widgetVersion = "1.1.1"
 
 [libraries]

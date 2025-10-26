@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
@@ -296,6 +297,7 @@ internal class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         WidgetPlaybackManager.refreshWidgets()
+        NavigationViewModel.reset()
     }
 
     fun musicHandled() {

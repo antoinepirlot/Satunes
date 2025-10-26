@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.models.listeners
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.savedstate.SavedState
+import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 
@@ -60,11 +61,5 @@ class OnDestinationChangedListener(
     ) {
         if (navigationViewModel.stackSize() != _depth)
             throw IllegalStateException("You didn't push the destination on stack. Be sure to use NavigationViewModel to navigate.")
-        if (
-            destination == controller.previousBackStackEntry?.destination
-            && Destination.getDestination(destination = destination.route!!) != Destination.FOLDER
-        ) {
-            navigationViewModel.popBackStack(navController = controller)
-        }
     }
 }

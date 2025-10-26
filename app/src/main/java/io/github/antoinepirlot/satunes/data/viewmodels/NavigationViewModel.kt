@@ -79,7 +79,6 @@ class NavigationViewModel : ViewModel() {
         }
 
         private fun pop(): Pair<Destination, MediaImpl?>? {
-            if (this._routesStack.isEmpty()) return null //To avoid crashing app if leaving with back gesture
             OnDestinationChangedListener.decrementDepth()
             val popped: Pair<Destination, MediaImpl?> = _routesStack.pop()
             updateUiState()
@@ -118,6 +117,8 @@ class NavigationViewModel : ViewModel() {
 
     fun stackSize(): Int = _routesStack.size
 
+    fun isRoot(): Boolean = stackSize() == 1
+
     fun init(defaultDestination: Destination) {
         if (isInitialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
@@ -149,6 +150,7 @@ class NavigationViewModel : ViewModel() {
     }
 
     fun popBackStack(navController: NavController): Pair<Destination, MediaImpl?>? {
+        if(this.isRoot()) return null
         navController.popBackStack()
         return pop()
     }
@@ -167,12 +169,8 @@ class NavigationViewModel : ViewModel() {
         rootRoute: Destination,
         navController: NavController
     ) {
-        var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-        if (currentRoute == rootRoute.link) return
-        while (currentRoute != null) {
-            this.popBackStack(navController = navController)
-            currentRoute = navController.currentBackStackEntry?.destination?.route
-        }
+        while (this.popBackStack(navController = navController) != null);
+        navController.popBackStack()
         this.navigate(navController = navController, destination = rootRoute)
     }
 

@@ -21,7 +21,8 @@
 package io.github.antoinepirlot.satunes.utils
 
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.R as RDb
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
@@ -35,7 +36,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
     return when (mediaImpl) {
         is Playlist -> {
             if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-                MainActivity.instance.getString(R.string.likes_playlist_title)
+                MainActivity.instance.getString(RDb.string.likes_playlist_title)
             } else {
                 mediaImpl.title
             }
@@ -43,7 +44,9 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
 
         is Folder -> {
             if (mediaImpl.title == "0") {
-                MainActivity.instance.getString(R.string.this_device)
+                MainActivity.instance.getString(RDb.string.this_device)
+            } else if(mediaImpl.parentFolder!!.isRoot()) {
+                MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
             } else {
                 mediaImpl.title
             }
@@ -58,8 +61,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
  */
 fun getTheFirstVisibleFolder(folder: Folder): Folder {
     val subFolders: Collection<Folder> = folder.getSubFolderSet()
-    if (subFolders.size == 1 && folder.getMusicSet().isEmpty()) return getTheFirstVisibleFolder(
-        subFolders.first()
-    )
+    if (subFolders.size == 1 && folder.getMusicSet().isEmpty())
+        return getTheFirstVisibleFolder(subFolders.first())
     return folder
 }

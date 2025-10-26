@@ -6,7 +6,7 @@ android-minSdk = "22"
 #noinspection OldTargetApi
 android-targetSdk = "35"
 composeBom = "2025.01.01" #Needs kotlin upgrade
-composeUiVersion = "1.9.3"
+composeUiVersion = "1.9.4"
 core = "1.7.0"
 coreKtx = "1.17.0"
 dataStoreVersion = "1.1.7"

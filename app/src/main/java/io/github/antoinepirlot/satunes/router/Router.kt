@@ -20,10 +20,8 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
-import androidx.activity.BackEventCompat
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -56,8 +54,6 @@ import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -80,15 +76,16 @@ internal fun Router(
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
 
-    LaunchedEffect(key1 = Unit) {
-        defaultDestination =
-            getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+    if (defaultDestination == null) {
+        LaunchedEffect(key1 = Unit) {
+            defaultDestination =
+                getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+            navigationViewModel.reset()
+        }
+        return
     }
 
-    if (defaultDestination == null) return
-
     HandleBackButtonPressed()
-    HandleSwipeBack()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if(!navigationViewModel.isInitialised) {
@@ -160,16 +157,6 @@ internal fun Router(
             onStart = { /* Nothing */ }
         )
     }
-}
-
-@Composable
-private fun HandleSwipeBack(navigationViewModel: NavigationViewModel = viewModel()) {
-    val navController = LocalNavController.current
-
-    PredictiveBackHandler(onBack = { event: @JvmSuppressWildcards Flow<BackEventCompat> ->
-        event.collect()
-        navigationViewModel.popBackStack(navController = navController)
-    })
 }
 
 @Composable

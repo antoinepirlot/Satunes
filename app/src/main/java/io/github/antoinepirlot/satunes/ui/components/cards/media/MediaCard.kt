@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,21 +46,17 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
-import io.github.antoinepirlot.satunes.ui.utils.getFirstFolderNameInChain
-import io.github.antoinepirlot.satunes.database.R as RDb
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -79,14 +74,7 @@ internal fun MediaCard(
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
-    val title: String =
-        if (mediaImpl is RootFolder) {
-            getFirstFolderNameInChain(title = mediaImpl.title)
-        } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-            stringResource(id = RDb.string.likes_playlist_title)
-        } else {
-            mediaImpl.title
-        }
+    val title: String = getMediaTitle(mediaImpl = mediaImpl)
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val boxModifier: Modifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(

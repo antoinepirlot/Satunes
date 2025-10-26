@@ -98,16 +98,3 @@ fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
         else -> MUSIC // In that case, mediaImpl is Music
     }
 }
-
-/**
- * Returns External Storage: [title] or just title if it is not an external storage
- *
- * @param title the folder's title
- */
-@Composable
-fun getFirstFolderNameInChain(title: String): String {
-    return when (title) {
-        stringResource(id = RDb.string.this_device) -> title
-        else -> "${stringResource(id = R.string.external_storage)}: $title"
-    }
-}

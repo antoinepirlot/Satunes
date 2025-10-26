@@ -41,6 +41,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
 /**
  * @author Antoine Pirlot 12/10/2025
@@ -75,7 +76,7 @@ fun FolderPathButton(
                 .padding(all = padding)
         ) {
             NormalText(
-                text = folder.title,
+                text = getMediaTitle(mediaImpl = folder),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = fontSize,
                 maxLines = 2

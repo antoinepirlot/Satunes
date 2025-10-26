@@ -75,6 +75,8 @@ open class Folder(
      */
     fun getSubFolderSet(): Set<Folder> = this.subFolderSortedSet
 
+    open fun isRoot(): Boolean = false
+
     /**
      * Create a list containing sub folders then this folder musics.
      * This list starts with all sub folders sorted by title, then this folder's musics sorted by title.

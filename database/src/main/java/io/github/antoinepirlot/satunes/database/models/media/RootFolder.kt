@@ -30,4 +30,6 @@ class RootFolder : Folder(title = ROOT_FOLDER_TITLE) {
     companion object {
         private const val ROOT_FOLDER_TITLE: String = "root"
     }
+
+    override fun isRoot(): Boolean = true
 }

@@ -80,12 +80,14 @@ internal fun Router(
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
 
-    LaunchedEffect(key1 = Unit) {
-        defaultDestination =
-            getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+    if (defaultDestination == null) {
+        LaunchedEffect(key1 = Unit) {
+            defaultDestination =
+                getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+            navigationViewModel.reset()
+        }
+        return
     }
-
-    if (defaultDestination == null) return
 
     HandleBackButtonPressed()
 

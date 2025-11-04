@@ -63,19 +63,27 @@ class NavigationViewModel : ViewModel() {
         private val _routesStack: Deque<Pair<Destination, MediaImpl?>> =
             ArrayDeque() //TODO change structure as it add at first place
 
+        private var _currentRoute: Destination =
+            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value) //TODO used instead of deque while no fix found for back gesture issues.
+
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
         private fun push(destination: Destination, mediaImpl: MediaImpl?) {
+            /*
             _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
             OnDestinationChangedListener.incrementDepth()
+            */
+            this._currentRoute = destination
+            this.updateUiState()
         }
 
         private fun pop(): Pair<Destination, MediaImpl?>? {
-            OnDestinationChangedListener.decrementDepth()
-            val popped: Pair<Destination, MediaImpl?> = _routesStack.pop()
-            updateUiState()
-            return popped
+//            OnDestinationChangedListener.decrementDepth()
+//            val popped: Pair<Destination, MediaImpl?> = _routesStack.pop()
+//            updateUiState()
+//            return popped
+            return null
         }
 
         private fun updateUiState() {
@@ -95,8 +103,9 @@ class NavigationViewModel : ViewModel() {
         }
 
         private fun getCurrentDestination(): Destination {
-            return this._routesStack.peekFirst()?.first
-                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
+//            return this._routesStack.peekFirst()?.first
+//                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
+            return this._currentRoute
         }
 
         private fun getCurrentMediaImpl(): MediaImpl? {
@@ -239,5 +248,10 @@ class NavigationViewModel : ViewModel() {
 
     fun isInPlaybackView(): Boolean {
         return getCurrentDestination().category == DestinationCategory.PLAYBACK
+    }
+
+    fun setCurrentDestination(destination: String) {
+        _currentRoute = Destination.getDestination(destination = destination)
+        updateUiState()
     }
 }

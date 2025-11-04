@@ -20,19 +20,21 @@
 
 package io.github.antoinepirlot.satunes.utils
 
+import android.content.Context
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.R as RDb
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 11/08/2024
  */
 
 fun getMediaTitle(mediaImpl: MediaImpl): String {
+    val context: Context = MainActivity.instance.applicationContext
     return when (mediaImpl) {
         is Playlist -> {
             if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
@@ -43,13 +45,9 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
         }
 
         is Folder -> {
-            if (mediaImpl.title == "0") {
-                MainActivity.instance.getString(RDb.string.this_device)
-            } else if(mediaImpl.parentFolder != null && mediaImpl.parentFolder!!.isRoot()) {
+            if (mediaImpl.title != context.getString(RDb.string.this_device))
                 MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
-            } else {
-                mediaImpl.title
-            }
+            else mediaImpl.title
         }
 
         else -> mediaImpl.title

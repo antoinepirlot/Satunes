@@ -27,8 +27,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavController
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot 14/10/2025
@@ -38,6 +36,7 @@ class OnBackPressedListener(
     private val navController: NavController
 ) : OnBackPressedCallback(enabled = true) {
     override fun handleOnBackPressed() {
+        //TODO issues when going home screen then back to app and back button pressed
         if(navigationViewModel.popBackStack(navController = navController) == null)
             MainActivity.instance.finish()
     }

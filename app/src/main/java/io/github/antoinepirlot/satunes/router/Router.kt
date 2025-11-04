@@ -85,7 +85,7 @@ internal fun Router(
         return
     }
 
-    HandleBackButtonPressed()
+//    HandleBackButtonPressed()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if(!navigationViewModel.isInitialised) {
@@ -121,6 +121,7 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
@@ -132,6 +133,7 @@ internal fun Router(
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
@@ -144,6 +146,7 @@ internal fun Router(
             satunesViewModel = satunesViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
                     isAudioAllowed = isAudioAllowed,
                     navController = navController,
@@ -154,7 +157,9 @@ internal fun Router(
         )
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
-            onStart = { /* Nothing */ }
+            onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
+            }
         )
     }
 }

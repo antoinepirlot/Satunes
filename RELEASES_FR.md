@@ -4,6 +4,36 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.0
+
+Nouvelles fonctionnalités :
+
+* Lors du tri des fichiers multimédias dans un autre type de média, le titre de l'autre média s'
+  affiche à la place de la première lettre.
+  (Par exemple, lorsque tu tries la musique par albums, le titre de l'album s'affiche pour chaque
+  album.)
+* Ajout d'un dossier « .. » pour revenir en arrière
+* Nouveau paramètre dans la bibliothèque pour choisir si le titre de la musique est le nom du
+  fichier ou le titre dans les métadonnées.
+* Option pour inverser le tri
+* Le chemin d'accès dans la vue du dossier est cliquable pour naviguer
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour sur d'autres canaux que le canal stable.
+* Correction du plantage du tri par date
+* Ajout d'un espace entre le formulaire et le bouton dans la boîte de dialogue du formulaire de
+  minuterie
+* Mise à jour de la conception de la liste des médias
+* Correction des options de tri lorsque de la sortie de la boîte de dialogue de tri sans appliquer
+  de modification, les valeurs précédentes sont
+  restaurées
+* Correction de la modification de l'avance et de la récompense qui prend effet immédiatement
+* Correction du retour à l'affichage par défaut lors de la rotation ou du changement de mode
+  clair/foncé
+* Quelques optimisations
+* Mise à jour des bibliothèques
+
 ### 3.3.0-preview-2
 
 Améliorations, optimisations et corrections de bugs :

@@ -4,6 +4,30 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.0
+
+New features:
+
+* When sorting media into another media type, it shows the other media's title instead of first
+  letter. (For example, sorting music by albums for each album you'll see the album title.)
+* Add a ".." folder to go back
+* New setting in library to choose if the music's title is the file name of tag in metadata.
+* Option to reverse sorting
+* Path in folder view is clickable to navigate
+
+Improvements, optimisations and bug fixes:
+
+* Fix updates check other channel than stable.
+* Fix sorting crash by dates
+* Added a space between the form and the button in the timer form dialog
+* Update design of media list
+* Fix sorting options when leaving sort dialog without applying modification, previous values are
+  restored
+* Fix forward and reward modification takes directly effect
+* Fix going back to the default view when rotating or changing light/dark mode
+* Some optimisation
+* Update libraries
+
 ### 3.3.0-preview-2
 
 Improvements, optimisations and bug fixes:

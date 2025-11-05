@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import java.util.Date
 import java.util.SortedSet
@@ -44,7 +45,19 @@ abstract class MediaImpl(
 
     override var id: Long = id
         internal set
-    override var title: String by mutableStateOf(value = title)
+
+    /**
+     * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is
+     * true, then it means the user selected the file as title and the file's extension must be removed.
+     *
+     * So if the user has selected the option and if the file's name is: "example.mp3" the music's title
+     * will be "example" otherwise if there's no music's tag "title", then it will be "example.mp3".
+     */
+    override var title: String by mutableStateOf(
+        value =
+            if (this !is Music || !SettingsManager.isMusicTitleDisplayName) title
+            else title.split(".").first()
+    )
 
     var artwork: Bitmap? by mutableStateOf(null)
         internal set

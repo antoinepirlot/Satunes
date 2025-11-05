@@ -70,10 +70,10 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
@@ -107,6 +107,9 @@ class PlaybackViewModel : ViewModel() {
     private var _currentPositionProgression: MutableFloatState =
         PlaybackManager.currentPositionProgression
     private var _repeatMode: MutableIntState = PlaybackManager.repeatMode
+
+    private val _forwardMs: MutableState<Long> = SettingsManager.forwardMs
+    private val _rewindMs: MutableState<Long> = SettingsManager.rewindMs
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
@@ -122,8 +125,11 @@ class PlaybackViewModel : ViewModel() {
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
     val isInitialized: Boolean by _isInitialed
-    val forwardMs: Long = SettingsManager.forwardMs
-    val rewindMs: Long = SettingsManager.rewindMs
+
+    val forwardMs: Long by this._forwardMs
+
+    val rewindMs: Long by this._rewindMs
+
     val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder
 
     init {
@@ -233,7 +239,7 @@ class PlaybackViewModel : ViewModel() {
     fun getNextMusic(): Music? {
         return try {
             PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Can't get the next music in queue")
             null
         }
@@ -498,7 +504,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -521,7 +527,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

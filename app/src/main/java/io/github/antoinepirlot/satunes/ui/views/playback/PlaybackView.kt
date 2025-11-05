@@ -28,10 +28,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
-import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
 
@@ -43,12 +43,13 @@ import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletVi
 internal fun PlaybackView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel()
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
 
     if (playbackViewModel.musicPlaying == null) {
-        backToRoot(
+        navigationViewModel.backToRoot(
             rootRoute = getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection),
             navController = navController
         )

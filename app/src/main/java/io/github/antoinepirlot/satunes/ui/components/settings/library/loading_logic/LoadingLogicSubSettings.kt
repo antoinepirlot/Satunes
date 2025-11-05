@@ -38,8 +38,8 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -60,7 +60,7 @@ internal fun LoadingLogicSubSettings(
         modifier = modifier,
         title = stringResource(R.string.data_loading_settings_title)
     ) {
-        SettingWithSwitch(
+        SwitchSetting(
             setting = SwitchSettings.COMPILATION_MUSIC,
             checked = satunesUiState.compilationMusic,
             onCheckedChange = {
@@ -69,11 +69,22 @@ internal fun LoadingLogicSubSettings(
         )
         Spacer(modifier = Modifier.size(size = spacerSize))
 
-        SettingWithSwitch(
+        SwitchSetting(
             setting = SwitchSettings.ARTIST_REPLACEMENT,
             checked = satunesUiState.artistReplacement,
             onCheckedChange = {
                 satunesViewModel.switchArtistReplacement(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        )
+
+        SwitchSetting(
+            setting = SwitchSettings.IS_MUSIC_TITLE_DISPLAY_NAME,
+            checked = satunesUiState.isMusicTitleDisplayName,
+            onCheckedChange = {
+                satunesViewModel.switchIsMusicTitleDisplayName(
                     scope = scope,
                     snackBarHostState = snackBarHostState
                 )

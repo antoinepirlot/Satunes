@@ -23,7 +23,6 @@ package io.github.antoinepirlot.satunes.data
 import android.os.Build
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.models.Permissions
-import io.github.antoinepirlot.satunes.models.SwitchSettings
 
 /**
  * @author Antoine Pirlot on 26/07/2024
@@ -32,18 +31,6 @@ import io.github.antoinepirlot.satunes.models.SwitchSettings
 internal val permissionsList: List<Permissions> =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) listOf(Permissions.READ_AUDIO_PERMISSION)
     else listOf(Permissions.READ_EXTERNAL_STORAGE_PERMISSION)
-
-
-internal val switchSettingsNeedRestarts: List<SwitchSettings> = listOf(
-    SwitchSettings.AUDIO_OFFLOAD,
-    SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
-    SwitchSettings.PAUSE_IF_NOISY,
-)
-
-internal val switchSettingsNeedReloadLibrary: List<SwitchSettings> = listOf(
-    SwitchSettings.COMPILATION_MUSIC,
-    SwitchSettings.ARTIST_REPLACEMENT
-)
 
 internal val allFoldersSelections: List<FoldersSelection> = listOf(
     FoldersSelection.INCLUDE,

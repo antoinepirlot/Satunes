@@ -21,6 +21,8 @@
 package io.github.antoinepirlot.satunes.database.services.settings.playback
 
 import android.content.Context
+import androidx.compose.runtime.MutableLongState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -88,9 +90,9 @@ internal object PlaybackSettings {
         private set
     var audioOffloadChecked: Boolean = DEFAULT_AUDIO_OFFLOAD_CHECKED
         private set
-    var forwardMs: Long = DEFAULT_FORWARD_MS
+    var forwardMs: MutableLongState = mutableLongStateOf(DEFAULT_FORWARD_MS)
         private set
-    var rewindMs: Long = DEFAULT_REWIND_MS
+    var rewindMs: MutableLongState = mutableLongStateOf(DEFAULT_REWIND_MS)
         private set
 
     suspend fun loadSettings(context: Context) {
@@ -116,8 +118,8 @@ internal object PlaybackSettings {
             audioOffloadChecked =
                 preferences[AUDIO_OFFLOAD_CHECKED_KEY] ?: DEFAULT_AUDIO_OFFLOAD_CHECKED
 
-            forwardMs = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
-            rewindMs = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
+            forwardMs.longValue = preferences[FORWARD_MS_KEY] ?: DEFAULT_FORWARD_MS
+            rewindMs.longValue = preferences[REWIND_MS_KEY] ?: DEFAULT_REWIND_MS
 
         }.first() //Without .first() settings are not loaded correctly
     }
@@ -200,15 +202,15 @@ internal object PlaybackSettings {
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.forwardMs = seconds.toLong() * 1000L
-            preferences[FORWARD_MS_KEY] = this.forwardMs
+            this.forwardMs.longValue = seconds.toLong() * 1000L
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
         }
     }
 
     suspend fun updateRewindMs(context: Context, seconds: Int) {
         context.dataStore.edit { preferences: MutablePreferences ->
-            this.rewindMs = seconds.toLong() * 1000L
-            preferences[REWIND_MS_KEY] = this.rewindMs
+            this.rewindMs.longValue = seconds.toLong() * 1000L
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
         }
     }
 
@@ -237,12 +239,12 @@ internal object PlaybackSettings {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.shuffleMode = DEFAULT_SHUFFLE_MODE
             this.repeatMode = DEFAULT_REPEAT_MODE
-            this.forwardMs = DEFAULT_FORWARD_MS
-            this.rewindMs = DEFAULT_REWIND_MS
+            this.forwardMs.longValue = DEFAULT_FORWARD_MS
+            this.rewindMs.longValue = DEFAULT_REWIND_MS
             preferences[SHUFFLE_MODE_KEY] = this.shuffleMode
             preferences[REPEAT_MODE_KEY] = this.repeatMode
-            preferences[FORWARD_MS_KEY] = this.forwardMs
-            preferences[REWIND_MS_KEY] = this.rewindMs
+            preferences[FORWARD_MS_KEY] = this.forwardMs.longValue
+            preferences[REWIND_MS_KEY] = this.rewindMs.longValue
         }
     }
 }

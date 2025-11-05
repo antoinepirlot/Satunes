@@ -48,7 +48,7 @@ internal fun SettingsSwitchList(
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         for ((setting: SwitchSettings, checked: Boolean) in checkedMap) {
-            SettingWithSwitch(
+            SwitchSetting(
                 setting = setting,
                 checked = checked,
                 onCheckedChange = {

@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -51,7 +51,7 @@ internal fun AudioOffloadSetting(
     val audioOffloadChecked: Boolean = satunesUiState.audioOffloadChecked
     var showAudioOffloadDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    SettingWithSwitch(
+    SwitchSetting(
         modifier = modifier,
         setting = SwitchSettings.AUDIO_OFFLOAD,
         checked = audioOffloadChecked,

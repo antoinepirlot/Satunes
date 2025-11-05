@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -167,7 +168,7 @@ class NavigationViewModel : ViewModel() {
         val destination: Destination = this.getDestinationOf(mediaImpl = mediaImpl)
         push(destination = destination, mediaImpl = mediaImpl)
         val route: String =
-            if (mediaImpl == null || destination == Destination.PLAYBACK) destination.link
+            if (mediaImpl == null || destination == Destination.PLAYBACK || destination == Destination.FOLDERS) destination.link
             else this.getRoute(destination = destination, mediaImpl = mediaImpl)
         navController.navigate(route = route)
     }
@@ -208,6 +209,7 @@ class NavigationViewModel : ViewModel() {
      */
     private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
         return when (mediaImpl) {
+            is RootFolder -> Destination.FOLDERS
             is Folder -> Destination.FOLDER
             is Artist -> Destination.ARTIST
             is Album -> Destination.ALBUM

@@ -1,4 +1,4 @@
-Satunes est un lecteur mp3 compatible Android Auto pour Android Lollipop 5.1.1+
+Satunes est un lecteur mp3 compatible Android Auto pour Android Lollipop 5.1.1+ et développé par une intelligence organique.
 
 Avec ce nouveau lecteur mp3, tu peux écouter la musique de ton téléphone sans publicité.
 

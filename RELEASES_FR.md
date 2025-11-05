@@ -100,7 +100,7 @@ Améliorations, optimisations et corrections de bogues :
 Améliorations, optimisations et corrections de bugs :
 
 * Correction de l'action de la bannière de l'artiste dans la vue de l'album.
-* Correction de l'export d'une seule playlist à partir de ses options. Maintenant l'option export
+* Correction de l'export d'une seule playlist à partir de ses options. Maintenant l'option exporte
   uniquement cette playlist.
 
 ### 3.2.2

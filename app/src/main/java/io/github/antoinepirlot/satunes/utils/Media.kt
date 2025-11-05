@@ -45,9 +45,13 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
         }
 
         is Folder -> {
-            if (mediaImpl.title != context.getString(RDb.string.this_device))
+            if (
+                mediaImpl.parentFolder != null
+                && mediaImpl.parentFolder!!.isRoot()
+                && mediaImpl.title != context.getString(RDb.string.this_device)
+            ) {
                 MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
-            else mediaImpl.title
+            } else mediaImpl.title
         }
 
         else -> mediaImpl.title

@@ -1,3 +1,4 @@
 Améliorations, optimisations et corrections de bogues :
 
 * Correction du nom des dossiers en supprimant "Stockage externe: " pour les sous dossiers.
+* Correction de l'action du dossier "../"

@@ -9,6 +9,7 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 Improvements, optimisations and bug fixes:
 
 * Fix folder by removing "External Storage: " for all sub folders
+* Fix folder "../"'s action
 
 ### 3.3.0
 

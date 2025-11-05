@@ -9,6 +9,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 Améliorations, optimisations et corrections de bogues :
 
 * Correction du nom des dossiers en supprimant "Stockage externe: " pour les sous dossiers.
+* Correction de l'action du dossier "../"
 
 ### 3.3.0
 

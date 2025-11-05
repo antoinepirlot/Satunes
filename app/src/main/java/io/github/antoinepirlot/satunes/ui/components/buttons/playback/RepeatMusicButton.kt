@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor

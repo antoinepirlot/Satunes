@@ -38,11 +38,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.LoadingCircle
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
-import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.DownloadButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.InstallRequestButton
 import io.github.antoinepirlot.satunes.ui.components.buttons.updates.SeeDetailsButton

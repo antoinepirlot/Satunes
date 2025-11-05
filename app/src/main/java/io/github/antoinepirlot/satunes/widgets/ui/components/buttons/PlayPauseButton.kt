@@ -29,7 +29,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.SquareIconButton
-import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**

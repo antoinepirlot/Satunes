@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.custom_action
 
-import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.database.R
 import kotlinx.serialization.Serializable
 

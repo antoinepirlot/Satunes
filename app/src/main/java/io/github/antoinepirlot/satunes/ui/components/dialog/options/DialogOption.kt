@@ -30,9 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.components.LoadingCircle
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 
 /**
  * @author Antoine Pirlot on 19/04/2024

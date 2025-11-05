@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
-import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAddedDateComparator

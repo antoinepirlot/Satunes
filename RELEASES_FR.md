@@ -4,6 +4,12 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.1
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction du nom des dossiers en supprimant "Stockage externe: " pour les sous dossiers.
+
 ### 3.3.0
 
 Nouvelles fonctionnalités :

@@ -4,6 +4,12 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.1
+
+Improvements, optimisations and bug fixes:
+
+* Fix folder by removing "External Storage: " for all sub folders
+
 ### 3.3.0
 
 New features:

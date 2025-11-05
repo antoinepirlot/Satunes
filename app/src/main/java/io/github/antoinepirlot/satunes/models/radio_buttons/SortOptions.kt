@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.models.radio_buttons
 
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByAddedDateComparator
@@ -28,43 +29,50 @@ import io.github.antoinepirlot.satunes.database.models.comparators.SortByArtistC
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByGenreComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByTitleComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByYearsComparator
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 30/11/2024
  */
 enum class SortOptions(
-    val icon: SatunesIcons,
+    val jetpackLibsIcons: JetpackLibsIcons,
     val stringId: Int,
     val comparator: Comparator<MediaImpl>?
 ) {
     ALBUM(
-        icon = SatunesIcons.ALBUM,
+        jetpackLibsIcons = JetpackLibsIcons.ALBUM,
         stringId = RDb.string.albums,
         comparator = SortByAlbumComparator
     ),
     ARTIST(
-        icon = SatunesIcons.ARTIST,
+        jetpackLibsIcons = JetpackLibsIcons.ARTIST,
         stringId = RDb.string.artists,
         comparator = SortByArtistComparator
     ),
 
     DATE_ADDED(
-        icon = SatunesIcons.ADDED_DATE,
+        jetpackLibsIcons = JetpackLibsIcons.ADDED_DATE,
         stringId = RDb.string.added_date,
         comparator = SortByAddedDateComparator
     ),
     GENRE(
-        icon = SatunesIcons.GENRES,
+        jetpackLibsIcons = JetpackLibsIcons.GENRES,
         stringId = RDb.string.genres,
         comparator = SortByGenreComparator
     ),
     PLAYLIST_ADDED_DATE(
-        icon = SatunesIcons.ADDED_DATE,
+        jetpackLibsIcons = JetpackLibsIcons.ADDED_DATE,
         stringId = RDb.string.playlist_added_date,
         comparator = null
     ),
-    TITLE(icon = SatunesIcons.TITLE, stringId = R.string.title, comparator = SortByTitleComparator),
-    YEAR(icon = SatunesIcons.YEARS, stringId = RDb.string.years, comparator = SortByYearsComparator)
+    TITLE(
+        jetpackLibsIcons = JetpackLibsIcons.TITLE,
+        stringId = R.string.title,
+        comparator = SortByTitleComparator
+    ),
+    YEAR(
+        jetpackLibsIcons = JetpackLibsIcons.YEARS,
+        stringId = RDb.string.years,
+        comparator = SortByYearsComparator
+    )
 }

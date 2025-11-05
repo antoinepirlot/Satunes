@@ -42,12 +42,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
@@ -62,10 +62,10 @@ internal fun RepeatModeRadioButtons(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val iconsList: List<SatunesIcons> = listOf(
-        SatunesIcons.REPEAT, // i = 0
-        SatunesIcons.REPEAT, // i = 1
-        SatunesIcons.REPEAT_ONE // i = 2
+    val iconsLists: List<JetpackLibsIcons> = listOf(
+        JetpackLibsIcons.REPEAT, // i = 0
+        JetpackLibsIcons.REPEAT, // i = 1
+        JetpackLibsIcons.REPEAT_ONE // i = 2
     )
     var state: Int = satunesUiState.repeatMode
 
@@ -86,7 +86,7 @@ internal fun RepeatModeRadioButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         NormalText(text = stringResource(id = R.string.repeat_mode))
-        for (i: Int in iconsList.indices) {
+        for (i: Int in iconsLists.indices) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -105,8 +105,8 @@ internal fun RepeatModeRadioButtons(
                     modifier = Modifier
                         .clip(CircleShape)
                         .background(color = getRightIconColors(isOn = i > 0).containerColor),
-                    imageVector = iconsList[i].imageVector,
-                    contentDescription = iconsList[i].description,
+                    imageVector = iconsLists[i].imageVector,
+                    contentDescription = iconsLists[i].description,
                     tint = getRightIconTintColor(isOn = i > 0)
                 )
             }

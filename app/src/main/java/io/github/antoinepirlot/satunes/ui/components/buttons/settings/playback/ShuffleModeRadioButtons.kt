@@ -37,11 +37,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
@@ -56,9 +56,9 @@ internal fun ShuffleModeRadioButtons(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    val iconList: List<SatunesIcons> = listOf(
-        SatunesIcons.SHUFFLE, // i = 0 or false
-        SatunesIcons.SHUFFLE// i = 1 or true
+    val jetpackLibsIconsLists: List<JetpackLibsIcons> = listOf(
+        JetpackLibsIcons.SHUFFLE, // i = 0 or false
+        JetpackLibsIcons.SHUFFLE// i = 1 or true
     )
 
     val state: Boolean = satunesUiState.shuffleMode
@@ -71,11 +71,11 @@ internal fun ShuffleModeRadioButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         NormalText(text = stringResource(id = R.string.shuffle) + ':')
-        for (i: Int in iconList.indices) {
+        for (i: Int in jetpackLibsIconsLists.indices) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val isShuffleOnIcon: Boolean =
                     i > 0 // If i is 0 then it is shuffle off otherwise shuffle on
-                val icon: SatunesIcons = iconList[i]
+                val jetpackLibsIcons: JetpackLibsIcons = jetpackLibsIconsLists[i]
 
                 RadioButton(
                     selected = state == isShuffleOnIcon,
@@ -92,8 +92,8 @@ internal fun ShuffleModeRadioButtons(
                     modifier = Modifier
                         .clip(CircleShape)
                         .background(color = getRightIconColors(isOn = isShuffleOnIcon).containerColor),
-                    imageVector = icon.imageVector,
-                    contentDescription = icon.description,
+                    imageVector = jetpackLibsIcons.imageVector,
+                    contentDescription = jetpackLibsIcons.description,
                     tint = getRightIconTintColor(isOn = isShuffleOnIcon)
                 )
             }

@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.Player.REPEAT_MODE_ONE
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
@@ -49,11 +49,11 @@ internal fun RepeatMusicButton(
         colors = getRightIconColors(isOn = isOn),
         onClick = { playbackViewModel.switchRepeatMode() }
     ) {
-        val icon: SatunesIcons = getRightRepeatIcon(repeatMode = repeatMode)
+        val jetpackLibsIcons: JetpackLibsIcons = getRightRepeatIcon(repeatMode = repeatMode)
         Icon(
             modifier = modifier,
-            imageVector = icon.imageVector,
-            contentDescription = icon.description,
+            imageVector = jetpackLibsIcons.imageVector,
+            contentDescription = jetpackLibsIcons.description,
             tint = getRightIconTintColor(isOn = isOn)
         )
     }
@@ -65,14 +65,14 @@ private fun RepeatMusicButtonPreview() {
     RepeatMusicButton()
 }
 
-private fun getRightRepeatIcon(repeatMode: Int): SatunesIcons {
+private fun getRightRepeatIcon(repeatMode: Int): JetpackLibsIcons {
     return when (repeatMode) {
         REPEAT_MODE_ONE -> {
-            SatunesIcons.REPEAT_ONE
+            JetpackLibsIcons.REPEAT_ONE
         }
 
         else -> {
-            SatunesIcons.REPEAT
+            JetpackLibsIcons.REPEAT
         }
     }
 }

@@ -26,7 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 
 /**
@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 internal fun ClickableListItem(
     modifier: Modifier = Modifier,
     text: String,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     onClick: () -> Unit,
 ) {
     ListItem(
@@ -45,7 +45,10 @@ internal fun ClickableListItem(
             onClick()
         },
         leadingContent = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         },
         headlineContent = {
             Text(text = text)
@@ -56,5 +59,8 @@ internal fun ClickableListItem(
 @Preview
 @Composable
 private fun ClickableListItemPreview() {
-    ClickableListItem(text = "Hello World!", icon = SatunesIcons.SETTINGS, onClick = {})
+    ClickableListItem(
+        text = "Hello World!",
+        jetpackLibsIcons = JetpackLibsIcons.SETTINGS,
+        onClick = {})
 }

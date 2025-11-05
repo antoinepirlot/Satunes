@@ -27,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 internal fun IconButton(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     onClick: () -> Unit,
     enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
@@ -50,12 +50,12 @@ internal fun IconButton(
         colors = colors,
         interactionSource = interactionSource,
     ) {
-        Icon(icon = icon)
+        Icon(jetpackLibsIcons = jetpackLibsIcons)
     }
 }
 
 @Preview
 @Composable
 private fun IconButtonPreview() {
-    IconButton(icon = SatunesIcons.ADD, onClick = {})
+    IconButton(jetpackLibsIcons = JetpackLibsIcons.ADD, onClick = {})
 }

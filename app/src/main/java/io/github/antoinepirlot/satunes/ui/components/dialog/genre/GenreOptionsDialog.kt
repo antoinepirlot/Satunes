@@ -27,10 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
@@ -53,8 +53,11 @@ internal fun GenreOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ },
         icon = {
-            val icon: SatunesIcons = SatunesIcons.GENRES
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            val jetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.GENRES
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         },
         title = {
             NormalText(text = genre.title)

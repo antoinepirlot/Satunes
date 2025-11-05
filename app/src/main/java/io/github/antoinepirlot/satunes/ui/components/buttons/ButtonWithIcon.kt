@@ -43,8 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
@@ -54,7 +54,7 @@ import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 @Composable
 internal fun ButtonWithIcon(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     onClick: () -> Unit,
     enabled: Boolean = true,
     isLoading: Boolean = false,
@@ -89,8 +89,8 @@ internal fun ButtonWithIcon(
                 LoadingCircle(modifier = Modifier.size(20.dp))
             } else {
                 Icon(
-                    imageVector = icon.imageVector,
-                    contentDescription = icon.description
+                    imageVector = jetpackLibsIcons.imageVector,
+                    contentDescription = jetpackLibsIcons.description
                 )
                 if (text != null) {
                     Spacer(modifier = Modifier.size(10.dp))
@@ -111,13 +111,13 @@ private fun ButtonWithIconPreview() {
     Column {
         ButtonWithIcon(
             modifier = Modifier.fillMaxWidth(),
-            icon = SatunesIcons.REMOVE_ICON,
+            jetpackLibsIcons = JetpackLibsIcons.REMOVE_ICON,
             onClick = {},
             text = "Hello World !"
         )
         ButtonWithIcon(
             modifier = Modifier.fillMaxWidth(),
-            icon = SatunesIcons.TIMER,
+            jetpackLibsIcons = JetpackLibsIcons.TIMER,
             onClick = {},
             text = null
         )

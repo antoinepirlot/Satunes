@@ -25,9 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
@@ -41,7 +41,7 @@ internal fun ImportPlaylistsButton(
 ) {
     ButtonWithIcon(
         modifier = modifier,
-        icon = SatunesIcons.IMPORT,
+        jetpackLibsIcons = JetpackLibsIcons.IMPORT,
         onClick = { dataViewModel.openImportPlaylistDialog() },
         text = stringResource(id = R.string._import)
     )

@@ -23,6 +23,13 @@ package io.github.antoinepirlot.satunes.ui.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.ALBUM
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.ARTIST
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.FOLDER
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.GENRES
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.MUSIC
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons.PLAYLIST
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.Album
@@ -33,13 +40,6 @@ import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
 
 /**
  * @author Antoine Pirlot on 27/01/2024
@@ -87,7 +87,7 @@ fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, 
     }
 }
 
-fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
+fun getRightIconAndDescription(media: MediaImpl): JetpackLibsIcons {
     return when (media) {
         is Folder -> FOLDER
         is Artist -> ARTIST

@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -35,13 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.MusicsRootPathSelection
@@ -60,7 +57,8 @@ fun ExportImportPlaylistsDialog(
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
-    val icon: SatunesIcons = if (export) SatunesIcons.EXPORT else SatunesIcons.IMPORT
+    val jetpackLibsIcons: JetpackLibsIcons =
+        if (export) JetpackLibsIcons.EXPORT else JetpackLibsIcons.IMPORT
     val stringId: Int = if (export) R.string.export else R.string._import
 
     val onDismissRequest: () -> Unit = {
@@ -72,14 +70,14 @@ fun ExportImportPlaylistsDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         icon = {
-            Icon(icon = icon)
+            Icon(jetpackLibsIcons = jetpackLibsIcons)
         },
         title = {
             NormalText(text = stringResource(id = stringId))
         },
         confirmButton = {
             ButtonWithIcon(
-                icon = icon, text = stringResource(id = stringId),
+                jetpackLibsIcons = jetpackLibsIcons, text = stringResource(id = stringId),
                 onClick = {
                     if (export) {
                         dataViewModel.exportPlaylists(

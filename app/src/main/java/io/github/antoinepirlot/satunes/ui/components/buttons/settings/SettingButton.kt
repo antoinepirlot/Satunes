@@ -24,7 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ClickableListItem
 
 /**
@@ -34,13 +34,13 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.ClickableListItem
 internal fun SettingButton(
     modifier: Modifier = Modifier,
     text: String,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     onClick: () -> Unit
 ) {
     ClickableListItem(
         modifier = modifier,
         text = text,
-        icon = icon,
+        jetpackLibsIcons = jetpackLibsIcons,
         onClick = onClick
     )
     HorizontalDivider()
@@ -49,5 +49,5 @@ internal fun SettingButton(
 @Preview
 @Composable
 private fun SettingButtonPreview() {
-    SettingButton(text = "Setting", icon = SatunesIcons.SETTINGS, onClick = {})
+    SettingButton(text = "Setting", jetpackLibsIcons = JetpackLibsIcons.SETTINGS, onClick = {})
 }

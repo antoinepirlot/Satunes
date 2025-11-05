@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
@@ -47,7 +48,6 @@ import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
@@ -83,7 +83,7 @@ internal fun TopAppBar(
                 screenWidth < ScreenSizes.LARGE
             ) {
                 IconButton(
-                    icon = SatunesIcons.PLAYBACK,
+                    jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
                     onClick = {
                         onPlaybackQueueButtonClick(
                             uiState = satunesUiState,
@@ -96,7 +96,7 @@ internal fun TopAppBar(
                 getSortOptions(destination = satunesUiState.currentDestination).size > 1
             ) {
                 IconButton(
-                    icon = SatunesIcons.SORT,
+                    jetpackLibsIcons = JetpackLibsIcons.SORT,
                     onClick = { satunesViewModel.showSortDialog() }
                 )
             }
@@ -112,7 +112,7 @@ internal fun TopAppBar(
             if (currentDestination.category != DestinationCategory.SETTING) {
                 // Search Button
                 IconButton(
-                    icon = SatunesIcons.SEARCH,
+                    jetpackLibsIcons = JetpackLibsIcons.SEARCH,
                     onClick = {
                         onSearchButtonClick(
                             uiState = satunesUiState,
@@ -124,7 +124,7 @@ internal fun TopAppBar(
 
             //Setting Button
             IconButton(
-                icon = SatunesIcons.SETTINGS,
+                jetpackLibsIcons = JetpackLibsIcons.SETTINGS,
                 onClick = {
                     onSettingButtonClick(
                         uiState = satunesUiState,

@@ -29,13 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
@@ -55,7 +55,7 @@ internal fun SortListDialog(
     val selectedSortOption: SortOptions = sortListViewModel.selectedSortOption
     Dialog(
         modifier = modifier,
-        icon = SatunesIcons.SORT,
+        jetpackLibsIcons = JetpackLibsIcons.SORT,
         title = stringResource(R.string.sort_list_title),
         onDismissRequest = { satunesViewModel.hideSortDialog() },
         onConfirmRequest = {
@@ -77,7 +77,7 @@ internal fun SortListDialog(
                 RadioButton(
                     selected = selectedSortOption == sortOption,
                     onClick = { sortListViewModel.selectSortOption(sortRadioButton = sortOption) },
-                    icon = sortOption.icon,
+                    jetpackLibsIcons = sortOption.jetpackLibsIcons,
                     text = stringResource(sortOption.stringId),
                     maxLine = 2
                 )

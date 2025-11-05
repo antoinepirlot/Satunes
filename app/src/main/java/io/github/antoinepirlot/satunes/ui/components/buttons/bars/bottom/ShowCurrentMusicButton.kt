@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
@@ -69,7 +69,7 @@ internal fun ShowCurrentMusicButton(
     ) {
         Icon(
             modifier = Modifier.size(buttonSize / 1.5f),
-            icon = SatunesIcons.MUSIC
+            jetpackLibsIcons = JetpackLibsIcons.MUSIC
         )
     }
 }

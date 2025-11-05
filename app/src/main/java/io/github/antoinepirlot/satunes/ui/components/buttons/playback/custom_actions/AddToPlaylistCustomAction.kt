@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -36,7 +37,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 
@@ -58,7 +58,7 @@ internal fun AddToPlaylistCustomAction(
 
     CustomActionButton(
         modifier = modifier,
-        icon = SatunesIcons.PLAYLIST_ADD,
+        jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist),
         onClick = { satunesViewModel.showMediaSelectionDialog() }
     )
@@ -88,7 +88,7 @@ internal fun AddToPlaylistCustomAction(
             },
             mediaImplCollection = playlistMap,
             mediaDestination = music,
-            icon = SatunesIcons.PLAYLIST_ADD
+            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD
         )
     }
 }

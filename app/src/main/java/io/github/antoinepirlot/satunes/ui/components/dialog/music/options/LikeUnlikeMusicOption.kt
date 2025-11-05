@@ -25,12 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
 
@@ -56,7 +56,7 @@ internal fun LikeUnlikeMusicOption(
                 music = music
             )
         },
-        icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        jetpackLibsIcons = if (music.liked.value) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
         text = stringResource(id = if (music.liked.value) R.string.remove_from_likes else R.string.add_to_likes)
     )
 }

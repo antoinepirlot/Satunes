@@ -26,8 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconColors
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconTintColor
 
@@ -47,11 +47,11 @@ internal fun ShuffleMusicButton(
         colors = getRightIconColors(isOn = isShuffle),
         onClick = { playbackViewModel.switchShuffleMode() }
     ) {
-        val icon = SatunesIcons.SHUFFLE
+        val jetpackLibsIcons = JetpackLibsIcons.SHUFFLE
         Icon(
             modifier = modifier,
-            imageVector = icon.imageVector,
-            contentDescription = icon.description,
+            imageVector = jetpackLibsIcons.imageVector,
+            contentDescription = jetpackLibsIcons.description,
             tint = getRightIconTintColor(isOn = isShuffle)
         )
     }

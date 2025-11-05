@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -35,7 +36,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.router.utils.openMedia
 
 /**
@@ -65,7 +65,7 @@ internal fun ExtraButtonList(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ExtraButton(
-            icon = SatunesIcons.PLAY,
+            jetpackLibsIcons = JetpackLibsIcons.PLAY,
             onClick = {
                 playbackViewModel.loadMusicFromMedias(
                     medias = mediaImplCollection,
@@ -81,7 +81,7 @@ internal fun ExtraButtonList(
         if (!satunesUiState.shuffleMode) {
             //The shuffle mode is always activated by default and don't need to be shown
             ExtraButton(
-                icon = SatunesIcons.SHUFFLE,
+                jetpackLibsIcons = JetpackLibsIcons.SHUFFLE,
                 onClick = {
                     playbackViewModel.loadMusicFromMedias(
                         medias = mediaImplCollection,

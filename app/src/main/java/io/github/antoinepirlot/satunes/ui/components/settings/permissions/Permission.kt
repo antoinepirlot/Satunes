@@ -1,3 +1,23 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
 package io.github.antoinepirlot.satunes.ui.components.settings.permissions
 
 import androidx.compose.foundation.layout.Row
@@ -12,9 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 private val spacerSize = 16.dp
 
@@ -22,7 +42,7 @@ private val spacerSize = 16.dp
 fun Permission(
     modifier: Modifier = Modifier,
     isGranted: Boolean,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     title: String,
     onClick: () -> Unit,
 ) {
@@ -31,19 +51,19 @@ fun Permission(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = icon.imageVector,
-            contentDescription = icon.description
+            imageVector = jetpackLibsIcons.imageVector,
+            contentDescription = jetpackLibsIcons.description
         )
         Spacer(modifier = Modifier.size(16.dp))
         NormalText(text = title)
         Spacer(modifier = Modifier.size(spacerSize))
-        val isGrantedIcon: SatunesIcons =
-            if (isGranted) SatunesIcons.PERMISSION_GRANTED
-            else SatunesIcons.PERMISSION_NOT_GRANTED
+        val isGrantedJetpackLibsIcons: JetpackLibsIcons =
+            if (isGranted) JetpackLibsIcons.PERMISSION_GRANTED
+            else JetpackLibsIcons.PERMISSION_NOT_GRANTED
 
         Icon(
-            imageVector = isGrantedIcon.imageVector,
-            contentDescription = isGrantedIcon.description,
+            imageVector = isGrantedJetpackLibsIcons.imageVector,
+            contentDescription = isGrantedJetpackLibsIcons.description,
             tint = if (isGranted) Color.Green else Color.Red
         )
         if (!isGranted) {
@@ -58,5 +78,9 @@ fun Permission(
 @Preview
 @Composable
 fun PermissionPreview(modifier: Modifier = Modifier) {
-    Permission(isGranted = true, icon = SatunesIcons.FOLDER, title = "Hello", onClick = {})
+    Permission(
+        isGranted = true,
+        jetpackLibsIcons = JetpackLibsIcons.FOLDER,
+        title = "Hello",
+        onClick = {})
 }

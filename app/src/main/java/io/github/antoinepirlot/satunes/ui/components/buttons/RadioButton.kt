@@ -38,8 +38,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
@@ -56,7 +56,7 @@ internal fun RadioButton(
     enabled: Boolean = true,
     colors: RadioButtonColors = RadioButtonDefaults.colors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    icon: SatunesIcons? = null,
+    jetpackLibsIcons: JetpackLibsIcons? = null,
     text: String? = null,
     maxLine: Int = 1
 ) {
@@ -75,8 +75,8 @@ internal fun RadioButton(
             colors = colors,
             interactionSource = interactionSource
         )
-        if (icon != null) Icon(icon = icon)
-        if (icon != null && text != null) Spacer(modifier = Modifier.size(size = spacerSize))
+        if (jetpackLibsIcons != null) Icon(jetpackLibsIcons = jetpackLibsIcons)
+        if (jetpackLibsIcons != null && text != null) Spacer(modifier = Modifier.size(size = spacerSize))
         if (text != null) NormalText(text = text, maxLines = maxLine)
     }
 }
@@ -86,10 +86,10 @@ internal fun RadioButton(
 private fun RadioButtonPreview() {
     Column {
         RadioButton(selected = true, onClick = {})
-        RadioButton(icon = SatunesIcons.SORT, selected = false, onClick = {})
+        RadioButton(jetpackLibsIcons = JetpackLibsIcons.SORT, selected = false, onClick = {})
         RadioButton(text = "Hello RadioButton!", selected = false, onClick = {})
         RadioButton(
-            icon = SatunesIcons.SORT,
+            jetpackLibsIcons = JetpackLibsIcons.SORT,
             text = "Hello RadioButtonWithIcon",
             selected = true,
             onClick = {})

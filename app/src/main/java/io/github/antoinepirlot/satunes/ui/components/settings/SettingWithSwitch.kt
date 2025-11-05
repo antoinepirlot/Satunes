@@ -35,11 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.switchSettingsNeedReloadLibrary
 import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 
@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 internal fun SettingWithSwitch(
     modifier: Modifier = Modifier,
     setting: SwitchSettings,
-    icon: SatunesIcons? = null,
+    jetpackLibsIcons: JetpackLibsIcons? = null,
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
@@ -68,15 +68,21 @@ internal fun SettingWithSwitch(
             text = stringResource(id = setting.stringId),
             maxLines = Int.MAX_VALUE,
             modifier = Modifier
-                .fillMaxWidth(if (icon != null) 0.7f else 0.75f) // Fix the button to be outside the screen if text is long
+                .fillMaxWidth(if (jetpackLibsIcons != null) 0.7f else 0.75f) // Fix the button to be outside the screen if text is long
         )
-        if (icon != null) {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+        if (jetpackLibsIcons != null) {
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         } else {
             if (isRestartNeeded || isReloadLibraryNeeded) {
                 @Suppress("NAME_SHADOWING")
-                val icon = SatunesIcons.INFO
-                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                val jetpackLibsIcons = JetpackLibsIcons.INFO
+                Icon(
+                    imageVector = jetpackLibsIcons.imageVector,
+                    contentDescription = jetpackLibsIcons.description
+                )
             }
         }
         Switch(
@@ -114,7 +120,7 @@ private fun SettingWithSwitchPreview() {
     SettingWithSwitch(
         setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
         checked = true,
-        icon = SatunesIcons.INFO,
+        jetpackLibsIcons = JetpackLibsIcons.INFO,
         onCheckedChange = {}
     )
 }

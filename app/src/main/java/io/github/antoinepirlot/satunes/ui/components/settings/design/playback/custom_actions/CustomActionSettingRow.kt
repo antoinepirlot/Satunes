@@ -35,10 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
@@ -63,7 +63,7 @@ fun CustomActionSettingRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(icon = customAction.icon)
+                Icon(jetpackLibsIcons = customAction.icon)
                 Spacer(Modifier.size(size = 5.dp))
                 if (customAction.stringId != null)
                     NormalText(text = stringResource(customAction.stringId!!))
@@ -72,11 +72,11 @@ fun CustomActionSettingRow(
         Column {
             if (playbackViewModel.customActionsOrder.first() != customAction)
                 IconButton(
-                    icon = SatunesIcons.MOVE_UP,
+                    jetpackLibsIcons = JetpackLibsIcons.MOVE_UP,
                     onClick = { playbackViewModel.moveUp(customAction = customAction) })
             if (playbackViewModel.customActionsOrder.last() != customAction)
                 IconButton(
-                    icon = SatunesIcons.MOVE_DOWN,
+                    jetpackLibsIcons = JetpackLibsIcons.MOVE_DOWN,
                     onClick = { playbackViewModel.moveDown(customAction = customAction) })
         }
     }

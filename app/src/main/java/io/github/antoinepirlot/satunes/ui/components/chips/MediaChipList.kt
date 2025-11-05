@@ -34,10 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.allSearchChips
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SearchChips
 
 /**
@@ -83,11 +83,14 @@ internal fun MediaChipList(
                     }
                 },
                 leadingIcon = {
-                    val icon: SatunesIcons =
-                        if (selected) SatunesIcons.CHIP_SELECTED
-                        else SatunesIcons.ADD
+                    val jetpackLibsIcons: JetpackLibsIcons =
+                        if (selected) JetpackLibsIcons.CHIP_SELECTED
+                        else JetpackLibsIcons.ADD
 
-                    Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                    Icon(
+                        imageVector = jetpackLibsIcons.imageVector,
+                        contentDescription = jetpackLibsIcons.description
+                    )
                 },
                 label = { NormalText(text = stringResource(id = searchChip.stringId)) }
             )

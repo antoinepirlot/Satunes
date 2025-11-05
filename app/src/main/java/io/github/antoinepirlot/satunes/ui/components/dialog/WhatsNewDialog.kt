@@ -35,13 +35,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
 import io.github.antoinepirlot.satunes.ui.utils.openUrl
 import kotlinx.coroutines.CoroutineScope
@@ -84,8 +84,11 @@ internal fun WhatsNewDialog(
     AlertDialog(
         modifier = modifier,
         icon = {
-            val infoIcon: SatunesIcons = SatunesIcons.INFO
-            Icon(imageVector = infoIcon.imageVector, contentDescription = infoIcon.description)
+            val infoJetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.INFO
+            Icon(
+                imageVector = infoJetpackLibsIcons.imageVector,
+                contentDescription = infoJetpackLibsIcons.description
+            )
         },
         title = {
             Title(text = versionName, fontSize = 25.sp)

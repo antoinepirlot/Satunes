@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
@@ -44,7 +44,7 @@ internal fun ExportPlaylistOption(
     DialogOption(
         modifier = modifier,
         onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) },
-        icon = SatunesIcons.EXPORT,
+        jetpackLibsIcons = JetpackLibsIcons.EXPORT,
         text = stringResource(id = R.string.export)
     )
 }

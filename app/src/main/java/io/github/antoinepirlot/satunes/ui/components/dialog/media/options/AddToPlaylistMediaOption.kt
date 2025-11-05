@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -37,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +62,7 @@ internal fun AddToPlaylistMediaOption(
     DialogOption(
         modifier = modifier,
         onClick = { satunesViewModel.showMediaSelectionDialog() },
-        icon = SatunesIcons.PLAYLIST_ADD,
+        jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (satunesUiState.showMediaSelectionDialog) {
@@ -92,7 +92,7 @@ internal fun AddToPlaylistMediaOption(
             },
             mediaImplCollection = playlistSet,
             mediaDestination = mediaImpl,
-            icon = SatunesIcons.PLAYLIST_ADD,
+            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         )
     }
 }

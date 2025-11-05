@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 
 /**
  * @author Antoine Pirlot on 09/08/2024
@@ -34,13 +34,13 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 @Composable
 internal fun Icon(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     tint: Color = LocalContentColor.current,
 ) {
     androidx.compose.material3.Icon(
         modifier = modifier,
-        imageVector = icon.imageVector,
-        contentDescription = icon.description,
+        imageVector = jetpackLibsIcons.imageVector,
+        contentDescription = jetpackLibsIcons.description,
         tint = tint
     )
 }
@@ -48,5 +48,5 @@ internal fun Icon(
 @Preview
 @Composable
 private fun IconPreview() {
-    Icon(icon = SatunesIcons.ADD)
+    Icon(jetpackLibsIcons = JetpackLibsIcons.ADD)
 }

@@ -32,8 +32,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 @Composable
 internal fun ExtraButton(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     onClick: () -> Unit,
 ) {
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -62,7 +62,7 @@ internal fun ExtraButton(
         }
     ) {
         Icon(
-            icon = icon,
+            jetpackLibsIcons = jetpackLibsIcons,
             modifier = Modifier.size(buttonSize / 2),
         )
     }
@@ -72,7 +72,7 @@ internal fun ExtraButton(
 @Composable
 private fun ExtraButtonPreview() {
     ExtraButton(
-        icon = SatunesIcons.PLAYLIST_ADD,
+        jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         onClick = {}
     )
 }

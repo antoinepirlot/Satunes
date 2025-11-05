@@ -30,8 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
@@ -44,7 +44,7 @@ private val SPACER_SIZE = 10.dp
 internal fun DialogOption(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
     text: String,
     isLoading: Boolean = false
 ) {
@@ -58,7 +58,10 @@ internal fun DialogOption(
             if (isLoading)
                 LoadingCircle(modifier = Modifier.size(20.dp))
             else
-                Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+                Icon(
+                    imageVector = jetpackLibsIcons.imageVector,
+                    contentDescription = jetpackLibsIcons.description
+                )
             Spacer(modifier = Modifier.size(SPACER_SIZE))
             NormalText(text = text)
         }
@@ -70,7 +73,7 @@ internal fun DialogOption(
 private fun DialogOptionPreview() {
     DialogOption(
         onClick = {},
-        icon = SatunesIcons.ADD,
+        jetpackLibsIcons = JetpackLibsIcons.ADD,
         text = "Dialog Option"
     )
 }

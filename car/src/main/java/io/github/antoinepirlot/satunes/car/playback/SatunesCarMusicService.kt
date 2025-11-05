@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import io.github.antoinepirlot.satunes.icons.R as RIcons
+import io.github.antoinepirlot.jetpack_libs.components.R as RIcons
 
 /**
  * @author Antoine Pirlot on 16/03/2024

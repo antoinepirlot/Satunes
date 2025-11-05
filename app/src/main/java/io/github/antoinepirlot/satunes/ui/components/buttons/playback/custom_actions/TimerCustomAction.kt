@@ -32,10 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Timer
 import io.github.antoinepirlot.satunes.ui.components.dialog.Dialog
 import io.github.antoinepirlot.satunes.ui.components.forms.CreateTimerForm
@@ -79,14 +79,14 @@ internal fun TimerCustomAction(
 
     CustomActionButton(
         modifier = modifier,
-        icon = SatunesIcons.TIMER,
+        jetpackLibsIcons = JetpackLibsIcons.TIMER,
         text = remainingTime,
         onClick = { showDialog = true }
     )
 
     if (showDialog) {
         Dialog(
-            icon = SatunesIcons.TIMER,
+            jetpackLibsIcons = JetpackLibsIcons.TIMER,
             title = stringResource(R.string.timer_settings_title),
             onDismissRequest = { showDialog = false },
             onConfirmRequest = {},

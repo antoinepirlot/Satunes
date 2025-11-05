@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -36,13 +33,13 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import java.util.Date
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 
 /**
@@ -79,7 +76,7 @@ class Music(
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
 
-    val uri: Uri? = uri ?: encode(absolutePath).toUri() // Must be init before media item
+    val uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
 
     val mediaItem: MediaItem = getMediaMetadata()
 
@@ -142,7 +139,7 @@ class Music(
         if (bitmap == null)
             bitmap = AppCompatResources.getDrawable(
                 context,
-                RIcon.mipmap.empty_album_artwork_foreground
+                R.mipmap.empty_album_artwork_foreground
             )!!.toBitmap()
         return if (SettingsManager.artworkCircleShape.value) bitmap.toCircularBitmap() else bitmap
     }

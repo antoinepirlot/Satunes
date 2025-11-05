@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
@@ -55,7 +56,6 @@ import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
@@ -110,11 +110,12 @@ internal fun MediaCard(
                         .fillMaxSize()
                         .align(Alignment.Center)
                     if (mediaImpl == playbackViewModel.musicPlaying) {
-                        val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
+                        val playingJetpackLibsIcons: JetpackLibsIcons =
+                            JetpackLibsIcons.MUSIC_PLAYING
                         Icon(
                             modifier = imageModifier,
-                            imageVector = playingIcon.imageVector,
-                            contentDescription = playingIcon.description
+                            imageVector = playingJetpackLibsIcons.imageVector,
+                            contentDescription = playingJetpackLibsIcons.description
                         )
                     } else {
                         MediaArtwork(mediaImpl = mediaImpl)
@@ -140,10 +141,10 @@ internal fun MediaCard(
                 if (mediaImpl is Music) {
                     val liked: Boolean by mediaImpl.liked
                     if (liked) {
-                        val likedIcon: SatunesIcons = SatunesIcons.LIKED
+                        val likedJetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.LIKED
                         Icon(
-                            imageVector = likedIcon.imageVector,
-                            contentDescription = likedIcon.description
+                            imageVector = likedJetpackLibsIcons.imageVector,
+                            contentDescription = likedJetpackLibsIcons.description
                         )
                     }
                 }

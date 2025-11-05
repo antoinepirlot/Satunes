@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
@@ -42,7 +43,6 @@ import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.FileExtensionSelection
 import io.github.antoinepirlot.satunes.ui.components.forms.playlists.MusicsRootPathSelection
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import kotlinx.coroutines.CoroutineScope
 
 /**

@@ -79,7 +79,7 @@ internal fun MediaListView(
     var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
     val sortOption: SortOptions = dataViewModel.sortOption
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
-    var previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
+    val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
 
     LaunchedEffect(key1 = collectionChanged) {
         // Prevent doing twice the same thing at launching and showing empty text temporarily

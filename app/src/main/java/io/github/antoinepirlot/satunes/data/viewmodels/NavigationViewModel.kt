@@ -63,8 +63,22 @@ class NavigationViewModel : ViewModel() {
         private val _routesStack: Deque<Pair<Destination, MediaImpl?>> =
             ArrayDeque() //TODO change structure as it add at first place
 
+        private val DEFAULT_CURRENT_ROUTE: Destination =
+            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value)
+
         private var _currentRoute: Destination =
-            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value) //TODO used instead of deque while no fix found for back gesture issues.
+            DEFAULT_CURRENT_ROUTE //TODO used instead of deque while no fix found for back gesture issues.
+            set(value) {
+                field = value
+                updateUiState()
+            }
+
+        private val DEFAULT_CURRENT_MEDIA_IMPL: MediaImpl? = null
+        private var _currentMediaImpl: MediaImpl? = DEFAULT_CURRENT_MEDIA_IMPL
+            set(value) {
+                field = value
+                updateUiState()
+            }
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
@@ -75,7 +89,6 @@ class NavigationViewModel : ViewModel() {
             OnDestinationChangedListener.incrementDepth()
             */
             this._currentRoute = destination
-            this.updateUiState()
         }
 
         private fun pop(): Pair<Destination, MediaImpl?>? {
@@ -109,7 +122,8 @@ class NavigationViewModel : ViewModel() {
         }
 
         private fun getCurrentMediaImpl(): MediaImpl? {
-            return this._routesStack.peekFirst()?.second
+//            return this._routesStack.peekFirst()?.second
+            return this._currentMediaImpl
         }
     }
 
@@ -250,8 +264,31 @@ class NavigationViewModel : ViewModel() {
         return getCurrentDestination().category == DestinationCategory.PLAYBACK
     }
 
+    /**
+     * TODO remove when solution for back gesture found
+     */
     fun setCurrentDestination(destination: String) {
         _currentRoute = Destination.getDestination(destination = destination)
-        updateUiState()
+    }
+
+    /**
+     * TODO remove when solution for back gesture found
+     */
+    fun resetCurrentMediaImpl() {
+        _currentRoute = DEFAULT_CURRENT_ROUTE
+    }
+
+    /**
+     * TODO remove when solution for back gesture found
+     */
+    fun resetCurrentDestination() {
+        _currentMediaImpl = DEFAULT_CURRENT_MEDIA_IMPL
+    }
+
+    /**
+     * TODO remove when solution for back gesture found
+     */
+    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
+        _currentMediaImpl = mediaImpl
     }
 }

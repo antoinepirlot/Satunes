@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
@@ -39,11 +40,13 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueVie
 internal fun NavGraphBuilder.playbackRoutes(
     satunesViewModel: SatunesViewModel,
     playbackViewModel: PlaybackViewModel,
+    navigationViewModel: NavigationViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(Destination.PLAYBACK.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
+            navigationViewModel.setCurrentMediaImpl(mediaImpl = playbackViewModel.musicPlaying!!)
         }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) LoadingView()

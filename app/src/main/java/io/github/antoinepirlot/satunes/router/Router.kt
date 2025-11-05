@@ -119,8 +119,11 @@ internal fun Router(
     ) {
         mediaRoutes(
             satunesViewModel = satunesViewModel,
+            navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                navigationViewModel.resetCurrentMediaImpl()
+                navigationViewModel.resetCurrentDestination()
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
                     isAudioAllowed = isAudioAllowed,
@@ -144,6 +147,7 @@ internal fun Router(
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
+            navigationViewModel = navigationViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)

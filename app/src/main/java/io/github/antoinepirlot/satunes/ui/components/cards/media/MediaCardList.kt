@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
@@ -104,7 +105,12 @@ internal fun MediaCardList(
                     } else {
                         if (mediaImpl is BackFolder) {
                             if (mediaImpl.hasBeenClicked()) return@MediaCard
-                            navigationViewModel.popBackStack(navController = navController)
+                            val currentMediaImpl: Folder =
+                                navigationUiState.currentMediaImpl as Folder
+                            navigationViewModel.navigate(
+                                navController = navController,
+                                mediaImpl = currentMediaImpl.parentFolder
+                            )
                             mediaImpl.clicked()
                             return@MediaCard
                         }

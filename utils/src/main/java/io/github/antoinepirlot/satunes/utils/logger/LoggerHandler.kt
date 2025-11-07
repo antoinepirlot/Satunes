@@ -20,23 +20,9 @@
 
 package io.github.antoinepirlot.satunes.utils.logger
 
-import java.util.logging.Filter
-import java.util.logging.Level
-import java.util.logging.LogRecord
+import java.util.logging.StreamHandler
 
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-internal class SatunesLoggerFilter : Filter {
-
-    override fun isLoggable(record: LogRecord?): Boolean {
-        if (record == null) return false
-
-        return when (record.level) {
-            Level.WARNING -> true
-            Level.SEVERE -> true
-            Level.INFO -> true
-            else -> false
-        }
-    }
-}
+internal class LoggerHandler : StreamHandler()

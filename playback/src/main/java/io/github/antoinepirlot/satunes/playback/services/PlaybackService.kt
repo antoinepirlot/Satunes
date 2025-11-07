@@ -35,7 +35,7 @@ import androidx.media3.session.MediaSessionService
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.CustomCommands
 import io.github.antoinepirlot.satunes.playback.models.PlaybackSessionCallback
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 31/01/24
@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 class PlaybackService : MediaSessionService() {
 
     companion object {
-        private var _logger: SatunesLogger? = null
+        private var _logger: Logger? = null
         var mediaSession: MediaSession? = null
 
         internal fun updateCustomCommands() {
@@ -75,9 +75,9 @@ class PlaybackService : MediaSessionService() {
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
-        SatunesLogger.DOCUMENTS_PATH =
+        Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = Logger.getLogger()
 
         _exoPlayer = ExoPlayer.Builder(applicationContext)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect

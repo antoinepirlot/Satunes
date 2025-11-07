@@ -31,7 +31,7 @@ import android.os.Environment
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 
 /**
@@ -42,7 +42,7 @@ import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     fun downloadUpdateApk(context: Context) {
         if (UpdateCheckManager.downloadStatus.value == APKDownloadStatus.CHECKING || UpdateCheckManager.downloadStatus.value == APKDownloadStatus.DOWNLOADING) {

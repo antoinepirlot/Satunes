@@ -24,7 +24,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.MediaItem
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 18/02/24
@@ -36,7 +36,7 @@ internal class Playlist(musics: Collection<Music>) {
     val mediaItemList: MutableList<MediaItem> = mutableListOf()
     internal var isShuffle: Boolean = false
         private set
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
 
     init {

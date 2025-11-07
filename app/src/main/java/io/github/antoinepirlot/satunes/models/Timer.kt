@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.models
 
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.util.Timer
@@ -35,7 +35,7 @@ class Timer(
     minutes: Int,
     seconds: Int
 ) {
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     private val _task: TimerTask = Task(function = function)
     private val _delayMillis: Long =
         (hours.toLong() * 3600L + minutes.toLong() * 60L + seconds.toLong()) * 1000L

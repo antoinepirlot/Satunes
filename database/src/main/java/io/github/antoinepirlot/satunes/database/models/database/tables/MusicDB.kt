@@ -29,7 +29,7 @@ import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -46,7 +46,7 @@ internal data class MusicDB(
 ) : Media {
     @Transient
     @Ignore
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     @Ignore
     @Transient

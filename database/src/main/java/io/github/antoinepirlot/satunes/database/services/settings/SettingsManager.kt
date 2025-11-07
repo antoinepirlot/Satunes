@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -41,7 +38,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.design.DesignS
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -49,7 +46,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 object SettingsManager {
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger = Logger.getLogger()
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
@@ -131,7 +128,7 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
-        SatunesLogger.enabled = this.logsActivation.value
+        Logger.enabled = this.logsActivation.value
         DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
@@ -323,10 +320,10 @@ object SettingsManager {
 
     suspend fun switchLogsActivation(context: Context) {
         SatunesSettings.switchLogsActivation(context)
-        SatunesLogger.getLogger()?.info(
+        Logger.getLogger()?.info(
             if (this.logsActivation.value) "Logs enabled." else "Logs Disabled."
         )
-        SatunesLogger.enabled = this.logsActivation.value
+        Logger.enabled = this.logsActivation.value
     }
 
     suspend fun resetArtworkSettings(context: Context) {

@@ -24,7 +24,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import io.github.antoinepirlot.satunes.utils.R
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -40,7 +40,7 @@ import java.io.InputStreamReader
  */
 @Throws(IOException::class)
 fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): String? {
-    val logger: SatunesLogger? = SatunesLogger.getLogger()
+    val logger: Logger? = Logger.getLogger()
     return try {
         val stringBuilder = StringBuilder()
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -76,7 +76,7 @@ fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): Str
  * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#edit
  */
 fun writeToUri(context: Context, uri: Uri, string: String): Boolean {
-    val logger = SatunesLogger.getLogger()
+    val logger = Logger.getLogger()
     return try {
         context.contentResolver.openFileDescriptor(uri, "w")
             ?.use { parcelFileDescriptor: ParcelFileDescriptor ->

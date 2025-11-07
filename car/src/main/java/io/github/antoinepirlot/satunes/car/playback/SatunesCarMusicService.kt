@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import io.github.antoinepirlot.jetpack_libs.components.R as RIcons
@@ -50,7 +50,7 @@ import io.github.antoinepirlot.jetpack_libs.components.R as RIcons
  */
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
-    private var _logger: SatunesLogger? = null
+    private var _logger: Logger? = null
 
     companion object {
         internal lateinit var instance: SatunesCarMusicService
@@ -62,9 +62,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        SatunesLogger.DOCUMENTS_PATH =
+        Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = Logger.getLogger()
         _logger?.info("Android Auto is Starting")
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)

@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 29/11/2024
@@ -70,7 +70,7 @@ internal fun SortListDialog(
                 getSortOptions(destination = satunesUiState.currentDestination)
             if (sortOptions.isEmpty()) {
                 val message = "Can't sort in ${satunesUiState.currentDestination.link}"
-                SatunesLogger.getLogger()?.severe(message)
+                Logger.getLogger()?.severe(message)
                 throw UnsupportedOperationException(message)
             }
             for (sortOption: SortOptions in sortOptions) {

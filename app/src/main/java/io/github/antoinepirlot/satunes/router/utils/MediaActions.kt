@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -94,7 +94,7 @@ internal fun openCurrentMusic(
     val musicPlaying: Music? = playbackViewModel.musicPlaying
     if (musicPlaying == null) {
         val message = "No music is currently playing, this button can be accessible"
-        SatunesLogger.getLogger()?.severe(message)
+        Logger.getLogger()?.severe(message)
         throw IllegalStateException(message)
     }
 

@@ -31,7 +31,7 @@ import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 20/07/2024
@@ -40,7 +40,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 @UnstableApi
 object PlaybackSessionCallback : MediaSession.Callback {
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     internal val SHUFFLE_COMMAND: SessionCommand = SessionCommand("SHUFFLE_COMMAND", Bundle.EMPTY)
     internal val REPEAT_COMMAND: SessionCommand = SessionCommand("REPEAT_COMMAND", Bundle.EMPTY)
 

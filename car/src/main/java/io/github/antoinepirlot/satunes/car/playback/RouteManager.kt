@@ -23,14 +23,14 @@ package io.github.antoinepirlot.satunes.car.playback
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 17/03/2024
  */
 internal object RouteManager {
     private const val DEFAULT_IS_SHUFFLE_BUTTON_SELECTED: Boolean = false
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     private var _selectedTab: ScreenPages? = null
     private var _selectedMediaImpl: MediaImpl? = null
     private var _isShuffleButtonSelected: Boolean = DEFAULT_IS_SHUFFLE_BUTTON_SELECTED

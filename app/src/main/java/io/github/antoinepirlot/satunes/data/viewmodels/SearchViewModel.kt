@@ -39,7 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,7 +52,7 @@ import java.util.SortedSet
  */
 class SearchViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     private val _filtersList: MutableMap<SearchChips, Boolean> = mutableMapOf(
         Pair(SearchChips.MUSICS, SettingsManager.musicsFilter),
         Pair(SearchChips.ALBUMS, SettingsManager.albumsFilter),

@@ -27,7 +27,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 11/04/2024
@@ -38,7 +38,7 @@ internal class InternetManager(context: Context) : Application() {
         context.getSystemService(ConnectivityManager::class.java)
 
     private val currentNetwork: Network? = connectivityManager.activeNetwork
-    private val logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val logger: Logger? = Logger.getLogger()
 
     internal fun isConnected(): Boolean {
         return if (currentNetwork != null) {

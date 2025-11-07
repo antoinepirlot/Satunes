@@ -45,7 +45,7 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPla
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.utils.utils.writeToUri
@@ -64,7 +64,7 @@ class DatabaseManager private constructor(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     companion object {
         private lateinit var _instance: DatabaseManager
@@ -495,7 +495,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun importPlaylists(context: Context, uri: Uri, fileExtension: FileExtensions) {
         importingPlaylist = true
-        val logger = SatunesLogger.getLogger()
+        val logger = Logger.getLogger()
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
                 context = context,

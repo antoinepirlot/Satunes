@@ -65,7 +65,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
 import io.github.antoinepirlot.satunes.ui.components.dialog.WhatsNewDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.ExportImportPlaylistsDialog
 import io.github.antoinepirlot.satunes.ui.theme.SatunesTheme
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -80,7 +80,7 @@ internal fun Satunes(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel()
 ) {
-    SatunesLogger.getLogger()?.info("Satunes Composable")
+    Logger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 

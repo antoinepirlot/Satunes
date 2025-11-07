@@ -33,7 +33,7 @@ import java.util.logging.Logger
 /**
  * @author Antoine Pirlot on 15/07/2024
  */
-class SatunesLogger private constructor(
+class Logger private constructor(
     name: String?,
     resourceBundleName: String? = null
 ) : Logger(name, resourceBundleName) {
@@ -44,12 +44,12 @@ class SatunesLogger private constructor(
         private const val MAX_FILES = 1
         lateinit var DOCUMENTS_PATH: String
         private lateinit var LOGS_PATH: String
-        private lateinit var _logger: SatunesLogger
+        private lateinit var _logger: io.github.antoinepirlot.satunes.utils.logger.Logger
 
-        fun getLogger(): SatunesLogger? {
+        fun getLogger(): io.github.antoinepirlot.satunes.utils.logger.Logger? {
             if (!enabled) return null
             if (!this::_logger.isInitialized) {
-                _logger = SatunesLogger(this::class.java.name)
+                _logger = Logger(this::class.java.name)
             }
             return _logger
         }
@@ -58,7 +58,7 @@ class SatunesLogger private constructor(
     init {
         LOGS_PATH = "$DOCUMENTS_PATH/logs"
         addHandler(ConsoleHandler())
-        addHandler(SatunesLoggerHandler())
+        addHandler(LoggerHandler())
         try {
             File(LOGS_PATH).mkdir()
             val fileHandler = FileHandler(
@@ -67,8 +67,8 @@ class SatunesLogger private constructor(
                 MAX_FILES,
                 true
             )
-            fileHandler.formatter = SatunesLoggerFormatter()
-            fileHandler.filter = SatunesLoggerFilter()
+            fileHandler.formatter = LoggerFormatter()
+            fileHandler.filter = LoggerFilter()
             addHandler(fileHandler)
         } catch (e: Throwable) {
             e.printStackTrace()

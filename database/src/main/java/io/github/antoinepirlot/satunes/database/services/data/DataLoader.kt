@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -36,7 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -99,7 +100,7 @@ object DataLoader {
 
     private lateinit var selection_args: Array<String> //see loadFoldersPaths function
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

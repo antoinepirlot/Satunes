@@ -25,7 +25,7 @@ import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.Folder
 import io.github.antoinepirlot.satunes.database.models.Genre
 import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -34,7 +34,7 @@ class SortByComparatorTests {
     private val _musics: Collection<Music>
 
     init {
-        SatunesLogger.enabled = false
+        Logger.enabled = false
         val collection: MutableCollection<Music> = mutableSetOf()
         for (i: Long in 0L..1000L) {
 

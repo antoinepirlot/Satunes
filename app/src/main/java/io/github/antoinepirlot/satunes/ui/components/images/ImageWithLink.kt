@@ -31,7 +31,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.logger.Logger
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -61,7 +61,7 @@ internal fun ImageWithLink(
                 action = null
             )
         },
-        logger = SatunesLogger.getLogger()
+        logger = Logger.getLogger()
     )
 }
 

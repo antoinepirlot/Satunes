@@ -34,8 +34,8 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -54,7 +54,7 @@ fun ListSubSettings(
         modifier = modifier,
         title = stringResource(R.string.list_sub_settings_title)
     ) {
-        SettingWithSwitch(
+        SwitchSetting(
             setting = SwitchSettings.SHOW_FIRST_LETTER,
             checked = dataUiState.showFirstLetter,
             onCheckedChange = {

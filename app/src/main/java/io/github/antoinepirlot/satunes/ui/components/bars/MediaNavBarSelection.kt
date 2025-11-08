@@ -33,8 +33,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
@@ -47,12 +47,12 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 @Composable
 internal fun RowScope.MediaNavBarSelection(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     navBarSection: NavBarSection,
+    navigationViewModel: NavigationViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val currentDestination: Destination = satunesUiState.currentDestination
+    val currentDestination: Destination = navigationUiState.currentDestination
     val selectedCanBeShown: Boolean = currentDestination.category == DestinationCategory.MEDIA
 
     NavigationBarItem(
@@ -71,7 +71,7 @@ internal fun RowScope.MediaNavBarSelection(
                 NavBarSection.MUSICS -> Destination.MUSICS
 
             }
-            backToRoot(rootRoute = rootRoute, navController = navController)
+            navigationViewModel.backToRoot(rootRoute = rootRoute, navController = navController)
         },
         icon = {
             val pair = getRightIconAndDescription(navBarSection = navBarSection)
@@ -82,25 +82,6 @@ internal fun RowScope.MediaNavBarSelection(
             )
         }
     )
-}
-
-/**
- * Redirect controller to the state where the user is in a bottom button's view.
- * For example, if the user click on Album button and he is in settings, then it redirects to albums.
- *
- * @param rootRoute the root route to go
- */
-internal fun backToRoot(
-    rootRoute: Destination,
-    navController: NavHostController
-) {
-    var currentRoute: String? = navController.currentBackStackEntry?.destination?.route
-    if (currentRoute == rootRoute.link) return
-    while (currentRoute != null) {
-        navController.popBackStack()
-        currentRoute = navController.currentBackStackEntry?.destination?.route
-    }
-    navController.navigate(rootRoute.link)
 }
 
 @Preview

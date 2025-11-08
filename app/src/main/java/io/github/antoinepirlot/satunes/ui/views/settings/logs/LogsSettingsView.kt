@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.SwitchSettings
-import io.github.antoinepirlot.satunes.ui.components.settings.SettingWithSwitch
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -71,7 +71,7 @@ internal fun LogsSettingsView(
 
         Spacer(modifier = Modifier.size(size = 50.dp))
 
-        SettingWithSwitch(
+        SwitchSetting(
             setting = SwitchSettings.LOGS,
             checked = satunesViewModel.logsActivation,
             onCheckedChange = {

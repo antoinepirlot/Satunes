@@ -45,6 +45,7 @@ internal object LibrarySettings {
     private const val DEFAULT_INCLUDE_PATH: String = "/0/Music/%"
     private const val DEFAULT_COMPILATION_MUSIC: Boolean = false
     private const val DEFAULT_ARTISTS_REPLACEMENT: Boolean = true
+    private const val DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME: Boolean = false
 
     // KEYS
 
@@ -64,6 +65,8 @@ internal object LibrarySettings {
         booleanPreferencesKey("compilation_music")
     private val ARTISTS_REPLACEMENT_KEY: Preferences.Key<Boolean> =
         booleanPreferencesKey("artist_replacement")
+    private val IS_MUSIC_TITLE_DISPLAY_NAME_KEY: Preferences.Key<Boolean> =
+        booleanPreferencesKey("is_music_title_display_name")
 
     // VARIABLES
 
@@ -84,16 +87,20 @@ internal object LibrarySettings {
     var artistReplacement: Boolean = DEFAULT_ARTISTS_REPLACEMENT
         private set
 
+    var isMusicTitleDisplayName: Boolean = DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME
+        private set
+
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             if (preferences[this.SELECTED_PATHS_KEY] != null)
                 this.transferPaths(context = context, preferences = preferences)
             this.loadIncludingPaths(preferences = preferences)
             this.loadExcludingPaths(preferences = preferences)
-
-            compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
-
-            artistReplacement = preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
+            this.compilationMusic = preferences[COMPILATION_MUSIC_KEY] ?: DEFAULT_COMPILATION_MUSIC
+            this.artistReplacement =
+                preferences[ARTISTS_REPLACEMENT_KEY] ?: DEFAULT_ARTISTS_REPLACEMENT
+            this.isMusicTitleDisplayName =
+                preferences[IS_MUSIC_TITLE_DISPLAY_NAME_KEY] ?: DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -223,6 +230,13 @@ internal object LibrarySettings {
         }
     }
 
+    suspend fun switchIsMusicTitleDisplayName(context: Context) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            this.isMusicTitleDisplayName = !this.isMusicTitleDisplayName
+            preferences[IS_MUSIC_TITLE_DISPLAY_NAME_KEY] = this.isMusicTitleDisplayName
+        }
+    }
+
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
@@ -239,8 +253,10 @@ internal object LibrarySettings {
         context.dataStore.edit { preferences: MutablePreferences ->
             this.compilationMusic = DEFAULT_COMPILATION_MUSIC
             this.artistReplacement = DEFAULT_ARTISTS_REPLACEMENT
+            this.isMusicTitleDisplayName = DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME
             preferences[COMPILATION_MUSIC_KEY] = DEFAULT_COMPILATION_MUSIC
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
+            preferences[IS_MUSIC_TITLE_DISPLAY_NAME_KEY] = this.isMusicTitleDisplayName
         }
     }
 }

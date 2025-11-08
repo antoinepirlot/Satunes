@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * Show the first year of the media if it is the first occurrence in the list.
@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.Music
  */
 @Composable
 fun FirstYear(
-    map: MutableMap<Any?, MediaImpl>,
+    modifier: Modifier = Modifier,
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>
 ) {
@@ -52,21 +52,21 @@ fun FirstYear(
         is Album -> mediaImpl.year
         else -> throw UnsupportedOperationException()
     }
-    if (!map.containsKey(key = yearToCompare))
-        map[yearToCompare] = mediaImplList.first {
-            when (it) {
-                is Music -> it.getYear() == yearToCompare
-                is Album -> it.year == yearToCompare
-                else -> false
-            }
+
+    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first {
+        when (it) {
+            is Music -> it.getYear() == yearToCompare
+            is Album -> it.year == yearToCompare
+            else -> false
         }
-    if (mediaImpl == map[yearToCompare]) {
+    }
+
+    if (mediaImpl == firstWithLetterMediaImpl)
         Title(
-            modifier = Modifier.padding(start = 34.dp),
+            modifier = modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             text = yearToCompare?.toString() ?: stringResource(R.string.unknown_year)
         )
-    }
 }

@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.playback.services
 import android.content.ComponentName
 import android.content.Context
 import androidx.annotation.OptIn
+import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -29,9 +30,9 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
@@ -138,8 +139,8 @@ internal class PlaybackController private constructor(
 
         private var _instance: PlaybackController? = null
         private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-        private val _forwardMs: Long = SettingsManager.forwardMs
-        private val _rewindMs: Long = SettingsManager.rewindMs
+        private val _forwardMs: MutableLongState = SettingsManager.forwardMs
+        private val _rewindMs: MutableLongState = SettingsManager.rewindMs
 
         /**
          * Return only one instance of MediaController. If there's no instance already created
@@ -765,8 +766,8 @@ internal class PlaybackController private constructor(
         }
     }
 
-    fun forward() = movePoisitionOf(microSeconds = _forwardMs)
-    fun rewind() = movePoisitionOf(microSeconds = -_rewindMs)
+    fun forward() = movePoisitionOf(microSeconds = _forwardMs.longValue)
+    fun rewind() = movePoisitionOf(microSeconds = -_rewindMs.longValue)
 
     private fun movePoisitionOf(microSeconds: Long) {
         if (this.musicPlaying == null) return

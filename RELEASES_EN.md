@@ -2,6 +2,92 @@
 
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 3.3 (Android 5.1.1 Lollipop and later)
+
+### 3.3.1
+
+Improvements, optimisations and bug fixes:
+
+* Fix folder by removing "External Storage: " for all sub folders
+* Fix folder "../"'s action
+
+### 3.3.0
+
+New features:
+
+* When sorting media into another media type, it shows the other media's title instead of first
+  letter. (For example, sorting music by albums for each album you'll see the album title.)
+* Add a ".." folder to go back
+* New setting in library to choose if the music's title is the file name of tag in metadata.
+* Option to reverse sorting
+* Path in folder view is clickable to navigate
+
+Improvements, optimisations and bug fixes:
+
+* Fix updates check other channel than stable.
+* Fix sorting crash by dates
+* Added a space between the form and the button in the timer form dialog
+* Update design of media list
+* Fix sorting options when leaving sort dialog without applying modification, previous values are
+  restored
+* Fix forward and reward modification takes directly effect
+* Fix going back to the default view when rotating or changing light/dark mode
+* Some optimisation
+* Update libraries
+
+### 3.3.0-preview-2
+
+Improvements, optimisations and bug fixes:
+
+* Fix buttons from media list showing where it should not
+* Show "External Storage: [storage name]" in folder view for storage like sd cards
+* Fix going back to the default view when rotating or changing light/dark mode
+
+### 3.3.0-preview-1
+
+Improvements, optimisations and bug fixes:
+
+* Click on path button will now go ahead instead of going back
+* Fix forward and reward modification takes directly effect
+* Fix crash when rotating screen
+* Fix wrong bottom bar highlight in certain views
+* Maybe some other unknown bugs fixed
+
+### 3.3.0-beta-2
+
+New features:
+
+* Path in folder view is clickable to navigate
+
+Improvements, optimisations and bug fixes:
+
+* Fix updates check other channel than stable.
+* Remove the letter separator in the playback list view and album view
+* Fix sorting crash by dates
+* Added a space between the form and the button in the timer form dialog
+* Fix sorting options when leaving sort dialog without applying modification, previous values are
+  restored
+* Music in different storage are no more on the first folder alongside the "This device" folder
+* Improve design of list
+* No more folder associated to the file name created
+* The back folder can be clicked once by view (it prevents going to blank view if clicked too fast)
+
+### 3.3.0-beta-1
+
+New features:
+
+* When sorting media into another media type, it shows the other media's title instead of first
+  letter. (For example, sorting music by albums for each album you'll see the album title.)
+* Update design of media list
+* Add a ".." folder to go back
+* New setting in library to choose if the music's title is the file name of tag in metadata.
+* Option to reverse sorting
+
+Improvements, optimisations and bug fixes:
+
+* Some optimisation
+* Update libraries
+
 ## 3.2 (Android 5.1.1 Lollipop and later)
 
 ### 3.2.3

@@ -33,22 +33,25 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -95,8 +98,15 @@ class DataViewModel : ViewModel() {
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
 
-    var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+    var sortOption: SortOptions by mutableStateOf(defaultSortingOption)
         private set
+
+    var reverseSortedOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)
+        private set
+
+    var previousReverseOrder: Boolean by mutableStateOf(this.reverseSortedOrder)
+        private set
+
 
     val isLoaded: Boolean by _isLoaded
 
@@ -128,7 +138,8 @@ class DataViewModel : ViewModel() {
         this.listSetUpdatedProcessed = true
     }
 
-    fun getRootFolderSet(): Set<Folder> = DataManager.getRootFolderSet()
+    fun getRootFolder(): RootFolder = DataManager.getRootFolder()
+    fun getBackFolder(): BackFolder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
@@ -894,6 +905,10 @@ class DataViewModel : ViewModel() {
         this.sortOption = sortOption
     }
 
+    fun setReverseOrder(reverseOrder: Boolean) {
+        this.reverseSortedOrder = reverseOrder
+    }
+
     fun switchShowFirstLetter(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState
@@ -934,18 +949,24 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    internal fun sort(satunesUiState: SatunesUiState, list: MutableList<MediaImpl>) {
+    fun sort(navigationUiState: NavigationUiState, list: MutableList<MediaImpl>) {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
             list.sortBy { mediaImpl: MediaImpl ->
-                -(mediaImpl as Music).getOrder(playlist = playlist)
+                if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
+                else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
+            sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
             list.sortWith(comparator = sortOption.comparator!!)
         }
+    }
+
+    fun orderChanged() {
+        this.previousReverseOrder = this.reverseSortedOrder
     }
 
     fun resetListsSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {

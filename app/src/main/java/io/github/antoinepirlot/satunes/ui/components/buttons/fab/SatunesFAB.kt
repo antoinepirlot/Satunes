@@ -34,8 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.DestinationCategory
@@ -49,9 +51,11 @@ internal fun SatunesFAB(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel()
+    dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     Box(
@@ -64,7 +68,7 @@ internal fun SatunesFAB(
             if (!dataViewModel.isLoaded) return
 
             val isInMediaListViews: Boolean =
-                satunesUiState.currentDestination.category == DestinationCategory.MEDIA
+                navigationUiState.currentDestination.category == DestinationCategory.MEDIA
             if (isInMediaListViews) {
                 satunesUiState.extraButtons?.invoke()
                 if (playbackViewModel.musicPlaying != null)

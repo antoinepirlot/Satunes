@@ -1,12 +1,12 @@
 [versions]
 accompanistPermissions = "0.37.3"
-activityCompose = "1.10.1"
+activityCompose = "1.11.0"
 android-compileSdk = "36"
 android-minSdk = "22"
 #noinspection OldTargetApi
 android-targetSdk = "35"
-composeBom = "2025.01.01" #Need kotlin upgrade
-composeUiVersion = "1.9.0"
+composeBom = "2025.01.01" #Needs kotlin upgrade
+composeUiVersion = "1.9.4"
 core = "1.7.0"
 coreKtx = "1.17.0"
 dataStoreVersion = "1.1.7"
@@ -17,19 +17,19 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 kotlinxSerializationJson = "1.6.3" # Update causes gradle error
 ksp = "1.9.0-1.0.13"
-lifeCycleVersion = "2.9.2"
-material = "1.12.0"
-material3 = "1.3.2"
+lifeCycleVersion = "2.9.4"
+material = "1.13.0"
+material3 = "1.4.0"
 materialIconsVersion = "1.7.8"
 media3 = "1.8.0"
 mediaVersion = "1.7.1"
-mockitoCore = "5.18.0"
-mockitoKotlin = "6.0.0"
-mockk = "1.14.5"
+mockitoCore = "5.20.0"
+mockitoKotlin = "6.1.0"
+mockk = "1.14.6"
 mp3agic = "0.9.1"
-navVersion = "2.9.3"
-okhttp = "4.12.0" # Update cause error
-roomVersion = "2.6.1" #Need kotlin upgrade
+navVersion = "2.9.5"
+okhttp = "4.12.0" # Update causes error
+roomVersion = "2.6.1" #Needs kotlin upgrade
 widgetVersion = "1.1.1"
 
 [libraries]

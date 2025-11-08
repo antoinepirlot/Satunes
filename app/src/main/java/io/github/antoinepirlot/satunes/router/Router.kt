@@ -20,16 +20,16 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,20 +37,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.currentBackStackEntryAsState
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.listeners.OnBackPressedListener
 import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
-import io.github.antoinepirlot.satunes.ui.components.bars.backToRoot
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
@@ -64,53 +65,50 @@ internal fun Router(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     SatunesLogger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
-    var isInitialisation: Boolean by rememberSaveable { mutableStateOf(true) }
-    LaunchedEffect(key1 = Unit) {
-        defaultDestination =
-            getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+
+    if (defaultDestination == null) {
+        LaunchedEffect(key1 = Unit) {
+            defaultDestination =
+                getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+            navigationViewModel.reset()
+        }
+        return
     }
 
-    if (defaultDestination == null) return
+//    HandleBackButtonPressed()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (
-            defaultDestination == Destination.PLAYLISTS &&
-            dataViewModel.isLoaded &&
-            isInitialisation
-        ) {
-            isInitialisation = false
-            checkDefaultPlaylistSetting(context = context)
-            if (satunesViewModel.defaultPlaylistId >= 0) {
-                val playlist: Playlist =
-                    dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
-                backToRoot(rootRoute = defaultDestination!!, navController = navController)
-                navController.navigate(
-                    route = Destination.PLAYLISTS.link + "/${playlist.id}"
-                )
+        if(!navigationViewModel.isInitialised) {
+            navigationViewModel.init(defaultDestination = defaultDestination!!)
+            if (defaultDestination == Destination.PLAYLISTS && dataViewModel.isLoaded) {
+                checkDefaultPlaylistSetting(context = context)
+                if (satunesViewModel.defaultPlaylistId >= 0) {
+                    val playlist: Playlist =
+                        dataViewModel.getPlaylist(id = satunesViewModel.defaultPlaylistId)!!
+                    navigationViewModel.backToRoot(
+                        rootRoute = defaultDestination!!,
+                        navController = navController
+                    )
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        mediaImpl = playlist
+                    )
+                }
             }
         }
     }
 
     // Start handle destination change
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember {
-        derivedStateOf {
-            currentBackStackEntry?.destination?.route ?: defaultDestination!!.link
-        }
-    }
-
-    LaunchedEffect(key1 = currentRoute) {
-        satunesViewModel.setCurrentDestination(destination = currentRoute)
-        satunesViewModel.clearCurrentMediaImpl()
-    }
 
     NavHost(
         modifier = modifier,
@@ -121,39 +119,67 @@ internal fun Router(
     ) {
         mediaRoutes(
             satunesViewModel = satunesViewModel,
+            navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                navigationViewModel.resetCurrentMediaImpl()
+                navigationViewModel.resetCurrentDestination()
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
         playbackRoutes(
             satunesViewModel = satunesViewModel,
+            navigationViewModel = navigationViewModel,
             playbackViewModel = playbackViewModel,
             onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
                 checkIfAllowed(
-                    satunesUiState = satunesUiState,
                     isAudioAllowed = isAudioAllowed,
-                    navController = navController
+                    navController = navController,
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState
                 )
             }
         )
         settingsRoutes(
             satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
-            onStart = { /* Nothing */ }
+            onStart = {
+                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
+            }
+        )
+    }
+}
+
+@Composable
+private fun HandleBackButtonPressed(navigationViewModel: NavigationViewModel = viewModel()) {
+    val navController = LocalNavController.current
+    val backPressedDispatcher: OnBackPressedDispatcher? =
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(key1 = Unit) {
+        backPressedDispatcher?.addCallback(
+            onBackPressedCallback = OnBackPressedListener(
+                navigationViewModel = navigationViewModel,
+                navController = navController
+            )
         )
     }
 }
@@ -170,12 +196,16 @@ internal fun Router(
  * @return true if it is allowed, false otherwise
  */
 private fun checkIfAllowed(
-    satunesUiState: SatunesUiState,
     isAudioAllowed: Boolean,
-    navController: NavHostController
+    navController: NavHostController,
+    navigationUiState: NavigationUiState,
+    navigationViewModel: NavigationViewModel
 ): Boolean {
-    if (!isAudioAllowed && satunesUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
-        backToRoot(rootRoute = Destination.PERMISSIONS_SETTINGS, navController = navController)
+    if (!isAudioAllowed && navigationUiState.currentDestination != Destination.PERMISSIONS_SETTINGS) {
+        navigationViewModel.backToRoot(
+            rootRoute = Destination.PERMISSIONS_SETTINGS,
+            navController = navController
+        )
         return false
     }
     return true

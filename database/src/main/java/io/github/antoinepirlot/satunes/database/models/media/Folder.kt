@@ -21,7 +21,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.Date
@@ -31,23 +31,25 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Folder(
+open class Folder(
     title: String,
-    var parentFolder: Folder? = null,
+    val parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, title = title) {
-    private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
-
-    val absolutePath: String = if (parentFolder == null) {
-        "/$title"
-    } else {
-        parentFolder!!.absolutePath + "/$title"
-    }
-
-    public override var addedDate: Date? = null
 
     companion object {
         var nextId: Long = 1
     }
+
+    private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
+    private val _depth: Int = if (this.parentFolder == null) 0 else this.parentFolder.getDepth() + 1
+
+    val absolutePath: String = if (parentFolder == null) {
+        "/$title"
+    } else {
+        parentFolder.absolutePath + "/$title"
+    }
+
+    public override var addedDate: Date? = null
 
     init {
         nextId++
@@ -64,12 +66,16 @@ class Folder(
 
     override fun isNotEmpty(): Boolean = !isEmpty()
 
+    fun getDepth(): Int = this._depth
+
     /**
      * Get the list of subfolder
      *
      * @return a list of subfolder and each subfolder is a Folder object
      */
     fun getSubFolderSet(): Set<Folder> = this.subFolderSortedSet
+
+    open fun isRoot(): Boolean = false
 
     /**
      * Create a list containing sub folders then this folder musics.
@@ -92,7 +98,7 @@ class Folder(
      *                                 It's a path not all the subfolder of this folder
      *
      */
-    fun createSubFolders(subFolderNameChainList: MutableList<String>) {
+    fun createSubFolders(subFolderNameChainList: Collection<String>) {
         var parentFolder = this
         subFolderNameChainList.forEach { folderName: String ->
             var subFolder: Folder? = null
@@ -131,6 +137,22 @@ class Folder(
         }
 
         return null
+    }
+
+    /**
+     * Get the list of parents in order from the top parent to this.
+     * This list respect the order of the absolute path.
+     */
+    fun getPathAsFolderList(): List<Folder> {
+        val folders: MutableList<Folder> = mutableListOf()
+        this.getPathAsFolderList(folders = folders)
+        return folders
+    }
+
+    private fun getPathAsFolderList(folders: MutableCollection<Folder>) {
+        if (this == this.getRoot()) return //It's the root folder and don't need to be added.
+        this.parentFolder!!.getPathAsFolderList(folders = folders) //Do not switch this line with the next one to preserve the order.
+        folders.add(element = this) //Do not switch this line with the previous one to preserve the order.
     }
 
     /**
@@ -180,7 +202,7 @@ class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this.parentFolder == null) return this
+        if (this is RootFolder) return this
         return this.parentFolder!!.getRoot()
     }
 }

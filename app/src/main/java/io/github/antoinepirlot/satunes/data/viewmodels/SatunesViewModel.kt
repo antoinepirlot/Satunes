@@ -219,6 +219,12 @@ class SatunesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+                if (DataLoader.getCountMusicNotLoaded() > 0)
+                    showSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackbarHostState,
+                        message = MainActivity.instance.getString(R.string.error_load_music_count_text),
+                    )
             } catch (e: Exception) {
                 SatunesLogger.getLogger()?.severe("An error occurred when loading music.")
                 showErrorSnackBar(

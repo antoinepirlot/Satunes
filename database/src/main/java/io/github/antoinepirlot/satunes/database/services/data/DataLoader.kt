@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -73,6 +74,7 @@ object DataLoader {
     private const val UNKNOWN_ARTIST = "<unknown>"
     private const val UNKNOWN_ALBUM = "<unknown>"
     private const val UNKNOWN_GENRE = "<unknown>"
+    private var _countMusicNotLoaded: Long = 0
 
     private var projection: Array<String> = arrayOf(
         // AUDIO
@@ -112,6 +114,8 @@ object DataLoader {
             projection += MediaStore.Audio.Media.TRACK
         }
     }
+
+    fun getCountMusicNotLoaded(): Long = this._countMusicNotLoaded
 
     /**
      * Load folders path to include or exclude from Data query.
@@ -167,6 +171,7 @@ object DataLoader {
 
         isLoading.value = true
         // this allow data to be reloaded if no data loaded
+        this._countMusicNotLoaded = 0
         if (DataManager.getMusicSet().isEmpty()) this.resetAllData()
 
         WidgetDatabaseManager.refreshWidgets()
@@ -174,9 +179,7 @@ object DataLoader {
             this@DataLoader.loadFoldersPaths()
         }
 
-        if (
-            this@DataLoader.selection_args.isNotEmpty()
-        ) {
+        if (this@DataLoader.selection_args.isNotEmpty()) {
             context.contentResolver.query(
                 URI,
                 projection,
@@ -186,7 +189,14 @@ object DataLoader {
             )?.use {
                 _logger?.info("${it.count} musics to load.")
                 loadColumns(cursor = it)
-                while (it.moveToNext()) loadData(cursor = it, context = context)
+                while (it.moveToNext()) {
+                    try {
+                        loadData(cursor = it, context = context)
+                    } catch (_: Exception) {
+                        SatunesLogger.getLogger()?.warning("A music has not been loaded.")
+                        this._countMusicNotLoaded++
+                    }
+                }
             }
         }
         DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()

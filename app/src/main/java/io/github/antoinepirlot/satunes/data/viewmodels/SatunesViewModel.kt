@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -215,13 +212,35 @@ class SatunesViewModel : ViewModel() {
         )
     }
 
-    fun loadAllData() {
+    fun loadAllData(
+        scope: CoroutineScope?,
+        snackbarHostState: SnackbarHostState?
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            try {
+                DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            } catch (e: Exception) {
+                SatunesLogger.getLogger()?.severe("An error occurred when loading music.")
+                if (scope != null && snackbarHostState != null)
+                    showErrorSnackBar(
+                        scope = scope,
+                        snackBarHostState = snackbarHostState,
+                        action = {
+                            this@SatunesViewModel.loadAllData(
+                                scope = scope,
+                                snackbarHostState = snackbarHostState
+                            )
+                        }
+                    )
+            }
         }
     }
 
-    fun reloadAllData(playbackViewModel: PlaybackViewModel) {
+    fun reloadAllData(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        playbackViewModel: PlaybackViewModel
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             while (DatabaseManager.exportingPlaylist) {
                 // Wait
@@ -231,7 +250,7 @@ class SatunesViewModel : ViewModel() {
                 playbackViewModel.stop()
             }
             DataLoader.resetAllData()
-            this@SatunesViewModel.loadAllData()
+            this@SatunesViewModel.loadAllData(scope = scope, snackbarHostState = snackbarHostState)
         }
     }
 

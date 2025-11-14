@@ -72,7 +72,7 @@ internal fun loadSatunesData(
         }
     } else {
         satunesViewModel.loadSettings()
-        satunesViewModel.loadAllData()
+        satunesViewModel.loadAllData(scope = null, snackbarHostState = null)
     }
 }
 

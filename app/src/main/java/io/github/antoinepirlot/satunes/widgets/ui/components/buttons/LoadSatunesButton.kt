@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -20,13 +21,19 @@
 package io.github.antoinepirlot.satunes.widgets.ui.components.buttons
 
 import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.glance.Button
 import androidx.glance.GlanceComposable
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.utils.initSatunes
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 22/08/2024
@@ -36,12 +43,22 @@ import io.github.antoinepirlot.satunes.utils.initSatunes
 @GlanceComposable
 internal fun LoadSatunesButton(
     modifier: GlanceModifier = GlanceModifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
 ) {
     val context: Context = LocalContext.current
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
     Button(
         modifier = modifier,
         text = LocalContext.current.getString(R.string.load_satunes_text),
-        onClick = { initSatunes(context = context, satunesViewModel = null) }
+        onClick = {
+            initSatunes(
+                context = context,
+                satunesViewModel = satunesViewModel,
+                scope = scope,
+                snackbarHostState = snackbarHostState
+            )
+        }
     )
 }

@@ -213,25 +213,24 @@ class SatunesViewModel : ViewModel() {
     }
 
     fun loadAllData(
-        scope: CoroutineScope?,
-        snackbarHostState: SnackbarHostState?
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
             } catch (e: Exception) {
                 SatunesLogger.getLogger()?.severe("An error occurred when loading music.")
-                if (scope != null && snackbarHostState != null)
-                    showErrorSnackBar(
-                        scope = scope,
-                        snackBarHostState = snackbarHostState,
-                        action = {
-                            this@SatunesViewModel.loadAllData(
-                                scope = scope,
-                                snackbarHostState = snackbarHostState
-                            )
-                        }
-                    )
+                showErrorSnackBar(
+                    scope = scope,
+                    snackBarHostState = snackbarHostState,
+                    action = {
+                        this@SatunesViewModel.loadAllData(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState
+                        )
+                    }
+                )
             }
         }
     }

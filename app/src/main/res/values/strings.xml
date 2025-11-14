@@ -169,5 +169,5 @@
     <string name="export_multiple_files_text">One file per playlist?</string>
     <string name="reverse_order">Reverse order</string>
     <string name="is_music_title_display_name_text">Use the file\'s title for the music\'s title?</string>
-    <string name="error_load_music_count_text">" music(s) not loaded"</string>
+    <string name="error_load_music_count_text">"music(s) not loaded"</string>
 </resources>

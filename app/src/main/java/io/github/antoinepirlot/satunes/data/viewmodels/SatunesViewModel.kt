@@ -220,15 +220,15 @@ class SatunesViewModel : ViewModel() {
             try {
                 DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
                 val errorMusicCount: Long = DataLoader.getCountMusicNotLoaded()
-                if (errorMusicCount > 0)
+                if (errorMusicCount > 0) {
+                    val message: String =
+                        "$errorMusicCount " + MainActivity.instance.getString(R.string.error_load_music_count_text)
                     showSnackBar(
                         scope = scope,
                         snackBarHostState = snackbarHostState,
-                        message = MainActivity.instance.getString(
-                            R.string.error_load_music_count_text,
-                            errorMusicCount
-                        ),
+                        message = message
                     )
+                }
             } catch (e: Exception) {
                 SatunesLogger.getLogger()?.severe("An error occurred when loading music.")
                 showErrorSnackBar(

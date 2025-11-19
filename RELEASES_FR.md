@@ -4,6 +4,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.2
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction de la navigation lorsque, dans certaines conditions, l'icône de liste ne s'affiche pas
+* Correction du plantage si un fichier musical n'est pas chargé correctement
+
 ### 3.3.1
 
 Améliorations, optimisations et corrections de bogues :

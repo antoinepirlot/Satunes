@@ -4,6 +4,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.2
+
+Improvements, optimisations and bug fixes:
+
+* Fix navigation when, under certain conditions, list icon won't show
+* Fix crash if a music file is not correctly loaded
+
 ### 3.3.1
 
 Improvements, optimisations and bug fixes:

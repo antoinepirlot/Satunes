@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,12 +38,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 12/09/2024
@@ -54,6 +59,8 @@ internal fun FoldersPathButtons(
     playbackViewModel: PlaybackViewModel = viewModel(),
     folderSelectionViewModel: FolderSelectionViewModel = viewModel()
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val folderSelectionUiState: FolderSelectionUiState by folderSelectionViewModel.uiState.collectAsState()
 
     val spacerSize: Dp = 5.dp
@@ -76,7 +83,13 @@ internal fun FoldersPathButtons(
         ButtonWithIcon(
             modifier = Modifier.fillMaxWidth(),
             icon = SatunesIcons.REFRESH,
-            onClick = { satunesViewModel.reloadAllData(playbackViewModel = playbackViewModel) },
+            onClick = {
+                satunesViewModel.reloadAllData(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    playbackViewModel = playbackViewModel
+                )
+            },
             enabled = !satunesViewModel.isLoadingData,
             isLoading = satunesViewModel.isLoadingData,
             text = stringResource(id = R.string.refresh_data_button)

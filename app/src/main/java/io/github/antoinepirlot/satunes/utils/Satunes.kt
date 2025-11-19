@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.OptIn
+import androidx.compose.material3.SnackbarHostState
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -46,9 +47,16 @@ import kotlinx.coroutines.runBlocking
 internal fun initSatunes(
     context: Context,
     satunesViewModel: SatunesViewModel?,
+    scope: CoroutineScope?,
+    snackbarHostState: SnackbarHostState?
 ) {
     SatunesLogger.getLogger()?.info("Init Satunes")
-    loadSatunesData(context = context, satunesViewModel = satunesViewModel)
+    loadSatunesData(
+        context = context,
+        satunesViewModel = satunesViewModel,
+        scope = scope,
+        snackbarHostState = snackbarHostState
+    )
     PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
     setNotificationOnClick(context = context)
     removeSatunesDownloadedApkFiles(context = context)
@@ -60,7 +68,9 @@ fun checkDefaultPlaylistSetting(context: Context) {
 
 internal fun loadSatunesData(
     context: Context,
-    satunesViewModel: SatunesViewModel?
+    satunesViewModel: SatunesViewModel?,
+    scope: CoroutineScope?,
+    snackbarHostState: SnackbarHostState?
 ) {
     SatunesLogger.getLogger()?.info("Load Satunes Data")
     if (satunesViewModel == null) {
@@ -71,8 +81,10 @@ internal fun loadSatunesData(
             DataLoader.loadAllData(context = context)
         }
     } else {
+        if (scope == null || snackbarHostState == null)
+            throw IllegalArgumentException("You must give scope and snackBarHostState.")
         satunesViewModel.loadSettings()
-        satunesViewModel.loadAllData()
+        satunesViewModel.loadAllData(scope = scope, snackbarHostState = snackbarHostState)
     }
 }
 

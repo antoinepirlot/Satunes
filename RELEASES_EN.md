@@ -4,6 +4,13 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.3
+
+Improvements, optimisations and bug fixes:
+
+* If the export file could not be created, Satunes stops the export
+* Fixed exporting a single playlist in m3u format
+
 ### 3.3.2
 
 Improvements, optimisations and bug fixes:

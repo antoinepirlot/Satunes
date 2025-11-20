@@ -1,0 +1,4 @@
+Improvements, optimisations and bug fixes:
+
+* If the export file could not be created, Satunes stops the export
+* Fixed exporting a single playlist in m3u format

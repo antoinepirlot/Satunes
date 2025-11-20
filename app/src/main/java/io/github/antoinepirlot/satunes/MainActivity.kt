@@ -206,26 +206,24 @@ internal class MainActivity : ComponentActivity() {
                         CoroutineScope(Dispatchers.IO).launch {
                             if (requestCode == EXPORT_LOGS_CODE) {
                                 _logger?.exportLogs(context = this@MainActivity, uri = uri)
+                            } else if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
+                                DatabaseManager.getInstance().exportPlaylists(
+                                    context = this@MainActivity.applicationContext,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    uri = uri,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
                             } else {
-                                if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
-                                    DatabaseManager.getInstance().exportPlaylists(
-                                        context = this@MainActivity.applicationContext,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        uri = uri,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                } else {
-                                    DatabaseManager.getInstance().exportPlaylist(
-                                        context = applicationContext,
-                                        uri = uri,
-                                        playlist = _playlistToExport!!,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                    _playlistToExport = null
-                                }
+                                DatabaseManager.getInstance().exportPlaylist(
+                                    context = applicationContext,
+                                    uri = uri,
+                                    playlist = _playlistToExport!!,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
+                                _playlistToExport = null
                             }
                             this@MainActivity._fileExtension = null
                         }

@@ -38,8 +38,8 @@ android {
         applicationId = nameSpace
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 99
-        versionName = "3.3.2"
+        versionCode = 101
+        versionName = "3.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -4,6 +4,13 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.3
+
+Améliorations, optimisations et corrections de bugs :
+
+* Si le fichier d'exportation n'a pas pu être créé, Satunes arrête l'exportation
+* Correction de l'exportation d'une seule playlist sous le format m3u
+
 ### 3.3.2
 
 Améliorations, optimisations et corrections de bugs :

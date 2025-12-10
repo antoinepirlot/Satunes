@@ -55,7 +55,6 @@
 // *
 // * Inspired from https://developer.android.com/develop/connectivity/network-ops/xml
 // */
-//@RequiresApi(Build.VERSION_CODES.M)
 //class SubsonicParser(private val subsonicApiRequester: SubsonicApiRequester) {
 //    companion object {
 //        private const val SONG_TAG_NAME = "song"

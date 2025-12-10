@@ -1,4 +1,5 @@
 [versions]
+agp = "8.13.1"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.11.0"
 android-compileSdk = "36"
@@ -15,6 +16,7 @@ fragmentKtx = "1.8.9"
 javaxInject = "1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
+kotlin = "1.9.0"
 kotlinxSerializationJson = "1.6.3" # Update causes gradle error
 ksp = "1.9.0-1.0.13"
 lifeCycleVersion = "2.9.4"
@@ -80,4 +82,8 @@ ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "compo
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeUiVersion" }
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

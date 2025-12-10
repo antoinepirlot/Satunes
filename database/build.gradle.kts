@@ -19,8 +19,8 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     id("androidx.room") version ("2.6.1")
     kotlin("plugin.serialization") version "1.9.22"

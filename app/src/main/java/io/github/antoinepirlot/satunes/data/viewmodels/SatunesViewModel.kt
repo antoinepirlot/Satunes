@@ -24,7 +24,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.DocumentsContract
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -98,11 +97,9 @@ class SatunesViewModel : ViewModel() {
         SettingsManager.defaultNavBarSection
     private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         UpdateCheckManager.updateAvailableStatus
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
     private val _artworkAnimation: MutableState<Boolean> = SettingsManager.artworkAnimation
     private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
@@ -115,15 +112,12 @@ class SatunesViewModel : ViewModel() {
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var isCheckingUpdate: Boolean by mutableStateOf(false)
         private set
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
@@ -420,14 +414,12 @@ class SatunesViewModel : ViewModel() {
      * Reset update status.
      * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
      */
-    @RequiresApi(Build.VERSION_CODES.M)
     fun resetUpdatesStatus(force: Boolean = false) {
         if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun checkUpdate(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         isCheckingUpdate = true
         CoroutineScope(Dispatchers.IO).launch {
@@ -486,7 +478,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun getCurrentVersion(): String {
         try {
             return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
@@ -496,7 +487,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun downloadUpdateApk(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -790,7 +780,6 @@ class SatunesViewModel : ViewModel() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun selectUpdateChannel(channel: UpdateChannel) {
         try {
             CoroutineScope(Dispatchers.IO).launch {

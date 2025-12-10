@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
@@ -104,7 +102,6 @@ enum class Destination(
     SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),
     SETTINGS(link = "/settings", category = DestinationCategory.SETTING),
 
-    @RequiresApi(Build.VERSION_CODES.M)
     UPDATES_SETTINGS(link = "/updates", category = DestinationCategory.SETTING);
 
     companion object {
@@ -136,9 +133,7 @@ enum class Destination(
         )
 
         init {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
-            }
+            this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
         }
 
         fun getDestination(destination: String): Destination {

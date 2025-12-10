@@ -23,7 +23,6 @@ package io.github.antoinepirlot.satunes.utils
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.android.utils.logger.Logger
@@ -78,12 +77,7 @@ internal fun loadSatunesData(
 
 internal fun removeSatunesDownloadedApkFiles(context: Context) {
     Logger.getLogger()?.info("Remove Satunes Downloaded Apk Files")
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        DataCleanerManager.removeApkFiles(context = context)
-    } else {
-        Logger.getLogger()
-            ?.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
-    }
+    DataCleanerManager.removeApkFiles(context = context)
 }
 
 /**

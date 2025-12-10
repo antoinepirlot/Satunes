@@ -24,8 +24,6 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.internet.R
 
@@ -33,7 +31,6 @@ import io.github.antoinepirlot.satunes.internet.R
  * @author Antoine Pirlot on 14/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 internal object DownloadReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {

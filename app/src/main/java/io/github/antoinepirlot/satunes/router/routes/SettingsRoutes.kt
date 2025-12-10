@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.router.routes
 
-import android.os.Build
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
@@ -79,13 +78,11 @@ internal fun NavGraphBuilder.settingsRoutes(
         PlaybackSettingsView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        composable(Destination.UPDATES_SETTINGS.link) {
-            LaunchedEffect(key1 = Unit) {
-                onStart(it)
-            }
-            UpdatesSettingView(modifier = Modifier.padding(horizontal = 16.dp))
+    composable(Destination.UPDATES_SETTINGS.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
         }
+        UpdatesSettingView(modifier = Modifier.padding(horizontal = 16.dp))
     }
 
     composable(Destination.LIBRARY_SETTINGS.link) {

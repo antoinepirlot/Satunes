@@ -26,6 +26,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
@@ -38,7 +39,6 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
-import io.github.antoinepirlot.satunes.utils.logger.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

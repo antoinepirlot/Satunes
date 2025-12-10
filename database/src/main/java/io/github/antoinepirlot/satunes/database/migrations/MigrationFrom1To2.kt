@@ -22,7 +22,7 @@ package io.github.antoinepirlot.satunes.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import io.github.antoinepirlot.satunes.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 28/06/2024

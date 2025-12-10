@@ -20,10 +20,10 @@
 
 package io.github.antoinepirlot.satunes.car.playback
 
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 17/03/2024
@@ -36,7 +36,7 @@ internal object RouteManager {
     private var _isShuffleButtonSelected: Boolean = DEFAULT_IS_SHUFFLE_BUTTON_SELECTED
 
     fun isSelected(): Boolean {
-        return this._selectedTab == this._selectedMediaImpl // That means both are null
+        return this._selectedTab === this._selectedMediaImpl // That means both are null
     }
 
     fun reset() {

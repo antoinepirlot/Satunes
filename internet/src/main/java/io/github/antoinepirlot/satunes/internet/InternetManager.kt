@@ -27,7 +27,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import io.github.antoinepirlot.satunes.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 11/04/2024

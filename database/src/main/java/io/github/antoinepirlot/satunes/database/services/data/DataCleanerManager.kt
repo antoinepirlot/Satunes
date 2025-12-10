@@ -22,7 +22,7 @@ package io.github.antoinepirlot.satunes.database.services.data
 
 import android.content.Context
 import android.os.Environment
-import io.github.antoinepirlot.satunes.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.logger.Logger
 import java.io.File
 
 /**

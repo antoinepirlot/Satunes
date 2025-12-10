@@ -23,6 +23,10 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.readTextFromUri
+import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.android.utils.utils.writeToUri
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -45,14 +49,9 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.utils.logger.Logger
-import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import io.github.antoinepirlot.satunes.utils.utils.writeToUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**

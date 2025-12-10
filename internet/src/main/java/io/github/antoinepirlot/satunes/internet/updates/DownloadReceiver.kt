@@ -26,8 +26,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.internet.R
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 
 /**
  * @author Antoine Pirlot on 14/04/2024

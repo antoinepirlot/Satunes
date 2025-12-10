@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 
 /**
  * Extra Button list to show on scaffold.

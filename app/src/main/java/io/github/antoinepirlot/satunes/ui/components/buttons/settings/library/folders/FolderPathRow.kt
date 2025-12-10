@@ -41,7 +41,6 @@ import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 import kotlinx.coroutines.CoroutineScope
 
 /**

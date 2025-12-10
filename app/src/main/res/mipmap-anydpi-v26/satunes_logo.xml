@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of Satunes.
   ~
   ~ Satunes is free software: you can redistribute it and/or modify it under
@@ -13,14 +12,13 @@
   ~
   ~ **** INFORMATION ABOUT THE AUTHOR *****
   ~ The author of this file is Antoine Pirlot, the owner of this project.
-  ~ You find this original project on github.
+  ~ You find this original project on Codeberg.
   ~
-  ~ My github link is: https://github.com/antoinepirlot
-  ~ This current project's link is: https://github.com/antoinepirlot/Satunes
-  ~
-  ~ PS: I don't answer quickly.
+  ~ My Codeberg link is: https://codeberg.org/antoinepirlot
+  ~ This current project's link is: https://codeberg.org/antoinepirlot/Satunes
   -->
 
-<resources>
-    <color name="satunes_icon_background">#1C2F76</color>
-</resources>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/satunes_logo_background" />
+    <foreground android:drawable="@mipmap/satunes_logo_foreground" />
+</adaptive-icon>

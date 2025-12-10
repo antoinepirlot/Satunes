@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.router.routes
 
 import android.os.Build
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -64,10 +65,9 @@ internal fun NavGraphBuilder.settingsRoutes() {
         PlaybackSettingsView(modifier = Modifier.padding(horizontal = padding))
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
         composable(Destination.UPDATES_SETTINGS.link) {
             UpdatesSettingView(modifier = Modifier.padding(horizontal = padding))
-        }
     }
 
     composable(Destination.LIBRARY_SETTINGS.link) {

@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * ** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -27,16 +28,16 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 22/02/24
@@ -99,7 +100,7 @@ object DataLoader {
 
     private lateinit var selection_args: Array<String> //see loadFoldersPaths function
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -286,7 +287,7 @@ object DataLoader {
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album, uri = uri)
 
         //Load Folder
-        val folder: Folder = loadFolder(absolutePath = absolutePath!!)
+        val folder: Folder = loadFolder(context = context, absolutePath = absolutePath!!)
 
         //Load music and folder inside load music function
         return try {
@@ -394,36 +395,40 @@ object DataLoader {
      *
      * @param absolutePath the absolute path to create folder and sub-folders if not already created
      */
-    private fun loadFolder(absolutePath: String): Folder {
-        val splitPath: MutableList<String> = mutableListOf()
+    private fun loadFolder(context: Context, absolutePath: String): Folder {
+        val splitPath: Collection<String> =
+            this.getPathList(context = context, absolutePath = absolutePath)
+        val rootFolder: Folder = DataManager.getRootFolder()
+        rootFolder.createSubFolders(splitPath)
+        return rootFolder.getSubFolder(splitPath.toMutableList())!!
+    }
+
+    /**
+     * Returns the path list by removing storage and emulated.
+     */
+    private fun getPathList(context: Context, absolutePath: String): Collection<String> {
+        val splitPathToReturn: MutableCollection<String> = mutableListOf()
         val splitList: List<String> = absolutePath.split("/")
-        for (index: Int in 0..<splitList.lastIndex) {
-            //Don't create a folder for the file (no folder called music.mp3)
-            //The last name is a file
-            val folderName: String = splitList[index]
-            if (folderName !in listOf("", "storage", "emulated")) {
-                splitPath.add(folderName)
+        var canAddPath: Boolean = false
+        var storageNameCanBeProcessed: Boolean = false
+        for (i: Int in 0..<splitList.lastIndex) { //Do not process the final file which is the music.
+            val folderName: String =
+                if (storageNameCanBeProcessed) {
+                    storageNameCanBeProcessed = false
+                    if (splitList[i] == "0") context.getString(R.string.this_device)
+                    else splitList[i]
+                } else splitList[i]
+
+            if (canAddPath) splitPathToReturn.add(folderName)
+            else if (
+                folderName == "emulated"
+                || folderName == "storage" && splitList[i + 1] != "emulated" //isExternalStorage
+            ) {
+                canAddPath = true
+                storageNameCanBeProcessed = true
             }
         }
-
-        var rootFolder: Folder? = null
-
-        DataManager.getRootFolderSet().forEach { folder: Folder ->
-            if (folder.title == splitPath[0]) {
-                rootFolder = folder
-                return@forEach
-            }
-        }
-
-        if (rootFolder == null) {
-            // No root folders in the list
-            rootFolder = Folder(title = splitPath[0])
-            DataManager.addFolder(folder = rootFolder!!) //Do not follow warning for !!
-        }
-
-        splitPath.removeAt(0)
-        rootFolder!!.createSubFolders(splitPath.toMutableList()) //Do not follow warning for !!
-        return rootFolder!!.getSubFolder(splitPath.toMutableList())!! //Do not follow warning for !!
+        return splitPathToReturn
     }
 
     private fun loadArtist(context: Context, cursor: Cursor, uri: Uri?): Artist {

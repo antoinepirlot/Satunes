@@ -24,12 +24,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -45,7 +47,9 @@ object DataManager {
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
     private val subsonicMusicSortedMap: SortedMap<String, Music> = sortedMapOf()
 
-    private val rootFolderSortedSet: SortedSet<Folder> = sortedSetOf()
+    private var _rootFolder: RootFolder = RootFolder()
+    private val _backFolder: BackFolder
+        get() = BackFolder()
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
     private val subsonicFoldersSortedMap: SortedMap<String, Folder> = sortedMapOf()
@@ -73,7 +77,7 @@ object DataManager {
             return musicMapById[id]!!
         } catch (_: NullPointerException) {
             //That means the music is not more present in the phone storage
-            //Happens when the database is loaded with old informations.
+            //Happens when the database is loaded with old information.
             throw MusicNotFoundException(id = id)
         }
     }
@@ -81,7 +85,7 @@ object DataManager {
     fun getMusic(absolutePath: String): Music {
         return musicMapByAbsolutePath[absolutePath]!!
     }
-    
+
     fun getSubsonicMusic(subsonicId: String): Music? = this.subsonicMusicSortedMap[subsonicId]
 
     fun getMusicSet(): Set<Music> {
@@ -97,9 +101,12 @@ object DataManager {
         return getMusic(id = music.id)
     }
 
-    fun getRootFolderSet(): Set<Folder> {
-        return this.rootFolderSortedSet
-    }
+    /**
+     * Returns the very first folder in chain.
+     */
+    fun getRootFolder(): RootFolder = this._rootFolder
+
+    fun getBackFolder(): BackFolder = this._backFolder
 
     fun getRootSubsonicFolders(): Set<Folder> {
         return this.subsonicFolder?.getSubFolderSet()?: setOf()
@@ -163,7 +170,7 @@ object DataManager {
     fun hasSubsonicAlbums(): Boolean {
         return this.subsonicAlbumsSortedSet.isNotEmpty()
     }
-    
+
     fun getAlbum(subsonicId: String): Album? = this.subsonicAlbumsSortedSet[subsonicId]
 
     fun addAlbum(album: Album): Album {
@@ -222,7 +229,6 @@ object DataManager {
         folder.getSubFolderSet().forEach {
             this.removeFolder(folder = it)
         }
-        rootFolderSortedSet.remove(folder)
     }
 
     fun getGenre(id: Long): Genre? {
@@ -282,7 +288,7 @@ object DataManager {
         musicSortedSet.clear()
         musicMapById.clear()
         musicMapByAbsolutePath.clear()
-        rootFolderSortedSet.clear()
+        this._rootFolder = RootFolder()
         folderMapById.clear()
         folderSortedSet.clear()
         artistMapById.clear()

@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -31,11 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.models.SettingsViews
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
+import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSettings
 
@@ -46,6 +49,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSetting
 @Composable
 internal fun SettingsView(
     modifier: Modifier = Modifier,
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
     val scrollState = rememberScrollState()

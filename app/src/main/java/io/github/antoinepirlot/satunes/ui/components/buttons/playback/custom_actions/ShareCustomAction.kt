@@ -25,12 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -48,7 +48,7 @@ internal fun ShareCustomAction(
 
     CustomActionButton(
         modifier = modifier,
-        icon = SatunesIcons.SHARE,
+        jetpackLibsIcons = JetpackLibsIcons.SHARE,
         text = stringResource(R.string.share_button_content),
         onClick = {
             dataViewModel.share(

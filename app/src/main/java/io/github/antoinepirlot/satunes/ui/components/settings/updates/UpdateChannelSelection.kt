@@ -23,8 +23,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.updates
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
@@ -41,7 +39,6 @@ import io.github.antoinepirlot.satunes.ui.components.forms.SatunesDropDownMenu
 /**
  * @author Antoine Pirlot 21/04/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun UpdateChannelSelection(
     modifier: Modifier = Modifier,
@@ -56,7 +53,6 @@ fun UpdateChannelSelection(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 private fun Menu(
     modifier: Modifier = Modifier,
@@ -81,7 +77,6 @@ private fun Menu(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun UpdateChannelSelectionPreview() {

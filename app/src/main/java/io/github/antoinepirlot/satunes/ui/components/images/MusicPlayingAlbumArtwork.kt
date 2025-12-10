@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
 
 /**
  * @author Antoine Pirlot on 11/08/2024
@@ -37,13 +36,12 @@ import io.github.antoinepirlot.satunes.database.models.Album
 internal fun MusicPlayingAlbumArtwork(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    onClick: ((album: Album?) -> Unit)? = null,
+    playbackViewModel: PlaybackViewModel = viewModel()
 ) {
     MediaArtwork(
         modifier = modifier,
         mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = onClick,
+        isClickable = true,
         shape = if (satunesViewModel.artworkAnimation) CircleShape else null
     )
 }
@@ -52,9 +50,6 @@ internal fun MusicPlayingAlbumArtwork(
 @Composable
 private fun MusicPlayingAlbumArtworkPreview() {
     val playbackViewModel: PlaybackViewModel = viewModel()
-    MediaArtwork(
-        mediaImpl = playbackViewModel.musicPlaying!!,
-        onClick = { }
-    )
+    MediaArtwork(mediaImpl = playbackViewModel.musicPlaying!!)
 }
 

@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.buttons.updates
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot on 11/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun CheckUpdateButton(
     modifier: Modifier = Modifier,
@@ -63,7 +60,6 @@ internal fun CheckUpdateButton(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun CheckUpdateButtonPreview() {

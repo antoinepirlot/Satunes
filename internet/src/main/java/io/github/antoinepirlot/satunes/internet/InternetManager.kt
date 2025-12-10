@@ -29,7 +29,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager.updateAvailableStatus
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.android.utils.logger.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -37,7 +37,6 @@ import okhttp3.Response
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
-@RequiresApi(Build.VERSION_CODES.M)
 internal class InternetManager(context: Context) : Application() {
 
     companion object {

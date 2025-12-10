@@ -22,7 +22,7 @@ package io.github.antoinepirlot.satunes.playback.models
 
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
-import io.github.antoinepirlot.satunes.icons.R
+import io.github.antoinepirlot.jetpack_libs.components.R
 
 /**
  * @author Antoine Pirlot on 08/09/2024

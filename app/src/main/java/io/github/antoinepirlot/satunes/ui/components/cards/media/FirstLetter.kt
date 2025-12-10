@@ -26,8 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.getTitleToCompare
 import java.text.Normalizer
@@ -43,33 +46,36 @@ import java.text.Normalizer
 @Suppress("NAME_SHADOWING")
 @Composable
 fun FirstLetter(
-    map: MutableMap<Any?, MediaImpl>,
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>,
     sortOption: SortOptions
 ) {
+    if (mediaImpl is BackFolder) return
+
     val titleToCompare: String =
         getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
+
     val charToCompare: Char = Normalizer
         .normalize(titleToCompare.first().uppercase(), Normalizer.Form.NFD)
         .first()
-    if (!map.containsKey(charToCompare)) {
-        map[charToCompare] = mediaImplList.first { mediaImpl: MediaImpl ->
-            val itTitle: String =
-                getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
-            Normalizer.normalize(
-                itTitle.first().uppercase(),
-                Normalizer.Form.NFD
-            ).first() == charToCompare
-        }
+
+    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first { mediaImpl: MediaImpl ->
+        val itTitle: String =
+            getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
+        Normalizer.normalize(
+            itTitle.first().uppercase(),
+            Normalizer.Form.NFD
+        ).first() == charToCompare
     }
-    if (mediaImpl == map[charToCompare]) {
+
+    if (mediaImpl == firstWithLetterMediaImpl)
         Title(
-            modifier = Modifier.padding(vertical = 15.dp),
+            modifier = modifier.padding(vertical = 15.dp),
             bottomPadding = 0.dp,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             text = charToCompare.toString()
         )
-    }
 }

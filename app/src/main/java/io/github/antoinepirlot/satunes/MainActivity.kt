@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -32,12 +33,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -45,8 +48,6 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -89,7 +90,7 @@ internal class MainActivity : ComponentActivity() {
     private var _fileExtension: FileExtensions? = null
     private var _rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
     private var multipleFiles: Boolean = false
-    private var _logger: SatunesLogger? = null
+    private var _logger: Logger? = null
     private var _playlistToExport: Playlist? = null
     var handledMusic: Music? by mutableStateOf(null)
         private set
@@ -104,9 +105,9 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SatunesLogger.DOCUMENTS_PATH =
+        Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = Logger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
         if (intentToHandle != intent) intentToHandle = intent
@@ -199,31 +200,30 @@ internal class MainActivity : ComponentActivity() {
                                 context = this,
                                 message = this.getString(R.string.no_file_created)
                             )
+                            return
                         }
 
                         CoroutineScope(Dispatchers.IO).launch {
                             if (requestCode == EXPORT_LOGS_CODE) {
                                 _logger?.exportLogs(context = this@MainActivity, uri = uri)
+                            } else if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
+                                DatabaseManager.getInstance().exportPlaylists(
+                                    context = this@MainActivity.applicationContext,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    uri = uri,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
                             } else {
-                                if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
-                                    DatabaseManager.getInstance().exportPlaylists(
-                                        context = this@MainActivity.applicationContext,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        uri = uri,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                } else {
-                                    DatabaseManager.getInstance().exportPlaylist(
-                                        context = applicationContext,
-                                        uri = uri,
-                                        playlist = _playlistToExport!!,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                    _playlistToExport = null
-                                }
+                                DatabaseManager.getInstance().exportPlaylist(
+                                    context = applicationContext,
+                                    uri = uri,
+                                    playlist = _playlistToExport!!,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
+                                _playlistToExport = null
                             }
                             this@MainActivity._fileExtension = null
                         }

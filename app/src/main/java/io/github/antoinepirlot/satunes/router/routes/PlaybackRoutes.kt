@@ -24,15 +24,11 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.playback.PlaybackView
 import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueView
@@ -44,36 +40,17 @@ import io.github.antoinepirlot.satunes.ui.views.playback.common.PlaybackQueueVie
 internal fun NavGraphBuilder.playbackRoutes(
     satunesViewModel: SatunesViewModel,
     playbackViewModel: PlaybackViewModel,
+    navigationViewModel: NavigationViewModel,
     onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(Destination.PLAYBACK.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
+            navigationViewModel.setCurrentMediaImpl(mediaImpl = playbackViewModel.musicPlaying!!)
         }
 
-        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
-            LoadingView()
-        } else {
-            val navController: NavHostController = LocalNavController.current
-            PlaybackView(
-                onAlbumClick = { album: Album? ->
-                    if (album != null) {
-                        openMedia(
-                            playbackViewModel = playbackViewModel,
-                            media = album,
-                            navController = navController,
-                        )
-                    }
-                },
-                onArtistClick = { artist: Artist ->
-                    openMedia(
-                        playbackViewModel = playbackViewModel,
-                        media = artist,
-                        navController = navController
-                    )
-                }
-            )
-        }
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) LoadingView()
+        else PlaybackView()
     }
 
     composable(Destination.PLAYBACK_QUEUE.link) {

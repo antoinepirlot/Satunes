@@ -23,6 +23,10 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.readTextFromUri
+import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
+import io.github.antoinepirlot.android.utils.utils.writeToUri
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -34,21 +38,17 @@ import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundExceptio
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
-import io.github.antoinepirlot.satunes.utils.utils.writeToUri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class DatabaseManager private constructor(context: Context) {
     private val musicDao: MusicDAO = database.musicDao()
     private val playlistDao: PlaylistDAO = database.playlistDao()
     private val musicsPlaylistsRelDAO: MusicsPlaylistsRelDAO = database.musicsPlaylistsRelDao()
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     companion object {
         private lateinit var _instance: DatabaseManager
@@ -427,6 +427,7 @@ class DatabaseManager private constructor(context: Context) {
                 uris += uri
                 getPlaylistsM3uFormat(
                     rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+                    playlistsWithMusics = playlistsWithMusics,
                     multipleFiles = multipleFiles
                 )
             }
@@ -438,10 +439,10 @@ class DatabaseManager private constructor(context: Context) {
 
     private fun getPlaylistsM3uFormat(
         rootPlaylistsFilesPath: String,
+        playlistsWithMusics: List<PlaylistWithMusics>,
         multipleFiles: Boolean
     ): List<String> {
         val toReturn: MutableList<String> = mutableListOf()
-        val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         var fileContent: String = "#EXTM3U\n"
         for (playlist: PlaylistWithMusics in playlistsWithMusics) {
             if (multipleFiles) fileContent = "#EXTM3U\n"
@@ -495,7 +496,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun importPlaylists(context: Context, uri: Uri, fileExtension: FileExtensions) {
         importingPlaylist = true
-        val logger = SatunesLogger.getLogger()
+        val logger = Logger.getLogger()
         CoroutineScope(Dispatchers.IO).launch {
             showToastOnUiThread(
                 context = context,

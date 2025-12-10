@@ -28,15 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openMedia
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 
 /**
  * Extra Button list to show on scaffold.
@@ -53,9 +54,11 @@ internal fun ExtraButtonList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel()
+    dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListOnScreen
@@ -65,13 +68,13 @@ internal fun ExtraButtonList(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ExtraButton(
-            icon = SatunesIcons.PLAY,
+            jetpackLibsIcons = JetpackLibsIcons.PLAY,
             onClick = {
                 playbackViewModel.loadMusicFromMedias(
                     medias = mediaImplCollection,
-                    currentDestination = satunesUiState.currentDestination
+                    currentDestination = navigationUiState.currentDestination
                 )
-                openMedia(
+                navigationViewModel.openMedia(
                     playbackViewModel = playbackViewModel,
                     navController = navController
                 )
@@ -81,14 +84,14 @@ internal fun ExtraButtonList(
         if (!satunesUiState.shuffleMode) {
             //The shuffle mode is always activated by default and don't need to be shown
             ExtraButton(
-                icon = SatunesIcons.SHUFFLE,
+                jetpackLibsIcons = JetpackLibsIcons.SHUFFLE,
                 onClick = {
                     playbackViewModel.loadMusicFromMedias(
                         medias = mediaImplCollection,
-                        currentDestination = satunesUiState.currentDestination,
+                        currentDestination = navigationUiState.currentDestination,
                         shuffleMode = true
                     )
-                    openMedia(
+                    navigationViewModel.openMedia(
                         playbackViewModel = playbackViewModel,
                         navController = navController
                     )

@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -44,23 +43,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
-import io.github.antoinepirlot.satunes.database.R as RDb
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -70,22 +66,15 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 @Composable
 internal fun MediaCard(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
-    val title: String =
-        if (mediaImpl is Folder && mediaImpl.parentFolder == null) {
-            getRootFolderName(title = mediaImpl.title)
-        } else if (mediaImpl is Playlist && mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-            stringResource(id = RDb.string.likes_playlist_title)
-        } else {
-            mediaImpl.title
-        }
+    val title: String = getMediaTitle(mediaImpl = mediaImpl)
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val boxModifier: Modifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
@@ -95,7 +84,7 @@ internal fun MediaCard(
     } else modifier
     Box(modifier = boxModifier) {
         ListItem(
-            colors = ListItemDefaults.colors(containerColor = Color.Unspecified), //Without unspecified, in that specific case it's white
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent), //Without Transparent, in that specific case it's white
             leadingContent = {
                 val boxSize: Dp = if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL)
                     25.dp
@@ -110,11 +99,12 @@ internal fun MediaCard(
                         .fillMaxSize()
                         .align(Alignment.Center)
                     if (mediaImpl == playbackViewModel.musicPlaying) {
-                        val playingIcon: SatunesIcons = SatunesIcons.MUSIC_PLAYING
+                        val playingJetpackLibsIcons: JetpackLibsIcons =
+                            JetpackLibsIcons.MUSIC_PLAYING
                         Icon(
                             modifier = imageModifier,
-                            imageVector = playingIcon.imageVector,
-                            contentDescription = playingIcon.description
+                            imageVector = playingJetpackLibsIcons.imageVector,
+                            contentDescription = playingJetpackLibsIcons.description
                         )
                     } else {
                         MediaArtwork(mediaImpl = mediaImpl)
@@ -123,27 +113,26 @@ internal fun MediaCard(
             },
             headlineContent = {
                 Column {
-                    if (satunesUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null) {
+                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl is Music && mediaImpl.cdTrackNumber != null)
                         NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
-                    } else {
+                    else
                         NormalText(text = title)
-                    }
+
                     //Use these as for the same thing the builder doesn't like in one
-                    if (mediaImpl is Album) {
+                    if (mediaImpl is Album)
                         Subtitle(text = mediaImpl.artist.title)
-                    } else if (mediaImpl is Music) {
+                    else if (mediaImpl is Music)
                         Subtitle(text = mediaImpl.album.title + " - " + mediaImpl.artist.title)
-                    }
                 }
             },
             trailingContent = {
                 if (mediaImpl is Music) {
                     val liked: Boolean by mediaImpl.liked
                     if (liked) {
-                        val likedIcon: SatunesIcons = SatunesIcons.LIKED
+                        val likedJetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.LIKED
                         Icon(
-                            imageVector = likedIcon.imageVector,
-                            contentDescription = likedIcon.description
+                            imageVector = likedJetpackLibsIcons.imageVector,
+                            contentDescription = likedJetpackLibsIcons.description
                         )
                     }
                 }

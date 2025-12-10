@@ -1,13 +1,17 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     androidResources {
         generateLocaleConfig = true
@@ -18,8 +22,8 @@ android {
         applicationId = nameSpace
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 91
-        versionName = "3.2.2"
+        versionCode = 101
+        versionName = "3.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -103,11 +107,6 @@ dependencies {
     implementation(libs.androidx.media3.session)
 
     /**
-     * Icons
-     */
-    implementation(project(":icons"))
-
-    /**
      * Navigation
      */
     // Kotlin
@@ -125,6 +124,8 @@ dependencies {
     /**
      * Widget
      */
+    implementation(libs.androidx.glance)
+
     // For AppWidgets support
     implementation(libs.glance.appwidget)
 

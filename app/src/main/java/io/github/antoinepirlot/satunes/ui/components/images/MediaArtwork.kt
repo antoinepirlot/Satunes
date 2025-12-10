@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -58,16 +59,20 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
-import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -83,8 +88,9 @@ internal fun MediaArtwork(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImpl: MediaImpl,
-    onClick: ((album: Album?) -> Unit)? = null,
+    isClickable: Boolean = false,
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
@@ -97,6 +103,8 @@ internal fun MediaArtwork(
     val haptics: HapticFeedback = LocalHapticFeedback.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
+    val navController: NavHostController = LocalNavController.current
+
     val album: Album? = when (mediaImpl) {
         is Music -> mediaImpl.album
         is Album -> mediaImpl
@@ -125,7 +133,7 @@ internal fun MediaArtwork(
         }
     }
 
-    mediaArtWorkModifier = if (onClick != null) {
+    mediaArtWorkModifier = if (isClickable) {
         mediaArtWorkModifier
             .size(
                 if (screenWidthDp >= (ScreenSizes.VERY_VERY_SMALL - 1) && screenWidthDp < ScreenSizes.VERY_SMALL) 150.dp
@@ -135,7 +143,13 @@ internal fun MediaArtwork(
             .combinedClickable(
                 onClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    onClick(album)
+                    if (album != null) {
+                        navigationViewModel.openMedia(
+                            playbackViewModel = playbackViewModel,
+                            media = album,
+                            navController = navController,
+                        )
+                    }
                 },
                 onLongClick = {
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -191,7 +205,7 @@ internal fun MediaArtwork(
                 modifier = Modifier
                     .size(30.dp)
                     .align(Alignment.Center),
-                icon = getRightIconAndDescription(media = mediaImpl)
+                jetpackLibsIcons = getRightIconAndDescription(media = mediaImpl)
             )
         }
     }

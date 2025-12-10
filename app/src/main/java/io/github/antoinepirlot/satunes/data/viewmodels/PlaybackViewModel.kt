@@ -18,46 +18,6 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-/*
- * This file is part of Satunes.
- *
- * Satunes is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
- *
- * *** INFORMATION ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on Codeberg.
- *
- * My Codeberg link is: https://codeberg.org/antoinepirlot
- * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
- */
-
-/*
- * This file is part of Satunes.
- *
- * Satunes is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
- *
- * *** INFORMATION ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on Codeberg.
- *
- * My Codeberg link is: https://codeberg.org/antoinepirlot
- * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
- */
-
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
@@ -67,13 +27,14 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
@@ -82,7 +43,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -101,12 +61,16 @@ class PlaybackViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<PlaybackUiState> =
             MutableStateFlow(PlaybackUiState())
     }
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+
+    private val _logger: Logger? = Logger.getLogger()
     private var _isPlaying: MutableState<Boolean> = PlaybackManager.isPlaying
     private var _musicPlaying: MutableState<Music?> = PlaybackManager.musicPlaying
     private var _currentPositionProgression: MutableFloatState =
         PlaybackManager.currentPositionProgression
     private var _repeatMode: MutableIntState = PlaybackManager.repeatMode
+
+    private val _forwardMs: MutableState<Long> = SettingsManager.forwardMs
+    private val _rewindMs: MutableState<Long> = SettingsManager.rewindMs
     private var _isShuffle: MutableState<Boolean> = PlaybackManager.isShuffle
     private var _isLoaded: MutableState<Boolean> = PlaybackManager.isLoaded
     private var _isEnded: MutableState<Boolean> = PlaybackManager.isEnded
@@ -122,8 +86,11 @@ class PlaybackViewModel : ViewModel() {
     val isLoaded: Boolean by _isLoaded
     val isEnded: Boolean by _isEnded
     val isInitialized: Boolean by _isInitialed
-    val forwardMs: Long = SettingsManager.forwardMs
-    val rewindMs: Long = SettingsManager.rewindMs
+
+    val forwardMs: Long by this._forwardMs
+
+    val rewindMs: Long by this._rewindMs
+
     val customActionsOrder: Collection<CustomActions> = SettingsManager.customActionsOrder
 
     init {
@@ -233,7 +200,7 @@ class PlaybackViewModel : ViewModel() {
     fun getNextMusic(): Music? {
         return try {
             PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             _logger?.severe("Can't get the next music in queue")
             null
         }
@@ -498,7 +465,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -521,7 +488,7 @@ class PlaybackViewModel : ViewModel() {
                     seconds = seconds
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

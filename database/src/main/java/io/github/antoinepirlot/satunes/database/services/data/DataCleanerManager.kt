@@ -22,14 +22,14 @@ package io.github.antoinepirlot.satunes.database.services.data
 
 import android.content.Context
 import android.os.Environment
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.android.utils.logger.Logger
 import java.io.File
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 object DataCleanerManager {
-    private val logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val logger: Logger? = Logger.getLogger()
 
     fun removeApkFiles(context: Context) {
         try {

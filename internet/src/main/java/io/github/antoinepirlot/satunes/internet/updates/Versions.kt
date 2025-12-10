@@ -23,15 +23,12 @@
 
 package io.github.antoinepirlot.satunes.internet.updates
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 
 /**
  * @author Antoine Pirlot on 14/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 object Versions {
     private val ALPHA: String = UpdateChannel.ALPHA.name.lowercase()
     private val BETA: String = UpdateChannel.BETA.name.lowercase()

@@ -1,0 +1,122 @@
+/*
+ * This file is part of Satunes.
+ *
+ * Satunes is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
+ *
+ * *** INFORMATION ABOUT THE AUTHOR *****
+ * The author of this file is Antoine Pirlot, the owner of this project.
+ * You find this original project on Codeberg.
+ *
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
+ */
+
+package io.github.antoinepirlot.satunes.ui.components.settings
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
+
+/**
+ *   @author Antoine Pirlot 06/03/2024
+ */
+
+@Composable
+internal fun SwitchSetting(
+    modifier: Modifier = Modifier,
+    setting: SwitchSettings,
+    jetpackLibsIcons: JetpackLibsIcons? = null,
+    checked: Boolean,
+    onCheckedChange: () -> Unit
+) {
+    var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        NormalText(
+            text = stringResource(id = setting.stringId),
+            maxLines = Int.MAX_VALUE,
+            modifier = Modifier
+                .fillMaxWidth(if (jetpackLibsIcons != null) 0.7f else 0.75f) // Fix the button to be outside the screen if text is long
+        )
+        if (jetpackLibsIcons != null) {
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
+        } else {
+            if (setting.needRestart || setting.needReloadLibrary) {
+                @Suppress("NAME_SHADOWING")
+                val jetpackLibsIcons = JetpackLibsIcons.INFO
+                Icon(
+                    imageVector = jetpackLibsIcons.imageVector,
+                    contentDescription = jetpackLibsIcons.description
+                )
+            }
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = {
+                if (setting.needRestart || setting.needReloadLibrary) {
+                    showInfo = true
+                } else {
+                    onCheckedChange()
+                }
+            }
+        )
+    }
+
+    if (showInfo) {
+        InformationDialog(
+            title = stringResource(
+                id = if (setting.needRestart) R.string.restart_required
+                else if (setting.needReloadLibrary) R.string.reload_library_required
+                else throw UnsupportedOperationException("Can't show if no restart nor reload is needed.")
+            ),
+            onDismissRequest = { showInfo = false },
+            onConfirm = {
+                onCheckedChange()
+                showInfo = false
+            }
+        )
+    }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+@Preview
+private fun SettingWithSwitchPreview() {
+    SwitchSetting(
+        setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
+        checked = true,
+        jetpackLibsIcons = JetpackLibsIcons.INFO,
+        onCheckedChange = {}
+    )
+}

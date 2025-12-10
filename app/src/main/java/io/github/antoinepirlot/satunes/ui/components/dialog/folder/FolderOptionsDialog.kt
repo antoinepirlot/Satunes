@@ -28,15 +28,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
-import io.github.antoinepirlot.satunes.ui.utils.getRootFolderName
+import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
 /**
  * @author Antoine Pirlot on 07/07/2024
@@ -54,17 +54,13 @@ internal fun FolderOptionsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = { /* Nothing */ },
         icon = {
-            val icon: SatunesIcons = SatunesIcons.FOLDER
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            val jetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.FOLDER
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         },
-        title = {
-            val title: String = if (folder.parentFolder == null) {
-                getRootFolderName(title = folder.title)
-            } else {
-                folder.title
-            }
-            NormalText(text = title)
-        },
+        title = { NormalText(text =  getMediaTitle(mediaImpl = folder)) },
         text = {
             Column {
 

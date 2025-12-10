@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.components.bars.top
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,17 +39,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.buttons.IconButton
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
-import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -62,13 +62,14 @@ internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val barModifier: Modifier =
         if (screenWidthDp < ScreenSizes.VERY_VERY_SMALL) modifier.fillMaxHeight(0.11f) else modifier
-    val currentDestination: Destination = satunesUiState.currentDestination
+    val currentDestination: Destination = navigationUiState.currentDestination
 
     CenterAlignedTopAppBar(
         modifier = barModifier,
@@ -83,20 +84,21 @@ internal fun TopAppBar(
                 screenWidth < ScreenSizes.LARGE
             ) {
                 IconButton(
-                    icon = SatunesIcons.PLAYBACK,
+                    jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
                     onClick = {
                         onPlaybackQueueButtonClick(
-                            uiState = satunesUiState,
-                            navController = navController
+                            uiState = navigationUiState,
+                            navController = navController,
+                            navigationViewModel = navigationViewModel
                         )
                     }
                 )
             } else if (
                 currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = satunesUiState.currentDestination).size > 1
+                getSortOptions(destination = navigationUiState.currentDestination).size > 1
             ) {
                 IconButton(
-                    icon = SatunesIcons.SORT,
+                    jetpackLibsIcons = JetpackLibsIcons.SORT,
                     onClick = { satunesViewModel.showSortDialog() }
                 )
             }
@@ -112,11 +114,12 @@ internal fun TopAppBar(
             if (currentDestination.category != DestinationCategory.SETTING) {
                 // Search Button
                 IconButton(
-                    icon = SatunesIcons.SEARCH,
+                    jetpackLibsIcons = JetpackLibsIcons.SEARCH,
                     onClick = {
                         onSearchButtonClick(
-                            uiState = satunesUiState,
-                            navController = navController
+                            uiState = navigationUiState,
+                            navController = navController,
+                            navigationViewModel = navigationViewModel
                         )
                     }
                 )
@@ -124,12 +127,13 @@ internal fun TopAppBar(
 
             //Setting Button
             IconButton(
-                icon = SatunesIcons.SETTINGS,
+                jetpackLibsIcons = JetpackLibsIcons.SETTINGS,
                 onClick = {
                     onSettingButtonClick(
-                        uiState = satunesUiState,
+                        uiState = navigationUiState,
                         satunesViewModel = satunesViewModel,
-                        navController = navController
+                        navController = navController,
+                        navigationViewModel = navigationViewModel
                     )
                 }
             )
@@ -138,17 +142,31 @@ internal fun TopAppBar(
     )
 }
 
-private fun onSearchButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+private fun onSearchButtonClick(
+    uiState: NavigationUiState,
+    navController: NavHostController,
+    navigationViewModel: NavigationViewModel
+) {
     when (uiState.currentDestination) {
-        Destination.SEARCH -> navController.popBackStack()
-        else -> navController.navigate(Destination.SEARCH.link)
+        Destination.SEARCH -> navigationViewModel.popBackStack(navController = navController)
+        else -> navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.SEARCH
+        )
     }
 }
 
-private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: NavHostController) {
+private fun onPlaybackQueueButtonClick(
+    uiState: NavigationUiState,
+    navController: NavHostController,
+    navigationViewModel: NavigationViewModel
+) {
     when (uiState.currentDestination) {
-        Destination.PLAYBACK -> navController.navigate(Destination.PLAYBACK_QUEUE.link)
-        Destination.PLAYBACK_QUEUE -> navController.popBackStack()
+        Destination.PLAYBACK -> navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.PLAYBACK_QUEUE
+        )
+        Destination.PLAYBACK_QUEUE -> navigationViewModel.popBackStack(navController = navController)
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }
 }
@@ -158,22 +176,30 @@ private fun onPlaybackQueueButtonClick(uiState: SatunesUiState, navController: N
  * Otherwise navigate to settings
  */
 private fun onSettingButtonClick(
-    uiState: SatunesUiState,
+    uiState: NavigationUiState,
     navController: NavHostController,
     satunesViewModel: SatunesViewModel,
+    navigationViewModel: NavigationViewModel
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        satunesViewModel.resetUpdatesStatus()
-    }
+    satunesViewModel.resetUpdatesStatus()
     val currentDestination: Destination = uiState.currentDestination
     if (currentDestination.category == DestinationCategory.SETTING) {
-        navController.popBackStack()
+        navigationViewModel.popBackStack(navController = navController)
         if (navController.currentBackStackEntry == null) {
-            navController.navigate(Destination.FOLDERS.link)
-            navController.navigate(Destination.SETTINGS.link)
+            navigationViewModel.navigate(
+                navController = navController,
+                destination = Destination.FOLDERS
+            )
+            navigationViewModel.navigate(
+                navController = navController,
+                destination = Destination.SETTINGS
+            )
         }
     } else {
-        navController.navigate(Destination.SETTINGS.link)
+        navigationViewModel.navigate(
+            navController = navController,
+            destination = Destination.SETTINGS
+        )
     }
 }
 

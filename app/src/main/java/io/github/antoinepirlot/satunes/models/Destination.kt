@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 
 /**
@@ -113,7 +111,6 @@ enum class Destination(
 
     SUBSONIC_SETTINGS(link = "/subsonic", category = SETTINGS.category),
 
-    @RequiresApi(Build.VERSION_CODES.M)
     UPDATES_SETTINGS(link = "/updates", category = SETTINGS.category);
 
     companion object {
@@ -146,9 +143,7 @@ enum class Destination(
         )
 
         init {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
-            }
+            this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
         }
 
         fun getDestination(destination: String): Destination {

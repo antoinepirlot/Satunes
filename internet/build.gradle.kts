@@ -1,12 +1,15 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     kotlin("plugin.serialization") version "1.9.22"
 }
 
 android {
     namespace = "io.github.antoinepirlot.satunes.internet"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

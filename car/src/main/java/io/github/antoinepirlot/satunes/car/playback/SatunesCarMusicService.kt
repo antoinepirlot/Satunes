@@ -30,27 +30,27 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED
 import android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media.MediaBrowserServiceCompat
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.car.R
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import io.github.antoinepirlot.satunes.icons.R as RIcons
+import io.github.antoinepirlot.jetpack_libs.components.R as RIcons
 
 /**
  * @author Antoine Pirlot on 16/03/2024
  */
 internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
-    private var _logger: SatunesLogger? = null
+    private var _logger: Logger? = null
 
     companion object {
         internal lateinit var instance: SatunesCarMusicService
@@ -62,9 +62,9 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        SatunesLogger.DOCUMENTS_PATH =
+        Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = Logger.getLogger()
         _logger?.info("Android Auto is Starting")
         val className: String = this.javaClass.name.split(".").last()
         session = MediaSessionCompat(this, className)

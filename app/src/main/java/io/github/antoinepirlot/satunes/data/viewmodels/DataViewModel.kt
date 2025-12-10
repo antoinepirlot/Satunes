@@ -31,24 +31,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.defaultSortingOptions
+import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.comparators.MediaComparator
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -57,7 +61,6 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -75,16 +78,15 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
+        private var _playlistToExport: Playlist? = null
     }
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
     private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
-
-    private var _playlistToExport: Playlist? = null
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
@@ -96,8 +98,15 @@ class DataViewModel : ViewModel() {
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
 
-    var sortOption: SortOptions by mutableStateOf(defaultSortingOptions)
+    var sortOption: SortOptions by mutableStateOf(defaultSortingOption)
         private set
+
+    var reverseSortedOrder: Boolean by mutableStateOf(MediaComparator.DEFAULT_REVERSE_ORDER)
+        private set
+
+    var previousReverseOrder: Boolean by mutableStateOf(this.reverseSortedOrder)
+        private set
+
 
     val isLoaded: Boolean by _isLoaded
 
@@ -114,7 +123,7 @@ class DataViewModel : ViewModel() {
      * Indicates if the user export only one playlist
      */
     val isExportSinglePlaylist: Boolean
-        get() = this._playlistToExport != null
+        get() = _playlistToExport != null
 
     fun playlistSetUpdated() {
         this._playlistSetUpdated.value = false
@@ -129,7 +138,8 @@ class DataViewModel : ViewModel() {
         this.listSetUpdatedProcessed = true
     }
 
-    fun getRootFolderSet(): Set<Folder> = DataManager.getRootFolderSet()
+    fun getRootFolder(): RootFolder = DataManager.getRootFolder()
+    fun getBackFolder(): BackFolder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
@@ -293,7 +303,7 @@ class DataViewModel : ViewModel() {
                         )
                     }
                 )
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -540,14 +550,14 @@ class DataViewModel : ViewModel() {
     }
 
     fun openExportPlaylistDialog(playlist: Playlist? = null) {
-        this._playlistToExport = playlist
+        _playlistToExport = playlist
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = true)
         }
     }
 
     fun closeExportPlaylistDialog() {
-        this._playlistToExport = null
+        _playlistToExport = null
         _uiState.update { currentState: DataUiState ->
             currentState.copy(showExportPlaylistDialog = false)
         }
@@ -573,11 +583,11 @@ class DataViewModel : ViewModel() {
 
     fun exportPlaylists(
         scope: CoroutineScope,
-        snackBarHostState: SnackbarHostState
+        snackBarHostState: SnackbarHostState,
     ) {
         if (this.isExportSinglePlaylist) {
-            exportPlaylist(playlist = this._playlistToExport!!)
-            this._playlistToExport = null
+            exportPlaylist(playlist = _playlistToExport!!)
+            _playlistToExport = null
             return
         }
 
@@ -688,7 +698,7 @@ class DataViewModel : ViewModel() {
                     MainActivity.instance.startActivity(shareIntent)
                 }
             }
-        } catch (e: NotImplementedError) {
+        } catch (_: NotImplementedError) {
             return
         } catch (e: Throwable) {
             _logger?.severe(e.message)
@@ -717,7 +727,7 @@ class DataViewModel : ViewModel() {
                     snackBarHostState = snackBarHostState,
                     message = context.getString(R.string.cleaned_snackbar_text)
                 )
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -738,7 +748,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetFoldersSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -756,7 +766,7 @@ class DataViewModel : ViewModel() {
                 SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -773,7 +783,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetBatterySettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -790,7 +800,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetPlaybackBehaviorSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -810,7 +820,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetPlaybackModesSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -833,7 +843,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetDefaultSearchFiltersSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -853,7 +863,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetNavigationBarSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -877,7 +887,7 @@ class DataViewModel : ViewModel() {
                 SatunesViewModel.reloadSettings()
                 updateShowFirstLetter()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
@@ -895,6 +905,10 @@ class DataViewModel : ViewModel() {
         this.sortOption = sortOption
     }
 
+    fun setReverseOrder(reverseOrder: Boolean) {
+        this.reverseSortedOrder = reverseOrder
+    }
+
     fun switchShowFirstLetter(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState
@@ -903,7 +917,7 @@ class DataViewModel : ViewModel() {
             try {
                 SettingsManager.switchShowFirstLetter(context = MainActivity.instance.applicationContext)
                 updateShowFirstLetter()
-            } catch (e: Throwable) {
+            } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -935,18 +949,24 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    internal fun sort(satunesUiState: SatunesUiState, list: MutableList<MediaImpl>) {
+    fun sort(navigationUiState: NavigationUiState, list: MutableList<MediaImpl>) {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
-            val playlist: Playlist = satunesUiState.currentMediaImpl as Playlist
+            val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
             list.sortBy { mediaImpl: MediaImpl ->
-                -(mediaImpl as Music).getOrder(playlist = playlist)
+                if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
+                else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
+            sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
             list.sortWith(comparator = sortOption.comparator!!)
         }
+    }
+
+    fun orderChanged() {
+        this.previousReverseOrder = this.reverseSortedOrder
     }
 
     fun resetListsSettings(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
@@ -955,7 +975,7 @@ class DataViewModel : ViewModel() {
                 SettingsManager.resetListsSettings(context = MainActivity.instance.applicationContext)
                 SatunesViewModel.reloadSettings()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             showErrorSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,

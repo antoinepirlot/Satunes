@@ -33,12 +33,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.router.utils.openCurrentMusic
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 3/02/24
@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.ui.components.images.Icon
 internal fun ShowCurrentMusicButton(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
@@ -61,7 +62,7 @@ internal fun ShowCurrentMusicButton(
         modifier = modifier.size(buttonSize),
         onClick = {
             haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            openCurrentMusic(
+            navigationViewModel.openCurrentMusic(
                 playbackViewModel = playbackViewModel,
                 navController = navController
             )
@@ -69,7 +70,7 @@ internal fun ShowCurrentMusicButton(
     ) {
         Icon(
             modifier = Modifier.size(buttonSize / 1.5f),
-            icon = SatunesIcons.MUSIC
+            jetpackLibsIcons = JetpackLibsIcons.MUSIC
         )
     }
 }

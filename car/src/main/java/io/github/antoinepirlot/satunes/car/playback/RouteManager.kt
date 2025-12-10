@@ -21,7 +21,7 @@
 package io.github.antoinepirlot.satunes.car.playback
 
 import io.github.antoinepirlot.satunes.car.pages.ScreenPages
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.utils.logger.Logger
 

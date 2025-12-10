@@ -37,8 +37,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -200,31 +200,30 @@ internal class MainActivity : ComponentActivity() {
                                 context = this,
                                 message = this.getString(R.string.no_file_created)
                             )
+                            return
                         }
 
                         CoroutineScope(Dispatchers.IO).launch {
                             if (requestCode == EXPORT_LOGS_CODE) {
                                 _logger?.exportLogs(context = this@MainActivity, uri = uri)
+                            } else if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
+                                DatabaseManager.getInstance().exportPlaylists(
+                                    context = this@MainActivity.applicationContext,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    uri = uri,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
                             } else {
-                                if (requestCode == EXPORT_ALL_PLAYLISTS_CODE) {
-                                    DatabaseManager.getInstance().exportPlaylists(
-                                        context = this@MainActivity.applicationContext,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        uri = uri,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                } else {
-                                    DatabaseManager.getInstance().exportPlaylist(
-                                        context = applicationContext,
-                                        uri = uri,
-                                        playlist = _playlistToExport!!,
-                                        fileExtension = this@MainActivity._fileExtension!!,
-                                        rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
-                                        multipleFiles = this@MainActivity.multipleFiles
-                                    )
-                                    _playlistToExport = null
-                                }
+                                DatabaseManager.getInstance().exportPlaylist(
+                                    context = applicationContext,
+                                    uri = uri,
+                                    playlist = _playlistToExport!!,
+                                    fileExtension = this@MainActivity._fileExtension!!,
+                                    rootPlaylistsFilesPath = this@MainActivity._rootPlaylistsFilesPath,
+                                    multipleFiles = this@MainActivity.multipleFiles
+                                )
+                                _playlistToExport = null
                             }
                             this@MainActivity._fileExtension = null
                         }

@@ -28,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**

@@ -1,4 +1,4 @@
-Satunes is a mp3 player for Android Lollipop 5.1.1+
+Satunes is a mp3 player for Android Lollipop 5.1.1+ and developed by an organic intelligence.
 
 With this new mp3 player you can listen your local music with no ads.
 

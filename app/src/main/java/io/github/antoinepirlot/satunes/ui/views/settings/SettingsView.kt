@@ -31,11 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSettings
@@ -47,6 +49,7 @@ import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSetting
 @Composable
 internal fun SettingsView(
     modifier: Modifier = Modifier,
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navController: NavHostController = LocalNavController.current
     val scrollState = rememberScrollState()
@@ -58,49 +61,70 @@ internal fun SettingsView(
                 text = "Android Auto",
                 jetpackLibsIcons = JetpackLibsIcons.ANDROID_AUTO,
                 onClick = {
-                    navController.navigate(Destination.ANDROID_AUTO_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.ANDROID_AUTO_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.design_setting_title),
                 jetpackLibsIcons = JetpackLibsIcons.SETTING_INTERFACE,
                 onClick = {
-                    navController.navigate(Destination.DESIGN_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.DESIGN_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.playback_settings),
                 jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
                 onClick = {
-                    navController.navigate(Destination.PLAYBACK_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.PLAYBACK_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.search_setting_title),
                 jetpackLibsIcons = JetpackLibsIcons.SEARCH,
                 onClick = {
-                    navController.navigate(Destination.SEARCH_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.SEARCH_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.battery_settings),
                 jetpackLibsIcons = JetpackLibsIcons.BATTERY,
                 onClick = {
-                    navController.navigate(Destination.BATTERY_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.BATTERY_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.library_settings),
                 jetpackLibsIcons = JetpackLibsIcons.SETTING_LIBRARY,
                 onClick = {
-                    navController.navigate(Destination.LIBRARY_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.LIBRARY_SETTINGS
+                    )
                 }
             )
             SettingButton(
                 text = stringResource(id = R.string.permissions),
                 jetpackLibsIcons = JetpackLibsIcons.SETTING_PERMISSIONS,
                 onClick = {
-                    navController.navigate(Destination.PERMISSIONS_SETTINGS.link)
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.PERMISSIONS_SETTINGS
+                    )
                 }
             )
 
@@ -108,20 +132,35 @@ internal fun SettingsView(
                 SettingButton(
                     text = stringResource(id = R.string.version),
                     jetpackLibsIcons = JetpackLibsIcons.SETTING_UPDATE,
-                    onClick = { navController.navigate(Destination.UPDATES_SETTINGS.link) }
+                    onClick = {
+                        navigationViewModel.navigate(
+                            navController = navController,
+                            destination = Destination.UPDATES_SETTINGS
+                        )
+                    }
                 )
             }
 
             SettingButton(
                 text = stringResource(id = R.string.reset_settings),
                 jetpackLibsIcons = JetpackLibsIcons.RESET_SETTINGS,
-                onClick = { navController.navigate(Destination.RESET_SETTINGS.link) }
+                onClick = {
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.RESET_SETTINGS
+                    )
+                }
             )
 
             SettingButton(
                 text = stringResource(id = R.string.logs_settings),
                 jetpackLibsIcons = JetpackLibsIcons.SETTING_LOGS,
-                onClick = { navController.navigate(Destination.LOGS_SETTINGS.link) }
+                onClick = {
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.LOGS_SETTINGS
+                    )
+                }
             )
 
             AboutSettings(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space

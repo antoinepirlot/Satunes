@@ -26,19 +26,40 @@ package io.github.antoinepirlot.satunes.models.listeners
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.savedstate.SavedState
+import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 
 /**
  * @author Antoine Pirlot 20/08/2025
  */
-object OnDestinationChangedListener : NavController.OnDestinationChangedListener {
+class OnDestinationChangedListener(
+    private val navigationViewModel: NavigationViewModel
+) : NavController.OnDestinationChangedListener {
+
+    companion object {
+        private var _depth: Int = 0
+
+        fun incrementDepth() {
+            this._depth++
+        }
+
+        fun decrementDepth() {
+            //Depth < 0 means leaving app
+            this._depth--
+        }
+
+        fun resetDepth() {
+            this._depth = 0
+        }
+    }
+
     override fun onDestinationChanged(
         controller: NavController,
         destination: NavDestination,
         arguments: SavedState?
     ) {
-        if (controller.previousBackStackEntry != null && destination == controller.previousBackStackEntry!!.destination)
-            if (Destination.getDestination(destination = destination.route!!) != Destination.FOLDER)
-                controller.popBackStack()
+        if (navigationViewModel.stackSize() != _depth)
+            throw IllegalStateException("You didn't push the destination on stack. Be sure to use NavigationViewModel to navigate.")
     }
 }

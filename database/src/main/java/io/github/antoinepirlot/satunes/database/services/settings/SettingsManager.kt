@@ -30,9 +30,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
@@ -76,9 +76,9 @@ object SettingsManager {
         get() = PlaybackSettings.pauseIfAnotherPlayback
     val audioOffloadChecked: Boolean
         get() = PlaybackSettings.audioOffloadChecked
-    val forwardMs: Long
+    val forwardMs: MutableLongState
         get() = PlaybackSettings.forwardMs
-    val rewindMs: Long
+    val rewindMs: MutableLongState
         get() = PlaybackSettings.rewindMs
     val customActionsOrder: Collection<CustomActions> = DesignSettings.customActionsOrder
 
@@ -121,6 +121,9 @@ object SettingsManager {
 
     val showFirstLetter: Boolean
         get() = DesignSettings.showFirstLetter
+
+    val isMusicTitleDisplayName: Boolean
+        get() = LibrarySettings.isMusicTitleDisplayName
 
     suspend fun loadSettings(context: Context) {
         if (_isLoaded) {
@@ -237,6 +240,10 @@ object SettingsManager {
 
     suspend fun switchArtistReplacement(context: Context) {
         LibrarySettings.switchArtistReplacement(context = context)
+    }
+
+    suspend fun switchIsMusicTitleDisplayName(context: Context) {
+        LibrarySettings.switchIsMusicTitleDisplayName(context = context)
     }
 
     suspend fun updateForwardMs(context: Context, seconds: Int) {

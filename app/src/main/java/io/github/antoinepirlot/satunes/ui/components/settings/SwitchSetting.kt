@@ -38,8 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.switchSettingsNeedReloadLibrary
-import io.github.antoinepirlot.satunes.data.switchSettingsNeedRestarts
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
 
@@ -48,15 +46,13 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.InformationDialog
  */
 
 @Composable
-internal fun SettingWithSwitch(
+internal fun SwitchSetting(
     modifier: Modifier = Modifier,
     setting: SwitchSettings,
     jetpackLibsIcons: JetpackLibsIcons? = null,
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
-    val isRestartNeeded: Boolean = switchSettingsNeedRestarts.contains(setting)
-    val isReloadLibraryNeeded: Boolean = switchSettingsNeedReloadLibrary.contains(setting)
     var showInfo: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Row(
@@ -76,7 +72,7 @@ internal fun SettingWithSwitch(
                 contentDescription = jetpackLibsIcons.description
             )
         } else {
-            if (isRestartNeeded || isReloadLibraryNeeded) {
+            if (setting.needRestart || setting.needReloadLibrary) {
                 @Suppress("NAME_SHADOWING")
                 val jetpackLibsIcons = JetpackLibsIcons.INFO
                 Icon(
@@ -88,7 +84,7 @@ internal fun SettingWithSwitch(
         Switch(
             checked = checked,
             onCheckedChange = {
-                if (isRestartNeeded || isReloadLibraryNeeded) {
+                if (setting.needRestart || setting.needReloadLibrary) {
                     showInfo = true
                 } else {
                     onCheckedChange()
@@ -100,8 +96,8 @@ internal fun SettingWithSwitch(
     if (showInfo) {
         InformationDialog(
             title = stringResource(
-                id = if (isRestartNeeded) R.string.restart_required
-                else if (isReloadLibraryNeeded) R.string.reload_library_required
+                id = if (setting.needRestart) R.string.restart_required
+                else if (setting.needReloadLibrary) R.string.reload_library_required
                 else throw UnsupportedOperationException("Can't show if no restart nor reload is needed.")
             ),
             onDismissRequest = { showInfo = false },
@@ -117,7 +113,7 @@ internal fun SettingWithSwitch(
 @Composable
 @Preview
 private fun SettingWithSwitchPreview() {
-    SettingWithSwitch(
+    SwitchSetting(
         setting = SwitchSettings.PAUSE_IF_ANOTHER_PLAYBACK,
         checked = true,
         jetpackLibsIcons = JetpackLibsIcons.INFO,

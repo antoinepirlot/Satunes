@@ -52,13 +52,13 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
 import io.github.antoinepirlot.satunes.router.Router
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.bottom.BottomAppBar
 import io.github.antoinepirlot.satunes.ui.components.bars.top.TopAppBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.SatunesFAB
@@ -78,7 +78,8 @@ internal fun Satunes(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    playbackViewModel: PlaybackViewModel = viewModel()
+    playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     Logger.getLogger()?.info("Satunes Composable")
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -95,7 +96,11 @@ internal fun Satunes(
             val scope: CoroutineScope = rememberCoroutineScope()
             val snackBarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
-            navController.addOnDestinationChangedListener(listener = OnDestinationChangedListener)
+            navController.addOnDestinationChangedListener(
+                listener = OnDestinationChangedListener(
+                    navigationViewModel = navigationViewModel
+                )
+            )
 
             CompositionLocalProvider(
                 values = arrayOf(
@@ -132,7 +137,7 @@ internal fun Satunes(
                     if (dataViewModel.isLoaded && playbackViewModel.isInitialized)
                         if (handledMusic == null) MainActivity.instance.handleMusic()
                         else {
-                            openMedia(
+                            navigationViewModel.openMedia(
                                 playbackViewModel = playbackViewModel,
                                 media = handledMusic,
                                 navController = navController,

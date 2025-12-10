@@ -31,9 +31,9 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
 

@@ -35,12 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.buttons.IconButton
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
-import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.FolderSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.FolderSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
 import kotlinx.coroutines.CoroutineScope
 
 /**

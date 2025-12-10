@@ -2,6 +2,118 @@
 
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 3.3 (Android 5.1.1 Lollipop et ultérieur)
+
+### 3.3.3
+
+Améliorations, optimisations et corrections de bugs :
+
+* Si le fichier d'exportation n'a pas pu être créé, Satunes arrête l'exportation
+* Correction de l'exportation d'une seule playlist sous le format m3u
+
+### 3.3.2
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction de la navigation lorsque, dans certaines conditions, l'icône de liste ne s'affiche pas
+* Correction du plantage si un fichier musical n'est pas chargé correctement
+
+### 3.3.1
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction du nom des dossiers en supprimant "Stockage externe: " pour les sous dossiers.
+* Correction de l'action du dossier "../"
+
+### 3.3.0
+
+Nouvelles fonctionnalités :
+
+* Lors du tri des fichiers multimédias dans un autre type de média, le titre de l'autre média s'
+  affiche à la place de la première lettre.
+  (Par exemple, lorsque tu tries la musique par albums, le titre de l'album s'affiche pour chaque
+  album.)
+* Ajout d'un dossier « .. » pour revenir en arrière
+* Nouveau paramètre dans la bibliothèque pour choisir si le titre de la musique est le nom du
+  fichier ou le titre dans les métadonnées.
+* Option pour inverser le tri
+* Le chemin d'accès dans la vue du dossier est cliquable pour naviguer
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour sur d'autres canaux que le canal stable.
+* Correction du plantage du tri par date
+* Ajout d'un espace entre le formulaire et le bouton dans la boîte de dialogue du formulaire de
+  minuterie
+* Mise à jour de la conception de la liste des médias
+* Correction des options de tri lorsque de la sortie de la boîte de dialogue de tri sans appliquer
+  de modification, les valeurs précédentes sont
+  restaurées
+* Correction de la modification de l'avance et de la récompense qui prend effet immédiatement
+* Correction du retour à l'affichage par défaut lors de la rotation ou du changement de mode
+  clair/foncé
+* Quelques optimisations
+* Mise à jour des bibliothèques
+
+### 3.3.0-preview-2
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction des boutons des vues multimédia qui s'affichent là où ils ne devaient pas
+* Affichage de « Stockage externe : [nom du stockage] » dans la vue des dossiers pour les stockages
+  tels que les cartes SD
+* Correction du retour à la vue par défaut lors de la rotation ou du changement de mode clair/foncé
+
+### 3.3.0-preview-1
+
+Améliorations, optimisations et corrections de bugs :
+
+* Cliquer sur le bouton « chemin » permet désormais d'avancer au lieu de revenir en arrière
+* Correction des modifications apportées à l'avance et aux recul, elles prennent directement effet
+* Correction du crash lors de la rotation de l'écran
+* Correction de la mise en surbrillance incorrecte de la barre de navigation dans certaines vues
+* Corrections éventuelles d'autres bugs inconnus
+
+### 3.3.0-beta-2
+
+Nouvelles fonctionnalités :
+
+* Le chemin d'accès dans la vue des dossiers est cliquable pour naviguer
+
+Améliorations, optimisations et corrections de bogues :
+
+* Correction de la vérification des mises à jour sur d'autres canaux que le canal stable.
+* Suppression du séparateur de lettres dans la vue de la liste de lecture et la vue de l'album
+* Correction du plantage du tri par date
+* Ajout d'un espace entre le formulaire et le bouton dans la boîte de dialogue du formulaire de
+  minuterie
+* Correction des options de tri lorsque vous quittez la boîte de dialogue de tri sans appliquer les
+  modifications, les valeurs précédentes sont restaurées
+* Les musiques stockées sur des espaces de stockage externes n'apparaissent plus dans le premier
+  dossier à côté du dossier « Cet appareil »
+* Amélioration du design de la liste
+* Plus aucun dossier associé au nom de fichier créé
+* Le dossier précédent peut être cliqué une fois par affichage (cela empêche d'accéder à un
+  affichage vide si vous cliquez trop rapidement)
+
+### 3.3.0-beta-1
+
+Nouvelles fonctionnalités :
+
+* Lorsque vous triez des médias dans un autre type de média, le titre de l'autre média s'affiche à
+  la place de la première lettre. (Par exemple, lorsque vous triez la musique par albums, le titre
+  de l'album s'affiche pour chaque album.)
+* Mise à jour de l'interface de la liste des médias
+* Ajout d'un dossier ".." pour revenir en arrière
+* Nouveau paramètre dans la bibliothèque pour choisir si le titre de la musique est le nom du
+  fichier ou la balise dans les métadonnées.
+* Nouvelle option pour inverser le tri
+
+Améliorations, optimisations et corrections de bogues :
+
+* Quelques optimisations
+* Mise à jour des librairies
+
 ## 3.2 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 3.2.3
@@ -9,7 +121,7 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 Améliorations, optimisations et corrections de bugs :
 
 * Correction de l'action de la bannière de l'artiste dans la vue de l'album.
-* Correction de l'export d'une seule playlist à partir de ses options. Maintenant l'option export
+* Correction de l'export d'une seule playlist à partir de ses options. Maintenant l'option exporte
   uniquement cette playlist.
 
 ### 3.2.2

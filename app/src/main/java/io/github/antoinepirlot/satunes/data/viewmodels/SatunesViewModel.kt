@@ -42,10 +42,9 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.models.Playlist
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -53,8 +52,6 @@ import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
-import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.logger.Logger
@@ -151,9 +148,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun isInPlaybackView(): Boolean =
-        _uiState.value.currentDestination.category == DestinationCategory.PLAYBACK
-
     /**
      * Mark notification as read and show snack bar with a message depending of the action taken by the user.
      *
@@ -216,16 +210,6 @@ class SatunesViewModel : ViewModel() {
             permanentAction = { SettingsManager.seeWhatsNew(context = MainActivity.instance.applicationContext) },
             nonPermanentAction = { SettingsManager.unSeeWhatsNew(context = MainActivity.instance.applicationContext) }
         )
-    }
-
-
-    fun setCurrentDestination(destination: String) {
-        _uiState.update { currentState: SatunesUiState ->
-            @Suppress("NAME_SHADOWING")
-            val destination: Destination = Destination.getDestination(destination = destination)
-            _logger?.info("Going to destination: ${destination.name}")
-            currentState.copy(currentDestination = destination)
-        }
     }
 
     fun loadAllData() {
@@ -648,6 +632,31 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
+    fun switchIsMusicTitleDisplayName(
+        scope: CoroutineScope,
+        snackBarHostState: SnackbarHostState
+    ) {
+        try {
+            runBlocking {
+                SettingsManager.switchIsMusicTitleDisplayName(context = MainActivity.instance.applicationContext)
+                _uiState.update { currentState: SatunesUiState ->
+                    currentState.copy(isMusicTitleDisplayName = SettingsManager.isMusicTitleDisplayName)
+                }
+            }
+        } catch (_: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                action = {
+                    this.switchIsMusicTitleDisplayName(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState
+                    )
+                }
+            )
+        }
+    }
+
     fun switchArtworkAnimation() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -689,18 +698,6 @@ class SatunesViewModel : ViewModel() {
     fun hideSortDialog() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(showSortDialog = false)
-        }
-    }
-
-    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentMediaImpl = mediaImpl)
-        }
-    }
-
-    fun clearCurrentMediaImpl() {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentMediaImpl = null)
         }
     }
 

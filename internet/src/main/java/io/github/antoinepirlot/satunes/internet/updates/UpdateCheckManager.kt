@@ -197,7 +197,7 @@ object UpdateCheckManager {
         }
 
         if (isMoreStableThan(latestChannel, selectedChannel)
-            && isMoreStableThan(latestChannel, currentChannel)
+            || isMoreStableThan(latestChannel, currentChannel)
         ) {
             return numberIncreased || latestChannel != currentChannel || currentChannelVersion < latestChannelVersion
         }

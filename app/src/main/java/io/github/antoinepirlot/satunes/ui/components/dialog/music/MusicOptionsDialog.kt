@@ -30,12 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
@@ -53,13 +53,13 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.music.options.Remove
 @Composable
 internal fun MusicOptionsDialog(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     music: Music,
     onDismissRequest: () -> Unit,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val currentMediaImpl: MediaImpl? = satunesUiState.currentMediaImpl
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+    val currentMediaImpl: MediaImpl? = navigationUiState.currentMediaImpl
 
     AlertDialog(
         modifier = modifier,

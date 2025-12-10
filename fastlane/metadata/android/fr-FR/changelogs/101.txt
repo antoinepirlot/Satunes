@@ -1,0 +1,4 @@
+Améliorations, optimisations et corrections de bugs :
+
+* Si le fichier d'exportation n'a pas pu être créé, Satunes arrête l'exportation
+* Correction de l'exportation d'une seule playlist sous le format m3u

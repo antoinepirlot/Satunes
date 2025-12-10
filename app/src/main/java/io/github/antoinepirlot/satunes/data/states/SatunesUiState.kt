@@ -27,10 +27,7 @@ import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 19/07/2024
@@ -39,12 +36,6 @@ data class SatunesUiState(
     val whatsNewSeen: Boolean = SettingsManager.whatsNewSeen,
     val includeExcludeSeen: Boolean = SettingsManager.includeExcludeSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
-    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
-    /**
-     * The current [MediaImpl] associated to the [currentDestination] if it is a single media destination
-     * It's null if the [currentDestination] is not a single media.
-     */
-    val currentMediaImpl: MediaImpl? = null,
     /**
      * Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
      */
@@ -63,4 +54,5 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
+    val isMusicTitleDisplayName: Boolean = SettingsManager.isMusicTitleDisplayName
 )

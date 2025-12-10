@@ -34,8 +34,8 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.Music
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope

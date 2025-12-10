@@ -32,14 +32,15 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.MUSIC
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.PLAYLIST
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.Album
-import io.github.antoinepirlot.satunes.database.models.Artist
-import io.github.antoinepirlot.satunes.database.models.Folder
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.models.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/01/2024
@@ -95,17 +96,5 @@ fun getRightIconAndDescription(media: MediaImpl): JetpackLibsIcons {
         is Genre -> GENRES
         is Playlist -> PLAYLIST
         else -> MUSIC // In that case, mediaImpl is Music
-    }
-}
-
-/**
- * Return the root folder name: 0 -> This device, else -> External Storage: name
- */
-@Composable
-fun getRootFolderName(title: String): String {
-    return when (title) {
-        "0" -> stringResource(id = R.string.this_device)
-
-        else -> "${stringResource(id = R.string.external_storage)}: $title"
     }
 }

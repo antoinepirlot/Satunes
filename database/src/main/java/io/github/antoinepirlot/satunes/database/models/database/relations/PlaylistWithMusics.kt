@@ -24,10 +24,10 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
-import io.github.antoinepirlot.satunes.database.models.Media
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 

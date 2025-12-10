@@ -34,4 +34,5 @@
     <string name="added_date">Date d\'ajout</string>
     <string name="playlist_added_date">Ordre d\'ajout à la playlist</string>
     <string name="custom_action_add_to_playlist">Ajouter à une playlist</string>
+    <string name="this_device">Cet Appareil</string>
 </resources>

@@ -20,11 +20,12 @@
 
 package io.github.antoinepirlot.satunes.ui.components.cards.media
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,18 +38,20 @@ import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
-import io.github.antoinepirlot.satunes.router.utils.openMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
 /**
@@ -58,66 +61,40 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDi
 @Composable
 internal fun MediaCardList(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     lazyListState: LazyListState = rememberLazyListState(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
     mediaImplList: List<MediaImpl>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
-    onMediaClick: ((MediaImpl) -> Unit)? = null
+    onMediaClick: ((MediaImpl) -> Unit)? = null,
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val showFirstLetter: Boolean = dataUiState.showFirstLetter
-    val sortOption: SortOptions = dataViewModel.sortOption
     val navController: NavHostController = LocalNavController.current
     val haptics: HapticFeedback = LocalHapticFeedback.current
-    val isInPlaybackView: Boolean = satunesViewModel.isInPlaybackView()
+    val isInPlaybackView: Boolean = navigationViewModel.isInPlaybackView()
 
     LazyColumn(
         modifier = modifier,
         state = lazyListState
     ) {
-        //Used to store dynamically the first media impl linked to the first occurrence of a letter or media impl.
-        val groupMap: MutableMap<Any?, MediaImpl>? =
-            if (showGroupIndication) mutableMapOf() else null
-
         items(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
         ) { mediaImpl: MediaImpl ->
-            if (mediaImpl == mediaImplList.first()) header?.invoke()
+            val isFirst: Boolean = mediaImpl == mediaImplList.first()
+            if (isFirst) header?.invoke()
 
             if (showFirstLetter && showGroupIndication) {
-                when (sortOption) {
-                    SortOptions.GENRE -> {
-                        if (mediaImpl is Music) {
-                            FirstGenre(
-                                map = groupMap!!,
-                                mediaImpl = mediaImpl,
-                                mediaImplList = mediaImplList,
-                            )
-                        }
-                    }
-
-                    SortOptions.YEAR -> FirstYear(
-                        map = groupMap!!,
-                        mediaImpl = mediaImpl,
-                        mediaImplList = mediaImplList
-                    )
-
-                    else -> {
-                        FirstLetter(
-                            map = groupMap!!,
-                            mediaImpl = mediaImpl,
-                            mediaImplList = mediaImplList,
-                            sortOption = sortOption
-                        )
-                    }
-                }
+                if (isFirst)
+                    Spacer(Modifier.size(size = 16.dp))
+                Indicator(mediaImpl = mediaImpl, mediaImplList = mediaImplList)
             }
+
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
                 modifier = modifier,
@@ -126,13 +103,24 @@ internal fun MediaCardList(
                     if (onMediaClick != null) {
                         onMediaClick.invoke(mediaImpl)
                     } else {
+                        if (mediaImpl is BackFolder) {
+                            if (mediaImpl.hasBeenClicked()) return@MediaCard
+                            val currentMediaImpl: Folder =
+                                navigationUiState.currentMediaImpl as Folder
+                            navigationViewModel.navigate(
+                                navController = navController,
+                                mediaImpl = currentMediaImpl.parentFolder
+                            )
+                            mediaImpl.clicked()
+                            return@MediaCard
+                        }
                         if (mediaImpl is Music && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
-                                currentDestination = satunesUiState.currentDestination,
+                                currentDestination = navigationUiState.currentDestination,
                                 musicToPlay = mediaImpl
                             )
-                        openMedia(
+                        navigationViewModel.openMedia(
                             playbackViewModel = playbackViewModel,
                             media = mediaImpl,
                             navController = if (isInPlaybackView) null else navController
@@ -140,11 +128,12 @@ internal fun MediaCardList(
                     }
                 },
                 onLongClick = {
+                    if (mediaImpl is BackFolder) return@MediaCard
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     showMediaOptions = true
                 }
             )
-            HorizontalDivider(modifier = modifier)
+
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(
@@ -161,6 +150,53 @@ internal fun MediaCardList(
             lazyListState.scrollToItem(
                 playbackViewModel.getMusicPlayingIndexPosition()
             )
+        }
+    }
+}
+
+/**
+ * Show the indicator for the filtered list.
+ *
+ * For example, if sorting by letters, it will show each first different letter on screen.
+ *
+ * (Sorry, I don't know what to call it... that's the hardest part of a developer's job: naming things).
+ */
+@Composable
+private fun Indicator(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    mediaImpl: MediaImpl,
+    mediaImplList: List<MediaImpl>
+) {
+    val sortOption: SortOptions = dataViewModel.sortOption
+
+    FirstElementCard {
+        when (sortOption) {
+            SortOptions.ARTIST, SortOptions.ALBUM, SortOptions.GENRE -> {
+                FirstMedia(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList,
+                    sortOptions = sortOption
+                )
+            }
+
+            SortOptions.YEAR -> {
+                FirstYear(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList
+                )
+            }
+
+            else -> {
+                FirstLetter(
+                    modifier = modifier,
+                    mediaImpl = mediaImpl,
+                    mediaImplList = mediaImplList,
+                    sortOption = sortOption
+                )
+            }
         }
     }
 }

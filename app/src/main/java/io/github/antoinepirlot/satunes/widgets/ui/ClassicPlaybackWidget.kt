@@ -30,8 +30,8 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.provideContent
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.utils.logger.Logger
 import io.github.antoinepirlot.satunes.widgets.ui.views.ClassicPlaybackWidgetView
 import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
 

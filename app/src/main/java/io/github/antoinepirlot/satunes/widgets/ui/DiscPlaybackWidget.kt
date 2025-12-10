@@ -26,7 +26,7 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
-import io.github.antoinepirlot.satunes.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.widgets.ui.views.DiscPlaybackWidgetView
 import io.github.antoinepirlot.satunes.widgets.ui.views.WidgetView
 

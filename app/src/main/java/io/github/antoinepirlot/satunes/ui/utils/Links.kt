@@ -21,7 +21,7 @@
 package io.github.antoinepirlot.satunes.ui.utils
 
 import android.content.Context
-import io.github.antoinepirlot.satunes.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 10/04/2024

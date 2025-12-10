@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.components.bars.top
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -182,9 +181,7 @@ private fun onSettingButtonClick(
     satunesViewModel: SatunesViewModel,
     navigationViewModel: NavigationViewModel
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        satunesViewModel.resetUpdatesStatus()
-    }
+    satunesViewModel.resetUpdatesStatus()
     val currentDestination: Destination = uiState.currentDestination
     if (currentDestination.category == DestinationCategory.SETTING) {
         navigationViewModel.popBackStack(navController = navController)

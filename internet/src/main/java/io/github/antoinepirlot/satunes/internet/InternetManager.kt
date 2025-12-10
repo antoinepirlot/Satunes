@@ -25,14 +25,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.android.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
-@RequiresApi(Build.VERSION_CODES.M)
 internal class InternetManager(context: Context) : Application() {
     private val connectivityManager: ConnectivityManager =
         context.getSystemService(ConnectivityManager::class.java)

@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings
 
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -128,18 +127,16 @@ internal fun SettingsView(
                 }
             )
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                SettingButton(
-                    text = stringResource(id = R.string.version),
-                    jetpackLibsIcons = JetpackLibsIcons.SETTING_UPDATE,
-                    onClick = {
-                        navigationViewModel.navigate(
-                            navController = navController,
-                            destination = Destination.UPDATES_SETTINGS
-                        )
-                    }
-                )
-            }
+            SettingButton(
+                text = stringResource(id = R.string.version),
+                jetpackLibsIcons = JetpackLibsIcons.SETTING_UPDATE,
+                onClick = {
+                    navigationViewModel.navigate(
+                        navController = navController,
+                        destination = Destination.UPDATES_SETTINGS
+                    )
+                }
+            )
 
             SettingButton(
                 text = stringResource(id = R.string.reset_settings),

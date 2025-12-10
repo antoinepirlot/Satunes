@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.updates
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +52,6 @@ import io.github.antoinepirlot.satunes.internet.R as RInternet
 
 private val SPACER_SIZE = 10.dp
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun UpdateAvailable(
     modifier: Modifier = Modifier,
@@ -93,7 +90,6 @@ internal fun UpdateAvailable(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun UpdateAvailablePreview() {

@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.updates
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +56,6 @@ import io.github.antoinepirlot.satunes.ui.components.settings.updates.UpdateChan
 
 private val SIZE = 16.dp
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 internal fun UpdatesSettingView(
     modifier: Modifier = Modifier,
@@ -98,7 +95,6 @@ internal fun UpdatesSettingView(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun VersionViewPreview() {

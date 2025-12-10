@@ -22,8 +22,6 @@ package io.github.antoinepirlot.satunes.internet.updates
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.android.utils.logger.Logger
@@ -48,7 +46,6 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
     private val _logger: Logger? = Logger.getLogger()
 

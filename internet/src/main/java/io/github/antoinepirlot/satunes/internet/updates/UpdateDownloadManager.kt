@@ -28,7 +28,6 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
@@ -38,7 +37,6 @@ import io.github.antoinepirlot.satunes.internet.R
  * @author Antoine Pirlot on 14/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 object UpdateDownloadManager {
     private var downloadId: Long = -1
     private const val MIME_TYPE = "application/vnd.android.package-archive"

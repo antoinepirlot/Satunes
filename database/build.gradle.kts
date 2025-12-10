@@ -19,10 +19,10 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
-    id("androidx.room") version ("2.6.1")
+    id("androidx.room") version ("2.8.4")
     kotlin("plugin.serialization") version "1.9.22"
 }
 
@@ -32,7 +32,10 @@ room {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.database"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

@@ -1,13 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 val nameSpace: String = "io.github.antoinepirlot.satunes"
 
 android {
     namespace = nameSpace
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     androidResources {
         generateLocaleConfig = true

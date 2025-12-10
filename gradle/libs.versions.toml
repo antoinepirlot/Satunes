@@ -3,7 +3,7 @@ agp = "8.13.1"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.11.0"
 android-compileSdk = "36"
-android-minSdk = "22"
+android-minSdk = "23"
 #noinspection OldTargetApi
 android-targetSdk = "35"
 composeBom = "2025.01.01" #Needs kotlin upgrade
@@ -16,9 +16,9 @@ fragmentKtx = "1.8.9"
 javaxInject = "1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-kotlin = "1.9.0"
+kotlin = "2.2.21" # /!\ if update, checks the version of ksp for Android Room
 kotlinxSerializationJson = "1.6.3" # Update causes gradle error
-ksp = "1.9.0-1.0.13"
+ksp = "2.2.21-2.0.4" # 2.2.21 is the kotlin version used in this project: https://github.com/google/ksp/releases/tag/2.2.21-2.0.4
 lifeCycleVersion = "2.9.4"
 material = "1.13.0"
 material3 = "1.4.0"
@@ -31,7 +31,7 @@ mockk = "1.14.6"
 mp3agic = "0.9.1"
 navVersion = "2.9.5"
 okhttp = "4.12.0" # Update causes error
-roomVersion = "2.6.1" #Needs kotlin upgrade
+roomVersion = "2.8.4" #Needs kotlin upgrade
 widgetVersion = "1.1.1"
 
 [libraries]

@@ -25,7 +25,10 @@ plugins {
 
 android {
     namespace = "io.github.antoinepirlot.satunes.car"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()

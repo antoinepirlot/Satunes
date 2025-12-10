@@ -216,9 +216,6 @@ object DataManager {
             this.folderMapById[folder.id] = folder
             this.folderSortedSet.add(element = folder)
             if(folder.isSubsonic()) this.addSubsonicFolder(subsonicFolder = folder)
-            if (folder.parentFolder == null) {
-                this.rootFolderSortedSet.add(element = folder)
-            }
         }
     }
 

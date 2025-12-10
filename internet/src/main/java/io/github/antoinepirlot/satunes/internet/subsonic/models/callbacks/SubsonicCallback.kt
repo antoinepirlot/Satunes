@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
@@ -33,7 +34,6 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -55,7 +55,7 @@ internal abstract class SubsonicCallback(
     protected val onSucceed: (() -> Unit)?, //Used in children classes
 ) : Callback {
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     override fun onFailure(call: Call, e: IOException) {
         e.printStackTrace()

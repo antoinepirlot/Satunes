@@ -25,8 +25,8 @@ package io.github.antoinepirlot.satunes.models
 
 import android.annotation.SuppressLint
 import android.os.Build
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot 23/09/2025
@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 @SuppressLint("NewApi")
 enum class SettingsViews(
     val stringId: Int,
-    val icon: SatunesIcons,
+    val icon: JetpackLibsIcons,
     val destination: Destination,
     val minSdk: Int = -1
 ) {
@@ -43,59 +43,59 @@ enum class SettingsViews(
     // /!\ WARNING, THE ORDER HERE IS REFLECTED ON THE SCREEN. /!\
     ANDROID_AUTO(
         stringId = R.string.android_auto_title,
-        icon = SatunesIcons.ANDROID_AUTO,
+        icon = JetpackLibsIcons.ANDROID_AUTO,
         destination = Destination.ANDROID_AUTO_SETTINGS
     ),
     INTERFACE(
         stringId = R.string.design_setting_title,
-        icon = SatunesIcons.SETTING_INTERFACE,
+        icon = JetpackLibsIcons.SETTING_INTERFACE,
         destination = Destination.DESIGN_SETTINGS
     ),
     PLAYBACK(
         stringId = R.string.playback_settings,
-        icon = SatunesIcons.PLAYBACK,
+        icon = JetpackLibsIcons.PLAYBACK,
         destination = Destination.PLAYBACK
     ),
     SEARCH(
         stringId = R.string.search_setting_title,
-        icon = SatunesIcons.SEARCH,
+        icon = JetpackLibsIcons.SEARCH,
         destination = Destination.SEARCH_SETTINGS
     ),
     BATTERY(
         stringId = R.string.battery_settings,
-        icon = SatunesIcons.BATTERY,
+        icon = JetpackLibsIcons.BATTERY,
         destination = Destination.BATTERY_SETTINGS
     ),
     LIBRARY(
         stringId = R.string.library_settings,
-        icon = SatunesIcons.SETTING_LIBRARY,
+        icon = JetpackLibsIcons.SETTING_LIBRARY,
         destination = Destination.LIBRARY_SETTINGS
     ),
     SUBSONIC(
         stringId = R.string.subsonic_title,
-        icon = SatunesIcons.SETTING_SUBSONIC,
+        icon = JetpackLibsIcons.SETTING_CLOUD,
         destination = Destination.SUBSONIC_SETTINGS,
         minSdk = Build.VERSION_CODES.M
     ),
     PERMISSIONS(
         stringId = R.string.permissions,
-        icon = SatunesIcons.SETTING_PERMISSIONS,
+        icon = JetpackLibsIcons.SETTING_PERMISSIONS,
         destination = Destination.PERMISSIONS_SETTINGS
     ),
     UPDATE(
         stringId = R.string.version,
-        icon = SatunesIcons.SETTING_UPDATE,
+        icon = JetpackLibsIcons.SETTING_UPDATE,
         destination = Destination.UPDATES_SETTINGS,
         minSdk = Build.VERSION_CODES.M
     ),
     RESET(
         stringId = R.string.reset_settings,
-        icon = SatunesIcons.RESET_SETTINGS,
+        icon = JetpackLibsIcons.RESET_SETTINGS,
         destination = Destination.RESET_SETTINGS
     ),
     LOGS(
         stringId = R.string.logs_settings,
-        icon = SatunesIcons.SETTING_LOGS,
+        icon = JetpackLibsIcons.SETTING_LOGS,
         destination = Destination.LOGS_SETTINGS
     )
 }

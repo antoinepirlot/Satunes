@@ -37,9 +37,6 @@ import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
-import io.github.antoinepirlot.android.utils.logger.SatunesLogger
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
 
 
@@ -72,7 +69,7 @@ object UpdateCheckManager {
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                 return
             }
-            val page: String = res.body!!.string()
+            val page: String = res.body.string()
             res.close()
 
             val currentVersion: String =

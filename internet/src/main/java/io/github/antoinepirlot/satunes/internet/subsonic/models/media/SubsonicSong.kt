@@ -27,8 +27,8 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import io.github.antoinepirlot.satunes.database.models.Genre
-import io.github.antoinepirlot.satunes.database.models.Music
+import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import kotlinx.serialization.SerialName

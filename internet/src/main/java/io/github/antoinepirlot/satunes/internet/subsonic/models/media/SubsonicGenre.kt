@@ -24,7 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import io.github.antoinepirlot.satunes.database.models.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.Serializable
 

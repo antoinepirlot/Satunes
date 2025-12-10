@@ -25,11 +25,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.annotation.RequiresApi
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager.updateAvailableStatus
-import io.github.antoinepirlot.android.utils.logger.Logger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -40,7 +38,7 @@ import okhttp3.Response
 internal class InternetManager(context: Context) : Application() {
 
     companion object {
-        private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+        private val _logger: Logger? = Logger.getLogger()
 
         /**
          * Create a httpclient and get the response matching url.

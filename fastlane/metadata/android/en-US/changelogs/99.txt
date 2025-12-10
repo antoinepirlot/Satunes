@@ -1,0 +1,4 @@
+Improvements, optimisations and bug fixes:
+
+* Fix navigation when, under certain conditions, list icon won't show
+* Fix crash if a music file is not correctly loaded

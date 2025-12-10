@@ -427,6 +427,7 @@ class DatabaseManager private constructor(context: Context) {
                 uris += uri
                 getPlaylistsM3uFormat(
                     rootPlaylistsFilesPath = rootPlaylistsFilesPath,
+                    playlistsWithMusics = playlistsWithMusics,
                     multipleFiles = multipleFiles
                 )
             }
@@ -438,10 +439,10 @@ class DatabaseManager private constructor(context: Context) {
 
     private fun getPlaylistsM3uFormat(
         rootPlaylistsFilesPath: String,
+        playlistsWithMusics: List<PlaylistWithMusics>,
         multipleFiles: Boolean
     ): List<String> {
         val toReturn: MutableList<String> = mutableListOf()
-        val playlistsWithMusics: List<PlaylistWithMusics> = this.getAllPlaylistWithMusics()
         var fileContent: String = "#EXTM3U\n"
         for (playlist: PlaylistWithMusics in playlistsWithMusics) {
             if (multipleFiles) fileContent = "#EXTM3U\n"

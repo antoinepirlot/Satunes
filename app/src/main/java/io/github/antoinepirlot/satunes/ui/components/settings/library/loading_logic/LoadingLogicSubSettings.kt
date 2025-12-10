@@ -67,6 +67,7 @@ internal fun LoadingLogicSubSettings(
                 satunesViewModel.switchCompilationMusic()
             }
         )
+
         Spacer(modifier = Modifier.size(size = spacerSize))
 
         SwitchSetting(
@@ -79,6 +80,8 @@ internal fun LoadingLogicSubSettings(
                 )
             }
         )
+
+        Spacer(modifier = Modifier.size(size = spacerSize))
 
         SwitchSetting(
             setting = SwitchSettings.IS_MUSIC_TITLE_DISPLAY_NAME,

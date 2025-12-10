@@ -23,8 +23,6 @@
 
 package io.github.antoinepirlot.satunes.ui.components.settings.subsonic
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +41,6 @@ import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 /**
  * @author Antoine Pirlot 23/09/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun SubsonicStateSetting(
     modifier: Modifier = Modifier,
@@ -59,7 +56,6 @@ fun SubsonicStateSetting(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun SubsonicStateSettingPreview() {

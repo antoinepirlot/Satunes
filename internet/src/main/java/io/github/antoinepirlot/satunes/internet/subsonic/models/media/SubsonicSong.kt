@@ -24,8 +24,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Music
@@ -38,7 +36,6 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 27/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Serializable
 @SerialName("song")
 internal data class SubsonicSong(

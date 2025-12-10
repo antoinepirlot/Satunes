@@ -24,8 +24,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -37,7 +35,6 @@ import okhttp3.Response
 /**
  * @author Antoine Pirlot 26/09/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 internal class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null

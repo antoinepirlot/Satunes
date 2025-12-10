@@ -24,8 +24,6 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +46,6 @@ import kotlinx.coroutines.launch
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 class SubsonicViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<SubsonicUiState> =

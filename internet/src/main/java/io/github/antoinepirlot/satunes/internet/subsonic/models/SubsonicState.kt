@@ -23,8 +23,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 
@@ -32,7 +30,6 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Subson
  * @author Antoine Pirlot 03/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 enum class SubsonicState {
     DISCONNECTED,
     PINGING,

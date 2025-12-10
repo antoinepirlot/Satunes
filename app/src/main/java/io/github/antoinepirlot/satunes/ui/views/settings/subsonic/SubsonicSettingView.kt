@@ -23,8 +23,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.settings.subsonic
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -40,7 +38,6 @@ import io.github.antoinepirlot.satunes.ui.components.settings.subsonic.SubsonicS
  * @author Antoine Pirlot 23/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun SubsonicSettingView(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -50,7 +47,6 @@ fun SubsonicSettingView(modifier: Modifier = Modifier) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun SubsonicSettingViewPreview() {

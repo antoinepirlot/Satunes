@@ -23,15 +23,12 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 
 /**
  * @author Antoine Pirlot 04/09/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 data class SubsonicUiState(
     val subsonicState: SubsonicState = SubsonicApiRequester.DEFAULT_STATE //Only available for Android API 23+ (6.0 Marshmallow)
 )

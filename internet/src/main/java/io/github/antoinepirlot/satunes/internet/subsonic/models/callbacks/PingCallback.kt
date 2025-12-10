@@ -24,8 +24,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
@@ -36,7 +34,6 @@ import okhttp3.Response
  * @author Antoine Pirlot 03/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 internal class PingCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null

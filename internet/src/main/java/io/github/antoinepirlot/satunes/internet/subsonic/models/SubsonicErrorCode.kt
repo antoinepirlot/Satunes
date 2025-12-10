@@ -23,14 +23,10 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-
 /**
  * @author Antoine Pirlot 04/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 enum class SubsonicErrorCode(val code: Int, val message: String) {
     GENERIC_ERROR(code = 0, message = "A generic error."),
     MISSING_PARAMETERS(code = 10, message = "Required parameter is missing."),

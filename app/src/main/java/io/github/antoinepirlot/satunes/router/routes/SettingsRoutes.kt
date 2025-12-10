@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.router.routes
 
-import android.os.Build
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -75,8 +73,6 @@ internal fun NavGraphBuilder.settingsRoutes() {
     }
 
     composable(route = Destination.SUBSONIC_SETTINGS.link) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-            throw IllegalStateException("Wrong version to access Subsonic Settings")
         SubsonicSettingView(modifier = Modifier.padding(horizontal = padding))
     }
 

@@ -26,7 +26,6 @@ package io.github.antoinepirlot.satunes.ui.components.settings.subsonic
 import android.os.Build
 import android.view.View.AUTOFILL_HINT_PASSWORD
 import android.view.View.AUTOFILL_HINT_USERNAME
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -61,7 +60,6 @@ import kotlinx.coroutines.CoroutineScope
  * @author Antoine Pirlot 03/09/2025
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun SubsonicConnectionSetting(
     modifier: Modifier = Modifier,
@@ -112,7 +110,6 @@ fun SubsonicConnectionSetting(
 /**
  * Confirm and cancel button
  */
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 private fun Buttons(
     modifier: Modifier = Modifier,
@@ -152,7 +149,6 @@ private fun Buttons(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.M)
 @Preview
 @Composable
 private fun SubsonicSettingsViewPreview() {

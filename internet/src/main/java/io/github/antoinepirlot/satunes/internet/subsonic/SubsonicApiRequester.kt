@@ -24,8 +24,6 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
@@ -46,7 +44,6 @@ import okhttp3.Request
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-@RequiresApi(Build.VERSION_CODES.M)
 class SubsonicApiRequester(
     url: String,
     private val username: String,

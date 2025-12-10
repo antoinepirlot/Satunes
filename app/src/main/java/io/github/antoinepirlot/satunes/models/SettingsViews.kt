@@ -24,7 +24,6 @@
 package io.github.antoinepirlot.satunes.models
 
 import android.annotation.SuppressLint
-import android.os.Build
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 
@@ -75,7 +74,6 @@ enum class SettingsViews(
         stringId = R.string.subsonic_title,
         icon = JetpackLibsIcons.SETTING_CLOUD,
         destination = Destination.SUBSONIC_SETTINGS,
-        minSdk = Build.VERSION_CODES.M
     ),
     PERMISSIONS(
         stringId = R.string.permissions,
@@ -86,7 +84,6 @@ enum class SettingsViews(
         stringId = R.string.version,
         icon = JetpackLibsIcons.SETTING_UPDATE,
         destination = Destination.UPDATES_SETTINGS,
-        minSdk = Build.VERSION_CODES.M
     ),
     RESET(
         stringId = R.string.reset_settings,

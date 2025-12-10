@@ -124,6 +124,8 @@ dependencies {
     /**
      * Widget
      */
+    implementation(libs.androidx.glance)
+
     // For AppWidgets support
     implementation(libs.glance.appwidget)
 

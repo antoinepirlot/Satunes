@@ -102,6 +102,10 @@ object DataManager {
         return this.musicSortedSet
     }
 
+    fun getSubsonicMusicSet(): Set<SubsonicMusic> {
+        return this.subsonicMusicsMapById.values.toSortedSet()
+    }
+
     fun addMusic(music: Music): Music {
         return if (music.isSubsonic()) {
             music as SubsonicMusic

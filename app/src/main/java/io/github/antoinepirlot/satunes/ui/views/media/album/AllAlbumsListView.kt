@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -43,10 +42,13 @@ internal fun AllAlbumsListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val albumSet: Set<Album> = dataViewModel.getAlbumSet()
+
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getAlbumSet())
+    }
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (albumSet.isNotEmpty())
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
@@ -56,7 +58,6 @@ internal fun AllAlbumsListView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = albumSet,
         emptyViewText = stringResource(id = R.string.no_album)
     )
 }

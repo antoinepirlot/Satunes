@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import java.util.SortedSet
 
 /**
@@ -36,8 +34,6 @@ open class Artist(
     title = title
 ) {
     private val albumSortedSet: SortedSet<Album> = sortedSetOf()
-
-    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1

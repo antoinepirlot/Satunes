@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -62,7 +61,6 @@ abstract class MediaImpl(
     protected open var addedDate: Date? = null
 
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
-    val musicSetUpdated: MutableState<Boolean> = mutableStateOf(false)
 
     open fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
@@ -80,7 +78,6 @@ abstract class MediaImpl(
 
     fun clearMusicSet(triggerUpdate: Boolean = true) {
         this.musicSortedSet.clear()
-        if (triggerUpdate) this.listUpdated()
     }
 
     fun contains(mediaImpl: MediaImpl): Boolean {
@@ -94,25 +91,17 @@ abstract class MediaImpl(
     open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
-            if (triggerUpdate) this.listUpdated()
         }
     }
 
-    open fun addMusics(musics: Collection<Music>, triggerUpdate: Boolean = true) {
+    open fun addMusics(musics: Collection<Music>) {
         this.musicSortedSet.addAll(musics)
-        if (triggerUpdate) this.listUpdated()
     }
 
-    open fun removeMusic(music: Music, triggerUpdate: Boolean = true) {
+    open fun removeMusic(music: Music) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
-            this.listUpdated()
         }
-    }
-
-    protected fun listUpdated() {
-        if (this.musicSetUpdated.value) this.musicSetUpdated.value = false
-        this.musicSetUpdated.value = true
     }
 
     override fun compareTo(other: MediaImpl): Int {

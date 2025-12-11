@@ -20,12 +20,10 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 data class DataUiState(
-    val mediaImplListOnScreen: Collection<MediaImpl> = listOf(),
     val showFirstLetter: Boolean = SettingsManager.showFirstLetter,
     val appliedSortOption: SortOptions? = null,
     val showExportPlaylistDialog: Boolean = false,

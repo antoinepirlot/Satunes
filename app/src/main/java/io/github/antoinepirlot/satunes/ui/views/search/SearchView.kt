@@ -53,7 +53,6 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -82,7 +81,6 @@ internal fun SearchView(
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
@@ -143,7 +141,6 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            mediaImplCollection = searchUiState.mediaImplCollection,
             collectionChanged = collectionChanged,
             sort = false,
             emptyViewText = stringResource(id = R.string.no_result),

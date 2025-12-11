@@ -24,9 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
-import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -61,22 +59,17 @@ internal fun AllMusicsListView(
 @Composable
 private fun OnlineMode(
     modifier: Modifier = Modifier,
-    subsonicViewModel: SubsonicViewModel = viewModel()
+    subsonicViewModel: SubsonicViewModel = viewModel(),
 ) {
-    var musicSet: Set<MediaImpl> = setOf()
-    var collectionChanged: Boolean by rememberSaveable { mutableStateOf(value = false) }
+    val musicSet: MutableList<MediaImpl> = remember { mutableStateListOf() }
 
     LaunchedEffect(key1 = Unit) {
         subsonicViewModel.loadRandomSongs(onDataRetrieved = {
-            musicSet = it
-            collectionChanged = true
+            musicSet.addAll(it)
         })
     }
-
     MediaListView(
         modifier = modifier,
-        collectionChanged = collectionChanged,
-        mediaImplCollection = musicSet,
         emptyViewText = stringResource(id = R.string.no_music)
     )
 }
@@ -87,14 +80,10 @@ private fun OfflineMode(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-
     val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
 
     LaunchedEffect(key1 = Unit) {
-        //TODO remove as it won't be shown later
-        if (satunesUiState.mode == SatunesModes.ONLINE)
-            throw IllegalStateException("Can't show all musics page in online mode.")
+        dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
     }
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
@@ -108,7 +97,6 @@ private fun OfflineMode(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
         emptyViewText = stringResource(id = R.string.no_music)
     )
 }

@@ -62,9 +62,7 @@ internal fun AlbumView(
 
     LaunchedEffect(key1 = Unit) {
         dataViewModel.loadMediaImplList(list = album.getMusicSet())
-    }
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()

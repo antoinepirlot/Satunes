@@ -59,9 +59,7 @@ internal fun PlaylistListView(
 
     LaunchedEffect(key1 = Unit) {
         dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
-    }
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
         satunesViewModel.replaceExtraButtons {
             ExtraButton(
                 jetpackLibsIcons = JetpackLibsIcons.EXPORT,

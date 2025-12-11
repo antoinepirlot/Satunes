@@ -48,12 +48,24 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel()
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
     if (satunesUiState.mode == SatunesModes.ONLINE)
         OnlineMode(modifier = modifier)
     else
         OfflineMode(modifier = modifier)
+
+    // /!\ put this launch effect here as it must be ran after media impl list loaded
+    LaunchedEffect(key1 = Unit) {
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+            satunesViewModel.replaceExtraButtons(extraButtons = {
+                ExtraButtonList()
+            })
+        else
+            satunesViewModel.clearExtraButtons()
+    }
 }
 
 @Composable
@@ -84,15 +96,6 @@ private fun OfflineMode(
 
     LaunchedEffect(key1 = Unit) {
         dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
-    }
-
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (musicSet.isNotEmpty())
-            satunesViewModel.replaceExtraButtons(extraButtons = {
-                ExtraButtonList()
-            })
-        else
-            satunesViewModel.clearExtraButtons()
     }
 
     MediaListView(

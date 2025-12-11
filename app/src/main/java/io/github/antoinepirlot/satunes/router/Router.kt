@@ -74,10 +74,11 @@ internal fun Router(
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
+    val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
 
     if (defaultDestination == null) {
-        val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled } LaunchedEffect (key1 =
-            Unit) {
+        val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
+        LaunchedEffect(key1 = Unit) {
             defaultDestination =
                 Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection)
             navigationViewModel.reset()
@@ -111,7 +112,7 @@ internal fun Router(
     // Start handle destination change
 
     LaunchedEffect(key1 = satunesUiState.mode) {
-        if (!isMusicsNavBarEnabled && currentRoute == Destination.MUSICS.link) {
+        if (!isMusicsNavBarEnabled && navigationUiState.currentDestination == Destination.MUSICS) {
             navController.popBackStack()
             navController.navigate(
                 route = Destination.getDestination(navBarSection = getFirstCompatibleNavBar()!!).link

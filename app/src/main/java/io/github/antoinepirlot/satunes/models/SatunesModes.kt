@@ -23,12 +23,12 @@
 
 package io.github.antoinepirlot.satunes.models
 
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 
 /**
  * @author Antoine Pirlot 30/09/2025
  */
-enum class SatunesModes(val icon: SatunesIcons) {
-    OFFLINE(icon = SatunesIcons.CLOUD_OFF_ICON),
-    ONLINE(icon = SatunesIcons.CLOUD_ON_ICON)
+enum class SatunesModes(val icon: JetpackLibsIcons) {
+    OFFLINE(icon = JetpackLibsIcons.CLOUD_OFF_ICON),
+    ONLINE(icon = JetpackLibsIcons.CLOUD_ON_ICON)
 }

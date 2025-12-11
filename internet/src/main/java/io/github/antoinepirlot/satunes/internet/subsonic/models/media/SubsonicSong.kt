@@ -68,7 +68,7 @@ internal data class SubsonicSong(
             artist = DataManager.getArtist(subsonicId = artistId)!!,
             album = DataManager.getAlbum(subsonicId = albumId)!!,
             genre = DataManager.getGenre(title = genre.title)!!,
-            uri = "${subsonicApiRequester.url}/${subsonicApiRequester.inUrlMandatoryParams}&id=$id".toUri(),
+            uri = "${subsonicApiRequester.inUrlMandatoryParams}/${subsonicApiRequester.inUrlMandatoryParams}&id=$id".toUri(),
             displayName = "" //TODO
         )
     }

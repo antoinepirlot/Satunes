@@ -111,8 +111,8 @@ class SubsonicViewModel : ViewModel() {
                     user = user,
                     onSubsonicStateChanged = { this@SubsonicViewModel.updateState(newState = it) }
                 )
-                subsonicApiRequester!!.ping(onSucceed = {
-                    subsonicApiRequester!!.loadAll()
+                subsonicApiRequester.ping(onSucceed = {
+                    subsonicApiRequester.loadAll()
                 }) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
@@ -140,7 +140,7 @@ class SubsonicViewModel : ViewModel() {
             user = user,
             onSubsonicStateChanged = { this.updateState(newState = it) }
         )
-        apiRequester.loadArtists()
+        //TODO apiRequester.loadArtists()
     }
 
     fun removeOnlineMusic() {

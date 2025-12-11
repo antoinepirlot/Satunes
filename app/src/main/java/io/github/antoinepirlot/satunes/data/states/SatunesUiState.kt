@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SatunesModes
 
@@ -62,6 +63,6 @@ data class SatunesUiState(
     val artistReplacement: Boolean = SettingsManager.artistReplacement,
     val showSortDialog: Boolean = false,
     val showMediaSelectionDialog: Boolean = false,
-    val isMusicTitleDisplayName: Boolean = SettingsManager.isMusicTitleDisplayName
-    val mode: SatunesModes = SatunesModes.OFFLINE
+    val isMusicTitleDisplayName: Boolean = SettingsManager.isMusicTitleDisplayName,
+    val mode: SatunesModes = SatunesModes.OFFLINE,
 )

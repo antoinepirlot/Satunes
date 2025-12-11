@@ -41,7 +41,6 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,7 +61,7 @@ class NavigationViewModel : ViewModel() {
             ArrayDeque() //TODO change structure as it add at first place
 
         private val DEFAULT_CURRENT_ROUTE: Destination =
-            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value)
+            Destination.getDestination(SettingsManager.defaultNavBarSection.value)
 
         private var _currentRoute: Destination =
             DEFAULT_CURRENT_ROUTE //TODO used instead of deque while no fix found for back gesture issues.

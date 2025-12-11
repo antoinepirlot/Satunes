@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -70,6 +71,7 @@ internal fun TopAppBar(
     navigationViewModel: NavigationViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -96,28 +98,26 @@ internal fun TopAppBar(
                             onPlaybackQueueButtonClick(
                                 uiState = navigationUiState,
                                 navController = navController,
-                            navigationViewModel = navigationViewModel
-                        )
-                    }
-                )
-            } else if (
-                currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = navigationUiState.currentDestination).size > 1
+                                navigationViewModel = navigationViewModel
+                            )
+                        }
+                    )
+                } else if (
+                    currentDestination.category == DestinationCategory.MEDIA &&
+                    getSortOptions(destination = navigationUiState.currentDestination).size > 1
                 ) {
                     IconButton(
                         jetpackLibsIcons = JetpackLibsIcons.SORT,
                         onClick = { satunesViewModel.showSortDialog() }
                     )
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    val mode: SatunesModes = satunesUiState.mode
-                    IconButton(
-                        icon = mode.icon,
-                        onClick = {
-                            satunesViewModel.switchCloudMode(subsonicViewModel = subsonicViewModel)
-                        }
-                    )
-                }
+                val mode: SatunesModes = satunesUiState.mode
+                IconButton(
+                    jetpackLibsIcons = mode.icon,
+                    onClick = {
+                        satunesViewModel.switchCloudMode(subsonicViewModel = subsonicViewModel)
+                    }
+                )
             }
         },
         title = {
@@ -183,6 +183,7 @@ private fun onPlaybackQueueButtonClick(
             navController = navController,
             destination = Destination.PLAYBACK_QUEUE
         )
+
         Destination.PLAYBACK_QUEUE -> navigationViewModel.popBackStack(navController = navController)
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }

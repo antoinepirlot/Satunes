@@ -47,9 +47,12 @@ internal class GetRandomMusicCallback(
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.getSubsonicResponse()
-        //TODO
+        this.processData(response = this.getSubsonicResponse())
         this.dataProcessed()
         this.onSucceed?.invoke()
+    }
+
+    private fun processData(response: SubsonicResponse) {
+        //TODO
     }
 }

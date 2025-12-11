@@ -28,28 +28,26 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAl
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolders
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames
 
 /**
  * @author Antoine Pirlot 27/09/2025
  */
-@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @SerialName("subsonic-response")
 internal data class SubsonicResponse(
-    @JsonNames("status") val status: String,
-    @JsonNames("version") val version: String,
-    @JsonNames("type") val type: String,
+    @SerialName(value = "status") val status: String,
+    @SerialName(value = "version") val version: String,
+    @SerialName(value = "type") val type: String,
     val serverVersion: String? = null,
     val openSubsonic: Boolean = false,
-    @JsonNames("error") val error: Error? = null,
-    @JsonNames("indexes") private val indexes: Indexes? = null,
-    @JsonNames("musicFolders") private val subsonicFolders: SubsonicFolders? = null,
-    @JsonNames("artist") val artist: SubsonicArtist? = null,
-    @JsonNames("album") val album: SubsonicAlbum? = null,
+    @SerialName(value = "error") val error: Error? = null,
+    @SerialName(value = "indexes") private val indexes: Indexes? = null,
+    @SerialName(value = "musicFolders") private val subsonicFolders: SubsonicFolders? = null,
+    @SerialName(value = "artist") val artist: SubsonicArtist? = null,
+    @SerialName(value = "album") val album: SubsonicAlbum? = null,
+    @SerialName(value = "randomSongs") val randomSong: RandomSong? = null
 ) {
 
     companion object {

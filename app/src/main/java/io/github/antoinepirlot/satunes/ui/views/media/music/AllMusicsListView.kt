@@ -28,11 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
@@ -57,9 +57,12 @@ internal fun AllMusicsListView(
 @Composable
 private fun OnlineMode(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    //TODO
-    NormalText(text = "Cloud View")
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val musicSet: Set<MediaImpl> = subsonicViewModel.getRandomSongs()
 }
 
 @Composable
@@ -73,6 +76,7 @@ private fun OfflineMode(
     val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
 
     LaunchedEffect(key1 = Unit) {
+        //TODO remove as it won't be shown later
         if (satunesUiState.mode == SatunesModes.ONLINE)
             throw IllegalStateException("Can't show all musics page in online mode.")
     }

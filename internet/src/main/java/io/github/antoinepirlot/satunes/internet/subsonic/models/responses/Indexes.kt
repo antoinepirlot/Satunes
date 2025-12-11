@@ -24,15 +24,13 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames
 
 /**
  * @author Antoine Pirlot 27/09/2025
  */
 @Serializable
-@OptIn(ExperimentalSerializationApi::class)
 internal data class Indexes constructor(
-    @JsonNames("index") val list: Collection<Index>
+    @SerialName(value = "index") val list: Collection<Index>
 )

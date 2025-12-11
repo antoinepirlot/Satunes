@@ -278,4 +278,17 @@ class SubsonicApiRequester(
             )
         )
     }
+
+    fun getRandomSongs(size: Int = 10, onDataRetrieved: () -> Unit) {
+        this.get(
+            url = this.getCommandUrl(
+                command = "getRandomSongs",
+                parameters = arrayOf(size.toString())
+            ),
+            resCallback = GetRandomMusicCallback(
+                subsonicApiRequester = this,
+                onSucceed = onDataRetrieved
+            )
+        )
+    }
 }

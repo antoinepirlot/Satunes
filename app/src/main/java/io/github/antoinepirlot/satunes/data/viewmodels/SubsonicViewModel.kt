@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
@@ -164,5 +165,19 @@ class SubsonicViewModel : ViewModel() {
 
     fun removeOnlineMusic() {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * Get random song from API
+     */
+    fun getRandomSongs(): Set<Music> {
+        val apiRequester = SubsonicApiRequester(
+            user = user,
+            onSubsonicStateChanged = { this.updateState(newState = it) }
+        )
+        apiRequester.getRandomSongs(onDataRetrieved = {
+            println()
+        })
+        return setOf()//todo
     }
 }

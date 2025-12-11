@@ -22,14 +22,19 @@ package io.github.antoinepirlot.satunes.ui.views.media.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -41,24 +46,57 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 internal fun AllMusicsListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel()
 ) {
-    //Find a way to do something more aesthetic but it works
-//    val musicSet: Set<Music> = dataViewModel.getMusicSet()
-    val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (musicSet.isNotEmpty())
+    if (satunesUiState.mode == SatunesModes.ONLINE)
+        OnlineMode(modifier = modifier)
+    else
+        OfflineMode(modifier = modifier)
+
+    // /!\ put this launch effect here as it must be ran after media impl list loaded
+    LaunchedEffect(key1 = Unit) {
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
         else
             satunesViewModel.clearExtraButtons()
     }
+}
+
+@Composable
+private fun OnlineMode(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
+) {
+    LaunchedEffect(key1 = Unit) {
+        subsonicViewModel.loadRandomSongs(onDataRetrieved = {
+            dataViewModel.loadMediaImplList(list = it)
+        })
+    }
+    MediaListView(
+        modifier = modifier,
+        emptyViewText = stringResource(id = R.string.no_music)
+    )
+}
+
+@Composable
+private fun OfflineMode(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+) {
+    val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
+
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
+    }
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
         emptyViewText = stringResource(id = R.string.no_music)
     )
 }

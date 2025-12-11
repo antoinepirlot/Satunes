@@ -26,12 +26,11 @@ package io.github.antoinepirlot.satunes.data.states
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot 14/10/2025
  */
 data class NavigationUiState(
-    val currentDestination: Destination = getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value),
+    val currentDestination: Destination = Destination.getDestination(SettingsManager.defaultNavBarSection.value),
     val currentMediaImpl: MediaImpl? = null
 )

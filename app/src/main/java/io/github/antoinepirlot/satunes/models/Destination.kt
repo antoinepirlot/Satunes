@@ -21,8 +21,6 @@
 package io.github.antoinepirlot.satunes.models
 
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 
 /**
  * @author Antoine Pirlot on 24-01-24
@@ -33,6 +31,10 @@ enum class Destination(
     val category: DestinationCategory,
     val navBarSection: NavBarSection? = null
 ) {
+    ////////////////////////////////////////
+    /////////////////MEDIA//////////////////
+    ////////////////////////////////////////
+
     ALBUMS(
         link = "/albums",
         category = DestinationCategory.MEDIA,
@@ -43,7 +45,7 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ALBUMS
     ),
-    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = DestinationCategory.SETTING),
+
     ARTISTS(
         link = "/artists",
         category = DestinationCategory.MEDIA,
@@ -54,9 +56,6 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ARTISTS
     ),
-    BATTERY_SETTINGS(link = "/battery_settings", category = DestinationCategory.SETTING),
-    DESIGN_SETTINGS(link = "/design_settings", category = DestinationCategory.SETTING),
-    LIBRARY_SETTINGS(link = "/library_settings", category = DestinationCategory.SETTING),
     FOLDERS(
         link = "/folders",
         category = DestinationCategory.MEDIA,
@@ -77,16 +76,11 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.GENRES
     ),
-    LOGS_SETTINGS(link = "/logs_settings", category = DestinationCategory.SETTING),
     MUSICS(
         link = "/musics",
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.MUSICS
     ),
-    PERMISSIONS_SETTINGS(link = "/permissions_settings", category = DestinationCategory.SETTING),
-    PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
-    PLAYBACK_QUEUE(link = "/playback_queue", category = DestinationCategory.PLAYBACK),
-    PLAYBACK_SETTINGS(link = "/playback_settings", category = DestinationCategory.SETTING),
     PLAYLISTS(
         link = "/playlists",
         category = DestinationCategory.MEDIA,
@@ -97,12 +91,31 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.PLAYLISTS
     ),
-    RESET_SETTINGS(link = "/reset_settings", category = DestinationCategory.SETTING),
     SEARCH(link = "/search", category = DestinationCategory.MEDIA),
-    SEARCH_SETTINGS("/search_settings", category = DestinationCategory.SETTING),
-    SETTINGS(link = "/settings", category = DestinationCategory.SETTING),
 
-    UPDATES_SETTINGS(link = "/updates", category = DestinationCategory.SETTING);
+    ////////////////////////////////////////
+    ///////////////PLAYBACK/////////////////
+    ////////////////////////////////////////
+    PLAYBACK(link = "/playback", category = DestinationCategory.PLAYBACK),
+    PLAYBACK_QUEUE(link = "/playback_queue", category = PLAYBACK.category),
+
+    ////////////////////////////////////////
+    ///////////////SETTINGS/////////////////
+    ////////////////////////////////////////
+    SETTINGS(link = "/settings", category = DestinationCategory.SETTING),
+    ANDROID_AUTO_SETTINGS(link = "/android_auto_setting", category = SETTINGS.category),
+    BATTERY_SETTINGS(link = "/battery_settings", category = SETTINGS.category),
+    DESIGN_SETTINGS(link = "/design_settings", category = SETTINGS.category),
+    LIBRARY_SETTINGS(link = "/library_settings", category = SETTINGS.category),
+    LOGS_SETTINGS(link = "/logs_settings", category = SETTINGS.category),
+    PERMISSIONS_SETTINGS(link = "/permissions_settings", category = SETTINGS.category),
+    PLAYBACK_SETTINGS(link = "/playback_settings", category = SETTINGS.category),
+    RESET_SETTINGS(link = "/reset_settings", category = SETTINGS.category),
+    SEARCH_SETTINGS("/search_settings", category = SETTINGS.category),
+
+    SUBSONIC_SETTINGS(link = "/subsonic", category = SETTINGS.category),
+
+    UPDATES_SETTINGS(link = "/updates", category = SETTINGS.category);
 
     companion object {
         private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(
@@ -130,6 +143,7 @@ enum class Destination(
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),
             Pair(first = SETTINGS.link, second = SETTINGS),
+            Pair(first = SUBSONIC_SETTINGS.link, second = SUBSONIC_SETTINGS)
         )
 
         init {
@@ -137,8 +151,18 @@ enum class Destination(
         }
 
         fun getDestination(destination: String): Destination {
-            return this.destinationsMap[destination]
-                ?: getNavBarSectionDestination(navBarSection = SettingsManager.defaultNavBarSection.value)
+            return this.destinationsMap[destination]!!
+        }
+
+        fun getDestination(navBarSection: NavBarSection): Destination {
+            return when (navBarSection) {
+                NavBarSection.MUSICS -> MUSICS
+                NavBarSection.ALBUMS -> ALBUMS
+                NavBarSection.GENRES -> GENRES
+                NavBarSection.ARTISTS -> ARTISTS
+                NavBarSection.FOLDERS -> FOLDERS
+                NavBarSection.PLAYLISTS -> PLAYLISTS
+            }
         }
     }
 }

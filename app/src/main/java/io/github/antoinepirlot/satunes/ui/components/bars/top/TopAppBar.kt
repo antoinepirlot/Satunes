@@ -21,10 +21,12 @@
 package io.github.antoinepirlot.satunes.ui.components.bars.top
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -45,12 +47,19 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
+import io.github.antoinepirlot.satunes.models.SatunesModes
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -62,8 +71,13 @@ internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
 ) {
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -78,28 +92,41 @@ internal fun TopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-            val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (
-                currentDestination.category == DestinationCategory.PLAYBACK &&
-                screenWidth < ScreenSizes.LARGE
-            ) {
+            Row {
+                val screenWidth: Int = LocalConfiguration.current.screenWidthDp
+                if (
+                    currentDestination.category == DestinationCategory.PLAYBACK &&
+                    screenWidth < ScreenSizes.LARGE
+                ) {
+                    IconButton(
+                        jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
+                        onClick = {
+                            onPlaybackQueueButtonClick(
+                                uiState = navigationUiState,
+                                navController = navController,
+                                navigationViewModel = navigationViewModel
+                            )
+                        }
+                    )
+                } else if (
+                    currentDestination.category == DestinationCategory.MEDIA &&
+                    getSortOptions(destination = navigationUiState.currentDestination).size > 1
+                ) {
+                    IconButton(
+                        jetpackLibsIcons = JetpackLibsIcons.SORT,
+                        onClick = { satunesViewModel.showSortDialog() }
+                    )
+                }
+                val mode: SatunesModes = satunesUiState.mode
                 IconButton(
-                    jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
+                    jetpackLibsIcons = mode.icon,
                     onClick = {
-                        onPlaybackQueueButtonClick(
-                            uiState = navigationUiState,
-                            navController = navController,
-                            navigationViewModel = navigationViewModel
+                        satunesViewModel.switchCloudMode(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            subsonicViewModel = subsonicViewModel
                         )
                     }
-                )
-            } else if (
-                currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = navigationUiState.currentDestination).size > 1
-            ) {
-                IconButton(
-                    jetpackLibsIcons = JetpackLibsIcons.SORT,
-                    onClick = { satunesViewModel.showSortDialog() }
                 )
             }
         },
@@ -166,6 +193,7 @@ private fun onPlaybackQueueButtonClick(
             navController = navController,
             destination = Destination.PLAYBACK_QUEUE
         )
+
         Destination.PLAYBACK_QUEUE -> navigationViewModel.popBackStack(navController = navController)
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }

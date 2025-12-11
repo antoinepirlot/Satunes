@@ -46,12 +46,12 @@ import java.util.Date
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Music(
+open class Music(
     id: Long,
     title: String,
     displayName: String,
     val absolutePath: String,
-    val duration: Long = 0,
+    val durationMs: Long = 0,
     val size: Int = 0,
     cdTrackNumber: Int? = null,
     addedDateMs: Long,
@@ -180,6 +180,8 @@ class Music(
     fun getOrder(playlist: Playlist): Long {
         return this._playlistsOrderMap[playlist] ?: -1
     }
+
+    override fun isMusic(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

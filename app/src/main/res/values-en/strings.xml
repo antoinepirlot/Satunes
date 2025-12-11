@@ -168,4 +168,11 @@
     <string name="export_multiple_files_text">One file per playlist?</string>
     <string name="reverse_order">Reverse order</string>
     <string name="is_music_title_display_name_text">Use the file\'s title for the music\'s title?</string>
+    <string name="subsonic_title">Subsonic API (Server)</string>
+    <string name="subsonic_connection_text">Enter your Subsonic server information (prefer using HTTPS for security)</string>
+    <string name="test_connection_button_text">Try Connection</string>
+    <string name="subsonic_state_title">State</string>
+    <string name="subsonic_connection_title">Connection Credentials</string>
+    <string name="salt_label">Salt</string>
+    <string name="salt_placeholder">Anything you want</string>
 </resources>

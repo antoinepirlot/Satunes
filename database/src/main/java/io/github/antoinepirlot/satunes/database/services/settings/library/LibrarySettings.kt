@@ -90,6 +90,18 @@ internal object LibrarySettings {
     var isMusicTitleDisplayName: Boolean = DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME
         private set
 
+    val subsonicUrl: String
+        get() = SubsonicSettings.subsonicUrl
+
+    val subsonicUsername: String
+        get() = SubsonicSettings.subsonicUsername
+
+    val subsonicPassword: String
+        get() = SubsonicSettings.subsonicPassword
+
+    val subsonicSalt: String
+        get() = SubsonicSettings.subsonicSalt
+
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             if (preferences[this.SELECTED_PATHS_KEY] != null)
@@ -102,6 +114,7 @@ internal object LibrarySettings {
             this.isMusicTitleDisplayName =
                 preferences[IS_MUSIC_TITLE_DISPLAY_NAME_KEY] ?: DEFAULT_IS_MUSIC_TITLE_DISPLAY_NAME
         }.first() //Without .first() settings are not loaded correctly
+        SubsonicSettings.loadSettings(context = context)
     }
 
     private fun loadIncludingPaths(preferences: Preferences) {
@@ -237,6 +250,22 @@ internal object LibrarySettings {
         }
     }
 
+    suspend fun updateSubsonicUrl(context: Context, url: String) {
+        SubsonicSettings.updateSubsonicUrl(context = context, url = url)
+    }
+
+    suspend fun updateSubsonicUsername(context: Context, username: String) {
+        SubsonicSettings.updateSubsonicUsername(context = context, username = username)
+    }
+
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
+        SubsonicSettings.updateSubsonicPassword(context = context, password = password)
+    }
+
+    suspend fun updateSubsonicSalt(context: Context, salt: String) {
+        SubsonicSettings.updateSubsonicSalt(context = context, salt = salt)
+    }
+
     suspend fun resetFoldersSettings(context: Context) {
         context.dataStore.edit { preferences: MutablePreferences ->
             (this.foldersPathsIncludingCollection as MutableCollection<String>).clear()
@@ -258,5 +287,11 @@ internal object LibrarySettings {
             preferences[ARTISTS_REPLACEMENT_KEY] = this.artistReplacement
             preferences[IS_MUSIC_TITLE_DISPLAY_NAME_KEY] = this.isMusicTitleDisplayName
         }
+    }
+
+    suspend fun resetAll(context: Context) {
+        this.resetFoldersSettings(context = context)
+        this.resetLoadingLogicSettings(context = context)
+        SubsonicSettings.resetAll(context = context)
     }
 }

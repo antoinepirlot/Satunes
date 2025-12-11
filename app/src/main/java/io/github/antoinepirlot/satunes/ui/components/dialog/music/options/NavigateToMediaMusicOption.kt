@@ -58,13 +58,12 @@ internal fun NavigateToMediaMusicOption(
                 navController = navController
             )
         },
-        jetpackLibsIcons = when (mediaImpl) {
-            is Album -> JetpackLibsIcons.ALBUM
-            is Artist -> JetpackLibsIcons.ARTIST
-            is Genre -> JetpackLibsIcons.GENRES
-            is Folder -> JetpackLibsIcons.FOLDER
-            else -> throw IllegalArgumentException("${mediaImpl.javaClass} is not allowed")
-        },
+        jetpackLibsIcons =
+            if (mediaImpl.isAlbum()) JetpackLibsIcons.ALBUM
+            else if (mediaImpl.isArtist()) JetpackLibsIcons.ARTIST
+            else if (mediaImpl.isGenre()) JetpackLibsIcons.GENRES
+            else if (mediaImpl.isFolder()) JetpackLibsIcons.FOLDER
+            else throw IllegalArgumentException("${mediaImpl.javaClass} is not allowed"),
         text = mediaImpl.title
     )
 }

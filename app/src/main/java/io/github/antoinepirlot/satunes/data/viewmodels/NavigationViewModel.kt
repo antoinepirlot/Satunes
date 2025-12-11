@@ -28,20 +28,13 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,7 +55,7 @@ class NavigationViewModel : ViewModel() {
             ArrayDeque() //TODO change structure as it add at first place
 
         private val DEFAULT_CURRENT_ROUTE: Destination =
-            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value)
+            Destination.getDestination(SettingsManager.defaultNavBarSection.value)
 
         private var _currentRoute: Destination =
             DEFAULT_CURRENT_ROUTE //TODO used instead of deque while no fix found for back gesture issues.
@@ -205,15 +198,13 @@ class NavigationViewModel : ViewModel() {
      * @return the destination matching [MediaImpl]
      */
     private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
-        return when (mediaImpl) {
-            is RootFolder -> Destination.FOLDERS
-            is Folder -> Destination.FOLDER
-            is Artist -> Destination.ARTIST
-            is Album -> Destination.ALBUM
-            is Genre -> Destination.GENRE
-            is Playlist -> Destination.PLAYLIST
-            else -> Destination.PLAYBACK
-        }
+        return if (mediaImpl == null) Destination.PLAYBACK // same as else
+        else if (mediaImpl.isRootFolder() || mediaImpl.isFolder()) Destination.FOLDERS
+        else if (mediaImpl.isArtist()) Destination.ARTIST
+        else if (mediaImpl.isAlbum()) Destination.ALBUM
+        else if (mediaImpl.isGenre()) Destination.GENRE
+        else if (mediaImpl.isPlaylist()) Destination.PLAYLIST
+        else Destination.PLAYBACK // same as first
     }
 
     private fun getRoute(destination: Destination, mediaImpl: MediaImpl): String {
@@ -236,7 +227,7 @@ class NavigationViewModel : ViewModel() {
         navController: NavController?,
         reset: Boolean = false
     ) {
-        if (media == null || media is Music)
+        if (media == null || media.isMusic())
             startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media, reset = reset)
 
         if (navController != null)

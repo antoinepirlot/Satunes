@@ -93,16 +93,16 @@ private fun onClick(
 ) {
     checked.value = !checked.value
     if (checked.value) {
-        if (mediaImpl is Playlist) {
-            mediaSelectionViewModel.addPlaylist(playlist = mediaImpl)
-        } else if (mediaImpl is Music) {
-            mediaSelectionViewModel.addMusic(music = mediaImpl)
+        if (mediaImpl.isPlaylist()) {
+            mediaSelectionViewModel.addPlaylist(playlist = mediaImpl as Playlist)
+        } else if (mediaImpl.isMusic()) {
+            mediaSelectionViewModel.addMusic(music = mediaImpl as Music)
         }
     } else {
-        if (mediaImpl is Playlist) {
-            mediaSelectionViewModel.removePlaylist(playlist = mediaImpl)
-        } else if (mediaImpl is Music) {
-            mediaSelectionViewModel.removeMusic(music = mediaImpl)
+        if (mediaImpl.isPlaylist()) {
+            mediaSelectionViewModel.removePlaylist(playlist = mediaImpl as Playlist)
+        } else if (mediaImpl.isMusic()) {
+            mediaSelectionViewModel.removeMusic(music = mediaImpl as Music)
         }
     }
 }

@@ -137,7 +137,7 @@ private fun MediaSelectionDialogList(
         title = {
             if (mediaImplCollection.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaImplCollection.first() is Music) {
+            } else if (mediaImplCollection.first().isMusic()) {
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
@@ -194,7 +194,7 @@ private fun PlaylistSelectionDialogPreview() {
         jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
-        mediaDestination = Genre(""),
+        mediaDestination = Genre(title = ""),
         mediaImplCollection = listOf()
     )
 }

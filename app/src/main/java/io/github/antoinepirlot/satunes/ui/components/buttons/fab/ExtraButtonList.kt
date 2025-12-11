@@ -61,7 +61,7 @@ internal fun ExtraButtonList(
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val mediaImplCollection: Collection<MediaImpl> = dataUiState.mediaImplListOnScreen
+    val mediaImplCollection: Collection<MediaImpl> = dataViewModel.mediaImplListOnScreen
 
     Column(
         modifier = modifier,

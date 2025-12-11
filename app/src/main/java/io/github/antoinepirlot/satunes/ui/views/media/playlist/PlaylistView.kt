@@ -22,9 +22,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +31,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
@@ -52,17 +48,11 @@ internal fun PlaylistView(
     dataViewModel: DataViewModel = viewModel(),
     playlist: Playlist,
 ) {
-    val musicSet: Set<Music> = playlist.getMusicSet()
 
-    //Recompose if data changed
-    var setChanged: Boolean by rememberSaveable { playlist.musicSetUpdated }
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = playlist.getMusicSet())
 
-    LaunchedEffect(key1 = setChanged) {
-        if (setChanged) setChanged = false
-    }
-
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (musicSet.isNotEmpty())
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(
                 extraButtons = {
                     //It's in a column
@@ -80,8 +70,6 @@ internal fun PlaylistView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
-        collectionChanged = setChanged,
         header = {
             val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 stringResource(id = RDb.string.likes_playlist_title)

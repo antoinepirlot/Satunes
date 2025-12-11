@@ -27,9 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -46,7 +43,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
@@ -63,17 +59,11 @@ internal fun AlbumView(
     dataViewModel: DataViewModel = viewModel(),
     album: Album,
 ) {
-    val musicSet: Set<Music> = album.getMusicSet()
 
-    //Recompose if data changed
-    var setChanged: Boolean by rememberSaveable { album.musicSetUpdated }
-    if (setChanged) {
-        setChanged = false
-    }
-    //
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = album.getMusicSet())
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (musicSet.isNotEmpty())
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
@@ -83,8 +73,6 @@ internal fun AlbumView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
-        collectionChanged = setChanged,
         header = { Header(album = album) },
         emptyViewText = stringResource(id = R.string.no_music),
         showGroupIndication = false

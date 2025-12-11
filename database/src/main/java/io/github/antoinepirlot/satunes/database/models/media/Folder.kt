@@ -32,14 +32,14 @@ import java.util.SortedSet
  */
 
 open class Folder(
+    id: Long? = null,
     title: String,
     val parentFolder: Folder? = null,
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(id = id ?: nextId, title = title) {
 
     companion object {
         var nextId: Long = 1
     }
-
     private val subFolderSortedSet: SortedSet<Folder> = sortedSetOf()
     private val _depth: Int = if (this.parentFolder == null) 0 else this.parentFolder.getDepth() + 1
 
@@ -75,7 +75,7 @@ open class Folder(
      */
     fun getSubFolderSet(): Set<Folder> = this.subFolderSortedSet
 
-    open fun isRoot(): Boolean = false
+    override fun isFolder(): Boolean = true
 
     /**
      * Create a list containing sub folders then this folder musics.
@@ -202,7 +202,15 @@ open class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this is RootFolder) return this
+        if (this.isRootFolder()) return this
         return this.parentFolder!!.getRoot()
+    }
+
+    /**
+     * Add manually a [Folder] in [subFolderSortedSet].
+     * (Used in internet module with Subsonic)
+     */
+    fun addSubfolder(folder: Folder) {
+        this.subFolderSortedSet.add(element = folder)
     }
 }

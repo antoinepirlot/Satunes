@@ -66,14 +66,6 @@ internal fun AddToPlaylistCustomAction(
     if (satunesUiState.showMediaSelectionDialog) {
         val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
 
-        //Recompose if data changed
-        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (mapChanged) {
-            dataViewModel.playlistSetUpdated()
-            dataViewModel.listSetUpdatedUnprocessed()
-        }
-        //
-
         MediaSelectionDialog(
             onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
             onConfirm = {

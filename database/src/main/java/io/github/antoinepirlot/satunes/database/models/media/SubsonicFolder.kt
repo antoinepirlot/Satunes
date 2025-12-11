@@ -12,27 +12,25 @@
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on github.
+ * You find this original project on Codeberg.
  *
- * My github link is: https://github.com/antoinepirlot
- * This current project's link is: https://github.com/antoinepirlot/Satunes
- *
- * PS: I don't answer quickly.
+ * My Codeberg link is: https://codeberg.org/antoinepirlot
+ * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet
-
-import org.junit.Assert.assertEquals
-import org.junit.Test
+package io.github.antoinepirlot.satunes.database.models.media
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
+ * @author Antoine Pirlot 11/12/2025
  */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+class SubsonicFolder(
+    id: Long,
+    title: String
+) : Folder(id = id, title = title) {
+
+    companion object {
+        const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
     }
+
+    override fun isSubsonic(): Boolean = true
 }

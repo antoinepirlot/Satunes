@@ -39,16 +39,14 @@ object SortByYearsComparator : MediaComparator<MediaImpl>() {
      *         > 0 if the year of o1 is after the year of o2.
      */
     override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
-        val year1: Int? = when (o1) {
-            is Music -> o1.getYear()
-            is Album -> o1.year
-            else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
-        }
-        val year2: Int? = when (o2) {
-            is Music -> o2.getYear()
-            is Album -> o2.year
-            else -> throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
-        }
+        val year1: Int? = if (o1.isMusic()) (o1 as Music).getYear()
+        else if (o1.isAlbum()) (o1 as Album).year
+        else throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
+
+        val year2: Int? = if (o2.isMusic()) (o2 as Music).getYear()
+        else if (o2.isAlbum()) (o2 as Album).year
+        else throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")
+
         val cmp: Int = if (year1 == year2) {
             if (year1 == null) 0
             else o1.compareTo(o2)

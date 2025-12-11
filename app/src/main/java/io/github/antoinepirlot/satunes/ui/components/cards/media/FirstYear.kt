@@ -47,18 +47,16 @@ fun FirstYear(
     mediaImpl: MediaImpl,
     mediaImplList: Collection<MediaImpl>
 ) {
-    val yearToCompare: Int? = when (mediaImpl) {
-        is Music -> mediaImpl.getYear()
-        is Album -> mediaImpl.year
-        else -> throw UnsupportedOperationException()
-    }
+    val yearToCompare: Int? = if (mediaImpl.isMusic()) (mediaImpl as Music).getYear()
+    else if (mediaImpl.isAlbum()) (mediaImpl as Album).year
+    else throw UnsupportedOperationException()
 
     val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first {
-        when (it) {
-            is Music -> it.getYear() == yearToCompare
-            is Album -> it.year == yearToCompare
-            else -> false
-        }
+        if (it.isMusic()) {
+            (it as Music).getYear() == yearToCompare
+        } else if (it.isAlbum()) {
+            (it as Album).year == yearToCompare
+        } else false
     }
 
     if (mediaImpl == firstWithLetterMediaImpl)

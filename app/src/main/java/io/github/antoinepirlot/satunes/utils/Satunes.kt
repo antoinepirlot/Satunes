@@ -29,7 +29,7 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
@@ -67,7 +67,7 @@ internal fun loadSatunesData(
             SettingsManager.loadSettings(context = context)
         }
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = context)
+            LocalDataLoader.loadAllData(context = context)
         }
     } else {
         satunesViewModel.loadSettings()

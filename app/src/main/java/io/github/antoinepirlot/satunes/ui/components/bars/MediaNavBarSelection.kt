@@ -62,15 +62,7 @@ internal fun RowScope.MediaNavBarSelection(
         },
         selected = selectedCanBeShown && currentDestination.navBarSection == navBarSection,
         onClick = {
-            val rootRoute: Destination = when (navBarSection) {
-                NavBarSection.FOLDERS -> Destination.FOLDERS
-                NavBarSection.ARTISTS -> Destination.ARTISTS
-                NavBarSection.ALBUMS -> Destination.ALBUMS
-                NavBarSection.GENRES -> Destination.GENRES
-                NavBarSection.PLAYLISTS -> Destination.PLAYLISTS
-                NavBarSection.MUSICS -> Destination.MUSICS
-
-            }
+            val rootRoute: Destination = Destination.getDestination(navBarSection = navBarSection)
             navigationViewModel.backToRoot(rootRoute = rootRoute, navController = navController)
         },
         icon = {

@@ -48,24 +48,22 @@ fun FirstMedia(
     mediaImplList: Collection<MediaImpl>,
     sortOptions: SortOptions
 ) {
-    if (mediaImpl !is Music && mediaImpl !is Album)
+    if (!mediaImpl.isMusic() && !mediaImpl.isAlbum())
         throw IllegalArgumentException("mediaImpl must be music or album.")
     val mediaImplToCompare: MediaImpl = when (sortOptions) {
         SortOptions.ARTIST -> {
-            when (mediaImpl) {
-                is Music -> mediaImpl.artist
-                is Album -> mediaImpl.artist
-                else -> throw IllegalArgumentException()
-            }
+            if (mediaImpl.isMusic()) (mediaImpl as Music).artist
+            else if (mediaImpl.isAlbum()) (mediaImpl as Album).artist
+            else throw IllegalArgumentException()
         }
 
         SortOptions.ALBUM -> {
-            if (mediaImpl is Music) mediaImpl.album
+            if (mediaImpl.isMusic()) (mediaImpl as Music).album
             else throw IllegalArgumentException("mediaImpl must be a Music")
         }
 
         SortOptions.GENRE -> {
-            if (mediaImpl is Music) mediaImpl.genre
+            if (mediaImpl.isMusic()) (mediaImpl as Music).genre
             else throw IllegalArgumentException("mediaImpl must be a Music")
         }
 
@@ -75,20 +73,18 @@ fun FirstMedia(
     val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first {
         val media: MediaImpl = when (sortOptions) {
             SortOptions.ARTIST -> {
-                when (it) {
-                    is Music -> it.artist
-                    is Album -> it.artist
-                    else -> throw IllegalArgumentException()
-                }
+                if (it.isMusic()) (it as Music).artist
+                else if (it.isAlbum()) (it as Album).artist
+                else throw IllegalArgumentException()
             }
 
             SortOptions.ALBUM -> {
-                if (it is Music) it.album
+                if (it.isMusic()) (it as Music).album
                 else throw IllegalArgumentException("mediaImpl must be a Music")
             }
 
             SortOptions.GENRE -> {
-                if (it is Music) it.genre
+                if (it.isMusic()) (it as Music).genre
                 else throw IllegalArgumentException("mediaImpl must be a Music")
             }
 

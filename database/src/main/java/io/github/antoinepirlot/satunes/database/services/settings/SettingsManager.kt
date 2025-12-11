@@ -34,7 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
@@ -101,10 +101,21 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    val foldersPathsIncludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsIncludingCollection
-    val foldersPathsExcludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsExcludingCollection
+    val foldersPathsIncludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsExcludingCollection
+    val subsonicUrl: String
+        get() = LibrarySettings.subsonicUrl
+
+    val subsonicUsername: String
+        get() = LibrarySettings.subsonicUsername
+
+    val subsonicPassword: String
+        get() = LibrarySettings.subsonicPassword
+
+    val subsonicSalt: String
+        get() = LibrarySettings.subsonicSalt
 
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
@@ -136,7 +147,7 @@ object SettingsManager {
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
         LibrarySettings.loadSettings(context = context)
-        DataLoader.loadFoldersPaths()
+        LocalDataLoader.loadFoldersPaths()
         _isLoaded = true
     }
 
@@ -300,12 +311,9 @@ object SettingsManager {
 
     suspend fun resetAll(context: Context) {
         SatunesSettings.reset(context = context)
-        this.resetFoldersSettings(context = context)
-        this.resetLoadingLogicSettings(context = context)
-        this.resetBatterySettings(context = context)
-        this.resetPlaybackBehaviorSettings(context = context)
-        this.resetPlaybackModesSettings(context = context)
-        this.resetDefaultSearchFiltersSettings(context = context)
+        PlaybackSettings.resetAll(context = context)
+        SearchSettings.resetAll(context = context)
+        LibrarySettings.resetAll(context = context)
         DesignSettings.resetAll(context = context)
     }
 
@@ -347,5 +355,21 @@ object SettingsManager {
 
     suspend fun selectUpdateChannel(context: Context, channel: UpdateChannel) {
         SatunesSettings.selectUpdateChannel(context = context, channel = channel)
+    }
+
+    suspend fun updateSubsonicUrl(context: Context, url: String) {
+        LibrarySettings.updateSubsonicUrl(context = context, url = url)
+    }
+
+    suspend fun updateSubsonicUsername(context: Context, username: String) {
+        LibrarySettings.updateSubsonicUsername(context = context, username = username)
+    }
+
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
+        LibrarySettings.updateSubsonicPassword(context = context, password = password)
+    }
+
+    suspend fun updateSubsonicSalt(context: Context, salt: String) {
+        LibrarySettings.updateSubsonicSalt(context = context, salt = salt)
     }
 }

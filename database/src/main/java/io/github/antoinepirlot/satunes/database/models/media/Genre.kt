@@ -22,15 +22,20 @@ package io.github.antoinepirlot.satunes.database.models.media
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Genre(
+open class Genre(
+    id: Long? = null,
     title: String,
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(
+    id = id ?: nextId,
+    title = title
+) {
     private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
@@ -41,6 +46,7 @@ class Genre(
 
     init {
         nextId++
+        DataManager.addGenre(genre = this)
     }
 
     fun getAlbumSet(): Set<Album> {
@@ -53,6 +59,8 @@ class Genre(
             this.albumSortedSetUpdate.value = true
         }
     }
+
+    override fun isGenre(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

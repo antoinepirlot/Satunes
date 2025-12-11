@@ -74,34 +74,32 @@ internal fun buildMediaItem(
  */
 internal fun buildMediaItem(media: MediaImpl): MediaBrowserCompat.MediaItem {
     val flags: Int =
-        if (media is Music) {
+        if (media.isMusic()) {
             MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
         } else {
             MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
         }
     val description: String =
-        when (media) {
-            is Music -> "Music"
-            is Folder -> "Folder"
-            is Artist -> "Artist"
-            is Album -> "Album"
-            is Genre -> "Genre"
-            is Playlist -> "Playlist"
-            else -> throw IllegalArgumentException("An issue occurred with Media interface")
-        }
+        if (media.isMusic()) "Music"
+        else if (media.isFolder()) "Folder"
+        else if (media.isArtist()) "Artist"
+        else if (media.isGenre()) "Genre"
+        else if (media.isPlaylist()) "Playlist"
+        else throw IllegalArgumentException("An issue occurred with Media interface")
+
     val extras = Bundle()
     extras.putString(
         MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE,
         description
     )
-    if (media is Music) {
+    if (media.isMusic()) {
         extras.putInt(
             MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS,
             MediaConstants.DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_NOT_PLAYED
         )
         extras.putDouble(MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, 0.0)
     }
-    val title: String = if (media is Playlist && media.title == LIKES_PLAYLIST_TITLE) {
+    val title: String = if (media.isPlaylist() && media.title == LIKES_PLAYLIST_TITLE) {
         SatunesCarMusicService.instance.getString(R.string.likes_playlist_title)
     } else {
         media.title
@@ -109,9 +107,9 @@ internal fun buildMediaItem(media: MediaImpl): MediaBrowserCompat.MediaItem {
     return buildMediaItem(
         id = media.id.toString(),
         description = description,
-        subtitle = if (media is Music) media.artist.title else null,
+        subtitle = if (media.isMusic()) (media as Music).artist.title else null,
         title = title,
-        uri = if (media is Music) media.uri else null,
+        uri = if (media.isMusic()) (media as Music).uri else null,
         icon = media.artwork,
         flags = flags
     )

@@ -28,7 +28,11 @@ import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
@@ -79,11 +83,18 @@ class PlaybackService : MediaSessionService() {
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = Logger.getLogger()
 
+        val factory =
+            DefaultDataSourceFactory(applicationContext, OkHttpDataSource.Factory(CallFactory()))
         _exoPlayer = ExoPlayer.Builder(applicationContext)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
                 AudioAttributes.DEFAULT,
                 SettingsManager.pauseIfAnotherPlayback
+            )
+            .setMediaSourceFactory(
+                DefaultMediaSourceFactory(applicationContext).setDataSourceFactory(
+                    factory
+                )
             )
             .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()

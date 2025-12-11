@@ -247,4 +247,10 @@ internal object PlaybackSettings {
             preferences[REWIND_MS_KEY] = this.rewindMs.longValue
         }
     }
+
+    suspend fun resetAll(context: Context) {
+        this.resetBatterySettings(context = context)
+        this.resetPlaybackModesSettings(context = context)
+        this.resetPlaybackBehaviorSettings(context = context)
+    }
 }

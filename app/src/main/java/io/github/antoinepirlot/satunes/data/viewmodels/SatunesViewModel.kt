@@ -45,13 +45,14 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import kotlinx.coroutines.CoroutineScope
@@ -91,8 +92,8 @@ class SatunesViewModel : ViewModel() {
     }
 
     private val _logger: Logger? = Logger.getLogger()
-    private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
-    private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _isLoadingData: MutableState<Boolean> = LocalDataLoader.isLoading
+    private val _isDataLoaded: MutableState<Boolean> = LocalDataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         SettingsManager.defaultNavBarSection
     private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
@@ -208,7 +209,7 @@ class SatunesViewModel : ViewModel() {
 
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            LocalDataLoader.loadAllData(context = MainActivity.instance.applicationContext)
         }
     }
 
@@ -221,7 +222,7 @@ class SatunesViewModel : ViewModel() {
                 // run from MAIN thread as media controller seems to not be reachable from IO thread
                 playbackViewModel.stop()
             }
-            DataLoader.resetAllData()
+            LocalDataLoader.resetAllData()
             this@SatunesViewModel.loadAllData()
         }
     }
@@ -791,6 +792,47 @@ class SatunesViewModel : ViewModel() {
             }
         } catch (_: Throwable) {
             _logger?.severe("Error while selecting update channel '${channel.name}'")
+        }
+    }
+
+    /**
+     * Change the cloud mode.
+     * It pings the server if is turning on
+     */
+    fun switchCloudMode(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        subsonicViewModel: SubsonicViewModel
+    ) {
+        if (_uiState.value.mode == SatunesModes.ONLINE)
+            turnOffCloud(subsonicViewModel = subsonicViewModel)
+        else
+            subsonicViewModel.connect(
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onFinished = { isConnected: Boolean ->
+                    if (isConnected)
+                        turnOnCloud(subsonicViewModel = subsonicViewModel)
+                }
+            )
+    }
+
+    fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {
+        if (_uiState.value.mode == SatunesModes.ONLINE) {
+//        NavBarSection.MUSICS.isEnabled.value = true
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.OFFLINE)
+            }
+        }
+    }
+
+    fun turnOnCloud(subsonicViewModel: SubsonicViewModel) {
+        if (_uiState.value.mode == SatunesModes.OFFLINE) {
+//        NavBarSection.MUSICS.isEnabled.value = false
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.ONLINE)
+            }
+// TODO        subsonicViewModel.removeOnlineMusic()
         }
     }
 }

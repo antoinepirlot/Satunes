@@ -47,12 +47,11 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
@@ -215,8 +214,8 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
-        val musics: Set<Music> = if (mediaImpl is Folder) {
-            mediaImpl.getAllMusic()
+        val musics: Set<Music> = if (mediaImpl.isFolder()) {
+            (mediaImpl as Folder).getAllMusic()
         } else {
             mediaImpl.getMusicSet()
         }
@@ -295,7 +294,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun removeMusicFromPlaylist(music: Music, playlist: Playlist, triggerUpdate: Boolean = true) {
+    fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
             musicDao.unlike(musicId = music.id)
             music.liked.value = false
@@ -304,7 +303,7 @@ class DatabaseManager private constructor(context: Context) {
             musicId = music.id,
             playlistId = playlist.id
         )
-        playlist.removeMusic(music = music, triggerUpdate = triggerUpdate)
+        playlist.removeMusic(music = music)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
             musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
         }
@@ -318,8 +317,7 @@ class DatabaseManager private constructor(context: Context) {
         for (music: Music in musics) {
             this.removeMusicFromPlaylist(
                 music = music,
-                playlist = playlist,
-                triggerUpdate = triggerUpdate
+                playlist = playlist
             )
         }
     }
@@ -465,7 +463,7 @@ class DatabaseManager private constructor(context: Context) {
     private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
         var toReturn: String = ""
         for (music: Music in playlist.getMusicSet())
-            toReturn += """#EXTINF:${music.duration / 1000},${music.title}
+            toReturn += """#EXTINF:${music.durationMs / 1000},${music.title}
                 |file:///$rootPlaylistsFilesPath/${music.relativePath}
                 |
             """.trimMargin()
@@ -627,7 +625,7 @@ class DatabaseManager private constructor(context: Context) {
                 music = music,
                 playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
-            musicDao.unlike(musicId = music.id)
+            musicDao.unlike(musicId = music.id!!)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -658,7 +656,7 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     suspend fun getOrder(playlist: Playlist, music: Music): Long {
-        if (!DataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
+        if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
         val musicsPlaylistsRel: MusicsPlaylistsRel =

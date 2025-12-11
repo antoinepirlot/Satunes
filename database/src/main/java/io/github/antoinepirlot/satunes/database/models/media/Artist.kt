@@ -20,20 +20,20 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Artist(
+open class Artist(
+    id: Long? = null,
     title: String,
-) : MediaImpl(id = nextId, title = title) {
+) : MediaImpl(
+    id = id ?: nextId,
+    title = title
+) {
     private val albumSortedSet: SortedSet<Album> = sortedSetOf()
-
-    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
     companion object {
         var nextId: Long = 1
@@ -58,6 +58,8 @@ class Artist(
     fun contains(album: Album): Boolean {
         return this.albumSortedSet.contains(album)
     }
+
+    override fun isArtist(): Boolean = true
 
     override fun toString(): String {
         return this.title

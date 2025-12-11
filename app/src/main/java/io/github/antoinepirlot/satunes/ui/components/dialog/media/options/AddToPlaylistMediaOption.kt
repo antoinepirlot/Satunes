@@ -67,13 +67,6 @@ internal fun AddToPlaylistMediaOption(
     )
     if (satunesUiState.showMediaSelectionDialog) {
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
-        //Recompose if data changed
-        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (mapChanged) {
-            dataViewModel.playlistSetUpdated()
-            dataViewModel.listSetUpdatedUnprocessed()
-        }
-        //
 
         MediaSelectionDialog(
             onDismissRequest = {
@@ -104,19 +97,18 @@ private fun updateMediaPlaylists(
     mediaSelectionViewModel: MediaSelectionViewModel,
     mediaImpl: MediaImpl
 ) {
-    when (mediaImpl) {
-        is Music -> dataViewModel.updateMusicPlaylist(
+    if (mediaImpl.isMusic()) {
+        mediaImpl as Music
+        dataViewModel.updateMusicPlaylist(
             scope = scope,
             snackBarHostState = snackBarHostState,
             music = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
-
-        else -> dataViewModel.updateMediaImplToPlaylists(
-            scope = scope,
-            snackBarHostState = snackBarHostState,
-            mediaImpl = mediaImpl,
-            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
-        )
-    }
+    } else dataViewModel.updateMediaImplToPlaylists(
+        scope = scope,
+        snackBarHostState = snackBarHostState,
+        mediaImpl = mediaImpl,
+        playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
+    )
 }

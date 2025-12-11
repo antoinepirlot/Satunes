@@ -46,41 +46,40 @@ internal fun MediaOptionsDialog(
     mediaImpl: MediaImpl,
     onDismissRequest: () -> Unit
 ) {
-    when (mediaImpl) {
-        is Music -> MusicOptionsDialog(
+    if (mediaImpl.isMusic())
+        MusicOptionsDialog(
             modifier = modifier,
-            music = mediaImpl,
+            music = mediaImpl as Music,
             onDismissRequest = onDismissRequest
         )
-
-        is Artist -> ArtistOptionsDialog(
+    else if (mediaImpl.isArtist())
+        ArtistOptionsDialog(
             modifier = modifier,
-            artist = mediaImpl,
+            artist = mediaImpl as Artist,
             onDismissRequest = onDismissRequest
         )
-
-        is Album -> AlbumOptionsDialog(
+    else if (mediaImpl.isAlbum())
+        AlbumOptionsDialog(
             modifier = modifier,
-            album = mediaImpl,
+            album = mediaImpl as Album,
             onDismissRequest = onDismissRequest
         )
-
-        is Genre -> GenreOptionsDialog(
+    else if (mediaImpl.isGenre())
+        GenreOptionsDialog(
             modifier = modifier,
-            genre = mediaImpl,
+            genre = mediaImpl as Genre,
             onDismissRequest = onDismissRequest
         )
-
-        is Playlist -> PlaylistOptionsDialog(
+    else if (mediaImpl.isPlaylist())
+        PlaylistOptionsDialog(
             modifier = modifier,
-            playlist = mediaImpl,
+            playlist = mediaImpl as Playlist,
             onDismissRequest = onDismissRequest
         )
-
-        is Folder -> FolderOptionsDialog(
+    else if (mediaImpl.isFolder())
+        FolderOptionsDialog(
             modifier = modifier,
-            folder = mediaImpl,
+            folder = mediaImpl as Folder,
             onDismissRequest = onDismissRequest
         )
-    }
 }

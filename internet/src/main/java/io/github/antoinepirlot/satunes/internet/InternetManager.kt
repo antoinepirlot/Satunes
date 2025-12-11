@@ -26,22 +26,56 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
+import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager.updateAvailableStatus
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 
 /**
  * @author Antoine Pirlot on 11/04/2024
  */
 internal class InternetManager(context: Context) : Application() {
+
+    companion object {
+        private val _logger: Logger? = Logger.getLogger()
+
+        /**
+         * Create a httpclient and get the response matching url.
+         *
+         * @param context the context :p
+         * @param url the url to get the response
+         */
+        internal fun getUrlResponse(context: Context, url: String): Response? {
+            return try {
+                val internetManager = InternetManager(context = context)
+                if (!internetManager.isConnected()) {
+                    UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
+                    updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
+                    return null
+                }
+                val httpClient = OkHttpClient()
+                val req: Request = Request.Builder()
+                    .url(url)
+                    .build()
+                httpClient.newCall(req).execute()
+            } catch (e: Throwable) {
+                _logger?.warning(e.message)
+                null
+            }
+        }
+    }
+
     private val connectivityManager: ConnectivityManager =
         context.getSystemService(ConnectivityManager::class.java)
 
     private val currentNetwork: Network? = connectivityManager.activeNetwork
-    private val logger: Logger? = Logger.getLogger()
 
     internal fun isConnected(): Boolean {
         return if (currentNetwork != null) {
             isConnected(capabilities = connectivityManager.getNetworkCapabilities(currentNetwork))
         } else {
-            logger?.warning("Current network is null")
+            _logger?.warning("Current network is null")
             false
         }
     }

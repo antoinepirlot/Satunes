@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.database.services.widgets.WidgetDatabaseM
  * @author Antoine Pirlot on 22/02/24
  */
 
-object DataLoader {
+object LocalDataLoader {
     private val URI: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     val isLoaded: MutableState<Boolean> = mutableStateOf(false)
@@ -171,18 +171,18 @@ object DataLoader {
         if (DataManager.getMusicSet().isEmpty()) this.resetAllData()
 
         WidgetDatabaseManager.refreshWidgets()
-        if (!this@DataLoader::selection.isInitialized || !this@DataLoader::selection_args.isInitialized) {
-            this@DataLoader.loadFoldersPaths()
+        if (!this@LocalDataLoader::selection.isInitialized || !this@LocalDataLoader::selection_args.isInitialized) {
+            this@LocalDataLoader.loadFoldersPaths()
         }
 
         if (
-            this@DataLoader.selection_args.isNotEmpty()
+            this@LocalDataLoader.selection_args.isNotEmpty()
         ) {
             context.contentResolver.query(
                 URI,
                 projection,
-                this@DataLoader.selection,
-                this@DataLoader.selection_args,
+                this@LocalDataLoader.selection,
+                this@LocalDataLoader.selection_args,
                 null
             )?.use {
                 _logger?.info("${it.count} musics to load.")
@@ -377,7 +377,7 @@ object DataLoader {
             title = title,
             absolutePath = absolutePath,
             displayName = displayName,
-            duration = duration,
+            durationMs = duration,
             size = size,
             cdTrackNumber = cdTrackNumber,
             addedDateMs = dateAdded,

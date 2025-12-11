@@ -103,7 +103,8 @@ internal fun MediaCardList(
                     if (onMediaClick != null) {
                         onMediaClick.invoke(mediaImpl)
                     } else {
-                        if (mediaImpl is BackFolder) {
+                        if (mediaImpl.isBackFolder()) {
+                            mediaImpl as BackFolder
                             if (mediaImpl.hasBeenClicked()) return@MediaCard
                             val currentMediaImpl: Folder =
                                 navigationUiState.currentMediaImpl as Folder
@@ -114,11 +115,11 @@ internal fun MediaCardList(
                             mediaImpl.clicked()
                             return@MediaCard
                         }
-                        if (mediaImpl is Music && !isInPlaybackView)
+                        if (mediaImpl.isMusic() && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
                                 currentDestination = navigationUiState.currentDestination,
-                                musicToPlay = mediaImpl
+                                musicToPlay = mediaImpl as Music?
                             )
                         navigationViewModel.openMedia(
                             playbackViewModel = playbackViewModel,
@@ -128,7 +129,7 @@ internal fun MediaCardList(
                     }
                 },
                 onLongClick = {
-                    if (mediaImpl is BackFolder) return@MediaCard
+                    if (mediaImpl.isBackFolder()) return@MediaCard
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     showMediaOptions = true
                 }

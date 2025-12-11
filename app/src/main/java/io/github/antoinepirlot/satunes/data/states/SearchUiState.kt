@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 
 /**
@@ -33,5 +32,4 @@ data class SearchUiState(
     val genresFilter: Boolean = SettingsManager.genresFilter,
     val foldersFilter: Boolean = SettingsManager.foldersFilter,
     val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val mediaImplCollection: Collection<MediaImpl> = listOf()
 )

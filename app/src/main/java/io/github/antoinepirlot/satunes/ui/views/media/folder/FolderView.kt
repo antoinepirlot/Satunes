@@ -49,9 +49,12 @@ internal fun FolderView(
     dataViewModel: DataViewModel = viewModel(),
     folder: Folder,
 ) {
-    val subFolders: MutableList<MediaImpl> = mutableListOf()
-    if (folder !is RootFolder) subFolders.add(dataViewModel.getBackFolder())
-    subFolders.addAll(elements = folder.getSubFolderListWithMusics())
+    LaunchedEffect(key1 = Unit) {
+        val subFolders: MutableList<MediaImpl> = mutableListOf()
+        if (folder !is RootFolder) subFolders.add(dataViewModel.getBackFolder())
+        subFolders.addAll(elements = folder.getSubFolderListWithMusics())
+        dataViewModel.loadMediaImplList(list = subFolders)
+    }
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         if (folder.isNotEmpty())
@@ -63,10 +66,7 @@ internal fun FolderView(
     Column(modifier = modifier) {
         if (folder !== dataViewModel.getRootFolder())
             FoldersPathRow(endFolder = folder)
-        MediaListView(
-            mediaImplCollection = subFolders,
-            emptyViewText = stringResource(id = R.string.no_music)
-        )
+        MediaListView(emptyViewText = stringResource(id = R.string.no_music))
     }
 }
 

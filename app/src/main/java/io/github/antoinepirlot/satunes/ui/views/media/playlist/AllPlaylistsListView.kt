@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -58,6 +57,10 @@ internal fun PlaylistListView(
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
+    }
+
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         satunesViewModel.replaceExtraButtons {
             ExtraButton(
@@ -76,43 +79,24 @@ internal fun PlaylistListView(
         }
     }
 
-    Column(modifier = modifier) {
-        var playlistSet: Set<Playlist>? by remember { mutableStateOf(null) }
-
-        //Recompose if data changed
-        val setChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (setChanged) {
-            dataViewModel.playlistSetUpdated()
-            dataViewModel.listSetUpdatedUnprocessed()
-        }
-
-        LaunchedEffect(key1 = dataViewModel.playlistSetUpdated) {
-            playlistSet = dataViewModel.getPlaylistSet()
-        }
-
-        if (playlistSet == null) return
-
+    Box(modifier = modifier) {
         MediaListView(
-            mediaImplCollection = playlistSet!!,
-            collectionChanged = setChanged,
             emptyViewText = stringResource(id = R.string.no_playlists),
-            sort = false,
+            canBeSorted = false,
         )
 
-        when {
-            openAlertDialog -> {
-                PlaylistCreationForm(
-                    onConfirm = { playlistTitle: String ->
-                        dataViewModel.addOnePlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            playlistTitle = playlistTitle
-                        )
-                        openAlertDialog = false
-                    },
-                    onDismissRequest = { openAlertDialog = false }
-                )
-            }
+        if (openAlertDialog) {
+            PlaylistCreationForm(
+                onConfirm = { playlistTitle: String ->
+                    dataViewModel.addOnePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlistTitle = playlistTitle
+                    )
+                    openAlertDialog = false
+                },
+                onDismissRequest = { openAlertDialog = false }
+            )
         }
     }
 }

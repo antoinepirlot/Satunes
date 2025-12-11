@@ -33,11 +33,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -53,7 +50,6 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
@@ -82,11 +78,9 @@ internal fun SearchView(
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val query: String = searchViewModel.query
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
-    var collectionChanged: Boolean by rememberSaveable { mutableStateOf(false) }
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
     var searchJob: Job? = null
     LaunchedEffect(key1 = query, key2 = selectedSearchChips.size) {
@@ -98,12 +92,7 @@ internal fun SearchView(
                 dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
             )
-            collectionChanged = true
         }
-    }
-
-    LaunchedEffect(key1 = collectionChanged) {
-        if (collectionChanged) collectionChanged = false
     }
 
     val focusRequester: FocusRequester = remember { FocusRequester() }
@@ -143,9 +132,7 @@ internal fun SearchView(
         Spacer(modifier = Modifier.size(16.dp))
         MediaChipList()
         MediaListView(
-            mediaImplCollection = searchUiState.mediaImplCollection,
-            collectionChanged = collectionChanged,
-            sort = false,
+            canBeSorted = false,
             emptyViewText = stringResource(id = R.string.no_result),
             onMediaClick = { mediaImpl: MediaImpl ->
                 if (mediaImpl.isMusic())

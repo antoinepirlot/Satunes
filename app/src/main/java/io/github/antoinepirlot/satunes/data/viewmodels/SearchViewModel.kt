@@ -142,18 +142,22 @@ class SearchViewModel : ViewModel() {
     ) {
         val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
         if (this.query.isBlank()) { // Prevent loop if string is "" or " "
-            this._uiState.update { currentState: SearchUiState ->
-                currentState.copy(mediaImplCollection = mediaImplSet)
-            }
+            dataViewModel.loadMediaImplList(list = mediaImplSet)
             return
         }
 
         val query: String = this.query.trim().lowercase()
+        val musicSet: Set<Music> = dataViewModel.getMusicSet()
+        val artistSet: Set<Artist> = dataViewModel.getArtistSet()
+        val albumSet: Set<Album> = dataViewModel.getAlbumSet()
+        val genreSet: Set<Genre> = dataViewModel.getGenreSet()
+        val folderSet: Set<Folder> = dataViewModel.getFolderSet()
+        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
 
         for (searchChip: SearchChips in selectedSearchChips) {
             when (searchChip) {
                 SearchChips.MUSICS -> {
-                    dataViewModel.getMusicSet().forEach { music: Music ->
+                    musicSet.forEach { music: Music ->
                         if (music.title.lowercase().contains(query)) {
                             mediaImplSet.add(element = music)
                         }
@@ -161,7 +165,7 @@ class SearchViewModel : ViewModel() {
                 }
 
                 SearchChips.ARTISTS -> {
-                    dataViewModel.getArtistSet().forEach { artist: Artist ->
+                    artistSet.forEach { artist: Artist ->
                         if (artist.title.lowercase().contains(query)) {
                             mediaImplSet.add(element = artist)
                         }
@@ -169,7 +173,7 @@ class SearchViewModel : ViewModel() {
                 }
 
                 SearchChips.ALBUMS -> {
-                    dataViewModel.getAlbumSet().forEach { album: Album ->
+                    albumSet.forEach { album: Album ->
                         if (album.title.lowercase().contains(query)) {
                             mediaImplSet.add(element = album)
                         }
@@ -177,7 +181,7 @@ class SearchViewModel : ViewModel() {
                 }
 
                 SearchChips.GENRES -> {
-                    dataViewModel.getGenreSet().forEach { genre: Genre ->
+                    genreSet.forEach { genre: Genre ->
                         if (genre.title.lowercase().contains(query)) {
                             mediaImplSet.add(element = genre)
                         }
@@ -185,7 +189,7 @@ class SearchViewModel : ViewModel() {
                 }
 
                 SearchChips.FOLDERS -> {
-                    dataViewModel.getFolderSet().forEach { folder: Folder ->
+                    folderSet.forEach { folder: Folder ->
                         if (folder.title.lowercase().contains(query)) {
                             mediaImplSet.add(element = folder)
                         }
@@ -193,7 +197,7 @@ class SearchViewModel : ViewModel() {
                 }
 
                 SearchChips.PLAYLISTS -> {
-                    dataViewModel.getPlaylistSet().forEach { playlist: Playlist ->
+                    playlistSet.forEach { playlist: Playlist ->
                         val context = MainActivity.instance.applicationContext
                         if (playlist.title == LIKES_PLAYLIST_TITLE) {
                             playlist.title = context.getString(R.string.likes_playlist_title)
@@ -205,8 +209,6 @@ class SearchViewModel : ViewModel() {
                 }
             }
         }
-        this._uiState.update { currentState: SearchUiState ->
-            currentState.copy(mediaImplCollection = mediaImplSet)
-        }
+        dataViewModel.loadMediaImplList(list = mediaImplSet)
     }
 }

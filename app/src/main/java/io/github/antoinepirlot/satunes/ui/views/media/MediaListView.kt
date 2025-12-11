@@ -26,11 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,12 +35,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -61,11 +51,9 @@ internal fun MediaListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImplCollection: Collection<MediaImpl>,
-    collectionChanged: Boolean = false,
     header: (@Composable () -> Unit)? = null,
     emptyViewText: String,
-    sort: Boolean = true,
+    canBeSorted: Boolean = true,
     showGroupIndication: Boolean = true,
     /**
      * Overrides the base onClick on media behavior
@@ -76,35 +64,30 @@ internal fun MediaListView(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    var listToShow: MutableList<MediaImpl> by remember { mutableStateOf(mediaImplCollection.toMutableList()) }
+    val listToShow: List<MediaImpl> = dataViewModel.mediaImplListOnScreen
     val sortOption: SortOptions = dataViewModel.sortOption
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
     val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
 
-    LaunchedEffect(key1 = collectionChanged) {
-        // Prevent doing twice the same thing at launching and showing empty text temporarily
-        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
-        listToShow = mediaImplCollection.toMutableList()
-    }
+//    LaunchedEffect(key1 = collectionChanged) { //TODO REMOVE
+//        // Prevent doing twice the same thing at launching and showing empty text temporarily
+//        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
+//    }
 
-    LaunchedEffect(key1 = sortOption, key2 = reverseOrder, key3 = collectionChanged) {
-        if (sort && (sortOption != dataUiState.appliedSortOption || collectionChanged || reverseOrder != previousReverseOrder)) {
-            dataViewModel.sort(
-                navigationUiState = navigationUiState,
-                list = listToShow,
-            )
-            if (!collectionChanged)
-                lazyListState.requestScrollToItem(0)
-            else {
+    LaunchedEffect(key1 = sortOption, key2 = reverseOrder) {
+        if (canBeSorted && (sortOption != dataUiState.appliedSortOption || reverseOrder != previousReverseOrder)) {
+            dataViewModel.sort(navigationUiState = navigationUiState)
+//            if (!collectionChanged)
+//                lazyListState.requestScrollToItem(0)
+//            else {
                 lazyListState.requestScrollToItem(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture
-            }
+//            }
         }
         if (reverseOrder != previousReverseOrder)
             dataViewModel.orderChanged()
-        dataViewModel.setMediaImplListOnScreen(mediaImplCollection = listToShow)
     }
 
     if (satunesUiState.showSortDialog)
@@ -132,24 +115,8 @@ internal fun MediaListView(
 @Composable
 @Preview
 private fun MediaListViewPreview() {
-    val list: SnapshotStateList<MediaImpl> = mutableStateListOf(
-        Music(
-            1,
-            title = "title",
-            displayName = "Musique",
-            absolutePath = "",
-            durationMs = 0,
-            size = 0,
-            folder = Folder(title = "Folder"),
-            artist = Artist(title = "Artist Title"),
-            album = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
-            genre = Genre(title = "Genre Title"),
-            addedDateMs = 0,
-        )
-    )
     MediaListView(
-        mediaImplCollection = list,
-        collectionChanged = false,
+//        collectionChanged = false,
         emptyViewText = "No data"
     )
 }

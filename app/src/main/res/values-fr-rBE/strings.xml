@@ -152,4 +152,6 @@
     <string name="subsonic_state_title">État</string>
     <string name="subsonic_state_content">Le statut de la connection au serveur est: </string>
     <string name="subsonic_connection_title">Identifiants de connexion</string>
+    <string name="salt_label">Graine</string>
+    <string name="salt_placeholder">Ce que tu veux</string>
 </resources>

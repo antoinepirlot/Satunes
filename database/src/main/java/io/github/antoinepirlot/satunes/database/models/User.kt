@@ -34,13 +34,13 @@ import io.github.antoinepirlot.satunes.database.utils.md5
 class User(
     url: String,
     username: String,
-    password: String
+    password: String,
+    salt: String
 ) {
-    var password: String by mutableStateOf(password)
-    var username: String by mutableStateOf(username)
-    var url: String by mutableStateOf(url)
+    var password: String by mutableStateOf(value = password)
+    var salt: String by mutableStateOf(value = salt)
+    var username: String by mutableStateOf(value = username)
+    var url: String by mutableStateOf(value = url)
 
-    fun getMd5Password(): String? {
-        return this.password.md5()
-    }
+    fun getMd5Password(): String = this.password.md5(salt = salt)
 }

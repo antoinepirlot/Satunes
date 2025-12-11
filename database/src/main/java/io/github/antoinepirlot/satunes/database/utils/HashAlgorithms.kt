@@ -30,8 +30,8 @@ import java.security.MessageDigest
  */
 
 @OptIn(ExperimentalStdlibApi::class)
-fun String.md5(): String {
+fun String.md5(salt: String): String {
     val md = MessageDigest.getInstance("MD5")
-    val digest = md.digest(this.toByteArray())
+    val digest = md.digest((this + salt).toByteArray())
     return digest.toHexString()
 }

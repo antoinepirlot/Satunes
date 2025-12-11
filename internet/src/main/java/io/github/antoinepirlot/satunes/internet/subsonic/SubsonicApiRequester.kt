@@ -69,7 +69,7 @@ class SubsonicApiRequester(
         }
 
     val inUrlMandatoryParams: String
-        get() = "u=${user.username}&t=${user.getMd5Password()}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
+        get() = "u=${user.username}&t=${user.getMd5Password()}&s=${user.salt}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
 
     /**
      * Returns the url as https://example.org/rest/[command]?[inUrlMandatoryParams]&[parameters]

@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.ui.components.settings.subsonic
 import android.os.Build
 import android.view.View.AUTOFILL_HINT_PASSWORD
 import android.view.View.AUTOFILL_HINT_USERNAME
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -64,16 +65,25 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun SubsonicConnectionSetting(
     modifier: Modifier = Modifier,
-    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
     SubSettings(
         modifier = modifier,
         title = stringResource(R.string.subsonic_connection_title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val user: User = subsonicViewModel.user
-
         NormalText(text = stringResource(R.string.subsonic_connection_text), maxLines = 2)
+        Form()
+        Buttons()
+    }
+}
+
+@Composable
+fun Form(
+    modifier: Modifier = Modifier,
+    subsonicViewModel: SubsonicViewModel = viewModel()
+) {
+    val user: User = subsonicViewModel.user
+    Column(modifier = Modifier) {
         OutlinedTextField(
             value = user.url,
             onValueChange = { subsonicViewModel.updateSubsonicUrl(url = it) },
@@ -106,7 +116,13 @@ fun SubsonicConnectionSetting(
             singleLine = true,
             visualTransformation = PasswordVisualTransformation()
         )
-        Buttons()
+        OutlinedTextField(
+            value = user.salt,
+            onValueChange = { subsonicViewModel.updateSubsonicSalt(salt = it) },
+            label = { NormalText(text = stringResource(id = R.string.salt_label)) },
+            placeholder = { NormalText(text = stringResource(id = R.string.salt_placeholder)) },
+            singleLine = true,
+        )
     }
 }
 

@@ -40,12 +40,16 @@ internal object SubsonicSettings {
     private const val DEFAULT_SUBSONIC_URL: String = ""
     private const val DEFAULT_SUBSONIC_USERNAME: String = ""
     private const val DEFAULT_SUBSONIC_PASSWORD: String = ""
+    private val DEFAULT_SUBSONIC_SALT: String
+        get() = Math.random()
+            .toString() //use get() to avoid it to be generated everytime Satunes launch (more optimised)
 
     private val SUBSONIC_URL_KEY: Preferences.Key<String> = stringPreferencesKey("subsonic_url")
     private val SUBSONIC_USERNAME_KEY: Preferences.Key<String> =
         stringPreferencesKey("subsonic_username")
     private val SUBSONIC_PASSWORD_KEY: Preferences.Key<String> =
         stringPreferencesKey("subsonic_password")
+    private val SUBSONIC_SALT_KEY: Preferences.Key<String> = stringPreferencesKey("subsonic_salt")
 
     var subsonicUrl: String = DEFAULT_SUBSONIC_URL
         private set
@@ -53,12 +57,14 @@ internal object SubsonicSettings {
         private set
     var subsonicPassword: String = DEFAULT_SUBSONIC_PASSWORD
         private set
+    var subsonicSalt: String = DEFAULT_SUBSONIC_SALT
 
     suspend fun loadSettings(context: Context) {
         context.dataStore.data.map { preferences: Preferences ->
             this.subsonicUrl = preferences[SUBSONIC_URL_KEY] ?: DEFAULT_SUBSONIC_URL
             this.subsonicUsername = preferences[SUBSONIC_USERNAME_KEY] ?: DEFAULT_SUBSONIC_USERNAME
             this.subsonicPassword = preferences[SUBSONIC_PASSWORD_KEY] ?: DEFAULT_SUBSONIC_PASSWORD
+            this.subsonicSalt = preferences[SUBSONIC_SALT_KEY] ?: DEFAULT_SUBSONIC_SALT
         }.first() //Without .first() settings are not loaded correctly
     }
 
@@ -86,9 +92,17 @@ internal object SubsonicSettings {
         }
     }
 
+    suspend fun updateSubsonicSalt(context: Context, salt: String) {
+        context.dataStore.edit { preferences: MutablePreferences ->
+            preferences[SUBSONIC_SALT_KEY] = salt
+            this.subsonicSalt = salt
+        }
+    }
+
     suspend fun resetAll(context: Context) {
         this.updateSubsonicUrl(context = context, url = DEFAULT_SUBSONIC_URL)
         this.updateSubsonicUsername(context = context, username = DEFAULT_SUBSONIC_USERNAME)
         this.updateSubsonicPassword(context = context, password = DEFAULT_SUBSONIC_PASSWORD)
+        this.updateSubsonicSalt(context = context, salt = DEFAULT_SUBSONIC_SALT)
     }
 }

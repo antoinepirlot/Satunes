@@ -62,7 +62,8 @@ class SubsonicViewModel : ViewModel() {
     var user: User = User(
         url = SettingsManager.subsonicUrl,
         username = SettingsManager.subsonicUsername,
-        password = SettingsManager.subsonicPassword
+        password = SettingsManager.subsonicPassword,
+        salt = SettingsManager.subsonicSalt
     )
 
     fun updateSubsonicUrl(url: String) {
@@ -77,6 +78,11 @@ class SubsonicViewModel : ViewModel() {
 
     fun updateSubsonicPassword(password: String) {
         this.user.password = password
+        this.hasBeenUpdated = true
+    }
+
+    fun updateSubsonicSalt(salt: String) {
+        this.user.salt = salt
         this.hasBeenUpdated = true
     }
 
@@ -105,6 +111,10 @@ class SubsonicViewModel : ViewModel() {
                 SettingsManager.updateSubsonicPassword(
                     context = context,
                     password = this@SubsonicViewModel.user.password
+                )
+                SettingsManager.updateSubsonicSalt(
+                    context = context,
+                    salt = this@SubsonicViewModel.user.salt
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
                 val subsonicApiRequester = SubsonicApiRequester(

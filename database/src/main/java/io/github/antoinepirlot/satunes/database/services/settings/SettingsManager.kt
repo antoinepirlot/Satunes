@@ -114,6 +114,9 @@ object SettingsManager {
     val subsonicPassword: String
         get() = LibrarySettings.subsonicPassword
 
+    val subsonicSalt: String
+        get() = LibrarySettings.subsonicSalt
+
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
         get() = SatunesSettings.updateChannel
@@ -364,5 +367,9 @@ object SettingsManager {
 
     suspend fun updateSubsonicPassword(context: Context, password: String) {
         LibrarySettings.updateSubsonicPassword(context = context, password = password)
+    }
+
+    suspend fun updateSubsonicSalt(context: Context, salt: String) {
+        LibrarySettings.updateSubsonicSalt(context = context, salt = salt)
     }
 }

@@ -44,7 +44,7 @@ class SubsonicMusic(
     title = title,
     displayName = displayName,
     absolutePath = absolutePath,
-    durationMs = 0,
+    durationMs = durationMs,
     size = size,
     cdTrackNumber = cdTrackNumber,
     addedDateMs = addedDateMs,

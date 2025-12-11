@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.playback.services
 
 import okhttp3.Call
+import okhttp3.OkHttpClient
 import okhttp3.Request
 
 /**
@@ -28,6 +29,6 @@ import okhttp3.Request
  */
 class CallFactory : Call.Factory {
     override fun newCall(request: Request): Call {
-        TODO("Not yet implemented")
+        return OkHttpClient().newCall(request)
     }
 }

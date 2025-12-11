@@ -55,6 +55,10 @@ internal class Song constructor(
      * Convert this object [Song] to [SubsonicMusic] object
      */
     fun toMusic(subsonicApiRequester: SubsonicApiRequester): SubsonicMusic {
+        val url: String = subsonicApiRequester.getCommandUrl(
+            command = "stream",
+            parameters = arrayOf("id=$id")
+        )
         return DataManager.getSubsonicMusic(id = id) ?: SubsonicMusic(
             id = this.id,
             title = this.title,
@@ -68,7 +72,7 @@ internal class Song constructor(
             artist = this.getOrCreateArtist(),
             album = this.getOrCreateAlbum(),
             genre = this.getGenre(),
-            uri = "${subsonicApiRequester.inUrlMandatoryParams}/${subsonicApiRequester.inUrlMandatoryParams}&id=$id".toUri(),
+            uri = url.toUri(),
         )
     }
 

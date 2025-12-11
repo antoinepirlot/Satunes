@@ -177,7 +177,6 @@
     <string name="test_connection_button_text">Try Connection</string>
     <string name="android_auto_title" translatable="false">Android Auto</string>
     <string name="subsonic_state_title">State</string>
-    <string name="subsonic_state_content">The server connection state is: </string>
     <string name="subsonic_connection_title">Connection Credentials</string>
     <string name="salt_label">Salt</string>
     <string name="salt_placeholder">Anything you want</string>

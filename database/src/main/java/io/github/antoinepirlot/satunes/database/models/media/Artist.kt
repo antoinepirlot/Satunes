@@ -29,11 +29,10 @@ import java.util.SortedSet
  */
 
 open class Artist(
-    subsonicId: Long? = null,
+    id: Long? = null,
     title: String,
 ) : MediaImpl(
-    id = if (subsonicId == null) nextId else null,
-    subsonicId = subsonicId,
+    id = id ?: nextId,
     title = title
 ) {
     private val albumSortedSet: SortedSet<Album> = sortedSetOf()
@@ -63,6 +62,8 @@ open class Artist(
     fun contains(album: Album): Boolean {
         return this.albumSortedSet.contains(album)
     }
+
+    override fun isArtist(): Boolean = true
 
     override fun toString(): String {
         return this.title

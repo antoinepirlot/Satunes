@@ -46,10 +46,6 @@ internal data class MusicDB(
 ) : Media {
     @Transient
     @Ignore
-    override val subsonicId: Long? = null
-
-    @Transient
-    @Ignore
     private val _logger: Logger? = Logger.getLogger()
 
     @Ignore

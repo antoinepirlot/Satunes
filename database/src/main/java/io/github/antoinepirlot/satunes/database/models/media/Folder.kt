@@ -32,10 +32,10 @@ import java.util.SortedSet
  */
 
 open class Folder(
-    subsonicId: Long? = null,
+    id: Long? = null,
     title: String,
     val parentFolder: Folder? = null,
-) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
+) : MediaImpl(id = id ?: nextId, title = title) {
 
     companion object {
         var nextId: Long = 1
@@ -75,7 +75,7 @@ open class Folder(
      */
     fun getSubFolderSet(): Set<Folder> = this.subFolderSortedSet
 
-    open fun isRoot(): Boolean = false
+    override fun isFolder(): Boolean = true
 
     /**
      * Create a list containing sub folders then this folder musics.

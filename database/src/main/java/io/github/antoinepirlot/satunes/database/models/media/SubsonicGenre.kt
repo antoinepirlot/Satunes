@@ -18,26 +18,17 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.utils
-
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
+package io.github.antoinepirlot.satunes.database.models.media
 
 /**
- * @author Antoine Pirlot 30/01/2025
+ * @author Antoine Pirlot 11/12/2025
  */
-fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): String? {
-    return when (sortOption) {
-        SortOptions.TITLE -> mediaImpl.title
-        SortOptions.ALBUM -> if (mediaImpl.isMusic()) (mediaImpl as Music).album.title else null
-        SortOptions.ARTIST -> {
-            if (mediaImpl.isMusic()) (mediaImpl as Music).artist.title
-            else if (mediaImpl.isAlbum()) (mediaImpl as Album).artist.title
-            else null
-        }
-
-        else -> null
-    }
+class SubsonicGenre(
+    id: Long,
+    title: String,
+) : Genre(
+    id = id,
+    title = title,
+) {
+    override fun isSubsonic(): Boolean = true
 }

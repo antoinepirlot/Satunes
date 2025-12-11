@@ -46,9 +46,9 @@ internal data class SubsonicAlbum(
     @JsonNames("song") val songs: Collection<Song> = listOf()
 ) {
     fun toAlbum(): Album = DataManager.getSubsonicAlbum(id = this.id) ?: Album(
-            title = name,
-        subsonicId = this.id,
+        title = name,
+        id = this.id,
         artist = DataManager.getSubsonicArtist(id = this.artistId)!!,
-            isCompilation = isCompilation
-        )
+        isCompilation = isCompilation
+    )
 }

@@ -150,7 +150,6 @@
     <string name="subsonic_connection_text">Entre les informations de ton serveur Subsonic (l\'utilisation de HTTPS est recommandé pour la sécurité)</string>
     <string name="test_connection_button_text">Tester la connexion</string>
     <string name="subsonic_state_title">État</string>
-    <string name="subsonic_state_content">Le statut de la connection au serveur est: </string>
     <string name="subsonic_connection_title">Identifiants de connexion</string>
     <string name="salt_label">Graine</string>
     <string name="salt_placeholder">Ce que tu veux</string>

@@ -47,9 +47,6 @@ internal data class PlaylistWithMusics(
 ) : Media {
     @Ignore
     @Transient
-    override val subsonicId: Long? = null
-    @Ignore
-    @Transient
     override lateinit var title: String // Not used
 
     @Ignore

@@ -28,6 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import okhttp3.Call
 import okhttp3.Response
@@ -38,32 +39,20 @@ import okhttp3.Response
 internal class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    onError: (() -> Unit)? = null,
+    onError: ((Error) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
     onError = onError
 ) {
-    companion object {
-        private const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
-    }
-
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.getSubsonicResponse()
-        var subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
-        if(subsonicRootFolder == null) {
-            subsonicRootFolder = Folder(
-                subsonicId = 0,
-                title = SUBSONIC_FOLDER_TITLE
-            ) //Use subsonicId for this one to consider it as subsonic one
-            DataManager.addFolder(subsonicRootFolder)
-        }
-
+//        if(!this.hasReceivedData()) return
+        val response: SubsonicResponse = this.response!!
+        val subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
         for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
             DataManager.addFolder(folder = subsonicFolder.toFolder(parentFolder = subsonicRootFolder))
-        this.dataProcessed()
+//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

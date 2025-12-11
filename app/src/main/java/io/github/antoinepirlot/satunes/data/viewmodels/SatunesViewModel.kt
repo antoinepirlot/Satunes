@@ -819,17 +819,21 @@ class SatunesViewModel : ViewModel() {
     }
 
     fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {
+        if (_uiState.value.mode == SatunesModes.ONLINE) {
 //        NavBarSection.MUSICS.isEnabled.value = true
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(mode = SatunesModes.OFFLINE)
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.OFFLINE)
+            }
         }
     }
 
     fun turnOnCloud(subsonicViewModel: SubsonicViewModel) {
+        if (_uiState.value.mode == SatunesModes.OFFLINE) {
 //        NavBarSection.MUSICS.isEnabled.value = false
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(mode = SatunesModes.ONLINE)
-        }
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.ONLINE)
+            }
 // TODO        subsonicViewModel.removeOnlineMusic()
+        }
     }
 }

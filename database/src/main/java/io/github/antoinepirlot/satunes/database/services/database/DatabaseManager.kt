@@ -214,8 +214,8 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
-        val musics: Set<Music> = if (mediaImpl is Folder) {
-            mediaImpl.getAllMusic()
+        val musics: Set<Music> = if (mediaImpl.isFolder()) {
+            (mediaImpl as Folder).getAllMusic()
         } else {
             mediaImpl.getMusicSet()
         }
@@ -248,7 +248,7 @@ class DatabaseManager private constructor(context: Context) {
         try {
             musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
             try {
-                musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
+                musicDao.insert(MusicDB(id = music.id!!, absolutePath = music.absolutePath))
             } catch (e: SQLiteConstraintException) {
                 _logger?.warning(e.message)
                 // Do nothing

@@ -212,7 +212,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (media is Music || media.getMusicSet().isNotEmpty()) {
+            if (media.isMusic() || media.getMusicSet().isNotEmpty()) {
                 val mediaItem: MediaItem = buildMediaItem(media = media)
                 mediaItemList.add(mediaItem)
             }

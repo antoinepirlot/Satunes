@@ -28,7 +28,6 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
@@ -50,25 +49,22 @@ import java.io.InputStream
 internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
-    protected val onError: (() -> Unit)?,
+    protected val onError: ((Error) -> Unit)?,
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
+    protected var response: SubsonicResponse? = null
 
     override fun onFailure(call: Call, e: IOException) {
-        e.printStackTrace()
-        SubsonicState.ERROR.error = null
-        subsonicApiRequester.subsonicState = SubsonicState.ERROR
+        _logger?.severe(e.message)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun onResponse(call: Call, response: Response) {
         if (response.code >= 400) {
-            SubsonicState.ERROR.error = SubsonicErrorCode.GENERIC_ERROR
-            subsonicApiRequester.subsonicState = SubsonicState.ERROR
+            //TODO
             return
         }
-        var hasError: Boolean = false
         try {
             val input: InputStream = response.body.byteStream()
             try {
@@ -76,23 +72,15 @@ internal abstract class SubsonicCallback(
                 val response: SubsonicResponse =
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
 
-                //Maybe error
-                if (response.isError()) {
-                    manageError(error = response.error!!)
-                } else {
-                    subsonicApiRequester.subsonicState = SubsonicState.DATA_RECEIVED
-                    SubsonicState.DATA_RECEIVED.addDataReceived(subsonicCallback = this, response)
-                }
+                if (response.isError()) this.onError?.invoke(response.error!!)
+                this.response = response
+
             } catch (e: SerializationException) {
                 _logger?.severe(e.message)
-                hasError = true
             } catch (e: IllegalArgumentException) {
                 _logger?.severe(e.message)
-                hasError = true
             } catch (e: IOException) {
                 _logger?.severe(e.message)
-                SubsonicState.ERROR.error = null
-                subsonicApiRequester.subsonicState = SubsonicState.ERROR
             } catch (_: NullPointerException) {
                 //Do nothing it's when lines has all been read
             } finally {
@@ -100,47 +88,8 @@ internal abstract class SubsonicCallback(
             }
         } catch (_: NullPointerException) {
             _logger?.warning("No body from request.")
-            hasError = true
         } finally {
-            if (hasError) {
-                SubsonicState.ERROR.error = SubsonicErrorCode.DATA_NOT_FOUND
-                subsonicApiRequester.subsonicState = SubsonicState.ERROR
-            }
             SubsonicCall.executionFinished(subsonicCallback = this)
         }
-    }
-
-    private fun manageError(error: Error) {
-        SubsonicState.ERROR.error = SubsonicErrorCode.getError(code = error.code)
-        subsonicApiRequester.subsonicState = SubsonicState.ERROR
-        this.onError?.invoke()
-    }
-
-    protected fun setUnknownError() {
-        _logger?.warning("Unknown error while fetching ping data.")
-        subsonicApiRequester.subsonicState = SubsonicState.ERROR
-        SubsonicState.ERROR.error = SubsonicErrorCode.UNKNOWN
-    }
-
-    /**
-     * Checks if data has been received, if false then it set unknown error and returns false. otherwise return true
-     */
-    protected fun hasReceivedData(): Boolean {
-        return if (subsonicApiRequester.subsonicState != SubsonicState.DATA_RECEIVED) {
-            setUnknownError()
-            false
-        } else true
-    }
-
-    /**
-     * Change state to idle for [SubsonicState]
-     */
-    protected fun dataProcessed() {
-        if(!SubsonicState.DATA_RECEIVED.hasDataToProcess())
-            subsonicApiRequester.subsonicState = SubsonicState.IDLE
-    }
-
-    protected fun getSubsonicResponse(): SubsonicResponse {
-        return SubsonicState.DATA_RECEIVED.getDataReceived(subsonicCallback = this)!!
     }
 }

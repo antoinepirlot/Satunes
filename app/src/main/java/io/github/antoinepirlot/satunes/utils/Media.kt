@@ -35,27 +35,22 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 
 fun getMediaTitle(mediaImpl: MediaImpl): String {
     val context: Context = MainActivity.instance.applicationContext
-    return when (mediaImpl) {
-        is Playlist -> {
-            if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-                MainActivity.instance.getString(RDb.string.likes_playlist_title)
-            } else {
-                mediaImpl.title
-            }
+    return if (mediaImpl.isPlaylist()) {
+        if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
+            MainActivity.instance.getString(RDb.string.likes_playlist_title)
+        } else {
+            mediaImpl.title
         }
-
-        is Folder -> {
-            if (
-                mediaImpl.parentFolder != null
-                && mediaImpl.parentFolder!!.isRoot()
-                && mediaImpl.title != context.getString(RDb.string.this_device)
-            ) {
-                MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
-            } else mediaImpl.title
-        }
-
-        else -> mediaImpl.title
-    }
+    } else if (mediaImpl.isFolder()) {
+        mediaImpl as Folder
+        if (
+            mediaImpl.parentFolder != null
+            && mediaImpl.parentFolder!!.isRootFolder()
+            && mediaImpl.title != context.getString(RDb.string.this_device)
+        ) {
+            MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
+        } else mediaImpl.title
+    } else mediaImpl.title
 }
 
 /**

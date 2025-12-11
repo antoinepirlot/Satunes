@@ -62,8 +62,8 @@ fun FoldersPathRow(
         items(
             items = folders,
             key = {
-                if (it.id != null) it.id!!
-                else "cloud-${it.subsonicId!!.toString()}"
+                if (it.isSubsonic()) "cloud-${it.id}"
+                else it.id
             },
         ) { targetFolder: Folder ->
             var onClick: (() -> Unit)? = null

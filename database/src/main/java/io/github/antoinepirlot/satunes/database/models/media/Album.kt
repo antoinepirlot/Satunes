@@ -31,14 +31,13 @@ import java.util.SortedSet
  */
 
 open class Album(
-    subsonicId: Long? = null,
+    id: Long? = null,
     title: String,
     var artist: Artist,
     var isCompilation: Boolean = false,
     year: Int? = null
 ) : MediaImpl(
-    id = if (subsonicId == null) nextId else null,
-    subsonicId = subsonicId,
+    id = id ?: nextId,
     title = title
 ) {
 
@@ -51,6 +50,8 @@ open class Album(
     init {
         nextId++
     }
+
+    override fun isAlbum(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -72,8 +73,8 @@ open class Album(
 
     override fun compareTo(other: MediaImpl): Int {
         var compared: Int = super.compareTo(other)
-        if (compared == 0 && other is Album) {
-            compared = this.artist.compareTo(other.artist)
+        if (compared == 0 && other.isAlbum()) {
+            compared = this.artist.compareTo((other as Album).artist)
         }
         return compared
     }

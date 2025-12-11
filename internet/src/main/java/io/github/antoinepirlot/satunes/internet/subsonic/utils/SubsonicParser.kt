@@ -43,7 +43,7 @@
 //import java.time.OffsetDateTime
 //import androidx.core.net.toUri
 //import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
-//import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
+//import io.github.antoinepirlot.satunes.database.models.media.SubsonicFolder
 //import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlAlbum
 //import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlArtist
 //import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.XmlGenre

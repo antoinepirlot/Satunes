@@ -45,10 +45,6 @@ internal data class PlaylistDB(
 ) : Media {
     @Ignore
     @Transient
-    override val subsonicId: Long? = null
-
-    @Ignore
-    @Transient
     var playlist: Playlist? = DataManager.getPlaylist(title = this.title)
 
     override fun equals(other: Any?): Boolean {

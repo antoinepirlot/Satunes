@@ -148,11 +148,11 @@ internal fun SearchView(
             sort = false,
             emptyViewText = stringResource(id = R.string.no_result),
             onMediaClick = { mediaImpl: MediaImpl ->
-                if (mediaImpl is Music)
+                if (mediaImpl.isMusic())
                     playbackViewModel.loadMusicFromMedias(
                         medias = DataManager.getMusicSet(),
                         currentDestination = navigationUiState.currentDestination,
-                        musicToPlay = mediaImpl
+                        musicToPlay = mediaImpl as Music
                     )
                 navigationViewModel.openMedia(
                     playbackViewModel = playbackViewModel,

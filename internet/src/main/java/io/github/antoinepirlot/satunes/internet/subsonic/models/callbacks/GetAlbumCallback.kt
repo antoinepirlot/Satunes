@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.Song
 import okhttp3.Call
@@ -37,7 +38,7 @@ import okhttp3.Response
 internal class GetAlbumCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    onError: (() -> Unit)? = null,
+    onError: ((Error) -> Unit)? = null,
 ): SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
@@ -45,12 +46,12 @@ internal class GetAlbumCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.getSubsonicResponse()
+//        if(!this.hasReceivedData()) return
+        val response: SubsonicResponse = this.response!!
         if(!response.hasAlbum()) throw IllegalStateException("No media found.")
         for (song: Song in response.album!!.songs)
             DataManager.addMusic(music = song.toMusic(subsonicApiRequester = subsonicApiRequester))
-        this.dataProcessed()
+//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

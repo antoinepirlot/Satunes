@@ -427,23 +427,18 @@ internal class PlaybackController private constructor(
     }
 
     fun addToQueue(mediaImpl: MediaImpl) {
-        when (mediaImpl) {
-            is Music -> {
-                try {
-                    this.playlist!!.addToQueue(music = mediaImpl)
-                    this.mediaController!!.addMediaItem(mediaImpl.mediaItem)
-                } catch (_: AlreadyInPlaybackException) {
-                    return
-                }
-                hasNext = true
+        if (mediaImpl.isMusic()) {
+            mediaImpl as Music
+            try {
+                this.playlist!!.addToQueue(music = mediaImpl)
+                this.mediaController!!.addMediaItem(mediaImpl.mediaItem)
+            } catch (_: AlreadyInPlaybackException) {
+                return
             }
-
-            is Folder -> addToQueue(mediaImplList = mediaImpl.getAllMusic())
-
-            else -> {
-                addToQueue(mediaImplList = mediaImpl.getMusicSet())
-            }
-        }
+            hasNext = true
+        } else if (mediaImpl.isFolder())
+            addToQueue(mediaImplList = (mediaImpl as Folder).getAllMusic())
+        else addToQueue(mediaImplList = mediaImpl.getMusicSet())
     }
 
     fun removeFromQueue(mediaImplList: Collection<MediaImpl>) {
@@ -455,22 +450,17 @@ internal class PlaybackController private constructor(
     fun removeFromQueue(mediaImpl: MediaImpl) {
         if (mediaImpl == musicPlaying) return
 
-        when (mediaImpl) {
-            is Music -> {
-                val musicIndex: Int = this.playlist!!.removeFromQueue(music = mediaImpl)
-                if (musicIndex >= 0) {
-                    this.mediaController!!.removeMediaItem(musicIndex)
-                    updateHasNext()
-                    updateHasPrevious()
-                }
+        if (mediaImpl.isMusic()) {
+            mediaImpl as Music
+            val musicIndex: Int = this.playlist!!.removeFromQueue(music = mediaImpl)
+            if (musicIndex >= 0) {
+                this.mediaController!!.removeMediaItem(musicIndex)
+                updateHasNext()
+                updateHasPrevious()
             }
-
-            is Folder -> removeFromQueue(mediaImplList = mediaImpl.getAllMusic())
-
-            else -> {
-                removeFromQueue(mediaImplList = mediaImpl.getMusicSet())
-            }
-        }
+        } else if (mediaImpl.isFolder())
+            removeFromQueue(mediaImplList = (mediaImpl as Folder).getAllMusic())
+        else removeFromQueue(mediaImplList = mediaImpl.getMusicSet())
     }
 
     private fun updateHasNext() {
@@ -497,28 +487,24 @@ internal class PlaybackController private constructor(
 
     fun addNext(mediaImpl: MediaImpl) {
         if (musicPlaying == mediaImpl) return
-
-        when (mediaImpl) {
-            is Music -> {
-                try {
-                    this.playlist!!.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
-                    this.mediaController!!.addMediaItem(
-                        this.musicPlayingIndex + 1,
-                        mediaImpl.mediaItem
-                    )
-                    hasNext = true
-                } catch (_: AlreadyInPlaybackException) {
-                    this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
-                    hasNext = true
-                }
+        if (mediaImpl.isMusic()) {
+            mediaImpl as Music
+            try {
+                this.playlist!!.addNext(index = this.musicPlayingIndex + 1, music = mediaImpl)
+                this.mediaController!!.addMediaItem(
+                    this.musicPlayingIndex + 1,
+                    mediaImpl.mediaItem
+                )
+                hasNext = true
+            } catch (_: AlreadyInPlaybackException) {
+                this.moveMusic(music = mediaImpl, newIndex = this.musicPlayingIndex + 1)
+                hasNext = true
             }
-
+        } else if (mediaImpl.isFolder())
             // reversed because each music will be added next to it's added after the current music
-            is Folder -> addNext(mediaImplList = mediaImpl.getAllMusic().reversed())
-
-            // reversed because each music will be added next to it's added after the current music
-            else -> addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
-        }
+            addNext(mediaImplList = (mediaImpl as Folder).getAllMusic().reversed())
+        // reversed because each music will be added next to it's added after the current music
+        else addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
     }
 
     private fun moveMusic(music: Music, newIndex: Int) {

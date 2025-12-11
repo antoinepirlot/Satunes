@@ -204,15 +204,12 @@ class NavigationViewModel : ViewModel() {
      * @return the destination matching [MediaImpl]
      */
     private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
-        return when (mediaImpl) {
-            is RootFolder -> Destination.FOLDERS
-            is Folder -> Destination.FOLDER
-            is Artist -> Destination.ARTIST
-            is Album -> Destination.ALBUM
-            is Genre -> Destination.GENRE
-            is Playlist -> Destination.PLAYLIST
-            else -> Destination.PLAYBACK
-        }
+        return if (mediaImpl == null) Destination.PLAYBACK // same as else
+        else if (mediaImpl.isRootFolder() || mediaImpl.isFolder()) Destination.FOLDERS
+        else if (mediaImpl.isArtist()) Destination.ARTIST
+        else if (mediaImpl.isGenre()) Destination.GENRE
+        else if (mediaImpl.isPlaylist()) Destination.PLAYLIST
+        else Destination.PLAYBACK // same as first
     }
 
     private fun getRoute(destination: Destination, mediaImpl: MediaImpl): String {
@@ -235,7 +232,7 @@ class NavigationViewModel : ViewModel() {
         navController: NavController?,
         reset: Boolean = false
     ) {
-        if (media == null || media is Music)
+        if (media == null || media.isMusic())
             startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media, reset = reset)
 
         if (navController != null)

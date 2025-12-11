@@ -25,7 +25,10 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import okhttp3.Call
 import okhttp3.Response
@@ -35,8 +38,9 @@ import okhttp3.Response
  */
 internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
+    private val onDataRetrieved: (Set<SubsonicMusic>) -> Unit,
     onSucceed: (() -> Unit)? = null,
-    onError: (() -> Unit)? = null,
+    onError: ((Error) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
@@ -46,13 +50,13 @@ internal class GetRandomMusicCallback(
 
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if(!this.hasReceivedData()) return
-        this.processData(response = this.getSubsonicResponse())
-        this.dataProcessed()
+//        if(!this.hasReceivedData()) return
+        this.processData()
+//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 
-    private fun processData(response: SubsonicResponse) {
-        response
+    private fun processData() {
+        this.onDataRetrieved(this.response!!.toMusics(subsonicApiRequester = subsonicApiRequester))
     }
 }

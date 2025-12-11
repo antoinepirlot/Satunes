@@ -24,7 +24,6 @@ package io.github.antoinepirlot.satunes.database.models.media
  * @author Antoine Pirlot on 11/07/2024
  */
 internal interface Media {
-    val id: Long?
-    val subsonicId: Long?
+    val id: Long
     var title: String
 }

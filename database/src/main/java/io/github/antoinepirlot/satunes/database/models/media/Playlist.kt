@@ -31,9 +31,8 @@ import kotlinx.coroutines.launch
  */
 class Playlist(
     id: Long, // Managed by Database
-    subsonicId: Long? = null,
     title: String
-) : MediaImpl(id = id, subsonicId = subsonicId, title = title) {
+) : MediaImpl(id = id, title = title) {
 
     override fun addMusic(music: Music, triggerUpdate: Boolean) {
         super.addMusic(music, triggerUpdate)
@@ -63,6 +62,8 @@ class Playlist(
         super.removeMusic(music, triggerUpdate)
         music.removeOrderInPlaylist(playlist = this)
     }
+
+    override fun isPlaylist(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

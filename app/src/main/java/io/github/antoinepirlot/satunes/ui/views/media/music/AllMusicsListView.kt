@@ -24,6 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +39,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -57,12 +61,24 @@ internal fun AllMusicsListView(
 @Composable
 private fun OnlineMode(
     modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    var musicSet: Set<MediaImpl> = setOf()
+    var collectionChanged: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
-    val musicSet: Set<MediaImpl> = subsonicViewModel.getRandomSongs()
+    LaunchedEffect(key1 = Unit) {
+        subsonicViewModel.loadRandomSongs(onDataRetrieved = {
+            musicSet = it
+            collectionChanged = true
+        })
+    }
+
+    MediaListView(
+        modifier = modifier,
+        collectionChanged = collectionChanged,
+        mediaImplCollection = musicSet,
+        emptyViewText = stringResource(id = R.string.no_music)
+    )
 }
 
 @Composable

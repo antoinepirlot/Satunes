@@ -36,6 +36,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -51,11 +54,9 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
-import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.User
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
 import kotlinx.coroutines.CoroutineScope
 
@@ -136,13 +137,10 @@ private fun Buttons(
     satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    val canTryConnection: Boolean = subsonicUiState.subsonicState in listOf(
-        SubsonicState.DISCONNECTED, SubsonicState.IDLE, SubsonicState.ERROR
-    )
+    var canTryConnection: Boolean by rememberSaveable { mutableStateOf(value = true) }
 
     Row(modifier = modifier) {
         if (subsonicViewModel.hasBeenUpdated) {
@@ -155,6 +153,7 @@ private fun Buttons(
 
         Button(
             onClick = {
+                canTryConnection = false
                 subsonicViewModel.connect(
                     scope = scope,
                     snackbarHostState = snackbarHostState,
@@ -163,12 +162,13 @@ private fun Buttons(
                             satunesViewModel.turnOnCloud(subsonicViewModel = subsonicViewModel)
                         else
                             satunesViewModel.turnOffCloud(subsonicViewModel = subsonicViewModel)
+                        canTryConnection = true
                     }
                 )
             },
             enabled = canTryConnection
         ) {
-            if (subsonicUiState.subsonicState == SubsonicState.PINGING)
+            if (!canTryConnection)
                 LoadingCircle(modifier = Modifier.size(size = 16.dp))
             else
                 NormalText(text = stringResource(R.string.test_connection_button_text))

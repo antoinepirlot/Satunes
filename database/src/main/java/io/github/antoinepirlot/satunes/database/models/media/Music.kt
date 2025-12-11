@@ -46,9 +46,8 @@ import java.util.Date
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Music(
-    id: Long?,
-    subsonicId: Long? = null,
+open class Music(
+    id: Long,
     title: String,
     displayName: String,
     val absolutePath: String,
@@ -61,7 +60,9 @@ class Music(
     val album: Album,
     val genre: Genre,
     uri: Uri? = null,
-) : MediaImpl(id = id, subsonicId = subsonicId, title = if (title.isBlank() || SettingsManager.isMusicTitleDisplayName) displayName else title
+) : MediaImpl(
+    id = id,
+    title = if (title.isBlank() || SettingsManager.isMusicTitleDisplayName) displayName else title
 ) {
 
     /**
@@ -179,6 +180,8 @@ class Music(
     fun getOrder(playlist: Playlist): Long {
         return this._playlistsOrderMap[playlist] ?: -1
     }
+
+    override fun isMusic(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

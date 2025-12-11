@@ -29,12 +29,11 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Genre(
-    subsonicId: Long? = null,
+open class Genre(
+    id: Long? = null,
     title: String,
 ) : MediaImpl(
-    id = if (subsonicId == null) nextId else null,
-    subsonicId = subsonicId,
+    id = id ?: nextId,
     title = title
 ) {
     private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
@@ -60,6 +59,8 @@ class Genre(
             this.albumSortedSetUpdate.value = true
         }
     }
+
+    override fun isGenre(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

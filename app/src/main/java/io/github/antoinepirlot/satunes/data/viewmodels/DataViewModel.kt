@@ -426,9 +426,9 @@ class DataViewModel : ViewModel() {
         this._updatePlaylistsJob?.cancel()
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (mediaImpl is Music)
+                if (mediaImpl.isMusic())
                     _db.updateMusicToPlaylists(
-                        music = mediaImpl,
+                        music = mediaImpl as Music,
                         newPlaylistsCollection = playlists
                     )
                 else
@@ -621,19 +621,15 @@ class DataViewModel : ViewModel() {
         try {
             var paths: Array<String> = arrayOf()
 
-            when (media) {
-                is Music -> paths += media.absolutePath
-                is Folder -> {
-                    media.getAllMusic().forEach { music: Music ->
-                        paths += music.absolutePath
-                    }
+            if (media.isMusic()) paths += (media as Music).absolutePath
+            else if (media.isFolder()) {
+                (media as Folder).getAllMusic().forEach { music: Music ->
+                    paths += music.absolutePath
                 }
-
-                else -> {
-                    @Suppress("NAME_SHADOWING")
-                    media.getMusicSet().forEach { media: Music ->
-                        paths += media.absolutePath
-                    }
+            } else {
+                @Suppress("NAME_SHADOWING")
+                media.getMusicSet().forEach { media: Music ->
+                    paths += media.absolutePath
                 }
             }
 

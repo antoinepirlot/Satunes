@@ -31,5 +31,5 @@ class RootFolder : Folder(title = ROOT_FOLDER_TITLE) {
         private const val ROOT_FOLDER_TITLE: String = "root"
     }
 
-    override fun isRoot(): Boolean = true
+    override fun isRootFolder(): Boolean = true
 }

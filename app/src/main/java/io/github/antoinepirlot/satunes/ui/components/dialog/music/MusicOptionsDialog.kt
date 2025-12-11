@@ -78,10 +78,10 @@ internal fun MusicOptionsDialog(
                 LikeUnlikeMusicOption(music = music)
                 AddToPlaylistMediaOption(mediaImpl = music, onFinished = null)
 
-                if (currentMediaImpl is Playlist) {
+                if (currentMediaImpl != null && currentMediaImpl.isPlaylist()) {
                     RemoveFromPlaylistMusicOption(
                         music = music,
-                        playlist = currentMediaImpl,
+                        playlist = currentMediaImpl as Playlist,
                         onFinished = null
                     )
                 }

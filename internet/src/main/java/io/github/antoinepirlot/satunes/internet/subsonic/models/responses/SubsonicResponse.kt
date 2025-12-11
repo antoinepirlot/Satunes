@@ -24,7 +24,8 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
@@ -74,7 +75,7 @@ internal data class SubsonicResponse(
     }
 
     /**
-     * Returns the list of [SubsonicFolder] received.
+     * Returns the list of [io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder] received.
      *
      * @throws IllegalStateException if it has not been received
      */
@@ -84,14 +85,14 @@ internal data class SubsonicResponse(
     }
 
     /**
-     * Constructs [Music] objects from what has been received
+     * Constructs [SubsonicMusic] objects from what has been received
      */
-    fun toMusics(): Collection<Music> {
+    fun toMusics(subsonicApiRequester: SubsonicApiRequester): Set<SubsonicMusic> {
         if (this.randomSongs == null)
             throw IllegalStateException("Can't convert data to songs, object not compatible")
-        for (song: Song in this.randomSongs) {
-            song
-        }
-        return listOf() // TODO
+        val set: MutableSet<SubsonicMusic> = mutableSetOf()
+        for (song: Song in this.randomSongs)
+            set.add(song.toMusic(subsonicApiRequester = subsonicApiRequester))
+        return set.toSortedSet()
     }
 }

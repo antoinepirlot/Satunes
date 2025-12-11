@@ -104,8 +104,8 @@ class PlaybackViewModel : ViewModel() {
         musicToPlay: Music? = null
     ) {
         val musicSet: Set<Music> =
-            if (media is Folder) {
-                media.getAllMusic()
+            if (media.isFolder()) {
+                (media as Folder).getAllMusic()
             } else {
                 val musicSet: MutableSet<Music> = mutableSetOf()
                 media.getMusicSet().forEach { music: Music ->
@@ -132,14 +132,14 @@ class PlaybackViewModel : ViewModel() {
             currentDestination == Destination.FOLDERS || currentDestination == Destination.FOLDER
         if (isInFolderView)
             medias.forEach { media: MediaImpl ->
-                if (media is Music) musicSet.add(media)
+                if (media.isMusic()) musicSet.add(media as Music)
                 else return@forEach
             }
 
         medias.forEach { mediaImpl: MediaImpl ->
-            if (isInFolderView && mediaImpl is Music) return@forEach
-            if (mediaImpl is Music) musicSet.add(mediaImpl)
-            else if (mediaImpl is Folder) musicSet.addAll(mediaImpl.getAllMusic())
+            if (isInFolderView && mediaImpl.isMusic()) return@forEach
+            if (mediaImpl.isMusic()) musicSet.add(mediaImpl as Music)
+            else if (mediaImpl.isFolder()) musicSet.addAll((mediaImpl as Folder).getAllMusic())
             else musicSet.addAll(mediaImpl.getMusicSet())
         }
         this.loadMusics(

@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Index
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import okhttp3.Call
@@ -38,7 +39,7 @@ import okhttp3.Response
 internal class GetIndexesCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    onError: (() -> Unit)? = null,
+    onError: ((Error) -> Unit)? = null,
 ): SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
@@ -46,14 +47,14 @@ internal class GetIndexesCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if(!this.hasReceivedData()) return
+//        if(!this.hasReceivedData()) return
 
-        val response: SubsonicResponse = this.getSubsonicResponse()
+        val response: SubsonicResponse = this.response!!
         if(!response.hasIndexes()) throw IllegalStateException("Indexes not found.")
         for(index: Index in response.getAllIndexes()) //Each index represents a letter (A, B, C, etc. alphabetical order)
             for(artist: SubsonicArtist in index.artists)
                 DataManager.addArtist(artist = artist.toArtist())
-        this.dataProcessed()
+//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

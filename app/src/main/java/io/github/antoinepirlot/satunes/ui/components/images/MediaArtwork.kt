@@ -105,11 +105,9 @@ internal fun MediaArtwork(
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val navController: NavHostController = LocalNavController.current
 
-    val album: Album? = when (mediaImpl) {
-        is Music -> mediaImpl.album
-        is Album -> mediaImpl
-        else -> null
-    }
+    val album: Album? = if (mediaImpl.isMusic()) (mediaImpl as Music).album
+    else if (mediaImpl.isAlbum()) mediaImpl as Album
+    else null
 
     if (satunesViewModel.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
         var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }
@@ -176,13 +174,13 @@ internal fun MediaArtwork(
         LaunchedEffect(key1 = mediaImpl) {
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
-                var bitmap: Bitmap? = when (mediaImpl) {
-                    is Music -> mediaImpl.getAlbumArtwork(context = context)
-                    is Album ->
+                var bitmap: Bitmap? =
+                    if (mediaImpl.isMusic()) (mediaImpl as Music).getAlbumArtwork(context = context)
+                    else if (mediaImpl.isAlbum()) {
                         if (mediaImpl.isEmpty()) null
                         else mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
-                    else -> null
-                }
+                    } else null
+
                 if (bitmap != null
                     && !satunesViewModel.artworkCircleShape
                     && satunesViewModel.artworkAnimation

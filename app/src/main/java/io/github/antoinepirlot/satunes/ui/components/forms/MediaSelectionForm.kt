@@ -75,8 +75,8 @@ internal fun MediaSelectionForm(
             items(
                 items = mediaList,
                 key = {
-                    if (it.id != null) it.id!!
-                    else "cloud-${it.subsonicId!!.toString()}"
+                    if (it.isSubsonic()) "cloud-${it.id}"
+                    else it.id
                 }
             ) { mediaImpl: MediaImpl ->
                 MediaSelectionCheckbox(mediaImpl = mediaImpl)

@@ -30,19 +30,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -50,12 +44,8 @@ import kotlinx.coroutines.launch
  */
 class SubsonicViewModel : ViewModel() {
     companion object {
-        private val _uiState: MutableStateFlow<SubsonicUiState> =
-            MutableStateFlow(SubsonicUiState())
 
     }
-
-    val uiState: StateFlow<SubsonicUiState> = _uiState.asStateFlow()
 
     var hasBeenUpdated: Boolean by mutableStateOf(false)
         private set
@@ -122,14 +112,11 @@ class SubsonicViewModel : ViewModel() {
                     salt = this@SubsonicViewModel.user.salt
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
-                val subsonicApiRequester = SubsonicApiRequester(
-                    user = user,
-                    onSubsonicStateChanged = { this@SubsonicViewModel.updateState(newState = it) }
-                )
+                val subsonicApiRequester = SubsonicApiRequester(user = user)
                 subsonicApiRequester.ping(
                     onSucceed = {
                         onFinished(true)
-                        subsonicApiRequester.loadAll()
+//                        subsonicApiRequester.loadAll()
                     },
                     onError = { onFinished(false) }
                 ) //TODO
@@ -149,18 +136,9 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    private fun updateState(newState: SubsonicState) {
-        _uiState.update { currentState: SubsonicUiState ->
-            currentState.copy(subsonicState = newState)
-        }
-    }
-
-    fun loadArtists() {
-        val apiRequester = SubsonicApiRequester(
-            user = user,
-            onSubsonicStateChanged = { this.updateState(newState = it) }
-        )
-        apiRequester.loadArtists()
+    private fun loadArtists() {
+        val apiRequester = SubsonicApiRequester(user = user)
+//        apiRequester.loadArtists()
     }
 
     fun removeOnlineMusic() {
@@ -170,14 +148,10 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Get random song from API
      */
-    fun getRandomSongs(): Set<Music> {
-        val apiRequester = SubsonicApiRequester(
-            user = user,
-            onSubsonicStateChanged = { this.updateState(newState = it) }
-        )
-        apiRequester.getRandomSongs(onDataRetrieved = {
-            println()
-        })
-        return setOf()//todo
+    fun loadRandomSongs(onDataRetrieved: (Set<Music>) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiRequester = SubsonicApiRequester(user = user)
+            apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
+        }
     }
 }

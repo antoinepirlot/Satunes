@@ -24,6 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
+import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames

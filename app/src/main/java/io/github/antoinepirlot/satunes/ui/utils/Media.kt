@@ -57,18 +57,13 @@ internal fun startMusic(
     mediaToPlay: MediaImpl? = null,
     reset: Boolean = false
 ) {
-    when (mediaToPlay) {
-        is Music -> {
-            playbackViewModel.start(mediaToPlay = mediaToPlay, reset = reset)
-        }
-
-        is Folder -> {
-            playbackViewModel.start(reset = reset)
-        }
-
-        null -> {
-            playbackViewModel.start(reset = reset)
-        }
+    if (mediaToPlay == null) {
+        playbackViewModel.start(reset = reset)
+    } else if (mediaToPlay.isMusic()) {
+        mediaToPlay as Music
+        playbackViewModel.start(mediaToPlay = mediaToPlay, reset = reset)
+    } else if (mediaToPlay.isFolder()) {
+        playbackViewModel.start(reset = reset)
     }
 }
 
@@ -89,12 +84,15 @@ fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, 
 }
 
 fun getRightIconAndDescription(media: MediaImpl): JetpackLibsIcons {
-    return when (media) {
-        is Folder -> FOLDER
-        is Artist -> ARTIST
-        is Album -> ALBUM
-        is Genre -> GENRES
-        is Playlist -> PLAYLIST
-        else -> MUSIC // In that case, mediaImpl is Music
-    }
+    return if (media.isFolder())
+        FOLDER
+    else if (media.isArtist())
+        ARTIST
+    else if (media.isAlbum())
+        ALBUM
+    else if (media.isGenre())
+        GENRES
+    else if (media.isPlaylist())
+        PLAYLIST
+    else MUSIC // In that case, mediaImpl is Music
 }

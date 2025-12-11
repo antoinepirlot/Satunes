@@ -18,26 +18,41 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.utils
+package io.github.antoinepirlot.satunes.database.models.media
 
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
+import android.net.Uri
 
 /**
- * @author Antoine Pirlot 30/01/2025
+ * @author Antoine Pirlot 11/12/2025
  */
-fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): String? {
-    return when (sortOption) {
-        SortOptions.TITLE -> mediaImpl.title
-        SortOptions.ALBUM -> if (mediaImpl.isMusic()) (mediaImpl as Music).album.title else null
-        SortOptions.ARTIST -> {
-            if (mediaImpl.isMusic()) (mediaImpl as Music).artist.title
-            else if (mediaImpl.isAlbum()) (mediaImpl as Album).artist.title
-            else null
-        }
-
-        else -> null
-    }
+class SubsonicMusic(
+    id: Long,
+    title: String,
+    displayName: String,
+    absolutePath: String,
+    durationMs: Long = 0,
+    size: Int = 0,
+    cdTrackNumber: Int? = null,
+    addedDateMs: Long,
+    folder: Folder,
+    artist: Artist,
+    album: Album,
+    genre: Genre,
+    uri: Uri? = null,
+) : Music(
+    id = id,
+    title = title,
+    displayName = displayName,
+    absolutePath = absolutePath,
+    durationMs = 0,
+    size = size,
+    cdTrackNumber = cdTrackNumber,
+    addedDateMs = addedDateMs,
+    folder = folder,
+    artist = artist,
+    album = album,
+    genre = genre,
+    uri = uri,
+) {
+    override fun isSubsonic(): Boolean = true
 }

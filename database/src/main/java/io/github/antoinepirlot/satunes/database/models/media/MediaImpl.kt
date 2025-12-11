@@ -35,8 +35,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 29/03/2024
  */
 abstract class MediaImpl(
-    override val id: Long?,
-    override val subsonicId: Long?,
+    override val id: Long,
     title: String
 ) : Media, Comparable<MediaImpl> {
     protected val _logger: Logger? = Logger.getLogger()
@@ -50,7 +49,7 @@ abstract class MediaImpl(
      */
     override var title: String by mutableStateOf(
         value =
-            if (this !is Music || !SettingsManager.isMusicTitleDisplayName) title
+            if (!this.isMusic() || !SettingsManager.isMusicTitleDisplayName) title
             else title.split(".").first()
     )
 
@@ -77,7 +76,7 @@ abstract class MediaImpl(
         return this.musicSortedSet
     }
 
-    fun isSubsonic(): Boolean = this.subsonicId != null
+    open fun isSubsonic(): Boolean = false
 
     fun clearMusicSet(triggerUpdate: Boolean = true) {
         this.musicSortedSet.clear()
@@ -85,11 +84,11 @@ abstract class MediaImpl(
     }
 
     fun contains(mediaImpl: MediaImpl): Boolean {
-        return when (mediaImpl) {
-            is Music -> this.getMusicSet().contains(mediaImpl)
-            is Folder -> this.getMusicSet().containsAll(elements = mediaImpl.getAllMusic())
-            else -> this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
-        }
+        return if (mediaImpl.isMusic())
+            this.getMusicSet().contains(mediaImpl)
+        else if (mediaImpl.isFolder())
+            this.getMusicSet().containsAll(elements = (mediaImpl as Folder).getAllMusic())
+        else this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
     }
 
     open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
@@ -120,17 +119,24 @@ abstract class MediaImpl(
         if (this == other) return 0
         var compared: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
         if (compared == 0 && this.javaClass != other.javaClass) {
-            compared = when (this) {
-                is Music -> -1
-                is Album -> if (other is Music) 1 else -1
-                is Artist -> if (other is Music || other is Album) 1 else -1
-                is Genre -> if (other is Folder || other is Playlist) -1 else 1
-                is Playlist -> if (other !is Playlist && other is Folder) -1 else 1
-                else -> 1
-            }
+            compared = if (this.isMusic()) -1
+            else if (this.isAlbum()) if (other.isMusic()) 1 else -1
+            else if (this.isArtist()) if (other.isMusic() || other.isAlbum()) 1 else -1
+            else if (this.isGenre()) if (other.isFolder() || other.isPlaylist()) -1 else 1
+            else if (this.isPlaylist()) if (!other.isPlaylist() && other.isFolder()) -1 else 1
+            else 1
         }
         return compared
     }
 
     open fun musicCount(): Int = this.musicSortedSet.size
+    open fun isRootFolder(): Boolean = false
+
+    open fun isFolder(): Boolean = false
+    open fun isBackFolder(): Boolean = false
+    open fun isMusic(): Boolean = false
+    open fun isAlbum(): Boolean = false
+    open fun isGenre(): Boolean = false
+    open fun isArtist(): Boolean = false
+    open fun isPlaylist(): Boolean = false
 }

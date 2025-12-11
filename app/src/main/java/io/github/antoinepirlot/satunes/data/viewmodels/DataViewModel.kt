@@ -150,6 +150,10 @@ class DataViewModel : ViewModel() {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
+                this@DataViewModel.mediaImplListOnScreen as MutableList<MediaImpl>
+                (this@DataViewModel.mediaImplListOnScreen).add(element = playlist)
+                this@DataViewModel.mediaImplListOnScreen.sort()
+
                 onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
                     scope = scope,

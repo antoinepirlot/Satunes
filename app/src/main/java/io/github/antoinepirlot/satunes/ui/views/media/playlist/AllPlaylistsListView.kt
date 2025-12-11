@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,6 +57,10 @@ internal fun PlaylistListView(
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
+    }
+
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
         satunesViewModel.replaceExtraButtons {
             ExtraButton(
@@ -75,30 +79,24 @@ internal fun PlaylistListView(
         }
     }
 
-    Column(modifier = modifier) {
-        LaunchedEffect(key1 = Unit) {
-            dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
-        }
-
+    Box(modifier = modifier) {
         MediaListView(
             emptyViewText = stringResource(id = R.string.no_playlists),
             sort = false,
         )
 
-        when {
-            openAlertDialog -> {
-                PlaylistCreationForm(
-                    onConfirm = { playlistTitle: String ->
-                        dataViewModel.addOnePlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            playlistTitle = playlistTitle
-                        )
-                        openAlertDialog = false
-                    },
-                    onDismissRequest = { openAlertDialog = false }
-                )
-            }
+        if (openAlertDialog) {
+            PlaylistCreationForm(
+                onConfirm = { playlistTitle: String ->
+                    dataViewModel.addOnePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlistTitle = playlistTitle
+                    )
+                    openAlertDialog = false
+                },
+                onDismissRequest = { openAlertDialog = false }
+            )
         }
     }
 }

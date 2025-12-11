@@ -158,7 +158,7 @@ private fun Buttons(
                 subsonicViewModel.connect(
                     scope = scope,
                     snackbarHostState = snackbarHostState,
-                    onIsConnected = { isConnected: Boolean ->
+                    onFinished = { isConnected: Boolean ->
                         if (isConnected)
                             satunesViewModel.turnOnCloud(subsonicViewModel = subsonicViewModel)
                         else

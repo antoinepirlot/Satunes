@@ -810,7 +810,7 @@ class SatunesViewModel : ViewModel() {
             subsonicViewModel.connect(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                onIsConnected = { isConnected: Boolean ->
+                onFinished = { isConnected: Boolean ->
                     if (isConnected)
                         turnOnCloud(subsonicViewModel = subsonicViewModel)
                 }

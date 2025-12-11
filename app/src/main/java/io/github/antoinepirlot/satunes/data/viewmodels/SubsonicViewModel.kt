@@ -99,7 +99,7 @@ class SubsonicViewModel : ViewModel() {
     fun connect(
         scope: CoroutineScope,
         snackbarHostState: SnackbarHostState,
-        onIsConnected: (Boolean) -> Unit
+        onFinished: (Boolean) -> Unit
     ) {
         val context: Context = MainActivity.instance.applicationContext
         CoroutineScope(Dispatchers.IO).launch {
@@ -127,10 +127,10 @@ class SubsonicViewModel : ViewModel() {
                 )
                 subsonicApiRequester.ping(
                     onSucceed = {
-                        onIsConnected(true)
+                        onFinished(true)
                         subsonicApiRequester.loadAll()
                     },
-                    onError = { onIsConnected(false) }
+                    onError = { onFinished(false) }
                 ) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
@@ -140,7 +140,7 @@ class SubsonicViewModel : ViewModel() {
                         connect(
                             scope = scope,
                             snackbarHostState = snackbarHostState,
-                            onIsConnected = onIsConnected
+                            onFinished = onFinished
                         )
                     }
                 )

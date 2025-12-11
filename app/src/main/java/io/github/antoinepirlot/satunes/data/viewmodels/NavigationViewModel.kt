@@ -28,14 +28,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -207,6 +201,7 @@ class NavigationViewModel : ViewModel() {
         return if (mediaImpl == null) Destination.PLAYBACK // same as else
         else if (mediaImpl.isRootFolder() || mediaImpl.isFolder()) Destination.FOLDERS
         else if (mediaImpl.isArtist()) Destination.ARTIST
+        else if (mediaImpl.isAlbum()) Destination.ALBUM
         else if (mediaImpl.isGenre()) Destination.GENRE
         else if (mediaImpl.isPlaylist()) Destination.PLAYLIST
         else Destination.PLAYBACK // same as first

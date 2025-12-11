@@ -795,13 +795,28 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    fun switchCloudMode(subsonicViewModel: SubsonicViewModel) {
+    /**
+     * Change the cloud mode.
+     * It pings the server if is turning on
+     */
+    fun switchCloudMode(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        subsonicViewModel: SubsonicViewModel
+    ) {
         if (_uiState.value.mode == SatunesModes.ONLINE)
             turnOffCloud(subsonicViewModel = subsonicViewModel)
         else
-            turnOnCloud(subsonicViewModel = subsonicViewModel)
-    }
+            subsonicViewModel.connect(
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                onIsConnected = { isConnected: Boolean ->
+                    if (isConnected)
+                        turnOnCloud(subsonicViewModel = subsonicViewModel)
+                }
+            )
 
+    }
 
     fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {
         NavBarSection.MUSICS.isEnabled.value = true

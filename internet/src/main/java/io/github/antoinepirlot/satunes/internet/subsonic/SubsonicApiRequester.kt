@@ -146,10 +146,14 @@ class SubsonicApiRequester(
     /**
      * Ping API
      */
-    fun ping(onSucceed: (() -> Unit)? = null) {
+    fun ping(onSucceed: (() -> Unit)? = null, onError: (() -> Unit)? = null) {
         this.get(
             url = this.getCommandUrl(command = "ping", parameters = arrayOf()),
-            resCallback = PingCallback(subsonicApiRequester = this, onSucceed = onSucceed),
+            resCallback = PingCallback(
+                subsonicApiRequester = this,
+                onSucceed = onSucceed,
+                onError = onError
+            ),
             newState = SubsonicState.PINGING
         )
     }

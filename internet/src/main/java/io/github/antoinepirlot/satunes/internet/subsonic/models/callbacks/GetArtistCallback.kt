@@ -37,9 +37,11 @@ import okhttp3.Response
 internal class GetArtistCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
+    onError: (() -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
-    onSucceed = onSucceed
+    onSucceed = onSucceed,
+    onError = onError,
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)

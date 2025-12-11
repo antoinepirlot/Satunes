@@ -52,6 +52,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicState
@@ -132,6 +133,7 @@ fun Form(
 @Composable
 private fun Buttons(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
     val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
@@ -153,9 +155,15 @@ private fun Buttons(
 
         Button(
             onClick = {
-                subsonicViewModel.testConnection(
+                subsonicViewModel.connect(
                     scope = scope,
-                    snackbarHostState = snackbarHostState
+                    snackbarHostState = snackbarHostState,
+                    onIsConnected = { isConnected: Boolean ->
+                        if (isConnected)
+                            satunesViewModel.turnOnCloud(subsonicViewModel = subsonicViewModel)
+                        else
+                            satunesViewModel.turnOffCloud(subsonicViewModel = subsonicViewModel)
+                    }
                 )
             },
             enabled = canTryConnection

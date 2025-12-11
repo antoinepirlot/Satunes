@@ -36,10 +36,12 @@ import okhttp3.Response
 
 internal class PingCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onSucceed: (() -> Unit)? = null
+    onSucceed: (() -> Unit)? = null,
+    onError: (() -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
-    onSucceed = onSucceed
+    onSucceed = onSucceed,
+    onError = onError
 ) {
 
     private val _logger: Logger? = Logger.getLogger()

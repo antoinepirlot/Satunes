@@ -37,9 +37,12 @@ import okhttp3.Response
  */
 internal class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onSucceed: (() -> Unit)? = null
+    onSucceed: (() -> Unit)? = null,
+    onError: (() -> Unit)? = null,
 ) : SubsonicCallback(
-    subsonicApiRequester = subsonicApiRequester, onSucceed = onSucceed
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed = onSucceed,
+    onError = onError
 ) {
     companion object {
         private const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language

@@ -96,7 +96,11 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Send ping to server to check if it is available and credentials corrects.
      */
-    fun testConnection(scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+    fun connect(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        onIsConnected: (Boolean) -> Unit
+    ) {
         val context: Context = MainActivity.instance.applicationContext
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -121,17 +125,22 @@ class SubsonicViewModel : ViewModel() {
                     user = user,
                     onSubsonicStateChanged = { this@SubsonicViewModel.updateState(newState = it) }
                 )
-                subsonicApiRequester.ping(onSucceed = {
-                    subsonicApiRequester.loadAll()
-                }) //TODO
+                subsonicApiRequester.ping(
+                    onSucceed = {
+                        onIsConnected(true)
+                        subsonicApiRequester.loadAll()
+                    },
+                    onError = { onIsConnected(false) }
+                ) //TODO
             } catch (_: Throwable) {
                 showErrorSnackBar(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
                     action = {
-                        testConnection(
+                        connect(
                             scope = scope,
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onIsConnected = onIsConnected
                         )
                     }
                 )

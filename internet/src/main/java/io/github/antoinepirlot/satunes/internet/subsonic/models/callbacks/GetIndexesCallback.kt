@@ -38,9 +38,11 @@ import okhttp3.Response
 internal class GetIndexesCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
+    onError: (() -> Unit)? = null,
 ): SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
-    onSucceed,
+    onSucceed = onSucceed,
+    onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)

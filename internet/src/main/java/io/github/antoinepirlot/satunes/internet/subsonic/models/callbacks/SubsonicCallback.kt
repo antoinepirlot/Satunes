@@ -50,6 +50,7 @@ import java.io.InputStream
 internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
+    protected val onError: (() -> Unit)?,
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
@@ -112,6 +113,7 @@ internal abstract class SubsonicCallback(
     private fun manageError(error: Error) {
         SubsonicState.ERROR.error = SubsonicErrorCode.getError(code = error.code)
         subsonicApiRequester.subsonicState = SubsonicState.ERROR
+        this.onError?.invoke()
     }
 
     protected fun setUnknownError() {

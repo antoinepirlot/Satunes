@@ -43,4 +43,7 @@ class User(
     var url: String by mutableStateOf(value = url)
 
     fun getMd5Password(): String = this.password.md5(salt = salt)
+
+    fun isFilled(): Boolean =
+        url.isNotBlank() && username.isNotBlank() && password.isNotBlank() && salt.isNotBlank()
 }

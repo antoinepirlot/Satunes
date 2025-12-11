@@ -113,6 +113,10 @@ class SubsonicViewModel : ViewModel() {
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
                 val subsonicApiRequester = SubsonicApiRequester(user = user)
+                if (!user.isFilled()) {
+                    onFinished(false)
+                    return@launch
+                }
                 subsonicApiRequester.ping(
                     onSucceed = {
                         onFinished(true)

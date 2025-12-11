@@ -38,7 +38,7 @@ import okhttp3.Response
 internal class GetArtistCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    onError: ((Error) -> Unit)? = null,
+    onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,

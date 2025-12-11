@@ -27,7 +27,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.SubsonicErrorCode
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponseBody
@@ -49,7 +48,7 @@ import java.io.InputStream
 internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
-    protected val onError: ((Error) -> Unit)?,
+    protected val onError: ((Error?) -> Unit)?,
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
@@ -57,6 +56,7 @@ internal abstract class SubsonicCallback(
 
     override fun onFailure(call: Call, e: IOException) {
         _logger?.severe(e.message)
+        onError?.invoke(null)
     }
 
     @OptIn(ExperimentalSerializationApi::class)

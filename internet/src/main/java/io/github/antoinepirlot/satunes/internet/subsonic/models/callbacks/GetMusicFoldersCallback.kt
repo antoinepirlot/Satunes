@@ -39,7 +39,7 @@ import okhttp3.Response
 internal class GetMusicFoldersCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
-    onError: ((Error) -> Unit)? = null,
+    onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,

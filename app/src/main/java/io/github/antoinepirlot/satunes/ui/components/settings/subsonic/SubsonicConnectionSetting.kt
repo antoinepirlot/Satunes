@@ -34,7 +34,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -140,7 +139,7 @@ private fun Buttons(
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
 
-    var canTryConnection: Boolean by rememberSaveable { mutableStateOf(value = true) }
+    var isLoading: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
     Row(modifier = modifier) {
         if (subsonicViewModel.hasBeenUpdated) {
@@ -153,7 +152,7 @@ private fun Buttons(
 
         Button(
             onClick = {
-                canTryConnection = false
+                isLoading = true
                 subsonicViewModel.connect(
                     scope = scope,
                     snackbarHostState = snackbarHostState,
@@ -162,13 +161,13 @@ private fun Buttons(
                             satunesViewModel.turnOnCloud(subsonicViewModel = subsonicViewModel)
                         else
                             satunesViewModel.turnOffCloud(subsonicViewModel = subsonicViewModel)
-                        canTryConnection = true
+                        isLoading = false
                     }
                 )
             },
-            enabled = canTryConnection
+            enabled = !isLoading
         ) {
-            if (!canTryConnection)
+            if (isLoading)
                 LoadingCircle(modifier = Modifier.size(size = 16.dp))
             else
                 NormalText(text = stringResource(R.string.test_connection_button_text))

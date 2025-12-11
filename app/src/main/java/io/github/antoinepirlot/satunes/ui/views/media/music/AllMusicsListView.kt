@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -43,6 +44,26 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 @Composable
 internal fun AllMusicsListView(
+    modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    if (satunesUiState.mode == SatunesModes.ONLINE)
+        OnlineMode(modifier = modifier)
+    else
+        OfflineMode(modifier = modifier)
+}
+
+@Composable
+private fun OnlineMode(
+    modifier: Modifier = Modifier,
+) {
+    //TODO
+    NormalText(text = "Cloud View")
+}
+
+@Composable
+private fun OfflineMode(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),

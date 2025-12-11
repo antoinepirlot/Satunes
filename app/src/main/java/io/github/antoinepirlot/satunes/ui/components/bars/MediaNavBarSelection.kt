@@ -34,13 +34,10 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
-import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 
 /**
@@ -51,15 +48,12 @@ import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 internal fun RowScope.MediaNavBarSelection(
     modifier: Modifier = Modifier,
     navBarSection: NavBarSection,
-    satunesViewModel: SatunesViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel()
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val currentDestination: Destination = navigationUiState.currentDestination
     val selectedCanBeShown: Boolean = currentDestination.category == DestinationCategory.MEDIA
-    val isCloudMode: Boolean = satunesUiState.mode == SatunesModes.ONLINE
 
     NavigationBarItem(
         modifier = modifier,
@@ -68,8 +62,7 @@ internal fun RowScope.MediaNavBarSelection(
         },
         selected = selectedCanBeShown && currentDestination.navBarSection == navBarSection,
         onClick = {
-            val rootRoute: Destination =
-                Destination.getDestination(navBarSection = navBarSection, isCloudMode = isCloudMode)
+            val rootRoute: Destination = Destination.getDestination(navBarSection = navBarSection)
             navigationViewModel.backToRoot(rootRoute = rootRoute, navController = navController)
         },
         icon = {

@@ -21,8 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.views.playback
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,12 +28,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.views.playback.mobile.PlaybackMobileView
 import io.github.antoinepirlot.satunes.ui.views.playback.tablet.PlaybackTabletView
 
@@ -50,16 +46,11 @@ internal fun PlaybackView(
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    
+
     if (playbackViewModel.musicPlaying == null) {
-        val isCloudMode: Boolean = satunesUiState.mode == SatunesModes.ONLINE
         navigationViewModel.backToRoot(
-            rootRoute = Destination.getDestination(
-                navBarSection = satunesViewModel.defaultNavBarSection,
-                isCloudMode = isCloudMode
-            ),
+            rootRoute = Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection),
             navController = navController
         )
         return

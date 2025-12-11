@@ -60,11 +60,8 @@ class NavigationViewModel : ViewModel() {
         private val _routesStack: Deque<Pair<Destination, MediaImpl?>> =
             ArrayDeque() //TODO change structure as it add at first place
 
-        val DEFAULT_CURRENT_ROUTE: Destination
-            get() = Destination.getDestination(
-                SettingsManager.defaultNavBarSection.value,
-                isCloudMode = false
-            ) //TODO use last mode
+        private val DEFAULT_CURRENT_ROUTE: Destination =
+            Destination.getDestination(SettingsManager.defaultNavBarSection.value)
 
         private var _currentRoute: Destination =
             DEFAULT_CURRENT_ROUTE //TODO used instead of deque while no fix found for back gesture issues.

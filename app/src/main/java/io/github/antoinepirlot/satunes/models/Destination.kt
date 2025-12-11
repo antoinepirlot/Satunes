@@ -76,11 +76,6 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.GENRES
     ),
-    HOME_CLOUD(
-        link = "/cloud/home",
-        category = DestinationCategory.MEDIA,
-        navBarSection = NavBarSection.MUSICS
-    ),
     MUSICS(
         link = "/musics",
         category = DestinationCategory.MEDIA,
@@ -159,9 +154,9 @@ enum class Destination(
             return this.destinationsMap[destination]!!
         }
 
-        fun getDestination(navBarSection: NavBarSection, isCloudMode: Boolean): Destination {
+        fun getDestination(navBarSection: NavBarSection): Destination {
             return when (navBarSection) {
-                NavBarSection.MUSICS -> if (isCloudMode) HOME_CLOUD else MUSICS
+                NavBarSection.MUSICS -> MUSICS
                 NavBarSection.ALBUMS -> ALBUMS
                 NavBarSection.GENRES -> GENRES
                 NavBarSection.ARTISTS -> ARTISTS

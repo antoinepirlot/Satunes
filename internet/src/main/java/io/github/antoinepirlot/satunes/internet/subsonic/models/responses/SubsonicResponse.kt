@@ -24,10 +24,13 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolders
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.RandomSongs
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -47,7 +50,7 @@ internal data class SubsonicResponse(
     @SerialName(value = "musicFolders") private val subsonicFolders: SubsonicFolders? = null,
     @SerialName(value = "artist") val artist: SubsonicArtist? = null,
     @SerialName(value = "album") val album: SubsonicAlbum? = null,
-    @SerialName(value = "randomSongs") val randomSong: RandomSong? = null
+    @SerialName(value = "randomSongs") val randomSongs: RandomSongs? = null
 ) {
 
     companion object {
@@ -78,5 +81,17 @@ internal data class SubsonicResponse(
     fun getAllMusicFolders(): Collection<SubsonicFolder> {
         if(!this.hasFolders()) throw IllegalStateException("No music folder received.")
         return this.subsonicFolders?.list?: listOf()
+    }
+
+    /**
+     * Constructs [Music] objects from what has been received
+     */
+    fun toMusics(): Collection<Music> {
+        if (this.randomSongs == null)
+            throw IllegalStateException("Can't convert data to songs, object not compatible")
+        for (song: Song in this.randomSongs) {
+            song
+        }
+        return listOf() // TODO
     }
 }

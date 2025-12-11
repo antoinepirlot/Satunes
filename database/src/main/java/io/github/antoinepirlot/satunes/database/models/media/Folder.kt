@@ -32,7 +32,7 @@ import java.util.SortedSet
  */
 
 open class Folder(
-    subsonicId: String? = null,
+    subsonicId: Long? = null,
     title: String,
     val parentFolder: Folder? = null,
 ) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {

@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.database.models.media
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedSet
 
 /**
@@ -29,9 +30,13 @@ import java.util.SortedSet
  */
 
 class Genre(
-    subsonicId: String? = null,
+    subsonicId: Long? = null,
     title: String,
-) : MediaImpl(id = nextId, subsonicId = subsonicId, title = title) {
+) : MediaImpl(
+    id = if (subsonicId == null) nextId else null,
+    subsonicId = subsonicId,
+    title = title
+) {
     private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
@@ -42,6 +47,7 @@ class Genre(
 
     init {
         nextId++
+        DataManager.addGenre(genre = this)
     }
 
     fun getAlbumSet(): Set<Album> {

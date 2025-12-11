@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
+package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,6 +27,8 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 11/12/2025
  */
 @Serializable
-data class RandomSong(
-    @SerialName(value = "song") val songs: List<Song>
-)
+internal class RandomSongs(
+    @SerialName(value = "song") private val songs: List<Song>
+) : Iterable<Song> {
+    override fun iterator(): Iterator<Song> = songs.iterator()
+}

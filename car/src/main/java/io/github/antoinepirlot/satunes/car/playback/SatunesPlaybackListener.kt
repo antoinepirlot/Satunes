@@ -78,7 +78,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
                 MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
                 artwork
             )
-            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.duration)
+            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlaying.durationMs)
             .build()
         SatunesCarMusicService.session.setMetadata(metaData)
     }
@@ -123,7 +123,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             .addCustomAction(repeatAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
-            .setActiveQueueItemId(musicPlaying.id)
+            .setActiveQueueItemId(musicPlaying.id!!)
             .setExtras(extras)
             .build()
         SatunesCarMusicService.session.setPlaybackState(playbackState)

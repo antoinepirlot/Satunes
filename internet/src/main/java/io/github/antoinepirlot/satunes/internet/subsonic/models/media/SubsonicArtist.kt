@@ -38,9 +38,10 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 @SerialName("artist")
 internal data class SubsonicArtist(
-    val id: String,
+    val id: Long,
     val name: String,
     @JsonNames("album") val subsonicAlbums: Collection<SubsonicAlbum> = listOf()
 ) {
-    fun toArtist(): Artist = DataManager.getArtist(subsonicId = id)?: Artist(subsonicId = id, title = name)
+    fun toArtist(): Artist =
+        DataManager.getSubsonicArtist(id = this.id) ?: Artist(subsonicId = id, title = name)
 }

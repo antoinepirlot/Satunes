@@ -53,6 +53,6 @@ internal class GetRandomMusicCallback(
     }
 
     private fun processData(response: SubsonicResponse) {
-        //TODO
+        response
     }
 }

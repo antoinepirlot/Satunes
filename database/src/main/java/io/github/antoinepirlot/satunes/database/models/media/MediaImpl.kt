@@ -35,14 +35,11 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 29/03/2024
  */
 abstract class MediaImpl(
-    id: Long,
-    val subsonicId: String?,
+    override val id: Long?,
+    override val subsonicId: Long?,
     title: String
 ) : Media, Comparable<MediaImpl> {
     protected val _logger: Logger? = Logger.getLogger()
-
-    override var id: Long = id
-        internal set
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is

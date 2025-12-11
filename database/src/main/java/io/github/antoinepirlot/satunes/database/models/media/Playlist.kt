@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
  */
 class Playlist(
     id: Long, // Managed by Database
-    subsonicId: String? = null,
+    subsonicId: Long? = null,
     title: String
 ) : MediaImpl(id = id, subsonicId = subsonicId, title = title) {
 

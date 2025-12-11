@@ -138,7 +138,7 @@ private fun MediaListViewPreview() {
             title = "title",
             displayName = "Musique",
             absolutePath = "",
-            duration = 0,
+            durationMs = 0,
             size = 0,
             folder = Folder(title = "Folder"),
             artist = Artist(title = "Artist Title"),

@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.media
 
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.Song
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -38,16 +39,16 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 @SerialName("album")
 internal data class SubsonicAlbum(
-    val id: String,
+    val id: Long,
     val name: String,
-    val artistId: String,
+    val artistId: Long,
     val isCompilation: Boolean,
-    @JsonNames("song") val songs: Collection<SubsonicSong> = listOf()
+    @JsonNames("song") val songs: Collection<Song> = listOf()
 ) {
-    fun toAlbum(): Album = DataManager.getAlbum(subsonicId = id)?: Album(
+    fun toAlbum(): Album = DataManager.getSubsonicAlbum(id = this.id) ?: Album(
             title = name,
-            subsonicId = id,
-            artist = DataManager.getSubsonicArtist(id = artistId)!!,
+        subsonicId = this.id,
+        artist = DataManager.getSubsonicArtist(id = this.artistId)!!,
             isCompilation = isCompilation
         )
 }

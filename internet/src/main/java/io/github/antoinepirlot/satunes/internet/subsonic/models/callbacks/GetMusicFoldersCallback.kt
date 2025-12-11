@@ -54,7 +54,10 @@ internal class GetMusicFoldersCallback(
         val response: SubsonicResponse = this.getSubsonicResponse()
         var subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
         if(subsonicRootFolder == null) {
-            subsonicRootFolder = Folder(subsonicId = SUBSONIC_FOLDER_TITLE, title = SUBSONIC_FOLDER_TITLE) //Use subsonicId for this one to consider it as subsonic one
+            subsonicRootFolder = Folder(
+                subsonicId = 0,
+                title = SUBSONIC_FOLDER_TITLE
+            ) //Use subsonicId for this one to consider it as subsonic one
             DataManager.addFolder(subsonicRootFolder)
         }
 

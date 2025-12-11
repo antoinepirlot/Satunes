@@ -74,7 +74,10 @@ internal fun MediaSelectionForm(
         LazyColumn(state = lazyState) {
             items(
                 items = mediaList,
-                key = { it.id }
+                key = {
+                    if (it.id != null) it.id!!
+                    else "cloud-${it.subsonicId!!.toString()}"
+                }
             ) { mediaImpl: MediaImpl ->
                 MediaSelectionCheckbox(mediaImpl = mediaImpl)
             }

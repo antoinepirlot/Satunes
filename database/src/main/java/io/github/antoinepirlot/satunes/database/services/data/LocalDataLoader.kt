@@ -377,7 +377,7 @@ object LocalDataLoader {
             title = title,
             absolutePath = absolutePath,
             displayName = displayName,
-            duration = duration,
+            durationMs = duration,
             size = size,
             cdTrackNumber = cdTrackNumber,
             addedDateMs = dateAdded,

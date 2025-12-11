@@ -356,7 +356,7 @@ internal class PlaybackController private constructor(
             throw IllegalStateException(message)
         }
 
-        val maxPosition: Long = this.musicPlaying!!.duration
+        val maxPosition: Long = this.musicPlaying!!.durationMs
         val newPosition: Long = (positionPercentage * maxPosition).toLong()
 
         this.seekTo(positionMs = newPosition)
@@ -753,7 +753,7 @@ internal class PlaybackController private constructor(
 
     fun updateCurrentPosition() {
         if (musicPlaying == null) return
-        val maxPosition: Long = this.musicPlaying!!.duration
+        val maxPosition: Long = this.musicPlaying!!.durationMs
         val newPosition: Long = this.getCurrentPosition()
         this.currentPositionProgression =
             newPosition.toFloat() / maxPosition.toFloat()
@@ -773,7 +773,7 @@ internal class PlaybackController private constructor(
     private fun movePoisitionOf(microSeconds: Long) {
         if (this.musicPlaying == null) return
         val newPosition = this.getCurrentPosition() + microSeconds
-        if (newPosition > this.musicPlaying!!.duration) this.playNext()
+        if (newPosition > this.musicPlaying!!.durationMs) this.playNext()
         else if (newPosition < 0) this.seekTo(positionMs = 0)
         else this.seekTo(positionMs = newPosition)
     }

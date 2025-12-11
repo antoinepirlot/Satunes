@@ -150,7 +150,7 @@ private fun CardPreview() {
         title = "",
         displayName = "Il avait les mots",
         absolutePath = "absolute path",
-        duration = 2,
+        durationMs = 2,
         size = 2,
         folder = Folder(title = "Folder"),
         artist = artist,

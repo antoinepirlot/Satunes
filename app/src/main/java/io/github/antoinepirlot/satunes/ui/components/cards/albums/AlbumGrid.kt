@@ -73,7 +73,10 @@ internal fun AlbumGrid(
             ) {
                 items(
                     items = albumList,
-                    key = { it.id }
+                    key = {
+                        if (it.id != null) it.id!!
+                        else "cloud-${it.subsonicId!!.toString()}"
+                    }
                 ) { album: Album ->
                     AlbumGridCard(album = album, onClick = onClick)
                     Spacer(modifier = Modifier.size(16.dp))

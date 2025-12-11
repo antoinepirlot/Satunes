@@ -47,12 +47,12 @@ import java.util.Date
  */
 
 class Music(
-    id: Long,
-    subsonicId: String? = null,
+    id: Long?,
+    subsonicId: Long? = null,
     title: String,
     displayName: String,
     val absolutePath: String,
-    val duration: Long = 0,
+    val durationMs: Long = 0,
     val size: Int = 0,
     cdTrackNumber: Int? = null,
     addedDateMs: Long,

@@ -238,7 +238,7 @@ class SubsonicApiRequester(
     /**
      * Load artist's information containing albums by using "getArtist" query.
      */
-    fun loadArtist(artistId: String) {
+    fun loadArtist(artistId: Long) {
         this.get(
             url = this.getCommandUrl(command = "getArtist", parameters = arrayOf("id=$artistId")),
             resCallback = GetArtistCallback(
@@ -262,7 +262,7 @@ class SubsonicApiRequester(
     /**
      * Load album by its id and get songs of it.
      */
-    fun loadAlbum(albumId: String) {
+    fun loadAlbum(albumId: Long) {
         this.get(
             url = this.getCommandUrl(command = "getAlbum", parameters = arrayOf("id=$albumId")),
             resCallback = GetAlbumCallback(subsonicApiRequester = this)

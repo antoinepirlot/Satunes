@@ -31,6 +31,10 @@ enum class Destination(
     val category: DestinationCategory,
     val navBarSection: NavBarSection? = null
 ) {
+    ////////////////////////////////////////
+    /////////////////MEDIA//////////////////
+    ////////////////////////////////////////
+
     ALBUMS(
         link = "/albums",
         category = DestinationCategory.MEDIA,
@@ -71,6 +75,11 @@ enum class Destination(
         link = GENRES.link + "/{id}",
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.GENRES
+    ),
+    HOME_CLOUD(
+        link = "/cloud/home",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.MUSICS
     ),
     MUSICS(
         link = "/musics",
@@ -150,9 +159,9 @@ enum class Destination(
             return this.destinationsMap[destination]!!
         }
 
-        fun getDestination(navBarSection: NavBarSection): Destination {
+        fun getDestination(navBarSection: NavBarSection, isCloudMode: Boolean): Destination {
             return when (navBarSection) {
-                NavBarSection.MUSICS -> MUSICS
+                NavBarSection.MUSICS -> if (isCloudMode) HOME_CLOUD else MUSICS
                 NavBarSection.ALBUMS -> ALBUMS
                 NavBarSection.GENRES -> GENRES
                 NavBarSection.ARTISTS -> ARTISTS

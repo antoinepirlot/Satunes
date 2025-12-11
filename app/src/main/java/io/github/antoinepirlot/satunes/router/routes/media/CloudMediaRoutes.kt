@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -21,16 +18,29 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.router.routes.media
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.views.cloud.HomeCloudView
 
 /**
- * @author Antoine Pirlot 14/10/2025
+ * @author Antoine Pirlot 11/12/2025
  */
-data class NavigationUiState(
-    val currentDestination: Destination = NavigationViewModel.DEFAULT_CURRENT_ROUTE,
-    val currentMediaImpl: MediaImpl? = null
-)
+
+internal fun NavGraphBuilder.cloudMediaRoutes(
+    satunesViewModel: SatunesViewModel,
+    dataViewModel: DataViewModel,
+    navigationViewModel: NavigationViewModel,
+    onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
+) {
+    composable(Destination.HOME_CLOUD.link) {
+        HomeCloudView()
+    }
+}

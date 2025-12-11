@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.router.routes
+package io.github.antoinepirlot.satunes.router.routes.media
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
@@ -51,7 +51,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
  * @author Antoine Pirlot on 15/07/2024
  */
 
-internal fun NavGraphBuilder.mediaRoutes(
+internal fun NavGraphBuilder.localMediaRoutes(
     satunesViewModel: SatunesViewModel,
     dataViewModel: DataViewModel,
     navigationViewModel: NavigationViewModel,

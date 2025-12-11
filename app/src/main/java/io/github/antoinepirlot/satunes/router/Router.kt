@@ -48,7 +48,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
+import io.github.antoinepirlot.satunes.models.SatunesModes
+import io.github.antoinepirlot.satunes.router.routes.media.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
@@ -80,7 +81,10 @@ internal fun Router(
         val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
         LaunchedEffect(key1 = Unit) {
             defaultDestination =
-                Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+                Destination.getDestination(
+                    navBarSection = satunesViewModel.defaultNavBarSection,
+                    isCloudMode = satunesUiState.mode == SatunesModes.ONLINE
+                )
             navigationViewModel.reset()
         }
         return
@@ -113,9 +117,13 @@ internal fun Router(
 
     LaunchedEffect(key1 = satunesUiState.mode) {
         if (!isMusicsNavBarEnabled && navigationUiState.currentDestination == Destination.MUSICS) {
+            val isCloudMode: Boolean = satunesUiState.mode == SatunesModes.ONLINE
             navController.popBackStack()
             navController.navigate(
-                route = Destination.getDestination(navBarSection = getFirstCompatibleNavBar()!!).link
+                route = Destination.getDestination(
+                    navBarSection = getFirstCompatibleNavBar()!!,
+                    isCloudMode = isCloudMode
+                ).link
             )
         }
     }

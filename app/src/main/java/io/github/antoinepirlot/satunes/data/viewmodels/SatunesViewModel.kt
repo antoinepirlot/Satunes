@@ -819,14 +819,14 @@ class SatunesViewModel : ViewModel() {
     }
 
     fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {
-        NavBarSection.MUSICS.isEnabled.value = true
+//        NavBarSection.MUSICS.isEnabled.value = true
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(mode = SatunesModes.OFFLINE)
         }
     }
 
     fun turnOnCloud(subsonicViewModel: SubsonicViewModel) {
-        NavBarSection.MUSICS.isEnabled.value = false
+//        NavBarSection.MUSICS.isEnabled.value = false
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(mode = SatunesModes.ONLINE)
         }

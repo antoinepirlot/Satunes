@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -21,16 +18,27 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.ui.views.cloud
 
-import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.models.Destination
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 
 /**
- * @author Antoine Pirlot 14/10/2025
+ * @author Antoine Pirlot 11/12/2025
  */
-data class NavigationUiState(
-    val currentDestination: Destination = NavigationViewModel.DEFAULT_CURRENT_ROUTE,
-    val currentMediaImpl: MediaImpl? = null
-)
+@Composable
+fun HomeCloudView(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
+        NormalText(text = "Hello Cloud")
+    }
+}
+
+@Preview
+@Composable
+private fun HomeCloudViewPreview() {
+    HomeCloudView()
+}

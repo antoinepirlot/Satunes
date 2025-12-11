@@ -24,8 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,13 +69,12 @@ internal fun AllMusicsListView(
 @Composable
 private fun OnlineMode(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
 ) {
-    val musicSet: MutableList<MediaImpl> = remember { mutableStateListOf() }
-
     LaunchedEffect(key1 = Unit) {
         subsonicViewModel.loadRandomSongs(onDataRetrieved = {
-            musicSet.addAll(it)
+            dataViewModel.loadMediaImplList(list = it)
         })
     }
     MediaListView(

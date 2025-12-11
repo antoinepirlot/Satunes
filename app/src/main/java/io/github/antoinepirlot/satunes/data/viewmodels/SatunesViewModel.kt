@@ -815,7 +815,6 @@ class SatunesViewModel : ViewModel() {
                         turnOnCloud(subsonicViewModel = subsonicViewModel)
                 }
             )
-
     }
 
     fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {

@@ -129,7 +129,7 @@ internal fun MediaCardList(
                     }
                 },
                 onLongClick = {
-                    if (mediaImpl is BackFolder) return@MediaCard
+                    if (mediaImpl.isBackFolder()) return@MediaCard
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     showMediaOptions = true
                 }

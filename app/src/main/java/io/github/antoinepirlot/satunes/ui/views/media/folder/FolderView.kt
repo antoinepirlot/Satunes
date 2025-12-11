@@ -32,7 +32,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.ui.components.bars.media.FoldersPathRow
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -51,7 +50,7 @@ internal fun FolderView(
 ) {
     LaunchedEffect(key1 = Unit) {
         val subFolders: MutableList<MediaImpl> = mutableListOf()
-        if (folder !is RootFolder) subFolders.add(dataViewModel.getBackFolder())
+        if (!folder.isRootFolder()) subFolders.add(dataViewModel.getBackFolder())
         subFolders.addAll(elements = folder.getSubFolderListWithMusics())
         dataViewModel.loadMediaImplList(list = subFolders)
     }

@@ -202,7 +202,7 @@ open class Folder(
     }
 
     fun getRoot(): Folder {
-        if (this is RootFolder) return this
+        if (this.isRootFolder()) return this
         return this.parentFolder!!.getRoot()
     }
 

@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.media.BackFolder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.getTitleToCompare
@@ -52,7 +51,7 @@ fun FirstLetter(
     mediaImplList: Collection<MediaImpl>,
     sortOption: SortOptions
 ) {
-    if (mediaImpl is BackFolder) return
+    if (mediaImpl.isBackFolder()) return
 
     val titleToCompare: String =
         getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return

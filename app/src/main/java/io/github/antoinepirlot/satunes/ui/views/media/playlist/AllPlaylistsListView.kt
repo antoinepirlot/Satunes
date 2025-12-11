@@ -82,7 +82,7 @@ internal fun PlaylistListView(
     Box(modifier = modifier) {
         MediaListView(
             emptyViewText = stringResource(id = R.string.no_playlists),
-            sort = false,
+            canBeSorted = false,
         )
 
         if (openAlertDialog) {

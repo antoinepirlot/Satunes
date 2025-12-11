@@ -265,8 +265,8 @@ object DataManager {
 
     fun getGenre(title: String): Genre? = this.genreMap[title]
 
-    fun getGenreSet(): Collection<Genre> {
-        return this.genreMap.values
+    fun getGenreSet(): Set<Genre> {
+        return this.genreMap.values.toSortedSet()
     }
 
     fun addGenre(genre: Genre): Genre {

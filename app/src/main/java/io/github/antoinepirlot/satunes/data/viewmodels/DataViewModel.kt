@@ -128,7 +128,7 @@ class DataViewModel : ViewModel() {
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
     fun getArtistSet(): Set<Artist> = DataManager.getArtistSet()
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
-    fun getGenreSet(): Collection<Genre> = DataManager.getGenreSet()
+    fun getGenreSet(): Set<Genre> = DataManager.getGenreSet()
     fun getMusicSet(): Set<Music> = DataManager.getMusicSet()
     fun getSubsonicMusicSet(): Set<SubsonicMusic> = DataManager.getSubsonicMusicSet()
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()

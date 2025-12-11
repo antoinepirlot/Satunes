@@ -77,6 +77,11 @@ dependencies {
     implementation(libs.androidx.media3.session)
 
     /**
+     * Streaming
+     */
+    implementation(libs.androidx.media3.datasource.okhttp)
+
+    /**
      * Database
      */
     implementation(project(":database"))

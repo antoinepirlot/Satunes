@@ -12,6 +12,9 @@ GET {{baseUrl}}/getMusicFolders?{{auth_params}}
 
 ###
 
+GET {{baseUrl}}/stream?{{stream_params}}
+
+###
 GET {{baseUrl}}/getRandomSongs?{{auth_params}}
 
 ###

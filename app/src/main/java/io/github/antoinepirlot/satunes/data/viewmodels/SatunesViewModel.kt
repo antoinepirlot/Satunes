@@ -808,7 +808,6 @@ class SatunesViewModel : ViewModel() {
         _uiState.update { currentState: SatunesUiState ->
             currentState.copy(mode = SatunesModes.OFFLINE)
         }
-        //TODO subsonicViewModel.loadOnlineMusic()
     }
 
     private fun turnOnCloud(subsonicViewModel: SubsonicViewModel) {

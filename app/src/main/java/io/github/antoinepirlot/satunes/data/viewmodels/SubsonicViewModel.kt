@@ -140,7 +140,7 @@ class SubsonicViewModel : ViewModel() {
             user = user,
             onSubsonicStateChanged = { this.updateState(newState = it) }
         )
-        //TODO apiRequester.loadArtists()
+        apiRequester.loadArtists()
     }
 
     fun removeOnlineMusic() {

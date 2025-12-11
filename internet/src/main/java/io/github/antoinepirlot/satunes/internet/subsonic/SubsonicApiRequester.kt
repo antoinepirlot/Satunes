@@ -208,7 +208,7 @@ class SubsonicApiRequester(
     /**
      * Load all artists.
      */
-    private fun loadArtists() {
+    fun loadArtists() {
         if(!DataManager.hasSubsonicFolders()) return
         for (folder: Folder in DataManager.getRootSubsonicFolders()) {
             this.get(

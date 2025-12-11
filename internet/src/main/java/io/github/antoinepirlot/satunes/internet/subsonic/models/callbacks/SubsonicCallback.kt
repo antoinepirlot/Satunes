@@ -69,7 +69,7 @@ internal abstract class SubsonicCallback(
         }
         var hasError: Boolean = false
         try {
-            val input: InputStream = response.body!!.byteStream()
+            val input: InputStream = response.body.byteStream()
             try {
                 val format = Json { ignoreUnknownKeys = true }
                 val response: SubsonicResponse =

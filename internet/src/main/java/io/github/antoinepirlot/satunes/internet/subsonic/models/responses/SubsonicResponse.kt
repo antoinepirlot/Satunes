@@ -40,12 +40,12 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 @SerialName("subsonic-response")
 internal data class SubsonicResponse(
-    val status: String,
-    val version: String,
-    val type: String,
-    val serverVersion: String,
-    val openSubsonic: Boolean,
-    val error: Error? = null,
+    @JsonNames("status") val status: String,
+    @JsonNames("version") val version: String,
+    @JsonNames("type") val type: String,
+    val serverVersion: String? = null,
+    val openSubsonic: Boolean = false,
+    @JsonNames("error") val error: Error? = null,
     @JsonNames("indexes") private val indexes: Indexes? = null,
     @JsonNames("musicFolders") private val subsonicFolders: SubsonicFolders? = null,
     @JsonNames("artist") val artist: SubsonicArtist? = null,

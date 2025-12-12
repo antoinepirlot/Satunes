@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import kotlinx.coroutines.CoroutineScope

@@ -56,7 +56,7 @@ internal fun AllMusicsListView(
         OfflineMode(modifier = modifier)
 
     // /!\ put this launch effect here as it must be ran after media impl list loaded
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
         if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()

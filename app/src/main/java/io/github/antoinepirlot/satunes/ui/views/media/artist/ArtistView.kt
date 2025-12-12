@@ -48,7 +48,9 @@ internal fun ArtistView(
 
     LaunchedEffect(key1 = Unit) {
         dataViewModel.loadMediaImplList(list = artist.getMusicSet())
+    }
 
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
         if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()

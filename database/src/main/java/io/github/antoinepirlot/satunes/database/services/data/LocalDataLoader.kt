@@ -279,10 +279,6 @@ object LocalDataLoader {
         //Load album
         val album: Album = loadAlbum(cursor = cursor, context = context, uri = uri)
 
-        //Link album to artist if the album doesn't already have the album
-        artist.addAlbum(album = album)
-
-
         //Load Genre
         val genre: Genre = loadGenre(context = context, cursor = cursor, album = album, uri = uri)
 
@@ -529,7 +525,6 @@ object LocalDataLoader {
                 year = year
             )
         )
-        artist.addAlbum(album = album)
         return album
     }
 

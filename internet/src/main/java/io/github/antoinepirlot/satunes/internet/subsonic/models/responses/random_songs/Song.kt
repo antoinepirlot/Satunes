@@ -70,7 +70,7 @@ internal class Song constructor(
             addedDateMs = 0,//TODO,
             folder = this.getOrCreateFolder(),
             artist = this.getOrCreateArtist(),
-            album = this.getOrCreateAlbum(),
+            album = this.getOrCreateAlbum(), //Must be after artist, otherwise album is not added in artist
             genre = this.getGenre(),
             uri = url.toUri(),
         )

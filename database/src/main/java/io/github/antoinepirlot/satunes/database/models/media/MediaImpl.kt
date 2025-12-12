@@ -74,8 +74,10 @@ abstract class MediaImpl(
 
     open fun isSubsonic(): Boolean = false
 
-    fun clearMusicSet(triggerUpdate: Boolean = true) {
+    fun clearMusicList() {
         this.musicSortedSet.clear()
+        this.musicList as MutableList
+        this.musicList.clear()
     }
 
     fun contains(mediaImpl: MediaImpl): Boolean {
@@ -86,7 +88,7 @@ abstract class MediaImpl(
         else this.musicList.containsAll(elements = mediaImpl.musicList)
     }
 
-    open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
+    open fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
             this.musicList as MutableList

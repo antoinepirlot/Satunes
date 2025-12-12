@@ -268,12 +268,12 @@ class DataViewModel : ViewModel() {
         playlist: Playlist,
     ) {
         this._updatePlaylistsJob?.cancel()
-        val oldMusicsSet: Collection<Music> = playlist.musicList
+        val oldMusicsList: Collection<Music> = playlist.musicList.toList()
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
-                playlist.clearMusicSet(triggerUpdate = false)
+                playlist.clearMusicList()
                 playlist.addMusics(musics = musics)
                 showSnackBar(
                     scope = scope,
@@ -284,7 +284,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = oldMusicsSet,
+                            musics = oldMusicsList,
                             playlist = playlist
                         )
                     }

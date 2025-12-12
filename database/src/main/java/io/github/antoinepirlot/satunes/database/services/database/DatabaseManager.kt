@@ -189,7 +189,7 @@ class DatabaseManager private constructor(context: Context) {
             val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
             val removedMusic: MutableCollection<Music> = mutableListOf()
             for (music: Music in oldMusicCollection)
-                if (!newMusicCollection.contains(music))
+                if (!newMusicSet.contains(music))
                     removedMusic.add(element = music)
                 else newMusicSet.remove(element = music)
 
@@ -226,7 +226,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicToPlaylist(music: Music, playlist: Playlist, triggerUpdate: Boolean = true) {
+    fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
                 musicId = music.id,
@@ -241,7 +241,7 @@ class DatabaseManager private constructor(context: Context) {
                 _logger?.warning(e.message)
                 // Do nothing
             }
-            playlist.addMusic(music = music, triggerUpdate = triggerUpdate)
+            playlist.addMusic(music = music)
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             // Do nothing
@@ -252,13 +252,9 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun insertMusicsToPlaylist(
-        musics: Collection<Music>,
-        playlist: Playlist,
-        triggerUpdate: Boolean = true
-    ) {
+    fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
         musics.forEach { music: Music ->
-            insertMusicToPlaylist(music = music, playlist = playlist, triggerUpdate = triggerUpdate)
+            insertMusicToPlaylist(music = music, playlist = playlist)
         }
     }
 

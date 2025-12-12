@@ -34,8 +34,8 @@ class Playlist(
     title: String
 ) : MediaImpl(id = id, title = title) {
 
-    override fun addMusic(music: Music, triggerUpdate: Boolean) {
-        super.addMusic(music, triggerUpdate)
+    override fun addMusic(music: Music) {
+        super.addMusic(music)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val order: Long =
@@ -52,9 +52,8 @@ class Playlist(
     }
 
     override fun addMusics(musics: Collection<Music>) {
-        for (music: Music in musics) {
-            this.addMusic(music = music, triggerUpdate = false)
-        }
+        for (music: Music in musics)
+            this.addMusic(music = music)
     }
 
     override fun removeMusic(music: Music) {
@@ -70,7 +69,7 @@ class Playlist(
 
         other as Playlist
 
-        return title.lowercase() == other.title.lowercase()
+        return title.equals(other.title, ignoreCase = true)
     }
 
     override fun hashCode(): Int {

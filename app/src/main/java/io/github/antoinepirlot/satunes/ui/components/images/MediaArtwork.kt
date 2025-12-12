@@ -178,7 +178,7 @@ internal fun MediaArtwork(
                     if (mediaImpl.isMusic()) (mediaImpl as Music).getAlbumArtwork(context = context)
                     else if (mediaImpl.isAlbum()) {
                         if (mediaImpl.isEmpty()) null
-                        else mediaImpl.getMusicSet().first().getAlbumArtwork(context = context)
+                        else mediaImpl.musicList.first().getAlbumArtwork(context = context)
                     } else null
 
                 if (bitmap != null

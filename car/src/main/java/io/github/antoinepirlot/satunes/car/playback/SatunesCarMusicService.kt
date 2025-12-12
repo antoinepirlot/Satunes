@@ -36,7 +36,6 @@ import io.github.antoinepirlot.satunes.car.pages.ScreenPages
 import io.github.antoinepirlot.satunes.car.pages.pages
 import io.github.antoinepirlot.satunes.car.utils.buildMediaItem
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -212,7 +211,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (media.isMusic() || media.getMusicSet().isNotEmpty()) {
+            if (media.isMusic() || media.musicList.isNotEmpty()) {
                 val mediaItem: MediaItem = buildMediaItem(media = media)
                 mediaItemList.add(mediaItem)
             }
@@ -243,7 +242,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             null
         }
 
-        return this.getAllMediaItem(mediaList = mediaImpl?.getMusicSet() ?: mutableListOf())
+        return this.getAllMediaItem(mediaList = mediaImpl?.musicList ?: mutableListOf())
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

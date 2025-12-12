@@ -26,7 +26,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -58,7 +57,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
  */
 fun getTheFirstVisibleFolder(folder: Folder): Folder {
     val subFolders: Collection<Folder> = folder.getSubFolderSet()
-    if (subFolders.size == 1 && folder.getMusicSet().isEmpty())
+    if (subFolders.size == 1 && folder.musicList.isEmpty())
         return getTheFirstVisibleFolder(subFolders.first())
     return folder
 }

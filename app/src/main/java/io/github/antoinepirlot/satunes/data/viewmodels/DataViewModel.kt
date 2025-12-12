@@ -268,15 +268,11 @@ class DataViewModel : ViewModel() {
         playlist: Playlist,
     ) {
         this._updatePlaylistsJob?.cancel()
-        val oldMusicsSet: Set<Music> = playlist.getMusicSet().toSet()
+        val oldMusicsSet: Collection<Music> = playlist.musicList
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.updatePlaylistMusics(
-                    playlist = playlist,
-                    newMusicCollection = musics,
-                    triggerUpdate = false
-                )
+                _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
                 playlist.clearMusicSet(triggerUpdate = false)
                 playlist.addMusics(musics = musics)
                 showSnackBar(
@@ -618,7 +614,7 @@ class DataViewModel : ViewModel() {
                 }
             } else {
                 @Suppress("NAME_SHADOWING")
-                media.getMusicSet().forEach { media: Music ->
+                media.musicList.forEach { media: Music ->
                     paths += media.absolutePath
                 }
             }

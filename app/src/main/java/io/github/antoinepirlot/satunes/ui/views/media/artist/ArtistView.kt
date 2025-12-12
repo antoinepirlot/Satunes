@@ -47,7 +47,7 @@ internal fun ArtistView(
 ) {
 
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = artist.getMusicSet())
+        dataViewModel.loadMediaImplList(list = artist.musicList)
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {

@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.database.models.media
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
@@ -61,6 +62,7 @@ abstract class MediaImpl(
     protected open var addedDate: Date? = null
 
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
+    val musicList: List<Music> = mutableStateListOf()
 
     open fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
@@ -68,10 +70,6 @@ abstract class MediaImpl(
 
     open fun isNotEmpty(): Boolean {
         return this.musicSortedSet.isNotEmpty()
-    }
-
-    fun getMusicSet(): Set<Music> {
-        return this.musicSortedSet
     }
 
     open fun isSubsonic(): Boolean = false
@@ -82,25 +80,33 @@ abstract class MediaImpl(
 
     fun contains(mediaImpl: MediaImpl): Boolean {
         return if (mediaImpl.isMusic())
-            this.getMusicSet().contains(mediaImpl)
+            this.musicList.contains(mediaImpl)
         else if (mediaImpl.isFolder())
-            this.getMusicSet().containsAll(elements = (mediaImpl as Folder).getAllMusic())
-        else this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
+            this.musicList.containsAll(elements = (mediaImpl as Folder).getAllMusic())
+        else this.musicList.containsAll(elements = mediaImpl.musicList)
     }
 
     open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
+            this.musicList as MutableList
+            this.musicList.add(element = music)
+            this.musicList.sort()
         }
     }
 
     open fun addMusics(musics: Collection<Music>) {
         this.musicSortedSet.addAll(musics)
+        this.musicList as MutableList
+        this.musicList.clear()
+        this.musicList.addAll(this.musicSortedSet)
     }
 
     open fun removeMusic(music: Music) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
+            this.musicList as MutableList
+            this.musicList.remove(element = music)
         }
     }
 

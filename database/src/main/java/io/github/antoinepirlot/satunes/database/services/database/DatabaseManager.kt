@@ -182,14 +182,10 @@ class DatabaseManager private constructor(context: Context) {
      * @param newMusicCollection the new collection of [Music]
      *
      */
-    fun updatePlaylistMusics(
-        playlist: Playlist,
-        newMusicCollection: Collection<Music>,
-        triggerUpdate: Boolean = true
-    ) {
+    fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
         if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
         try {
-            val oldMusicCollection: Collection<Music> = playlist.getMusicSet()
+            val oldMusicCollection: Collection<Music> = playlist.musicList
             val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
             val removedMusic: MutableCollection<Music> = mutableListOf()
             for (music: Music in oldMusicCollection)
@@ -197,16 +193,8 @@ class DatabaseManager private constructor(context: Context) {
                     removedMusic.add(element = music)
                 else newMusicSet.remove(element = music)
 
-            removeMusicsFromPlaylist(
-                musics = removedMusic,
-                playlist = playlist,
-                triggerUpdate = triggerUpdate
-            )
-            insertMusicsToPlaylist(
-                musics = newMusicSet,
-                playlist = playlist,
-                triggerUpdate = triggerUpdate
-            )
+            removeMusicsFromPlaylist(musics = removedMusic, playlist = playlist)
+            insertMusicsToPlaylist(musics = newMusicSet, playlist = playlist)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -214,23 +202,23 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
-        val musics: Set<Music> = if (mediaImpl.isFolder()) {
+        val musics: Collection<Music> = if (mediaImpl.isFolder()) {
             (mediaImpl as Folder).getAllMusic()
         } else {
-            mediaImpl.getMusicSet()
+            mediaImpl.musicList
         }
         val allPlaylists: Collection<Playlist> = DataManager.getPlaylistSet()
         for (playlist: Playlist in allPlaylists) {
-            val newMusicCollection: MutableCollection<Music> = playlist.getMusicSet().toMutableSet()
+            val newMusicCollection: MutableCollection<Music> = playlist.musicList.toMutableSet()
             if (playlists.contains(element = playlist)) {
                 //Playlist has been checked
-                newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                newMusicCollection.addAll(elements = playlist.musicList.toMutableSet())
                 newMusicCollection.addAll(elements = musics)
                 this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
             } else {
                 //Playlist has been unchecked (only remove if all of its music was inside)
-                if (playlist.getMusicSet().containsAll(musics)) {
-                    newMusicCollection.addAll(elements = playlist.getMusicSet().toMutableSet())
+                if (playlist.musicList.containsAll(musics)) {
+                    newMusicCollection.addAll(elements = playlist.musicList.toMutableSet())
                     newMusicCollection.removeAll(elements = musics)
                     this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
                 }
@@ -309,11 +297,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    fun removeMusicsFromPlaylist(
-        musics: Collection<Music>,
-        playlist: Playlist,
-        triggerUpdate: Boolean = true
-    ) {
+    fun removeMusicsFromPlaylist(musics: Collection<Music>, playlist: Playlist) {
         for (music: Music in musics) {
             this.removeMusicFromPlaylist(
                 music = music,
@@ -336,7 +320,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun removePlaylist(playlist: Playlist) {
         playlistDao.remove(id = playlist.id)
-        playlist.getMusicSet().forEach { music: Music ->
+        playlist.musicList.forEach { music: Music ->
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.id)
             if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 musicDao.unlike(musicId = music.id)
@@ -462,7 +446,7 @@ class DatabaseManager private constructor(context: Context) {
 
     private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
         var toReturn: String = ""
-        for (music: Music in playlist.getMusicSet())
+        for (music: Music in playlist.musicList)
             toReturn += """#EXTINF:${music.durationMs / 1000},${music.title}
                 |file:///$rootPlaylistsFilesPath/${music.relativePath}
                 |

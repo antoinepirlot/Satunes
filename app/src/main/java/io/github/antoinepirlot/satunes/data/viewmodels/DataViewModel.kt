@@ -130,7 +130,11 @@ class DataViewModel : ViewModel() {
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
     fun getGenreSet(): Set<Genre> = DataManager.getGenreSet()
     fun getMusicSet(): Set<Music> = DataManager.getMusicSet()
-    fun getSubsonicMusicSet(): Set<SubsonicMusic> = DataManager.getSubsonicMusicSet()
+    fun getSubsonicMusicsCollection(): Collection<SubsonicMusic> =
+        DataManager.getSubsonicMusicsCollection()
+
+    fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> =
+        DataManager.getSubsonicRandomMusicsCollection()
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
@@ -989,6 +993,13 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(multipleFiles = !currentState.multipleFiles)
         }
+    }
+
+    /**
+     * Add [Collection] of [SubsonicMusic] to [DataManager.subsonicRandomMusics] from the getRandomMusic query
+     */
+    fun addRandomMusics(musics: Collection<SubsonicMusic>) {
+        DataManager.addRandomMusic(musics = musics)
     }
 
     fun loadMediaImplList(list: Collection<MediaImpl>) {

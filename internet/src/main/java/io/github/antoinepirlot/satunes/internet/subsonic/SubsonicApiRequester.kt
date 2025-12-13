@@ -28,7 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
@@ -236,7 +236,7 @@ class SubsonicApiRequester(
      *
      * @param size the number of music to get (default 10, max 500).
      */
-    fun getRandomSongs(size: Int = 10, onDataRetrieved: ((Set<Music>) -> Unit)) {
+    fun getRandomSongs(size: Int = 10, onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
         if (size !in 1..500)
             throw IllegalArgumentException("Can't get $size musics")
         get(

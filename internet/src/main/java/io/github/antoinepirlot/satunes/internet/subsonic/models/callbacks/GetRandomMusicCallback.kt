@@ -36,7 +36,7 @@ import okhttp3.Response
  */
 internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    private val onDataRetrieved: (Set<SubsonicMusic>) -> Unit,
+    private val onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(

@@ -53,7 +53,17 @@ object DataManager {
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
     private val subsonicMusicsMapById: MutableMap<Long, SubsonicMusic> = mutableMapOf()
 
+    /**
+     * [Collection] of [SubsonicMusic] got by the random music query
+     * This [Collection] contains a maximum of 500 [SubsonicMusic] due to the API's limitation
+     */
+    private val subsonicRandomMusics: SortedSet<SubsonicMusic> = sortedSetOf()
+
     private var _rootFolder: RootFolder = RootFolder()
+
+    /**
+     * Back folder to back in [Folder]'s tree. Always generate a new one.
+     */
     private val _backFolder: BackFolder
         get() = BackFolder()
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
@@ -102,8 +112,12 @@ object DataManager {
         return this.musicSortedSet
     }
 
-    fun getSubsonicMusicSet(): Set<SubsonicMusic> {
+    fun getSubsonicMusicsCollection(): Collection<SubsonicMusic> {
         return this.subsonicMusicsMapById.values.toSortedSet()
+    }
+
+    fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> {
+        return this.subsonicRandomMusics.toSortedSet()
     }
 
     fun addMusic(music: Music): Music {
@@ -123,6 +137,29 @@ object DataManager {
             }
             getMusic(id = music.id)
         }
+    }
+
+    /**
+     * Add [musics] and add them to random music list
+     *
+     * @param musics the newly added [Collection] of [SubsonicMusic].
+     */
+    fun addRandomMusic(musics: Collection<SubsonicMusic>) {
+        for (music: SubsonicMusic in musics)
+            this.addRandomMusic(music)
+    }
+
+    /**
+     * Add [subsonicMusic] and add it to random music list
+     *
+     * @param subsonicMusic the newly added [SubsonicMusic]
+     *
+     * @return [SubsonicMusic] that has been added.
+     */
+    fun addRandomMusic(subsonicMusic: SubsonicMusic): SubsonicMusic {
+        val addedMusic: SubsonicMusic = this.addMusic(music = subsonicMusic) as SubsonicMusic
+        this.subsonicRandomMusics.add(element = addedMusic)
+        return addedMusic
     }
 
     /**

@@ -31,7 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.User
-import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
@@ -152,7 +152,7 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Get random song from API
      */
-    fun loadRandomSongs(onDataRetrieved: (Set<Music>) -> Unit) {
+    fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val apiRequester = SubsonicApiRequester(user = user)
             apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)

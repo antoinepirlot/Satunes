@@ -87,10 +87,10 @@ internal data class SubsonicResponse(
     /**
      * Constructs [SubsonicMusic] objects from what has been received
      */
-    fun toMusics(subsonicApiRequester: SubsonicApiRequester): Set<SubsonicMusic> {
+    fun toMusics(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicMusic> {
         if (this.randomSongs == null)
             throw IllegalStateException("Can't convert data to songs, object not compatible")
-        val set: MutableSet<SubsonicMusic> = mutableSetOf()
+        val set: MutableCollection<SubsonicMusic> = mutableSetOf()
         for (song: Song in this.randomSongs)
             set.add(song.toMusic(subsonicApiRequester = subsonicApiRequester))
         return set.toSortedSet()

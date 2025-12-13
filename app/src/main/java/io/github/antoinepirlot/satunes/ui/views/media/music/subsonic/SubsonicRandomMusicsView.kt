@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -40,9 +41,13 @@ fun SubsonicRandomMusicsView(
     subsonicViewModel: SubsonicViewModel = viewModel(),
 ) {
     LaunchedEffect(key1 = Unit) {
-        subsonicViewModel.loadRandomSongs(onDataRetrieved = {
-            dataViewModel.loadMediaImplList(list = it)
-        })
+        val musicList: Collection<SubsonicMusic> = dataViewModel.getSubsonicMusicSet()
+        if (musicList.isNotEmpty())
+            dataViewModel.loadMediaImplList(list = musicList)
+        else
+            subsonicViewModel.loadRandomSongs(onDataRetrieved = {
+                dataViewModel.loadMediaImplList(list = it)
+            })
     }
     MediaListView(
         modifier = modifier,

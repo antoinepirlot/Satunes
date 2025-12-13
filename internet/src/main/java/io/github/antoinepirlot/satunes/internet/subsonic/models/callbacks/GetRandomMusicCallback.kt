@@ -25,7 +25,7 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
 import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call

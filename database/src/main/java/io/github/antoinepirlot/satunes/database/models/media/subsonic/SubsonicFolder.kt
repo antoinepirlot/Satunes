@@ -18,7 +18,9 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media
+package io.github.antoinepirlot.satunes.database.models.media.subsonic
+
+import io.github.antoinepirlot.satunes.database.models.media.Folder
 
 /**
  * @author Antoine Pirlot 11/12/2025

@@ -32,11 +32,11 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicAlbum
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicArtist
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicFolder
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicGenre
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicFolder
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager.subsonicMusicsMapById
 import java.util.SortedMap
 import java.util.SortedSet

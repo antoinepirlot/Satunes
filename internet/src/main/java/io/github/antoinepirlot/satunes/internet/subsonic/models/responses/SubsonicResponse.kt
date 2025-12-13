@@ -24,7 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist

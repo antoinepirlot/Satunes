@@ -18,17 +18,26 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media
+package io.github.antoinepirlot.satunes.database.models.media.subsonic
+
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
-class SubsonicArtist(
+class SubsonicAlbum(
     id: Long,
     title: String,
-) : Artist(
+    artist: Artist,
+    isCompilation: Boolean = false,
+    year: Int? = null
+) : Album(
     id = id,
     title = title,
+    artist = artist,
+    isCompilation = isCompilation,
+    year = year
 ) {
     override fun isSubsonic(): Boolean = true
 }

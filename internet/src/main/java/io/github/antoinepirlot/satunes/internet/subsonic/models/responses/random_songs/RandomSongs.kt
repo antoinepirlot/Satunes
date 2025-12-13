@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 11/12/2025
  */
 @Serializable
-internal class RandomSongs(
+internal data class RandomSongs(
     @SerialName(value = "song") private val songs: List<Song>
 ) : Iterable<Song> {
     override fun iterator(): Iterator<Song> = songs.iterator()

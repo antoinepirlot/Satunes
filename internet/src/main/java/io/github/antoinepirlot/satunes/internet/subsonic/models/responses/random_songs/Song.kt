@@ -35,7 +35,7 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 11/12/2025
  */
 @Serializable
-internal class Song constructor(
+internal data class Song constructor(
     @SerialName(value = "id") val id: Long,
     @SerialName(value = "title") val title: String,
     @SerialName(value = "path") val path: String,

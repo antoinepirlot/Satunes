@@ -185,7 +185,7 @@ class DatabaseManager private constructor(context: Context) {
     fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
         if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
         try {
-            val oldMusicCollection: Collection<Music> = playlist.musicList
+            val oldMusicCollection: Collection<Music> = playlist.musicCollection
             val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
             val removedMusic: MutableCollection<Music> = mutableListOf()
             for (music: Music in oldMusicCollection)
@@ -205,20 +205,21 @@ class DatabaseManager private constructor(context: Context) {
         val musics: Collection<Music> = if (mediaImpl.isFolder()) {
             (mediaImpl as Folder).getAllMusic()
         } else {
-            mediaImpl.musicList
+            mediaImpl.musicCollection
         }
         val allPlaylists: Collection<Playlist> = DataManager.getPlaylistSet()
         for (playlist: Playlist in allPlaylists) {
-            val newMusicCollection: MutableCollection<Music> = playlist.musicList.toMutableSet()
+            val newMusicCollection: MutableCollection<Music> =
+                playlist.musicCollection.toMutableSet()
             if (playlists.contains(element = playlist)) {
                 //Playlist has been checked
-                newMusicCollection.addAll(elements = playlist.musicList.toMutableSet())
+                newMusicCollection.addAll(elements = playlist.musicCollection.toMutableSet())
                 newMusicCollection.addAll(elements = musics)
                 this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
             } else {
                 //Playlist has been unchecked (only remove if all of its music was inside)
-                if (playlist.musicList.containsAll(musics)) {
-                    newMusicCollection.addAll(elements = playlist.musicList.toMutableSet())
+                if (playlist.musicCollection.containsAll(musics)) {
+                    newMusicCollection.addAll(elements = playlist.musicCollection.toMutableSet())
                     newMusicCollection.removeAll(elements = musics)
                     this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
                 }
@@ -316,7 +317,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun removePlaylist(playlist: Playlist) {
         playlistDao.remove(id = playlist.id)
-        playlist.musicList.forEach { music: Music ->
+        playlist.musicCollection.forEach { music: Music ->
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.id)
             if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 musicDao.unlike(musicId = music.id)
@@ -442,7 +443,7 @@ class DatabaseManager private constructor(context: Context) {
 
     private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
         var toReturn: String = ""
-        for (music: Music in playlist.musicList)
+        for (music: Music in playlist.musicCollection)
             toReturn += """#EXTINF:${music.durationMs / 1000},${music.title}
                 |file:///$rootPlaylistsFilesPath/${music.relativePath}
                 |

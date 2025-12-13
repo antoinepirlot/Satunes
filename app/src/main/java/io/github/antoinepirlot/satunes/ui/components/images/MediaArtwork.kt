@@ -69,7 +69,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
@@ -89,7 +89,7 @@ internal fun MediaArtwork(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImpl: MediaImpl,
+    mediaImpl: Media,
     isClickable: Boolean = false,
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
@@ -178,7 +178,7 @@ internal fun MediaArtwork(
                     if (mediaImpl.isMusic()) (mediaImpl as Music).getAlbumArtwork(context = context)
                     else if (mediaImpl.isAlbum()) {
                         if (mediaImpl.isEmpty()) null
-                        else mediaImpl.musicList.first().getAlbumArtwork(context = context)
+                        else mediaImpl.musicCollection.first().getAlbumArtwork(context = context)
                     } else null
 
                 if (bitmap != null

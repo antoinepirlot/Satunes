@@ -46,12 +46,10 @@ internal class GetAlbumCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.response!!
+        val response: SubsonicResponse = this.subsonicResponse!!
         if(!response.hasAlbum()) throw IllegalStateException("No media found.")
         for (song: Song in response.album!!.songs)
             DataManager.addMusic(music = song.toMusic(subsonicApiRequester = subsonicApiRequester))
-//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

@@ -136,7 +136,7 @@ open class Music(
             if (artwork == null) null
             else BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         } catch (e: Throwable) {
-            _logger?.warning(e.message)
+            logger?.warning(e.message)
             null
         }
         if (bitmap == null)
@@ -199,7 +199,7 @@ open class Music(
         return this.id.hashCode()
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         val compared: Int = super.compareTo(other)
         if (compared == 0 && this != other) return 1
         return compared

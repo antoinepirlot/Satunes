@@ -60,7 +60,6 @@ internal class Song constructor(
             parameters = arrayOf("id=$id")
         )
         return DataManager.getSubsonicMusic(id = id) ?: SubsonicMusic(
-            id = this.id,
             subsonicId = this.id,
             title = this.title,
             displayName = this.path.split("/").last(),

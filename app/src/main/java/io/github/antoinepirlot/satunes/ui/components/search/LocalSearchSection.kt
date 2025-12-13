@@ -33,7 +33,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
@@ -56,7 +56,7 @@ fun LocalSearchSection(
         MediaListView(
             canBeSorted = false,
             emptyViewText = stringResource(id = R.string.no_result),
-            onMediaClick = { mediaImpl: MediaImpl ->
+            onMediaClick = { mediaImpl: Media ->
                 if (mediaImpl.isMusic())
                     playbackViewModel.loadMusicFromMedias(
                         medias = DataManager.getMusicSet(),

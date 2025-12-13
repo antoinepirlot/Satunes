@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -56,6 +57,9 @@ class SubsonicViewModel : ViewModel() {
         password = SettingsManager.subsonicPassword,
         salt = SettingsManager.subsonicSalt
     )
+
+    val apiRequester: SubsonicApiRequester
+        get() = SubsonicApiRequester(user = user)
 
     fun updateSubsonicUrl(url: String) {
         this.user.url = url
@@ -112,12 +116,11 @@ class SubsonicViewModel : ViewModel() {
                     salt = this@SubsonicViewModel.user.salt
                 )
                 this@SubsonicViewModel.hasBeenUpdated = false
-                val subsonicApiRequester = SubsonicApiRequester(user = user)
                 if (!user.isFilled()) {
                     onFinished(false)
                     return@launch
                 }
-                subsonicApiRequester.ping(
+                apiRequester.ping(
                     onSucceed = {
                         onFinished(true)
 //                        subsonicApiRequester.loadAll()
@@ -141,7 +144,6 @@ class SubsonicViewModel : ViewModel() {
     }
 
     private fun loadArtists() {
-        val apiRequester = SubsonicApiRequester(user = user)
 //        apiRequester.loadArtists()
     }
 
@@ -153,9 +155,19 @@ class SubsonicViewModel : ViewModel() {
      * Get random song from API
      */
     fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val apiRequester = SubsonicApiRequester(user = user)
+        CoroutineScope(context = Dispatchers.IO).launch {
             apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
+        }
+    }
+
+    /**
+     * Search for media into the API.
+     *
+     * @param query the query to send to the API.
+     */
+    fun search(query: String, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
+        CoroutineScope(context = Dispatchers.IO).launch {
+            apiRequester.search(query, onDataRetrieved)
         }
     }
 }

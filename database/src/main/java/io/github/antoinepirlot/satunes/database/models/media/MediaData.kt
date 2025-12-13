@@ -18,19 +18,12 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media.subsonic
-
-import io.github.antoinepirlot.satunes.database.models.media.Artist
+package io.github.antoinepirlot.satunes.database.models.media
 
 /**
- * @author Antoine Pirlot 11/12/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-class SubsonicArtist(
-    override var subsonicId: Long,
-    title: String,
-) : SubsonicMedia, Artist(
-    id = subsonicId,
-    title = title,
-) {
-    override fun isSubsonic(): Boolean = true
+interface MediaData { //Can't be set internal as the Media interface is public and could not be an abstract class
+    val id: Long
+    var title: String
 }

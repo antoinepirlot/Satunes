@@ -45,7 +45,7 @@ class Playlist(
                     order = order
                 )
             } catch (e: Throwable) {
-                _logger?.severe(e.message)
+                logger?.severe(e.message)
                 throw e
             }
         }
@@ -76,7 +76,7 @@ class Playlist(
         return title.lowercase().hashCode()
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         if (this.title == LIKES_PLAYLIST_TITLE || other.title == LIKES_PLAYLIST_TITLE) {
             if (this.title == other.title) {
                 return 0

@@ -38,8 +38,8 @@ import java.util.SortedSet
 abstract class MediaImpl(
     override val id: Long,
     title: String
-) : Media, Comparable<MediaImpl> {
-    protected val _logger: Logger? = Logger.getLogger()
+) : Media {
+    protected val logger: Logger? = Logger.getLogger()
     protected var isDownloaded: Boolean = !this.isSubsonic()
         set(value) {
             if (!this.isSubsonic())
@@ -69,59 +69,51 @@ abstract class MediaImpl(
     protected open var addedDate: Date? = null
 
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
-    val musicList: List<Music> = mutableStateListOf()
+    override val musicCollection: Collection<Music> = mutableStateListOf()
 
-    open fun isEmpty(): Boolean {
+    override fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
     }
 
-    open fun isNotEmpty(): Boolean {
+    override fun isNotEmpty(): Boolean {
         return this.musicSortedSet.isNotEmpty()
     }
 
-    open fun isSubsonic(): Boolean = false
+    override fun isStoredLocally(): Boolean = isDownloaded
 
-    /**
-     * If the media is stored on the device, it returns true.
-     * If the media is subsonic and is downloaded on the phone then it returns true, false otherwise
-     */
-    fun isStoredLocally(): Boolean = isDownloaded
-
-    fun clearMusicList() {
+    override fun clearMusicList() {
         this.musicSortedSet.clear()
-        this.musicList as MutableList
-        this.musicList.clear()
+        this.musicCollection as MutableList<Music>
+        (this.musicCollection as MutableList<Music>).clear()
     }
 
-    fun contains(mediaImpl: MediaImpl): Boolean {
+    override fun contains(mediaImpl: MediaImpl): Boolean {
         return if (mediaImpl.isMusic())
-            this.musicList.contains(mediaImpl)
+            this.musicCollection.contains(mediaImpl)
         else if (mediaImpl.isFolder())
-            this.musicList.containsAll(elements = (mediaImpl as Folder).getAllMusic())
-        else this.musicList.containsAll(elements = mediaImpl.musicList)
+            this.musicCollection.containsAll(elements = (mediaImpl as Folder).getAllMusic())
+        else this.musicCollection.containsAll(elements = mediaImpl.musicCollection)
     }
 
-    open fun addMusic(music: Music) {
+    override fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
-            this.musicList as MutableList
-            this.musicList.add(element = music)
-            this.musicList.sort()
+            (this.musicCollection as MutableList<Music>).add(element = music)
+            (this.musicCollection as MutableList<Music>).sort()
         }
     }
 
-    open fun addMusics(musics: Collection<Music>) {
+    override fun addMusics(musics: Collection<Music>) {
         this.musicSortedSet.addAll(musics)
-        this.musicList as MutableList
-        this.musicList.clear()
-        this.musicList.addAll(this.musicSortedSet)
+        this.musicCollection as MutableList
+        (this.musicCollection as MutableList<Music>).clear()
+        (this.musicCollection as MutableList<Music>).addAll(this.musicSortedSet)
     }
 
-    open fun removeMusic(music: Music) {
+    override fun removeMusic(music: Music) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)
-            this.musicList as MutableList
-            this.musicList.remove(element = music)
+            (this.musicCollection as MutableList<Music>).remove(element = music)
         }
     }
 
@@ -129,20 +121,18 @@ abstract class MediaImpl(
      * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
      * If it is already stored, do nothing
      */
-    fun download() {
+    override fun download() {
         if (this.isStoredLocally()) return
         TODO("Saving in cache is not yet implemented.")
     }
 
-    /**
-     * Remove this media impl from storage.
-     */
-    fun removeFromStorage() {
+    override fun removeFromStorage() {
         if (!this.isStoredLocally()) return
         TODO("Remove from storage is not yet implemented")
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
+        other as MediaImpl //Ensure no other class is added in the future that extends Media and is not MediaImpl
         if (this == other) return 0
         var compared: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
         if (compared == 0 && this.javaClass != other.javaClass) {
@@ -156,14 +146,16 @@ abstract class MediaImpl(
         return compared
     }
 
-    open fun musicCount(): Int = this.musicSortedSet.size
-    open fun isRootFolder(): Boolean = false
+    override fun isSubsonic(): Boolean = false
 
-    open fun isFolder(): Boolean = false
-    open fun isBackFolder(): Boolean = false
-    open fun isMusic(): Boolean = false
-    open fun isAlbum(): Boolean = false
-    open fun isGenre(): Boolean = false
-    open fun isArtist(): Boolean = false
-    open fun isPlaylist(): Boolean = false
+    override fun musicCount(): Int = this.musicSortedSet.size
+    override fun isRootFolder(): Boolean = false
+
+    override fun isFolder(): Boolean = false
+    override fun isBackFolder(): Boolean = false
+    override fun isMusic(): Boolean = false
+    override fun isAlbum(): Boolean = false
+    override fun isGenre(): Boolean = false
+    override fun isArtist(): Boolean = false
+    override fun isPlaylist(): Boolean = false
 }

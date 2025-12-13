@@ -49,7 +49,7 @@ internal fun GenreView(
     val albumSet: Set<Album> = genre.getAlbumSet()
 
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = genre.musicList)
+        dataViewModel.loadMediaImplList(list = genre.musicCollection)
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {

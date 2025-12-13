@@ -18,19 +18,34 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media.subsonic
+package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
+import okhttp3.Call
+import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 11/12/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-class SubsonicArtist(
-    override var subsonicId: Long,
-    title: String,
-) : SubsonicMedia, Artist(
-    id = subsonicId,
-    title = title,
+internal class Search3Callback(
+    subsonicApiRequester: SubsonicApiRequester,
+    onSucceed: (() -> Unit)? = null,
+    private val onDataRetrieved: (Collection<SubsonicMedia>) -> Unit,
+    onError: ((Error?) -> Unit)? = null,
+) : SubsonicCallback(
+    subsonicApiRequester = subsonicApiRequester,
+    onSucceed = onSucceed,
+    onError = onError
 ) {
-    override fun isSubsonic(): Boolean = true
+    override fun onResponse(call: Call, response: Response) {
+        super.onResponse(call, response)
+        this.processData()
+        this.onSucceed?.invoke()
+    }
+
+    private fun processData() {
+
+    }
 }

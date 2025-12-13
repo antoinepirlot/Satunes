@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.search.SearchSection
@@ -133,13 +134,15 @@ class SearchViewModel : ViewModel() {
      *
      * If the query is blank, no results.
      *
-     * @param selectedSection where the search algorithm must search.
+     * @param selectedSection the [SearchSection] where the search algorithm must search.
      * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally.
+     * @param subsonicViewModel the [SubsonicViewModel] used to ask the API.
      * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
      */
     fun search(
         selectedSection: SearchSection,
         dataViewModel: DataViewModel,
+        subsonicViewModel: SubsonicViewModel,
         selectedSearchChips: Collection<SearchChips>,
     ) {
         if (this.query.isNotBlank())
@@ -149,11 +152,13 @@ class SearchViewModel : ViewModel() {
                     selectedSearchChips = selectedSearchChips
                 )
 
-                SearchSection.SUBSONIC -> subsonicSearch()
+                SearchSection.SUBSONIC -> subsonicSearch(
+                    subsonicViewModel = subsonicViewModel,
+                    dataViewModel = dataViewModel
+                )
             }
         else
             dataViewModel.loadMediaImplList(list = sortedSetOf())
-        isSearchRequested = false
     }
 
     /**
@@ -241,9 +246,20 @@ class SearchViewModel : ViewModel() {
      * It request the subsonic api to search according to the query.
      *
      * These media are sorted.
+     *
+     * @param subsonicViewModel the [SubsonicViewModel] which query the API.
      */
-    private fun subsonicSearch() {
-        TODO()
+    private fun subsonicSearch(
+        subsonicViewModel: SubsonicViewModel,
+        dataViewModel: DataViewModel,
+    ) {
+        isSearchRequested = false
+        subsonicViewModel.search(
+            this.query,
+            onDataRetrieved = { medias: Collection<SubsonicMedia> ->
+                dataViewModel.loadMediaImplList(list = medias)
+            }
+        )
     }
 
     fun selectSection(selectedSection: SearchSection) {

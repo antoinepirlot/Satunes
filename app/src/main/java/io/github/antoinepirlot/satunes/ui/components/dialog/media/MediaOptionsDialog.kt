@@ -26,7 +26,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
@@ -43,7 +43,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 @Composable
 internal fun MediaOptionsDialog(
     modifier: Modifier = Modifier,
-    mediaImpl: MediaImpl,
+    mediaImpl: Media,
     onDismissRequest: () -> Unit
 ) {
     if (mediaImpl.isMusic())

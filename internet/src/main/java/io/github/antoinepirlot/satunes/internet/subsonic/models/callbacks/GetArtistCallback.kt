@@ -46,12 +46,10 @@ internal class GetArtistCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.response!!
+        val response: SubsonicResponse = this.subsonicResponse!!
         if (!response.hasArtist()) throw IllegalStateException("No Artist received.")
         for(album: SubsonicAlbum in response.artist?.subsonicAlbums!!)
             DataManager.addAlbum(album = album.toAlbum())
-//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

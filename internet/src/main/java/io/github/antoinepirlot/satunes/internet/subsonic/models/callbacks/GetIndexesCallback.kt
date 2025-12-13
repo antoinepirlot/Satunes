@@ -47,14 +47,12 @@ internal class GetIndexesCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
 
-        val response: SubsonicResponse = this.response!!
+        val response: SubsonicResponse = this.subsonicResponse!!
         if(!response.hasIndexes()) throw IllegalStateException("Indexes not found.")
         for(index: Index in response.getAllIndexes()) //Each index represents a letter (A, B, C, etc. alphabetical order)
             for(artist: SubsonicArtist in index.artists)
                 DataManager.addArtist(artist = artist.toArtist())
-//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

@@ -49,7 +49,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.BackFolder
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
@@ -65,11 +65,11 @@ internal fun MediaCardList(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImplList: List<MediaImpl>,
+    mediaImplList: List<Media>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
-    onMediaClick: ((MediaImpl) -> Unit)? = null,
+    onMediaClick: ((Media) -> Unit)? = null,
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
@@ -85,7 +85,7 @@ internal fun MediaCardList(
         items(
             items = mediaImplList,
             key = { it.javaClass.name + '-' + it.id }
-        ) { mediaImpl: MediaImpl ->
+        ) { mediaImpl: Media ->
             val isFirst: Boolean = mediaImpl == mediaImplList.first()
             if (isFirst) header?.invoke()
 
@@ -166,8 +166,8 @@ internal fun MediaCardList(
 private fun Indicator(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
-    mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>
+    mediaImpl: Media,
+    mediaImplList: List<Media>
 ) {
     val sortOption: SortOptions = dataViewModel.sortOption
 

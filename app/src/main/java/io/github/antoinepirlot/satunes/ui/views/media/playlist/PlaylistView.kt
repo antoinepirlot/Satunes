@@ -49,8 +49,8 @@ internal fun PlaylistView(
     playlist: Playlist,
 ) {
 
-    LaunchedEffect(key1 = playlist.musicList.size) {
-        dataViewModel.loadMediaImplList(list = playlist.musicList)
+    LaunchedEffect(key1 = playlist.musicCollection.size) {
+        dataViewModel.loadMediaImplList(list = playlist.musicCollection)
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {

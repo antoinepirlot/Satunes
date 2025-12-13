@@ -52,7 +52,7 @@ internal abstract class SubsonicCallback(
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
-    protected var response: SubsonicResponse? = null
+    protected var subsonicResponse: SubsonicResponse? = null
 
     override fun onFailure(call: Call, e: IOException) {
         _logger?.severe(e.message)
@@ -73,7 +73,7 @@ internal abstract class SubsonicCallback(
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
 
                 if (response.isError()) this.onError?.invoke(response.error!!)
-                this.response = response
+                this.subsonicResponse = response
 
             } catch (e: SerializationException) {
                 _logger?.severe(e.message)

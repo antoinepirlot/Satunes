@@ -24,7 +24,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
@@ -44,17 +43,9 @@ internal class GetRandomMusicCallback(
     onSucceed = onSucceed,
     onError = onError
 ) {
-    private val _logger: Logger? = Logger.getLogger()
-
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        this.processData()
-//        this.dataProcessed()
+        this.onDataRetrieved(this.subsonicResponse!!.toMusics(subsonicApiRequester = subsonicApiRequester))
         this.onSucceed?.invoke()
-    }
-
-    private fun processData() {
-        this.onDataRetrieved(this.response!!.toMusics(subsonicApiRequester = subsonicApiRequester))
     }
 }

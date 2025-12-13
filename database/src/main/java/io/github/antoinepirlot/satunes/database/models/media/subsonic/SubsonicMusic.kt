@@ -31,12 +31,11 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicMusic(
-    id: Long,
     /**
      * [id] can be different from [subsonicId] because [id] is considered as local id if the music is both online or on device.
      * Device will be used instead of subsonic.
      */
-    var subsonicId: Long,
+    override var subsonicId: Long,
     title: String,
     displayName: String,
     absolutePath: String,
@@ -49,8 +48,8 @@ class SubsonicMusic(
     album: Album,
     genre: Genre,
     uri: Uri? = null,
-) : Music(
-    id = id,
+) : SubsonicMedia, Music(
+    id = subsonicId,
     title = title,
     displayName = displayName,
     absolutePath = absolutePath,

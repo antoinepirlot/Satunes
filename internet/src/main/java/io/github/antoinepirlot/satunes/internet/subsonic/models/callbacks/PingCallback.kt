@@ -24,7 +24,6 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
@@ -44,19 +43,14 @@ internal class PingCallback(
     onSucceed = onSucceed,
     onError = onError
 ) {
-
-    private val _logger: Logger? = Logger.getLogger()
-
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
-//        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.response!!
+        val response: SubsonicResponse = this.subsonicResponse!!
         SubsonicApiRequester.status = response.status
         subsonicApiRequester.updateVersion(version = response.version)
         SubsonicApiRequester.type = response.type
         SubsonicApiRequester.serverVersion = response.serverVersion
         SubsonicApiRequester.openSubsonic = response.openSubsonic
-//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

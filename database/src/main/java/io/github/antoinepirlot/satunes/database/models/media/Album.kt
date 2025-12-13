@@ -72,7 +72,7 @@ open class Album(
         return result
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         var compared: Int = super.compareTo(other)
         if (compared == 0 && other.isAlbum()) {
             compared = this.artist.compareTo((other as Album).artist)

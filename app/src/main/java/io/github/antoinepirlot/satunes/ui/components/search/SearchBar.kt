@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.search.SearchSection
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
 
@@ -78,6 +80,7 @@ fun SearchBar(
             searchViewModel.search(
                 selectedSection = selectedSection,
                 dataViewModel = dataViewModel,
+                subsonicViewModel = subsonicViewModel,
                 selectedSearchChips = selectedSearchChips,
             )
         }

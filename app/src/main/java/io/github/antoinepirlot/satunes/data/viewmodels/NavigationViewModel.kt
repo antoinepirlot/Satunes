@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -73,7 +74,7 @@ class NavigationViewModel : ViewModel() {
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
-        private fun push(destination: Destination, mediaImpl: MediaImpl?) {
+        private fun push(destination: Destination, mediaImpl: Media?) {
             /*
             _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
@@ -153,7 +154,7 @@ class NavigationViewModel : ViewModel() {
 
     fun navigate(
         navController: NavController,
-        mediaImpl: MediaImpl?
+        mediaImpl: Media?
     ) {
         val destination: Destination = this.getDestinationOf(mediaImpl = mediaImpl)
         push(destination = destination, mediaImpl = mediaImpl)
@@ -197,7 +198,7 @@ class NavigationViewModel : ViewModel() {
      *
      * @return the destination matching [MediaImpl]
      */
-    private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
+    private fun getDestinationOf(mediaImpl: Media?): Destination {
         return if (mediaImpl == null) Destination.PLAYBACK // same as else
         else if (mediaImpl.isRootFolder() || mediaImpl.isFolder()) Destination.FOLDERS
         else if (mediaImpl.isArtist()) Destination.ARTIST
@@ -207,7 +208,7 @@ class NavigationViewModel : ViewModel() {
         else Destination.PLAYBACK // same as first
     }
 
-    private fun getRoute(destination: Destination, mediaImpl: MediaImpl): String {
+    private fun getRoute(destination: Destination, mediaImpl: Media): String {
         return "${destination.link.removeSuffix("/{id}")}/${mediaImpl.id}"
     }
 
@@ -223,7 +224,7 @@ class NavigationViewModel : ViewModel() {
      */
     fun openMedia(
         playbackViewModel: PlaybackViewModel,
-        media: MediaImpl? = null,
+        media: Media? = null,
         navController: NavController?,
         reset: Boolean = false
     ) {

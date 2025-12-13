@@ -26,10 +26,10 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicGenre(
-    id: Long,
+    override var subsonicId: Long,
     title: String,
-) : Genre(
-    id = id,
+) : SubsonicMedia, Genre(
+    id = subsonicId,
     title = title,
 ) {
     override fun isSubsonic(): Boolean = true

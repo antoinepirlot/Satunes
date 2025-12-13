@@ -141,37 +141,37 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         val musicCollection: Collection<Music>
         if (selectedMediaImpl != null) {
             musicCollection = when (selectedTab) {
-                ScreenPages.ALL_FOLDERS -> selectedMediaImpl.musicList
-                ScreenPages.ALL_ALBUMS -> selectedMediaImpl.musicList
-                ScreenPages.ALL_ARTISTS -> selectedMediaImpl.musicList
-                ScreenPages.ALL_GENRES -> selectedMediaImpl.musicList
-                ScreenPages.ALL_PLAYLISTS -> selectedMediaImpl.musicList
+                ScreenPages.ALL_FOLDERS -> selectedMediaImpl.musicCollection
+                ScreenPages.ALL_ALBUMS -> selectedMediaImpl.musicCollection
+                ScreenPages.ALL_ARTISTS -> selectedMediaImpl.musicCollection
+                ScreenPages.ALL_GENRES -> selectedMediaImpl.musicCollection
+                ScreenPages.ALL_PLAYLISTS -> selectedMediaImpl.musicCollection
                 else -> throw UnsupportedOperationException()
             }
         } else {
             val musics: MutableSet<Music> = mutableSetOf()
             when (RouteManager.getSelectedTab()) {
                 ScreenPages.ALL_FOLDERS -> DataManager.getFolderSet().forEach { folder: Folder ->
-                    musics.addAll(elements = folder.musicList)
+                    musics.addAll(elements = folder.musicCollection)
                 }
 
                 ScreenPages.ALL_ARTISTS ->
                     DataManager.getArtistSet().forEach { artist: Artist ->
-                        musics.addAll(elements = artist.musicList)
+                        musics.addAll(elements = artist.musicCollection)
                     }
 
                 ScreenPages.ALL_ALBUMS ->
                     DataManager.getAlbumSet().forEach { album: Album ->
-                        musics.addAll(elements = album.musicList)
+                        musics.addAll(elements = album.musicCollection)
                     }
 
                 ScreenPages.ALL_GENRES -> DataManager.getGenreSet().forEach { genre: Genre ->
-                    musics.addAll(elements = genre.musicList)
+                    musics.addAll(elements = genre.musicCollection)
                 }
 
                 ScreenPages.ALL_PLAYLISTS -> DataManager.getPlaylistSet()
                     .forEach { playlist: Playlist ->
-                        musics.addAll(elements = playlist.musicList)
+                        musics.addAll(elements = playlist.musicCollection)
                     }
 
                 else -> throw UnsupportedOperationException()

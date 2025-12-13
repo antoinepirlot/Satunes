@@ -211,7 +211,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
         }
         mediaItemList.add(getShuffleButton())
         for (media: MediaImpl in mediaList) {
-            if (media.isMusic() || media.musicList.isNotEmpty()) {
+            if (media.isMusic() || media.musicCollection.isNotEmpty()) {
                 val mediaItem: MediaItem = buildMediaItem(media = media)
                 mediaItemList.add(mediaItem)
             }
@@ -242,7 +242,7 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
             null
         }
 
-        return this.getAllMediaItem(mediaList = mediaImpl?.musicList ?: mutableListOf())
+        return this.getAllMediaItem(mediaList = mediaImpl?.musicCollection ?: mutableListOf())
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

@@ -28,6 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
@@ -38,6 +39,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetInd
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -235,8 +237,12 @@ class SubsonicApiRequester(
      * Get randomly [size] musics.
      *
      * @param size the number of music to get (default 10, max 500).
+     * @param onDataRetrieved the [Collection] function to run when got data from API.
      */
-    fun getRandomSongs(size: Int = 10, onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
+    suspend fun getRandomSongs(
+        size: Int = 10,
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
+    ) {
         if (size !in 1..500)
             throw IllegalArgumentException("Can't get $size musics")
         get(
@@ -246,6 +252,27 @@ class SubsonicApiRequester(
             ),
             resCallback = GetRandomMusicCallback(
                 subsonicApiRequester = this@SubsonicApiRequester,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    /**
+     * Query subsonic to get matching media to the [query].
+     * If the [query] is blank, nothing is done.
+     *
+     * @param query the [String] to send to api to find matching media.
+     * @param onDataRetrieved the function to run when got data from API.
+     */
+    suspend fun search(query: String, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
+        if (query.isBlank()) return
+        get(
+            url = getCommandUrl(
+                command = "search3",
+                parameters = arrayOf("query=$query")
+            ),
+            resCallback = Search3Callback(
+                subsonicApiRequester = this,
                 onDataRetrieved = onDataRetrieved
             )
         )

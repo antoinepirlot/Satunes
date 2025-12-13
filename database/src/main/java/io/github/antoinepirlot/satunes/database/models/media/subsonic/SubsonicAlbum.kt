@@ -27,13 +27,13 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicAlbum(
-    id: Long,
+    override var subsonicId: Long,
     title: String,
     artist: Artist,
     isCompilation: Boolean = false,
-    year: Int? = null
-) : Album(
-    id = id,
+    year: Int? = null,
+) : SubsonicMedia, Album(
+    id = subsonicId,
     title = title,
     artist = artist,
     isCompilation = isCompilation,

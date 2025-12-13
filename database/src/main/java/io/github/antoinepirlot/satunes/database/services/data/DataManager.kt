@@ -48,7 +48,7 @@ import java.util.SortedSet
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
     private var subsonicRootFolder: SubsonicFolder =
-        SubsonicFolder(id = 0, title = SubsonicFolder.SUBSONIC_FOLDER_TITLE)
+        SubsonicFolder(subsonicId = 0, title = SubsonicFolder.SUBSONIC_FOLDER_TITLE)
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
     private val musicsMapById: MutableMap<Long, Music> = mutableMapOf()
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()

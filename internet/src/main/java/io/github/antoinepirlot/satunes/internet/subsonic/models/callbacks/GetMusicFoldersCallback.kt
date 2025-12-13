@@ -47,12 +47,10 @@ internal class GetMusicFoldersCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.response!!
+        val response: SubsonicResponse = this.subsonicResponse!!
         val subsonicRootFolder: Folder? = DataManager.getSubsonicRootFolder()
         for (subsonicFolder: SubsonicFolder in response.getAllMusicFolders())
             DataManager.addFolder(folder = subsonicFolder.toFolder(parentFolder = subsonicRootFolder))
-//        this.dataProcessed()
         this.onSucceed?.invoke()
     }
 }

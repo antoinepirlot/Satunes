@@ -20,17 +20,11 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
- * @author Antoine Pirlot 11/12/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-class SubsonicArtist(
-    override var subsonicId: Long,
-    title: String,
-) : SubsonicMedia, Artist(
-    id = subsonicId,
-    title = title,
-) {
-    override fun isSubsonic(): Boolean = true
+interface SubsonicMedia : Media {
+    var subsonicId: Long
 }

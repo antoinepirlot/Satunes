@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -52,8 +53,8 @@ fun SubsonicSearchSection(
         emptyViewText = stringResource(id = R.string.no_result),
         onMediaClick = { mediaImpl: Media ->
             if (mediaImpl.isMusic())
-            //TODO start streaming radio
-                TODO("Not yet implemented")
+            //TODO start streaming radio and not playing single element
+                playbackViewModel.loadMusics(musics = listOf(mediaImpl as Music))
             navigationViewModel.openMedia(
                 playbackViewModel = playbackViewModel,
                 media = mediaImpl,

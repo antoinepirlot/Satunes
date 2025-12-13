@@ -33,6 +33,6 @@ import kotlinx.serialization.Serializable
 @SerialName(value = "searchResult3")
 internal data class Search3(
     @SerialName(value = "artist") val artists: Collection<Artist>? = null,
-    @SerialName(value = "album") val album: Collection<Album>? = null,
-    @SerialName(value = "song") val song: Collection<Song>? = null
+    @SerialName(value = "album") val albums: Collection<Album>? = null,
+    @SerialName(value = "song") val songs: Collection<Song>? = null
 )

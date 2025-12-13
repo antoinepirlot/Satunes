@@ -23,7 +23,9 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import okhttp3.Call
 import okhttp3.Response
 
@@ -48,11 +50,20 @@ internal class Search3Callback(
 
     private fun processData(): Boolean {
         if (this.subsonicResponse == null) return false
-        val mediaList: MutableSet<SubsonicMedia> = mutableSetOf()
-        this.subsonicResponse!!.search3!!.artists?.forEach { artist: Artist ->
-            mediaList.add(element = artist.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+        val mediaSet: MutableSet<SubsonicMedia> = mutableSetOf()
+        this.subsonicResponse!!.search3?.apply {
+            this.artists?.forEach { artist: Artist ->
+                mediaSet.add(element = artist.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+            }
+            this.albums?.forEach { album: Album ->
+                mediaSet.add(element = album.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+            }
+            this.songs?.forEach { song: Song ->
+                mediaSet.add(element = song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+            }
         }
-        this.onDataRetrieved(mediaList)
+        //TODO crash on opening artist and maybe album
+        this.onDataRetrieved(mediaSet.sorted())
         return true
     }
 }

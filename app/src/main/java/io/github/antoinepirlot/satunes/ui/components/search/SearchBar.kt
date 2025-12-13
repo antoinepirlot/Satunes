@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.models.StoragePlace
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -65,7 +66,8 @@ fun SearchBar(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            searchViewModel.localSearch(
+            searchViewModel.search(
+                storagePlace = StoragePlace.LOCAL,
                 dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
             )

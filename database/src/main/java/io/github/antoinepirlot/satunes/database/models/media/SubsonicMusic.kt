@@ -87,4 +87,10 @@ class SubsonicMusic(
         return if (this.javaClass == other?.javaClass) this.id == (other as SubsonicMusic).id
         else super.equals(other)
     }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + subsonicId.hashCode()
+        return result
+    }
 }

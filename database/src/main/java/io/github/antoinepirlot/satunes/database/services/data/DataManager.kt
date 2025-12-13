@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.SubsonicFolder
 import io.github.antoinepirlot.satunes.database.models.media.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.services.data.DataManager.subsonicMusicsMapById
 import java.util.SortedMap
 import java.util.SortedSet
 
@@ -52,6 +53,7 @@ object DataManager {
     private val musicsMapById: MutableMap<Long, Music> = mutableMapOf()
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
     private val subsonicMusicsMapById: MutableMap<Long, SubsonicMusic> = mutableMapOf()
+    private val subsonicMusicsSortedMap: SortedMap<SubsonicMusic, SubsonicMusic> = sortedMapOf()
 
     /**
      * [Collection] of [SubsonicMusic] got by the random music query
@@ -114,7 +116,7 @@ object DataManager {
     }
 
     fun getSubsonicMusicsCollection(): Collection<SubsonicMusic> {
-        return this.subsonicMusicsMapById.values.toSortedSet()
+        return this.subsonicMusicsSortedMap.keys.toSet()
     }
 
     fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> {
@@ -147,20 +149,20 @@ object DataManager {
      */
     fun addRandomMusic(musics: Collection<SubsonicMusic>) {
         for (music: SubsonicMusic in musics)
-            this.addRandomMusic(music)
+            this.addRandomMusic(subsonicMusic = music)
     }
 
     /**
-     * Add [subsonicMusic] and add it to random music list
+     * Add [subsonicMusic] to random music list only. Do not stores it in [subsonicMusicsMapById]
      *
      * @param subsonicMusic the newly added [SubsonicMusic]
      *
      * @return [SubsonicMusic] that has been added.
      */
     fun addRandomMusic(subsonicMusic: SubsonicMusic): SubsonicMusic {
-        val addedMusic: SubsonicMusic = this.addMusic(music = subsonicMusic) as SubsonicMusic
-        this.subsonicRandomMusics.add(element = addedMusic)
-        return addedMusic
+        if (!this.subsonicRandomMusicsSortedMap.contains(key = subsonicMusic))
+            this.subsonicRandomMusicsSortedMap[subsonicMusic] = subsonicMusic
+        return this.subsonicRandomMusicsSortedMap[subsonicMusic]!!
     }
 
     /**

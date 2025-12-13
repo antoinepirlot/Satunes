@@ -25,18 +25,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
+import io.github.antoinepirlot.satunes.ui.views.media.music.local.LocalAllMusicsListView
+import io.github.antoinepirlot.satunes.ui.views.media.music.subsonic.SubsonicRandomMusicsView
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -51,9 +48,9 @@ internal fun AllMusicsListView(
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     if (satunesUiState.mode == SatunesModes.ONLINE)
-        OnlineMode(modifier = modifier)
+        SubsonicRandomMusicsView(modifier = modifier)
     else
-        OfflineMode(modifier = modifier)
+        LocalAllMusicsListView(modifier = modifier)
 
     // /!\ put this launch effect here as it must be ran after media impl list loaded
     LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
@@ -64,41 +61,6 @@ internal fun AllMusicsListView(
         else
             satunesViewModel.clearExtraButtons()
     }
-}
-
-@Composable
-private fun OnlineMode(
-    modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel(),
-) {
-    LaunchedEffect(key1 = Unit) {
-        subsonicViewModel.loadRandomSongs(onDataRetrieved = {
-            dataViewModel.loadMediaImplList(list = it)
-        })
-    }
-    MediaListView(
-        modifier = modifier,
-        emptyViewText = stringResource(id = R.string.no_music)
-    )
-}
-
-@Composable
-private fun OfflineMode(
-    modifier: Modifier = Modifier,
-    satunesViewModel: SatunesViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
-) {
-    val musicSet: Set<MediaImpl> = dataViewModel.getMusicSet()
-
-    LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
-    }
-
-    MediaListView(
-        modifier = modifier,
-        emptyViewText = stringResource(id = R.string.no_music)
-    )
 }
 
 @Preview

@@ -39,14 +39,9 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMus
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.lang.UnsupportedOperationException
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -240,11 +235,9 @@ class SubsonicApiRequester(
      * Get randomly [size] musics.
      *
      * @param size the number of music to get (default 10, max 500).
-     *
-     * @return musics //TODO
      */
     fun getRandomSongs(size: Int = 10, onDataRetrieved: ((Set<Music>) -> Unit)) {
-        if (size < 1 || size > 500)
+        if (size !in 1..500)
             throw IllegalArgumentException("Can't get $size musics")
         get(
             url = getCommandUrl(

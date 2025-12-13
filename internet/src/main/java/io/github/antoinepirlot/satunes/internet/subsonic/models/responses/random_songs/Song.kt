@@ -61,6 +61,7 @@ internal class Song constructor(
         )
         return DataManager.getSubsonicMusic(id = id) ?: SubsonicMusic(
             id = this.id,
+            subsonicId = this.id,
             title = this.title,
             displayName = this.path.split("/").last(),
             absolutePath = this.path,

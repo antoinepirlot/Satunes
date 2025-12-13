@@ -127,10 +127,19 @@ abstract class MediaImpl(
 
     /**
      * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     * If it is already stored, do nothing
      */
     fun download() {
         if (this.isStoredLocally()) return
         TODO("Saving in cache is not yet implemented.")
+    }
+
+    /**
+     * Remove this media impl from storage.
+     */
+    fun removeFromStorage() {
+        if (!this.isStoredLocally()) return
+        TODO("Remove from storage is not yet implemented")
     }
 
     override fun compareTo(other: MediaImpl): Int {

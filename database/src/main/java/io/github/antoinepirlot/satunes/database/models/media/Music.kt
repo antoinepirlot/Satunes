@@ -50,15 +50,15 @@ open class Music(
     id: Long,
     title: String,
     displayName: String,
-    val absolutePath: String,
-    val durationMs: Long = 0,
-    val size: Int = 0,
-    cdTrackNumber: Int? = null,
+    var absolutePath: String,
+    open val durationMs: Long = 0,
+    open val size: Int = 0,
+    var cdTrackNumber: Int? = null,
     addedDateMs: Long,
     var folder: Folder,
-    val artist: Artist,
-    val album: Album,
-    val genre: Genre,
+    var artist: Artist,
+    var album: Album,
+    var genre: Genre,
     uri: Uri? = null,
 ) : MediaImpl(
     id = id,
@@ -72,19 +72,18 @@ open class Music(
 
     val relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
 
-    val cdTrackNumber: Int?
-
     public override var addedDate: Date? = null
 
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
 
-    val uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
+    var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
+        protected set
 
     val mediaItem: MediaItem = getMediaMetadata()
 
     init {
-        if (cdTrackNumber != null && cdTrackNumber < 1)
+        if (cdTrackNumber != null && cdTrackNumber!! < 1)
             this.cdTrackNumber = null
         else
             this.cdTrackNumber = cdTrackNumber
@@ -190,6 +189,9 @@ open class Music(
 
         other as Music
 
+        //TODO update as the music should not be the same as id.
+        //Using id is usefull to detect duplications by the user but not for the online system.
+        //The name, artist, albums and so on must be used to detect local and online music.
         return this.id == other.id
     }
 

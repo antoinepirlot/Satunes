@@ -162,6 +162,8 @@ object DataManager {
     fun addRandomMusic(subsonicMusic: SubsonicMusic): SubsonicMusic {
         if (!this.subsonicRandomMusicsSortedMap.contains(key = subsonicMusic))
             this.subsonicRandomMusicsSortedMap[subsonicMusic] = subsonicMusic
+        else
+            this.subsonicRandomMusicsSortedMap[subsonicMusic]!!.update(new = subsonicMusic)
         return this.subsonicRandomMusicsSortedMap[subsonicMusic]!!
     }
 

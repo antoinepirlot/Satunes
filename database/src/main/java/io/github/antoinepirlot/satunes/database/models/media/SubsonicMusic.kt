@@ -30,8 +30,8 @@ class SubsonicMusic(
     title: String,
     displayName: String,
     absolutePath: String,
-    durationMs: Long = 0,
-    size: Int = 0,
+    override var durationMs: Long = 0,
+    override var size: Int = 0,
     cdTrackNumber: Int? = null,
     addedDateMs: Long,
     folder: Folder,
@@ -55,4 +55,28 @@ class SubsonicMusic(
     uri = uri,
 ) {
     override fun isSubsonic(): Boolean = true
+
+    /**
+     * Update this [SubsonicMusic] with the [new] [SubsonicMusic] if both [id] are identical
+     */
+    fun update(new: SubsonicMusic) {
+        if (new.id != this.id)
+            throw IllegalArgumentException("These musics doesn't have the same id. Old id is: ${this.id} and the new id is: $id")
+        this.title = new.title
+        this.absolutePath = new.absolutePath
+        this.durationMs = new.durationMs
+        this.size = new.size
+        this.cdTrackNumber = new.cdTrackNumber
+        this.addedDate = new.addedDate
+        this.folder = new.folder
+        this.artist = new.artist
+        this.album = new.album
+        this.genre = new.genre
+        this.uri = new.uri
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (this.javaClass == other?.javaClass) this.id == (other as SubsonicMusic).id
+        else super.equals(other)
+    }
 }

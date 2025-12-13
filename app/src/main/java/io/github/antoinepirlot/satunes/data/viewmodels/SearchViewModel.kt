@@ -137,9 +137,20 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    fun search(
+    /**
+     * Search matching [MediaImpl] with the [query].
+     * It searches on media stored on the user's devices and not elsewhere.
+     *
+     * These media are sorted.
+     *
+     * If the query is blank, no results.
+     *
+     * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally
+     * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
+     */
+    fun localSearch(
         dataViewModel: DataViewModel,
-        selectedSearchChips: List<SearchChips>,
+        selectedSearchChips: Collection<SearchChips>,
     ) {
         val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
         if (this.query.isBlank()) { // Prevent loop if string is "" or " "

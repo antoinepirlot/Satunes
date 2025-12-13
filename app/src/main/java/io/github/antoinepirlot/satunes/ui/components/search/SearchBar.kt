@@ -65,7 +65,7 @@ fun SearchBar(
             searchJob!!.cancel()
         }
         searchJob = searchCoroutine.launch {
-            searchViewModel.search(
+            searchViewModel.localSearch(
                 dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
             )

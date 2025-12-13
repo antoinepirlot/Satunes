@@ -67,8 +67,10 @@ class SubsonicMusic(
     override fun isSubsonic(): Boolean = true
 
     /**
-     * Update this [SubsonicMusic] with the [new] [SubsonicMusic] if both [id] are identical
+     * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical
      * If [id] != [subsonicId] it means it is the local music. No update made and no error thrown.
+     *
+     * @param new the most updated [SubsonicMusic] matching this one.
      */
     fun update(new: SubsonicMusic) {
         if (this.id != this.subsonicId) return //It is the local music matching the server one. No update
@@ -88,9 +90,9 @@ class SubsonicMusic(
     }
 
     /**
-     * Save this [SubsonicMusic] in cache.
+     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
      */
-    fun saveInCache() {
+    fun download() {
         TODO("Saving in cache is not yet implemented.")
     }
 

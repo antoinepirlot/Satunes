@@ -39,6 +39,12 @@ abstract class MediaImpl(
     title: String
 ) : Media, Comparable<MediaImpl> {
     protected val _logger: Logger? = Logger.getLogger()
+    protected var isDownloaded: Boolean = !this.isSubsonic()
+        set(value) {
+            if (!this.isSubsonic())
+                throw IllegalStateException("Can't change value of isDownloaded for a local media.")
+            field = value
+        }
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is
@@ -73,6 +79,12 @@ abstract class MediaImpl(
     }
 
     open fun isSubsonic(): Boolean = false
+
+    /**
+     * If the media is stored on the device, it returns true.
+     * If the media is subsonic and is downloaded on the phone then it returns true, false otherwise
+     */
+    fun isStoredLocally(): Boolean = isDownloaded
 
     fun clearMusicList() {
         this.musicSortedSet.clear()

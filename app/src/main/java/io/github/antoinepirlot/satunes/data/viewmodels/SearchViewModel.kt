@@ -79,7 +79,6 @@ class SearchViewModel : ViewModel() {
         query = value
     }
 
-    fun resetSelectedChips() {
         try {
             runBlocking {
                 selectedSearchChips.clear()

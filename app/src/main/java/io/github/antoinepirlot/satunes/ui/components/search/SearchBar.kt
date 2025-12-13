@@ -26,6 +26,8 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -38,10 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.StoragePlace
+import io.github.antoinepirlot.satunes.models.search.SearchSection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -56,18 +59,24 @@ fun SearchBar(
     searchViewModel: SearchViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+
+    val selectedSection: SearchSection = searchUiState.selectedSection
+    val isSearchRequested: Boolean = searchViewModel.isSearchRequested
     val query: String = searchViewModel.query
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
 
     var searchJob: Job? = null
-    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size) {
-        if (searchJob != null && searchJob!!.isActive) {
+    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size, key3 = isSearchRequested) {
+        if (selectedSection != SearchSection.LOCAL && !isSearchRequested) return@LaunchedEffect
+
+        if (searchJob != null && searchJob!!.isActive)
             searchJob!!.cancel()
-        }
+
         searchJob = searchCoroutine.launch {
             searchViewModel.search(
-                storagePlace = StoragePlace.LOCAL,
+                selectedSection = selectedSection,
                 dataViewModel = dataViewModel,
                 selectedSearchChips = selectedSearchChips,
             )
@@ -90,8 +99,9 @@ fun SearchBar(
                 query = query,
                 onQueryChange = { searchViewModel.updateQuery(value = it) },
                 onSearch = {
-                    searchViewModel.updateQuery(value = it)
                     keyboard?.hide()
+                    if (selectedSection != SearchSection.LOCAL)
+                        searchViewModel.requestSearch()
                 },
                 placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
                 expanded = false,

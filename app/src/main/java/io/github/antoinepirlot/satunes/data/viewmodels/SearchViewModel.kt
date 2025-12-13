@@ -40,7 +40,6 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.StoragePlace
 import io.github.antoinepirlot.satunes.models.search.SearchSection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -71,6 +70,14 @@ class SearchViewModel : ViewModel() {
     var query: String by mutableStateOf("")
         private set
 
+    /**
+     * If the user clicks on the enter key, it starts a manual search.
+     *
+     * On local storage, every query modification triggers search while in cloud it is triggered only when enter key pressed.
+     */
+    var isSearchRequested: Boolean by mutableStateOf(false)
+        private set
+
     init {
         selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
     }
@@ -79,26 +86,8 @@ class SearchViewModel : ViewModel() {
         query = value
     }
 
-        try {
-            runBlocking {
-                selectedSearchChips.clear()
-                SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
-                _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
-                _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
-                _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
-                _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
-                _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
-                _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
-                _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
-                    if (checked) {
-                        selectedSearchChips.add(searchChip)
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            _logger?.severe(e.message)
-            throw e
-        }
+    fun requestSearch() {
+        isSearchRequested = true
     }
 
     fun select(searchChip: SearchChips) {
@@ -144,26 +133,27 @@ class SearchViewModel : ViewModel() {
      *
      * If the query is blank, no results.
      *
-     * @param storagePlace where the search algorithm must search.
+     * @param selectedSection where the search algorithm must search.
      * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally.
      * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
      */
     fun search(
-        storagePlace: StoragePlace,
+        selectedSection: SearchSection,
         dataViewModel: DataViewModel,
         selectedSearchChips: Collection<SearchChips>,
     ) {
         if (this.query.isNotBlank())
-            when (storagePlace) {
-                StoragePlace.LOCAL -> localSearch(
+            when (selectedSection) {
+                SearchSection.LOCAL -> localSearch(
                     dataViewModel = dataViewModel,
                     selectedSearchChips = selectedSearchChips
                 )
 
-                StoragePlace.SUBSONIC -> subsonicSearch()
+                SearchSection.SUBSONIC -> subsonicSearch()
             }
         else
             dataViewModel.loadMediaImplList(list = sortedSetOf())
+        isSearchRequested = false
     }
 
     /**
@@ -253,7 +243,7 @@ class SearchViewModel : ViewModel() {
      * These media are sorted.
      */
     private fun subsonicSearch() {
-
+        TODO()
     }
 
     fun selectSection(selectedSection: SearchSection) {

@@ -85,11 +85,9 @@ internal class Song constructor(
      * Create a new artist matching data
      */
     private fun createArtist(): Artist {
-        return DataManager.addArtist(
-            artist = Artist(
-                id = this.artistId,
-                title = this.artistTitle
-            )
+        return Artist(
+            id = this.artistId,
+            title = this.artistTitle
         )
     }
 
@@ -104,14 +102,12 @@ internal class Song constructor(
      * Create a new Album and returns it.
      */
     private fun createAlbum(): Album {
-        return DataManager.addAlbum(
-            album = Album(
-                id = albumId,
-                title = albumTitle,
-                artist = this.getOrCreateArtist(),
-//                isCompilation = false,
-//                year = null
-            )
+        return Album(
+            id = albumId,
+            title = albumTitle,
+            artist = this.getOrCreateArtist(),
+//            isCompilation = false,
+//            year = null
         )
     }
 

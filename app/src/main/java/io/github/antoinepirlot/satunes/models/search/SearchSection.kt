@@ -23,6 +23,7 @@ package io.github.antoinepirlot.satunes.models.search
 import androidx.compose.runtime.Composable
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.search.LocalSearchSection
+import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSection
 
 /**
  * Search section to indicate where to search.
@@ -33,5 +34,5 @@ enum class SearchSection(val stringId: Int, val composable: @Composable () -> Un
     LOCAL(stringId = R.string.local_section_text, composable = { LocalSearchSection() }),
     SUBSONIC(
         stringId = R.string.subsonic_section_text,
-        composable = { TODO("Not yet implemented") })
+        composable = { SubsonicSearchSection() })
 }

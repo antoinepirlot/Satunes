@@ -27,6 +27,7 @@ import android.net.Uri
  */
 class SubsonicMusic(
     id: Long,
+    var subsonicId: Long,
     title: String,
     displayName: String,
     absolutePath: String,
@@ -73,6 +74,13 @@ class SubsonicMusic(
         this.album = new.album
         this.genre = new.genre
         this.uri = new.uri
+    }
+
+    /**
+     * Save this [SubsonicMusic] in cache.
+     */
+    fun saveInCache() {
+        TODO("Saving in cache is not yet implemented.")
     }
 
     override fun equals(other: Any?): Boolean {

@@ -20,3 +20,6 @@ GET {{baseUrl}}/getRandomSongs?{{auth_params}}
 ###
 
 GET {{baseUrl}}/getArtist?{{auth_params}}
+
+###
+GET {{baseUrl}}/search3?{{search_params}}

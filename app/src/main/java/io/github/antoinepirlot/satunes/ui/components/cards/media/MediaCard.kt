@@ -24,6 +24,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
@@ -130,12 +131,14 @@ internal fun MediaCard(
                 }
             },
             trailingContent = {
-                if (mediaImpl.isMusic()) {
-                    mediaImpl as Music
-                    val liked: Boolean by mediaImpl.liked
-                    if (liked) {
-                        val likedJetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.LIKED
-                        Icon(jetpackLibsIcons = likedJetpackLibsIcons)
+                Row {
+                    if (mediaImpl.isSubsonic())
+                        Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_ON_ICON)
+                    if (mediaImpl.isMusic()) {
+                        mediaImpl as Music
+                        val liked: Boolean by mediaImpl.liked
+                        if (liked)
+                            Icon(jetpackLibsIcons = JetpackLibsIcons.LIKED)
                     }
                 }
             }

@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.models.search
 
 import androidx.compose.runtime.Composable
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.ui.components.search.LocalSearchSection
 import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSection
@@ -30,7 +31,17 @@ import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSectio
  * The order in enum is reflected on screen
  * @author Antoine Pirlot 13/12/2025
  */
-enum class SearchSection(val stringId: Int, val composable: @Composable () -> Unit) {
-    LOCAL(stringId = R.string.local_section_text, composable = { LocalSearchSection() }),
-    SUBSONIC(stringId = R.string.subsonic_section_text, composable = { SubsonicSearchSection() })
+enum class SearchSection(
+    val stringId: Int,
+    val icon: JetpackLibsIcons,
+    val composable: @Composable () -> Unit
+) {
+    LOCAL(
+        stringId = R.string.local_section_text,
+        icon = JetpackLibsIcons.LOCAL_ICON,
+        composable = { LocalSearchSection() }),
+    SUBSONIC(
+        stringId = R.string.subsonic_section_text,
+        icon = JetpackLibsIcons.CLOUD_ON_ICON,
+        composable = { SubsonicSearchSection() })
 }

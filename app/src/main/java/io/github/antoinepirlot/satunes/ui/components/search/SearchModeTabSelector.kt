@@ -20,14 +20,17 @@
 
 package io.github.antoinepirlot.satunes.ui.components.search
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
@@ -47,14 +50,17 @@ fun SearchModeTabSelector(
         modifier = modifier,
         selectedTabIndex = searchUiState.selectedSection.ordinal
     ) {
-        SearchSection.entries.forEachIndexed { index, section ->
+        SearchSection.entries.forEachIndexed { index: Int, section: SearchSection ->
             Tab(
                 selected = searchUiState.selectedSection.ordinal == index,
                 onClick = {
                     searchViewModel.selectSection(selectedSection = section)
                 },
                 text = {
-                    NormalText(text = stringResource(section.stringId))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(jetpackLibsIcons = section.icon)
+                        NormalText(text = stringResource(section.stringId))
+                    }
                 }
             )
         }

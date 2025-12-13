@@ -18,31 +18,21 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.media
+package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-
 @Serializable
-internal data class SubsonicFolder(
-    val id: Long,
-    val name: String
-) {
-    fun toFolder(parentFolder: Folder? = null): Folder {
-        var folder: Folder? = DataManager.getFolder(id = id)
-        if (folder == null) {
-            folder = Folder(
-                id = id,
-                title = name,
-                parentFolder = parentFolder
-            )
-            parentFolder?.addSubfolder(folder = folder)
-        }
-        return folder
-    }
-}
+@SerialName(value = "searchResult3")
+internal data class Search3(
+    @SerialName(value = "artist") val artists: Collection<Artist>? = null,
+    @SerialName(value = "album") val album: Collection<Album>? = null,
+    @SerialName(value = "song") val song: Collection<Song>? = null
+)

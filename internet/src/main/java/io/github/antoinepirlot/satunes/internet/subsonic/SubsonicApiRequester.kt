@@ -23,20 +23,11 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic
 
-import android.content.Context
 import io.github.antoinepirlot.satunes.database.models.User
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetIndexesCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMusicFoldersCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
@@ -144,92 +135,6 @@ class SubsonicApiRequester(
                 onSucceed = onSucceed,
                 onError = { onError?.invoke() }
             ),
-        )
-    }
-
-    /**
-     * Load all data from server.
-     * (Not recommended if the server is not the personal one as it could have a lot of data).
-     *
-     * It gets data in this order:
-     *      * MusicFolders -> Music Folder
-     *      * Indexes -> Artists
-     *      * Single Artist from Indexes -> Albums
-     *      * Single Album from Artist -> Songs
-     *      * Songs from album
-     *
-     * @param context the [Context] of the app.
-     */
-    private fun loadAll() {
-        this.loadMusicFolders()
-    }
-
-    /**
-     * Load all artists.
-     */
-    private fun loadArtists() {
-        for (folder: Folder in DataManager.getRootSubsonicFolders()) {
-            this.get(
-                url = this@SubsonicApiRequester.getCommandUrl(
-                    command = "getIndexes",
-                    parameters = arrayOf("musicFolderId=${folder.id}")
-                ),
-                resCallback = GetIndexesCallback(subsonicApiRequester = this@SubsonicApiRequester)
-            )
-        }
-    }
-
-    /**
-     * Load albums  query based on each subsonic artist.
-     */
-    private fun loadAlbums() {
-        if (!DataManager.hasSubsonicArtists()) return
-        for (artist: Artist in DataManager.getSubsonicArtistSet()) {
-            this.loadArtist(artistId = artist.id)
-        }
-    }
-
-    /**
-     * Load artist's information containing albums by using "getArtist" query.
-     */
-    private fun loadArtist(artistId: Long) {
-        this.get(
-            url = this.getCommandUrl(command = "getArtist", parameters = arrayOf("id=$artistId")),
-            resCallback = GetArtistCallback(
-                subsonicApiRequester = this,
-                onSucceed = { this.loadSongs() }
-            )
-        )
-    }
-
-    /**
-     * Load songs of received albums.
-     */
-    private fun loadSongs() {
-        return //TODO
-        if (!DataManager.hasSubsonicAlbums()) return
-        for (album: Album in DataManager.getSubsonicAlbumsSet()) {
-            this.loadAlbum(albumId = album.id)
-        }
-    }
-
-    /**
-     * Load album by its id and get songs of it.
-     */
-    private fun loadAlbum(albumId: Long) {
-        this.get(
-            url = this.getCommandUrl(command = "getAlbum", parameters = arrayOf("id=$albumId")),
-            resCallback = GetAlbumCallback(subsonicApiRequester = this)
-        )
-    }
-
-    private fun loadMusicFolders() {
-        this.get(
-            url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
-            resCallback = GetMusicFoldersCallback(
-                subsonicApiRequester = this,
-                onSucceed = { this.loadArtists() }
-            )
         )
     }
 

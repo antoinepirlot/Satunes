@@ -26,12 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicAlbum
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicArtist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder
-import io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolders
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.RandomSongs
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.Song
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -47,11 +42,8 @@ internal data class SubsonicResponse(
     val serverVersion: String? = null,
     val openSubsonic: Boolean = false,
     @SerialName(value = "error") val error: Error? = null,
-    @SerialName(value = "indexes") private val indexes: Indexes? = null,
-    @SerialName(value = "musicFolders") private val subsonicFolders: SubsonicFolders? = null,
-    @SerialName(value = "artist") val artist: SubsonicArtist? = null,
-    @SerialName(value = "album") val album: SubsonicAlbum? = null,
-    @SerialName(value = "randomSongs") val randomSongs: RandomSongs? = null
+    @SerialName(value = "randomSongs") val randomSongs: RandomSongs? = null,
+    @SerialName(value = "searchResult3") val search3: Search3? = null,
 ) {
 
     companion object {
@@ -59,30 +51,6 @@ internal data class SubsonicResponse(
         private const val FAILED_STATUS = "failed"
     }
     fun isError(): Boolean = this.status == FAILED_STATUS
-    fun hasArtist(): Boolean = this.artist != null
-    fun hasAlbum(): Boolean = this.album != null
-    fun hasFolders(): Boolean = this.subsonicFolders != null
-    fun hasIndexes(): Boolean = this.indexes != null
-
-    /**
-     * Returns the list of [Index] received.
-     *
-     * @throws IllegalStateException if it has not been received
-     */
-    fun getAllIndexes(): Collection<Index> {
-        if(!this.hasIndexes()) throw IllegalStateException("No indexes received.")
-        return this.indexes?.list?: listOf()
-    }
-
-    /**
-     * Returns the list of [io.github.antoinepirlot.satunes.internet.subsonic.models.media.SubsonicFolder] received.
-     *
-     * @throws IllegalStateException if it has not been received
-     */
-    fun getAllMusicFolders(): Collection<SubsonicFolder> {
-        if(!this.hasFolders()) throw IllegalStateException("No music folder received.")
-        return this.subsonicFolders?.list?: listOf()
-    }
 
     /**
      * Constructs [SubsonicMusic] objects from what has been received
@@ -92,7 +60,7 @@ internal data class SubsonicResponse(
             throw IllegalStateException("Can't convert data to songs, object not compatible")
         val set: MutableCollection<SubsonicMusic> = mutableSetOf()
         for (song: Song in this.randomSongs)
-            set.add(song.toMusic(subsonicApiRequester = subsonicApiRequester))
+            set.add(song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicMusic)
         return set.toSortedSet()
     }
 }

@@ -23,3 +23,7 @@ GET {{baseUrl}}/getArtist?{{auth_params}}
 
 ###
 GET {{baseUrl}}/search3?{{search_params}}
+
+###
+
+GET {{baseUrl}}/getCoverArt?{{cover_art_params}}

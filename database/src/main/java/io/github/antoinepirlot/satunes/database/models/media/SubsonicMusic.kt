@@ -27,6 +27,10 @@ import android.net.Uri
  */
 class SubsonicMusic(
     id: Long,
+    /**
+     * [id] can be different from [subsonicId] because [id] is considered as local id if the music is both online or on device.
+     * Device will be used instead of subsonic.
+     */
     var subsonicId: Long,
     title: String,
     displayName: String,
@@ -59,8 +63,10 @@ class SubsonicMusic(
 
     /**
      * Update this [SubsonicMusic] with the [new] [SubsonicMusic] if both [id] are identical
+     * If [id] != [subsonicId] it means it is the local music. No update made and no error thrown.
      */
     fun update(new: SubsonicMusic) {
+        if (this.id != this.subsonicId) return //It is the local music matching the server one. No update
         if (new.id != this.id)
             throw IllegalArgumentException("These musics doesn't have the same id. Old id is: ${this.id} and the new id is: $id")
         this.title = new.title

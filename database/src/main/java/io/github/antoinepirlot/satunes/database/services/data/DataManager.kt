@@ -57,7 +57,8 @@ object DataManager {
      * [Collection] of [SubsonicMusic] got by the random music query
      * This [Collection] contains a maximum of 500 [SubsonicMusic] due to the API's limitation
      */
-    private val subsonicRandomMusics: SortedSet<SubsonicMusic> = sortedSetOf()
+    private val subsonicRandomMusicsSortedMap: SortedMap<SubsonicMusic, SubsonicMusic> =
+        sortedMapOf()
 
     private var _rootFolder: RootFolder = RootFolder()
 
@@ -117,7 +118,7 @@ object DataManager {
     }
 
     fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> {
-        return this.subsonicRandomMusics.toSortedSet()
+        return this.subsonicRandomMusicsSortedMap.keys.toSet()
     }
 
     fun addMusic(music: Music): Music {

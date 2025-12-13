@@ -32,7 +32,5 @@ import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSectio
  */
 enum class SearchSection(val stringId: Int, val composable: @Composable () -> Unit) {
     LOCAL(stringId = R.string.local_section_text, composable = { LocalSearchSection() }),
-    SUBSONIC(
-        stringId = R.string.subsonic_section_text,
-        composable = { SubsonicSearchSection() })
+    SUBSONIC(stringId = R.string.subsonic_section_text, composable = { SubsonicSearchSection() })
 }

@@ -133,7 +133,7 @@ internal fun MediaCard(
             trailingContent = {
                 Row {
                     if (mediaImpl.isSubsonic())
-                        Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_ON_ICON)
+                        Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_NOT_SAVED_ICON)
                     if (mediaImpl.isMusic()) {
                         mediaImpl as Music
                         val liked: Boolean by mediaImpl.liked

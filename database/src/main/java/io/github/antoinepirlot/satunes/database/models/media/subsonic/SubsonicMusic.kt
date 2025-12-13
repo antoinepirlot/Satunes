@@ -89,13 +89,6 @@ class SubsonicMusic(
         this.uri = new.uri
     }
 
-    /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
-     */
-    fun download() {
-        TODO("Saving in cache is not yet implemented.")
-    }
-
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.id == (other as SubsonicMusic).id
         else super.equals(other)

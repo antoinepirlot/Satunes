@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
 import java.util.SortedSet
@@ -122,6 +123,14 @@ abstract class MediaImpl(
             this.musicList as MutableList
             this.musicList.remove(element = music)
         }
+    }
+
+    /**
+     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     */
+    fun download() {
+        if (this.isStoredLocally()) return
+        TODO("Saving in cache is not yet implemented.")
     }
 
     override fun compareTo(other: MediaImpl): Int {

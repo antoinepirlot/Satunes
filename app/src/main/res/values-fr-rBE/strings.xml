@@ -153,4 +153,6 @@
     <string name="subsonic_connection_title">Identifiants de connexion</string>
     <string name="salt_label">Graine</string>
     <string name="salt_placeholder">Ce que tu veux</string>
+    <string name="subsonic_section_text">Sur le cloud</string>
+    <string name="local_section_text">Sur l\'appareil</string>
 </resources>

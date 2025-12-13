@@ -18,20 +18,20 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.data.states
+package io.github.antoinepirlot.satunes.models.search
 
-import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.models.search.SearchSection
+import androidx.compose.runtime.Composable
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.ui.components.search.LocalSearchSection
 
 /**
- * @author Antoine Pirlot on 23/07/2024
+ * Search section to indicate where to search.
+ * The order in enum is reflected on screen
+ * @author Antoine Pirlot 13/12/2025
  */
-data class SearchUiState(
-    val musicsFilter: Boolean = SettingsManager.musicsFilter,
-    val albumsFilter: Boolean = SettingsManager.albumsFilter,
-    val artistsFilter: Boolean = SettingsManager.artistsFilter,
-    val genresFilter: Boolean = SettingsManager.genresFilter,
-    val foldersFilter: Boolean = SettingsManager.foldersFilter,
-    val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val selectedSection: SearchSection = SearchSection.LOCAL //TODO add setting
-)
+enum class SearchSection(val stringId: Int, val composable: @Composable () -> Unit) {
+    LOCAL(stringId = R.string.local_section_text, composable = { LocalSearchSection() }),
+    SUBSONIC(
+        stringId = R.string.subsonic_section_text,
+        composable = { TODO("Not yet implemented") })
+}

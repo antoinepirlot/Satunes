@@ -18,53 +18,45 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.views.search
+package io.github.antoinepirlot.satunes.ui.components.search
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
-import io.github.antoinepirlot.satunes.ui.components.search.SearchBar
-import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelector
+import io.github.antoinepirlot.satunes.models.search.SearchSection
 
 /**
- * @author Antoine Pirlot on 27/06/2024
+ * @author Antoine Pirlot 13/12/2025
  */
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SearchView(
+fun SearchModeTabSelector(
     modifier: Modifier = Modifier,
-    searchViewModel: SearchViewModel = viewModel()
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
+    PrimaryTabRow(
+        modifier = modifier,
+        selectedTabIndex = searchUiState.selectedSection.ordinal
     ) {
-        SearchBar()
-        Spacer(modifier = Modifier.size(16.dp))
-        SearchModeTabSelector()
-        searchUiState.selectedSection.composable()
+        SearchSection.entries.forEachIndexed { index, section ->
+            Tab(
+                selected = searchUiState.selectedSection.ordinal == index,
+                onClick = {
+                    searchViewModel.selectSection(selectedSection = section)
+                },
+                text = {
+                    NormalText(text = stringResource(section.stringId))
+                }
+            )
+        }
     }
-}
-
-@Preview
-@Composable
-private fun SearchViewPreview() {
-    SearchView()
 }

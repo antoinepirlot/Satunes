@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.models.search.SearchSection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -210,5 +211,11 @@ class SearchViewModel : ViewModel() {
             }
         }
         dataViewModel.loadMediaImplList(list = mediaImplSet)
+    }
+
+    fun selectSection(selectedSection: SearchSection) {
+        _uiState.update { currentState: SearchUiState ->
+            currentState.copy(selectedSection = selectedSection)
+        }
     }
 }

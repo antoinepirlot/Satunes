@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
@@ -121,8 +122,11 @@ internal fun NavGraphBuilder.mediaRoutes(
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             var artist: Artist? by rememberSaveable { mutableStateOf(value = null) }
 
-            LaunchedEffect(key1 = Unit) {
-                artist = dataViewModel.getArtist(id = artistId)
+            LaunchedEffect(key1 = dataUiState.isFetching) {
+                dataViewModel.getArtist(
+                    id = artistId,
+                    onFetched = { fetchedArtist: SubsonicArtist -> artist = fetchedArtist }
+                )
             }
 
             if (dataUiState.isFetching)

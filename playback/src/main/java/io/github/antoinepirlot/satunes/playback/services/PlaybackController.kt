@@ -194,20 +194,12 @@ internal class PlaybackController private constructor(
                 if (listener != null && listener != this._instance?.listener) {
                     _logger?.info("Update listener")
 
-                    while (!isInitialized()) {
-                        _logger?.info("Waiting")
+                    _logger?.info("Waiting")
+                    while (!isInitialized());
+                    _logger?.info("PlaybackListener initialized")
                         // Wait it is initializing
-                    }
-                    val wasPlaying: Boolean = _instance!!.isPlaying
-                    if (_instance!!.isPlaying) {
-                        _instance!!.pause()
-                    }
                     _instance!!.mediaController!!.removeListener(_instance!!.listener)
                     _instance!!.mediaController!!.addListener(listener)
-                    _instance!!.mediaController!!.prepare()
-                    if (wasPlaying) {
-                        _instance!!.play()
-                    }
                 }
             }
 

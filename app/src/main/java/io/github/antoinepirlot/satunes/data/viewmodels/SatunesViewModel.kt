@@ -44,6 +44,7 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -831,6 +832,12 @@ class SatunesViewModel : ViewModel() {
                 currentState.copy(mode = SatunesModes.ONLINE)
             }
 // TODO        subsonicViewModel.removeOnlineMusic()
+        }
+    }
+
+    fun updateCurrentMediaImpl(media: Media?) {
+        _uiState.update { currentState: SatunesUiState ->
+            currentState.copy(currentMedia = media)
         }
     }
 }

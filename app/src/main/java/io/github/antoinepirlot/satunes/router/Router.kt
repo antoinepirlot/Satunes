@@ -132,6 +132,7 @@ internal fun Router(
             navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                satunesViewModel.updateCurrentMediaImpl(media = null)
                 navigationViewModel.resetCurrentMediaImpl()
                 navigationViewModel.resetCurrentDestination()
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -141,6 +142,9 @@ internal fun Router(
                     navigationViewModel = navigationViewModel,
                     navigationUiState = navigationUiState
                 )
+            },
+            onMediaOpen = {
+                satunesViewModel.updateCurrentMediaImpl(media = it)
             }
         )
         searchRoutes(

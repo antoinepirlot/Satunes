@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.Intent
 import android.os.Environment
-import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.Player
@@ -87,7 +86,6 @@ class PlaybackService : MediaSessionService() {
 
     private lateinit var _exoPlayer: ExoPlayer
 
-    @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
         Logger.DOCUMENTS_PATH =

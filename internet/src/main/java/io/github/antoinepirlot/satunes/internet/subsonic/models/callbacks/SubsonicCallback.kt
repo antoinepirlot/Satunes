@@ -97,8 +97,7 @@ internal abstract class SubsonicCallback<T>(
     }
 
     open fun processData(): Boolean {
-        return if (this.subsonicResponse == null) false
-        else if (this.subsonicResponse!!.isError()) {
+        return if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
             this.onError?.invoke(this.subsonicResponse!!.error)
             false
         } else true

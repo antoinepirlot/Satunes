@@ -29,8 +29,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
@@ -44,10 +46,21 @@ internal fun ArtistView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     artist: Artist,
 ) {
 
     LaunchedEffect(key1 = Unit) {
+        for (album: Album in artist.getAlbumSet()) {
+            if (album.isSubsonic()) {
+                album as SubsonicAlbum
+                subsonicViewModel.getAlbum(
+                    albumId = album.subsonicId,
+                    onDataRetrieved = { album.update(album = it) },
+                    onFinished = { /*TODO*/ }
+                )
+            }
+        }
         dataViewModel.loadMediaImplList(list = artist.musicCollection)
     }
 

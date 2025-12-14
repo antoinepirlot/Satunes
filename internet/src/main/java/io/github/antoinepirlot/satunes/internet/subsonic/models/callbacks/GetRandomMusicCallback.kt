@@ -35,20 +35,28 @@ import okhttp3.Response
  */
 internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    private val onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+    onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback(
+) : SubsonicCallback<Collection<SubsonicMusic>>(
     subsonicApiRequester = subsonicApiRequester,
+    onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
     onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        this.onDataRetrieved(this.subsonicResponse!!.toMusics(subsonicApiRequester = subsonicApiRequester))
+
         this.onSucceed?.invoke()
         this.onFinished?.invoke()
+    }
+
+    override fun processData(): Boolean {
+        if (!super.processData()) return false
+        if (this.subsonicResponse == null) return false
+        this.onDataRetrieved(this.subsonicResponse!!.toMusics(subsonicApiRequester = subsonicApiRequester))
+        return true
     }
 }

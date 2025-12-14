@@ -29,16 +29,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -93,7 +93,7 @@ class SubsonicViewModel : ViewModel() {
         onFinished: (Boolean) -> Unit
     ) {
         val context: Context = MainActivity.instance.applicationContext
-        CoroutineScope(Dispatchers.IO).launch {
+        runIOThread {
             try {
                 SettingsManager.updateSubsonicUrl(
                     context = context,
@@ -114,7 +114,7 @@ class SubsonicViewModel : ViewModel() {
                 this@SubsonicViewModel.hasBeenUpdated = false
                 if (!user.isFilled()) {
                     onFinished(false)
-                    return@launch
+                    return@runIOThread
                 }
                 _apiRequester.ping(
                     onSucceed = {
@@ -151,7 +151,7 @@ class SubsonicViewModel : ViewModel() {
      * Get random song from API
      */
     fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
-        CoroutineScope(context = Dispatchers.IO).launch {
+        runIOThread {
             _apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
         }
     }
@@ -166,11 +166,21 @@ class SubsonicViewModel : ViewModel() {
         onFinished: () -> Unit,
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
     ) {
-        CoroutineScope(context = Dispatchers.IO).launch {
+        runIOThread {
             _apiRequester.search(
                 query = query,
                 onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved
+            )
+        }
+    }
+
+    fun getAlbum(albumId: Long, onDataRetrieved: (SubsonicAlbum) -> Unit, onFinished: () -> Unit) {
+        runIOThread {
+            _apiRequester.getAlbum(
+                albumId = albumId,
+                onDataRetrieved = onDataRetrieved,
+                onFinished = onFinished
             )
         }
     }

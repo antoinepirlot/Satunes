@@ -24,12 +24,14 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
@@ -117,7 +119,7 @@ class SubsonicApiRequester() {
      */
     private fun get(
         url: String,
-        resCallback: SubsonicCallback,
+        resCallback: SubsonicCallback<*>,
     ) {
         val client = OkHttpClient()
         val req: Request = Request.Builder()
@@ -195,21 +197,36 @@ class SubsonicApiRequester() {
     /**
      * Get artist from Subsonic
      *
-     * @param id the id of artist located on the server
+     * @param artistId the id of artist located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
     fun getArtist(
-        id: Long,
+        artistId: Long,
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit
     ) {
-        if (id < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
+        if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(
             url = getCommandUrl(
                 command = "getArtist",
-                parameters = arrayOf("id=$id")
+                parameters = arrayOf("id=$artistId")
             ),
             resCallback = GetArtistCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    fun getAlbum(albumId: Long, onDataRetrieved: (SubsonicAlbum) -> Unit, onFinished: () -> Unit) {
+        if (albumId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
+        get(
+            url = getCommandUrl(
+                command = "getArtist",
+                parameters = arrayOf("id=$albumId")
+            ),
+            resCallback = GetAlbumCallback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved

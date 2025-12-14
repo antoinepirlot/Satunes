@@ -39,21 +39,28 @@ internal class PingCallback(
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback(
+) : SubsonicCallback<Unit>(
     subsonicApiRequester = subsonicApiRequester,
+    onDataRetrieved = {},
     onSucceed = onSucceed,
     onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
+
+        this.onSucceed?.invoke()
+        this.onFinished?.invoke()
+    }
+
+    override fun processData(): Boolean {
+        if (!super.processData()) return false
         val response: SubsonicResponse = this.subsonicResponse!!
         SubsonicApiRequester.status = response.status
         subsonicApiRequester.updateVersion(version = response.version)
         SubsonicApiRequester.type = response.type
         SubsonicApiRequester.serverVersion = response.serverVersion
         SubsonicApiRequester.openSubsonic = response.openSubsonic
-        this.onSucceed?.invoke()
-        this.onFinished?.invoke()
+        return true
     }
 }

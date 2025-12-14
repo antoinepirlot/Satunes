@@ -45,8 +45,9 @@ import java.io.InputStream
  * @author Antoine Pirlot 03/09/2025
  */
 
-internal abstract class SubsonicCallback(
+internal abstract class SubsonicCallback<T>(
     protected val subsonicApiRequester: SubsonicApiRequester,
+    protected val onDataRetrieved: (T) -> Unit,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
     protected val onError: ((Error?) -> Unit)?,
     protected val onFinished: (() -> Unit)?
@@ -93,5 +94,13 @@ internal abstract class SubsonicCallback(
         } finally {
             SubsonicCall.executionFinished(subsonicCallback = this)
         }
+    }
+
+    open fun processData(): Boolean {
+        return if (this.subsonicResponse == null) false
+        else if (this.subsonicResponse!!.isError()) {
+            this.onError?.invoke(this.subsonicResponse!!.error)
+            false
+        } else true
     }
 }

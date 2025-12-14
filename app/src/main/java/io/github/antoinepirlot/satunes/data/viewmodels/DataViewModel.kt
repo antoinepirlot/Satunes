@@ -156,7 +156,7 @@ class DataViewModel : ViewModel() {
     private fun fetchArtist(subsonicId: Long, onFetched: (SubsonicArtist) -> Unit) {
         this.startFetching()
         this._apiRequester.getArtist(
-            id = subsonicId,
+            artistId = subsonicId,
             onDataRetrieved = { onFetched(DataManager.addArtist(artist = it)) },
             onFinished = { this.stopFetching() }
         )

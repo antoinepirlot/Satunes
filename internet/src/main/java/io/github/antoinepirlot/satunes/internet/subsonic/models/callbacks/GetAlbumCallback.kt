@@ -20,25 +20,22 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 13/12/2025
+ * @author Antoine Pirlot 14/12/2025
  */
-internal class Search3Callback(
+internal class GetAlbumCallback(
     subsonicApiRequester: SubsonicApiRequester,
+    onDataRetrieved: (SubsonicAlbum) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
-    onDataRetrieved: (Collection<SubsonicMedia>) -> Unit,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback<Collection<SubsonicMedia>>(
+) : SubsonicCallback<SubsonicAlbum>(
     subsonicApiRequester = subsonicApiRequester,
     onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
@@ -54,19 +51,10 @@ internal class Search3Callback(
 
     override fun processData(): Boolean {
         if (!super.processData()) return false
-        val mediaSet: MutableSet<SubsonicMedia> = mutableSetOf()
-        this.subsonicResponse!!.search3?.apply {
-            this.artists?.forEach { artist: Artist ->
-                mediaSet.add(element = artist.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
-            }
-            this.albums?.forEach { album: Album ->
-                mediaSet.add(element = album.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
-            }
-            this.songs?.forEach { song: Song ->
-                mediaSet.add(element = song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
-            }
-        }
-        this.onDataRetrieved(mediaSet.sorted())
+        this.onDataRetrieved(
+            this.subsonicResponse!!.album!!
+                .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicAlbum
+        )
         return true
     }
 }

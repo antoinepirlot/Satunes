@@ -31,12 +31,13 @@ import okhttp3.Response
  */
 internal class GetArtistCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    private val onDataRetrieved: (SubsonicArtist) -> Unit,
+    onDataRetrieved: (SubsonicArtist) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback(
+) : SubsonicCallback<SubsonicArtist>(
     subsonicApiRequester = subsonicApiRequester,
+    onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
     onFinished = onFinished,
     onError = onError
@@ -48,8 +49,8 @@ internal class GetArtistCallback(
         this.onFinished?.invoke()
     }
 
-    private fun processData(): Boolean {
-        if (this.subsonicResponse == null) return false
+    override fun processData(): Boolean {
+        if (!super.processData()) return false
         if (this.subsonicResponse!!.artist == null) return false
         onDataRetrieved(
             this.subsonicResponse!!.artist!!

@@ -23,14 +23,13 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
  * @author Antoine Pirlot 04/09/2025
  */
 @Serializable
-internal data class Error(
+data class Error(
     val code: Int,
     val message: String
 )

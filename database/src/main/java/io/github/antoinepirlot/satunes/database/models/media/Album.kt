@@ -24,6 +24,8 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedSet
 
 /**
@@ -50,6 +52,27 @@ open class Album(
     init {
         nextId++
         artist.addAlbum(album = this)
+    }
+
+    /**
+     * Transform this [Album] to [SubsonicAlbum].
+     * After that, this [Album] can't no more be used
+     */
+    open fun update(album: SubsonicAlbum): SubsonicAlbum {
+        val newAlbum: SubsonicAlbum = SubsonicAlbum(
+            id = this.id,
+            subsonicId = album.subsonicId,
+            title = this.title,
+            artist = this.artist,
+            isCompilation = this.isCompilation,
+            year = this.year,
+        )
+        for (music: Music in this.musicSortedSet) {
+            music.updateAlbum(album = newAlbum)
+            music.artist.updateAlbum(album = newAlbum)
+        }
+        DataManager.addAlbum(album = newAlbum)
+        return newAlbum
     }
 
     override fun isAlbum(): Boolean = true

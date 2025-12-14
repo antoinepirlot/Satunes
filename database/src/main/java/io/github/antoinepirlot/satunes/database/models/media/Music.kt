@@ -50,15 +50,15 @@ open class Music(
     id: Long,
     title: String,
     displayName: String,
-    var absolutePath: String,
+    absolutePath: String,
     open val durationMs: Long = 0,
     open val size: Int = 0,
-    var cdTrackNumber: Int? = null,
+    cdTrackNumber: Int? = null,
     addedDateMs: Long,
-    var folder: Folder,
-    var artist: Artist,
-    var album: Album,
-    var genre: Genre,
+    folder: Folder,
+    artist: Artist,
+    album: Album,
+    genre: Genre,
     uri: Uri? = null,
 ) : MediaImpl(
     id = id,
@@ -70,7 +70,26 @@ open class Music(
      */
     private val _playlistsOrderMap: MutableMap<Playlist, Long> = mutableMapOf()
 
-    val relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+    var absolutePath: String = absolutePath
+        protected set
+
+    var cdTrackNumber: Int? = cdTrackNumber
+        protected set
+
+    var folder: Folder = folder
+        protected set
+
+    var artist: Artist = artist
+        protected set
+
+    var album: Album = album
+        protected set
+
+    var genre: Genre = genre
+        protected set
+
+    var relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+        protected set
 
     public override var addedDate: Date? = null
 
@@ -83,10 +102,7 @@ open class Music(
     val mediaItem: MediaItem = getMediaMetadata()
 
     init {
-        if (cdTrackNumber != null && cdTrackNumber!! < 1)
-            this.cdTrackNumber = null
-        else
-            this.cdTrackNumber = cdTrackNumber
+        this.updateCdTrackNumber(cdTrackNumber = cdTrackNumber)
         if (!this.isSubsonic())
             DataManager.addMusic(music = this)
         album.addMusic(music = this)
@@ -189,6 +205,31 @@ open class Music(
      */
     fun getOrder(playlist: Playlist): Long {
         return this._playlistsOrderMap[playlist] ?: -1
+    }
+
+    fun updateFolder(folder: Folder) {
+        this.folder = folder
+        this.absolutePath = "${folder.absolutePath}/${this.absolutePath.split("/").last()}"
+        this.relativePath = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+    }
+
+    fun updateCdTrackNumber(cdTrackNumber: Int?) {
+        if (cdTrackNumber != null && cdTrackNumber < 1)
+            this.cdTrackNumber = null
+        else
+            this.cdTrackNumber = cdTrackNumber
+    }
+
+    fun updateAlbum(album: Album) {
+        this.album = album
+    }
+
+    fun updateArtist(artist: Artist) {
+        this.artist = artist
+    }
+
+    fun updateGenre(genre: Genre) {
+        this.genre = genre
     }
 
     override fun isMusic(): Boolean = true

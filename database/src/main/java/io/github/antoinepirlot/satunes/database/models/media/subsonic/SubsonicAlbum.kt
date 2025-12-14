@@ -28,12 +28,13 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
  */
 class SubsonicAlbum(
     override var subsonicId: Long,
+    id: Long = subsonicId,
     title: String,
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
 ) : SubsonicMedia, Album(
-    id = subsonicId,
+    id = id,
     title = title,
     artist = artist,
     isCompilation = isCompilation,

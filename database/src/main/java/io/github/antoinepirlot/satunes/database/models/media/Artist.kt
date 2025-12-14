@@ -59,6 +59,11 @@ open class Artist(
         return this._albumSortedSet.contains(album)
     }
 
+    fun updateAlbum(album: Album) {
+        this._albumSortedSet.remove(element = album) //If it is equals, reference may be different
+        this._albumSortedSet.add(element = album)
+    }
+
     override fun isArtist(): Boolean = true
 
     override fun toString(): String {

@@ -293,6 +293,10 @@ object DataManager {
 
     @Synchronized
     fun addAlbum(album: SubsonicAlbum): SubsonicAlbum {
+        if (this.albumSortedMap.contains(key = album)) {
+            this.removeAlbum(album = album)
+            this.addAlbum(album = album as Album) //TODO check if it will loop or not.
+        }
         if (!subsonicAlbumsMapById.contains(key = album.subsonicId))
             this.subsonicAlbumsMapById[album.subsonicId] = album
         return subsonicAlbumsMapById[album.subsonicId]!!

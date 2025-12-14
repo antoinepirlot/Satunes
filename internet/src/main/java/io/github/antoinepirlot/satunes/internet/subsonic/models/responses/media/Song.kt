@@ -42,20 +42,20 @@ internal data class Song constructor(
     @SerialName(value = "title") val title: String,
     @SerialName(value = "album") val albumTitle: String,
     @SerialName(value = "artist") val artistTitle: String,
-    @SerialName(value = "track") val track: Int,
-    @SerialName(value = "discNumber") val discNumber: Int,
+    @SerialName(value = "track") val track: Int? = null,
+    @SerialName(value = "discNumber") val discNumber: Int? = null,
     @SerialName(value = "contentType") val contentTypeMime: String,
-    @SerialName(value = "suffix") val fileExtension: String,
+    @SerialName(value = "suffix") val fileExtension: String? = null,
     @SerialName(value = "path") val path: String,
     @SerialName(value = "duration") val durationSeconds: Long,
     @SerialName(value = "created") val addedDate: String, //TODO 2025-11-27T12:43:55.000Z like that
     @SerialName(value = "albumId") val albumId: Long,
     @SerialName(value = "artistId") val artistId: Long,
     @SerialName(value = "type") val type: String,
-    @SerialName(value = "coverArt") val coverArt: String,
+    @SerialName(value = "coverArt") val coverArt: String? = null,
     @SerialName(value = "bitrate") val bitrate: Int,
     @SerialName(value = "size") val size: Int,
-    @SerialName(value = "year") val year: Int,
+    @SerialName(value = "year") val year: Int? = null,
 ) : SubsonicData {
     /**
      * Convert this object [Song] to [SubsonicMusic] object

@@ -34,8 +34,7 @@ import kotlinx.serialization.Serializable
 data class Artist(
     @SerialName(value = "id") val id: Long,
     @SerialName(value = "name") val title: String,
-    @SerialName(value = "albumCount") val albumCount: Int,
-    @SerialName(value = "coverArt") val coverArt: String
+    @SerialName(value = "coverArt") val coverArt: String? = null
 ) : SubsonicData {
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
         return (DataManager.getSubsonicArtist(id = id) ?: SubsonicArtist(

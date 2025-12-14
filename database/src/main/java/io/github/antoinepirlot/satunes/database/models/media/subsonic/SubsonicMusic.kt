@@ -20,6 +20,8 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -86,6 +88,11 @@ class SubsonicMusic(
         this.album = new.album
         this.genre = new.genre
         this.uri = new.uri
+    }
+
+    override fun getAlbumArtwork(context: Context): Bitmap {
+        //TODO
+        return this.getEmptyAlbumArtwork(context = context).applyShape()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -127,7 +127,7 @@ open class Music(
             .build()
     }
 
-    fun getAlbumArtwork(context: Context): Bitmap {
+    open fun getAlbumArtwork(context: Context): Bitmap {
         var bitmap: Bitmap? = try {
             val mediaMetadataRetriever = MediaMetadataRetriever()
             mediaMetadataRetriever.setDataSource(context, uri)
@@ -140,12 +140,23 @@ open class Music(
             null
         }
         if (bitmap == null)
-            bitmap = AppCompatResources.getDrawable(
-                context,
-                R.mipmap.empty_album_artwork_foreground
-            )!!.toBitmap()
-        return if (SettingsManager.artworkCircleShape.value) bitmap.toCircularBitmap() else bitmap
+            bitmap = getEmptyAlbumArtwork(context = context)
+        return bitmap.applyShape()
     }
+
+    /**
+     * Apply circle shape if user enabled it.
+     *
+     * @return the shaped [Bitmap]
+     */
+    protected fun Bitmap.applyShape(): Bitmap {
+        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
+    }
+
+    protected fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
+        context,
+        R.mipmap.empty_album_artwork_foreground
+    )!!.toBitmap()
 
     /**
      * Link this [Music] to [Playlist] with its order in the [Playlist].

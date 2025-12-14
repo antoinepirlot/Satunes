@@ -124,22 +124,19 @@ object DataManager {
     }
 
     fun addMusic(music: Music): Music {
-        return if (music.isSubsonic()) {
-            music as SubsonicMusic
-            if (!this.subsonicMusicsMapById.contains(key = music.id)) {
-                this.musicSortedSet.add(element = music)
-                this.subsonicMusicsMapById[music.id] = music
-                this.musicMapByAbsolutePath[music.absolutePath] = music
-            }
-            getMusic(id = music.id)
-        } else {
-            if (!this.musicsMapById.contains(key = music.id)) {
-                this.musicSortedSet.add(element = music)
-                this.musicsMapById[music.id] = music
-                this.musicMapByAbsolutePath[music.absolutePath] = music
-            }
-            getMusic(id = music.id)
+        if (!this.musicsMapById.contains(key = music.id)) {
+            this.musicSortedSet.add(element = music)
+            this.musicsMapById[music.id] = music
+            this.musicMapByAbsolutePath[music.absolutePath] = music
         }
+        return this.musicsMapById[music.id]!!
+    }
+
+    fun addMusic(music: SubsonicMusic): SubsonicMusic {
+        if (!this.subsonicMusicsMapById.contains(key = music.subsonicId))
+            this.subsonicMusicsMapById[music.subsonicId] = music
+        return this.subsonicMusicsMapById[music.subsonicId]!!
+
     }
 
     /**
@@ -205,10 +202,15 @@ object DataManager {
     fun addArtist(artist: Artist): Artist {
         if (!artistMap.contains(key = artist)) {
             artistMap[artist] = artist
-            if (artist.isSubsonic()) subsonicArtistsMapById[artist.id] = artist as SubsonicArtist
-            else artistsMapById[artist.id] = artist
+            artistsMapById[artist.id] = artist
         }
         return this.artistMap[artist]!!
+    }
+
+    fun addArtist(artist: SubsonicArtist): SubsonicArtist {
+        if (!subsonicArtistsMapById.contains(key = artist.subsonicId))
+            subsonicArtistsMapById[artist.subsonicId] = artist
+        return subsonicArtistsMapById[artist.subsonicId]!!
     }
 
     fun removeArtist(artist: Artist) {
@@ -243,10 +245,15 @@ object DataManager {
     fun addAlbum(album: Album): Album {
         if (!this.albumSortedMap.contains(key = album)) {
             this.albumSortedMap[album] = album
-            if (album.isSubsonic()) this.subsonicAlbumsMapById[album.id] = album as SubsonicAlbum
-            else this.albumsMapById[album.id] = album
+            this.albumsMapById[album.id] = album
         }
         return this.albumSortedMap[album]!!
+    }
+
+    fun addAlbum(album: SubsonicAlbum): SubsonicAlbum {
+        if (!subsonicAlbumsMapById.contains(key = album.subsonicId))
+            this.subsonicAlbumsMapById[album.subsonicId] = album
+        return subsonicAlbumsMapById[album.subsonicId]!!
     }
 
     fun removeAlbum(album: Album) {
@@ -271,18 +278,16 @@ object DataManager {
     }
 
     fun addFolder(folder: Folder) {
-        if (folder.isSubsonic()) {
-            if (!folderSortedSet.contains(folder)) {
-                this.folderSortedSet.add(element = folder)
-                this.subsonicFoldersMapById[folder.id] = folder as SubsonicFolder
-            }
-        } else {
-            if (!folderSortedSet.contains(folder)) {
-                this.folderMapById[folder.id] = folder
-                this.folderSortedSet.add(element = folder)
-            }
+        if (!folderSortedSet.contains(folder)) {
+            this.folderMapById[folder.id] = folder
+            this.folderSortedSet.add(element = folder)
         }
+    }
 
+    fun addFolder(folder: SubsonicFolder): SubsonicFolder {
+        if (!subsonicFoldersMapById.contains(folder.subsonicId))
+            this.subsonicFoldersMapById[folder.subsonicId] = folder
+        return this.subsonicFoldersMapById[folder.subsonicId]!!
     }
 
     /**
@@ -314,11 +319,16 @@ object DataManager {
     fun addGenre(genre: Genre): Genre {
         if (!this.genreMap.contains(key = genre.title)) {
             genreMap[genre.title] = genre
-            if (genre.isSubsonic()) this.subsonicGenreMapById[genre.id] = genre as SubsonicGenre
-            else genresMapById[genre.id] = genre
+            genresMapById[genre.id] = genre
         }
         //You can have multiple same genre's name but different id, but it's the same genre.
         return genreMap[genre.title]!!
+    }
+
+    fun addGenre(genre: SubsonicGenre): SubsonicGenre {
+        if (!this.subsonicGenreMapById.contains(key = genre.subsonicId))
+            this.subsonicGenreMapById[genre.subsonicId] = genre
+        return this.subsonicGenreMapById[genre.subsonicId]!!
     }
 
     fun removeGenre(genre: Genre) {

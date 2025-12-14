@@ -60,6 +60,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
@@ -89,6 +90,9 @@ class DataViewModel : ViewModel() {
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
     private val _isLoaded: MutableState<Boolean> = LocalDataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
+
+    private val _apiRequester: SubsonicApiRequester
+        get() = SubsonicApiRequester()
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
@@ -139,7 +143,36 @@ class DataViewModel : ViewModel() {
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
-    fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
+    fun getArtist(id: Long): Artist? {
+        val artist: Artist? = DataManager.getArtist(id = id)
+        if (artist == null) this.fetchArtist(subsonicId = id)
+        return artist
+    }
+
+    /**
+     * Fetch artist from Subsonic API
+     */
+    private fun fetchArtist(subsonicId: Long) {
+        this.startFetching()
+        this._apiRequester.getArtist(
+            id = subsonicId,
+            onFinished = { this.stopFetching() },
+            onDataRetrieved = { DataManager.addArtist(artist = it) }
+        )
+    }
+
+    private fun startFetching() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(isFetching = true)
+        }
+    }
+
+    private fun stopFetching() {
+        _uiState.update { currentState: DataUiState ->
+            currentState.copy(isFetching = false)
+        }
+    }
+
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)

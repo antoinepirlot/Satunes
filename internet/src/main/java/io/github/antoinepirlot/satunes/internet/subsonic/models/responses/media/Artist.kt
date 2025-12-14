@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -31,18 +32,28 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 13/12/2025
  */
 @Serializable
-data class Artist(
+internal data class Artist(
     @SerialName(value = "id") val id: Long,
     @SerialName(value = "name") val title: String,
-    @SerialName(value = "coverArt") val coverArt: String? = null
+    @SerialName(value = "coverArt") val coverArt: String? = null,
+    @SerialName(value = "albumCount") val albumCount: Int? = null,
+    @SerialName(value = "album") val albumCollection: Collection<Album>? = null
 ) : SubsonicData {
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
-        return (DataManager.getSubsonicArtist(id = id) ?: DataManager.addArtist(
-            artist = SubsonicArtist(
-            subsonicId = this.id,
-            title = this.title
+        val artist: SubsonicArtist =
+            DataManager.getSubsonicArtist(id = id) ?: DataManager.addArtist(
+                artist = SubsonicArtist(
+                    subsonicId = this.id,
+                    title = this.title
+                )
             )
-        )) as SubsonicMedia //TODO use separated artist list in datamanger
+        albumCollection?.forEach { album: Album ->
+            artist.addAlbum(
+                album = album.toSubsonicMedia(
+                    subsonicApiRequester = subsonicApiRequester
+                ) as SubsonicAlbum
+            )
+        }
+        return artist
     }
-
 }

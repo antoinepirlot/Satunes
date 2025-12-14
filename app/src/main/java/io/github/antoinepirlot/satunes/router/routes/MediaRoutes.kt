@@ -22,9 +22,14 @@ package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -35,6 +40,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
@@ -104,16 +110,23 @@ internal fun NavGraphBuilder.mediaRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
+        val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val artist: Artist = dataViewModel.getArtist(id = artistId)
-            LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = artist)
+            val artist: Artist? = dataViewModel.getArtist(id = artistId)
+            if (dataUiState.isFetching)
+                LoadingView()
+            else if (artist == null)
+                EmptyView(text = stringResource(R.string.error_while_fetching_text))
+            else {
+                LaunchedEffect(key1 = Unit) {
+                    navigationViewModel.setCurrentMediaImpl(mediaImpl = artist)
+                }
+                ArtistView(artist = artist)
             }
-            ArtistView(artist = artist)
         }
     }
 

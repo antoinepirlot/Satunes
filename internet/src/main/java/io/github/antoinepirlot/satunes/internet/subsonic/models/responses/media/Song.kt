@@ -65,7 +65,7 @@ internal data class Song constructor(
             command = "stream",
             parameters = arrayOf("id=$id")
         )
-        return (DataManager.getSubsonicMusic(id = id) ?: DataManager.addMusic(
+        return DataManager.getSubsonicMusic(id = id) ?: DataManager.addMusic(
             music = SubsonicMusic(
             subsonicId = this.id,
             title = this.title,
@@ -86,7 +86,7 @@ internal data class Song constructor(
             genre = getGenre(),
             uri = url.toUri(),
             )
-        )) as SubsonicMedia
+        )
     }
 
     override fun equals(other: Any?): Boolean {

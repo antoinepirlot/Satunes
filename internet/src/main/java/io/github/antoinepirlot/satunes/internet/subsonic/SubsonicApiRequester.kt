@@ -24,10 +24,13 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
@@ -39,9 +42,7 @@ import okhttp3.Request
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-class SubsonicApiRequester(
-    private val user: User,
-) {
+class SubsonicApiRequester() {
     companion object {
         const val SONG_MEDIA_TYPE = "song"
         private const val CLIENT_NAME = "Satunes"
@@ -53,8 +54,15 @@ class SubsonicApiRequester(
         internal var openSubsonic: Boolean? = null
     }
 
+    private val _user: User = User(
+        url = SettingsManager.subsonicUrl,
+        username = SettingsManager.subsonicUsername,
+        password = SettingsManager.subsonicPassword,
+        salt = SettingsManager.subsonicSalt
+    )
+
     val inUrlMandatoryParams: String
-        get() = "u=${user.username}&t=${user.getMd5Password()}&s=${user.salt}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
+        get() = "u=${_user.username}&t=${_user.getMd5Password()}&s=${_user.salt}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
 
     /**
      * Returns the url as https://example.org/rest/[command]?[inUrlMandatoryParams]&[parameters]
@@ -78,14 +86,14 @@ class SubsonicApiRequester(
     }
 
     private fun getSubsonicCommandUrl(command: String, vararg parameters: String): String {
-        var toReturn = "${user.url}/rest/$command?$inUrlMandatoryParams"
+        var toReturn = "${_user.url}/rest/$command?$inUrlMandatoryParams"
         for (parameter: String in parameters)
             toReturn += "&$parameter"
         return toReturn
     }
 
     private fun getFunkwhaleCommandUrl(command: String, vararg parameters: String): String {
-        return "${user.url}/api/v1/$command"
+        return "${_user.url}/api/v1/$command"
     }
 
     private fun getBody(vararg parameters: String) {
@@ -177,6 +185,31 @@ class SubsonicApiRequester(
                 parameters = arrayOf("query=$query")
             ),
             resCallback = Search3Callback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    /**
+     * Get artist from Subsonic
+     *
+     * @param id the id of artist located on the server
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     */
+    fun getArtist(
+        id: Long,
+        onFinished: (() -> Unit)? = null,
+        onDataRetrieved: (SubsonicArtist) -> Unit
+    ) {
+        if (id < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
+        get(
+            url = getCommandUrl(
+                command = "getArtist",
+                parameters = arrayOf("id=$id")
+            ),
+            resCallback = GetArtistCallback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved

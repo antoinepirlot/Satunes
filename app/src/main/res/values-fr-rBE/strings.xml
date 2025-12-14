@@ -155,4 +155,5 @@
     <string name="salt_placeholder">Ce que tu veux</string>
     <string name="subsonic_section_text">Sur le cloud</string>
     <string name="local_section_text">Sur l\'appareil</string>
+    <string name="error_while_fetching_text">Une erreur est survenue lors de la récupération des données.</string>
 </resources>

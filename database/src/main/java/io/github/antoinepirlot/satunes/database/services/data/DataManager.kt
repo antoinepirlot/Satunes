@@ -193,7 +193,7 @@ object DataManager {
         return this.subsonicArtistsMapById.values
     }
 
-    fun getSubsonicArtist(id: Long): Artist? {
+    fun getSubsonicArtist(id: Long): SubsonicArtist? {
         return this.subsonicArtistsMapById[id]
     }
 
@@ -227,7 +227,7 @@ object DataManager {
         else null
     }
 
-    fun getSubsonicAlbum(id: Long): Album? = this.subsonicAlbumsMapById[id]
+    fun getSubsonicAlbum(id: Long): SubsonicAlbum? = this.subsonicAlbumsMapById[id]
 
     fun getAlbumSet(): Set<Album> {
         return this.albumSortedMap.keys

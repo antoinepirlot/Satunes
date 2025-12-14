@@ -44,10 +44,6 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicViewModel : ViewModel() {
-    companion object {
-
-    }
-
     var hasBeenUpdated: Boolean by mutableStateOf(false)
         private set
 
@@ -58,8 +54,8 @@ class SubsonicViewModel : ViewModel() {
         salt = SettingsManager.subsonicSalt
     )
 
-    val apiRequester: SubsonicApiRequester
-        get() = SubsonicApiRequester(user = user)
+    private val _apiRequester: SubsonicApiRequester
+        get() = SubsonicApiRequester()
 
     fun updateSubsonicUrl(url: String) {
         this.user.url = url
@@ -120,7 +116,7 @@ class SubsonicViewModel : ViewModel() {
                     onFinished(false)
                     return@launch
                 }
-                apiRequester.ping(
+                _apiRequester.ping(
                     onSucceed = {
                         onFinished(true)
 //                        subsonicApiRequester.loadAll()
@@ -156,7 +152,7 @@ class SubsonicViewModel : ViewModel() {
      */
     fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
         CoroutineScope(context = Dispatchers.IO).launch {
-            apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
+            _apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
         }
     }
 
@@ -171,7 +167,7 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
     ) {
         CoroutineScope(context = Dispatchers.IO).launch {
-            apiRequester.search(
+            _apiRequester.search(
                 query = query,
                 onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved

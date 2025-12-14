@@ -182,4 +182,5 @@
     <string name="salt_placeholder">Anything you want</string>
     <string name="subsonic_section_text">on Cloud</string>
     <string name="local_section_text">On device</string>
+    <string name="error_while_fetching_text">An error occurred while fetching data.</string>
 </resources>

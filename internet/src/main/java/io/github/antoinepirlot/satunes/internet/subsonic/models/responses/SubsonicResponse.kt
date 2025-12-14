@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -44,6 +45,7 @@ internal data class SubsonicResponse(
     @SerialName(value = "error") val error: Error? = null,
     @SerialName(value = "randomSongs") val randomSongs: RandomSongs? = null,
     @SerialName(value = "searchResult3") val search3: Search3? = null,
+    @SerialName(value = "artist") val artist: Artist? = null
 ) {
 
     companion object {

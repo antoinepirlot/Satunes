@@ -89,7 +89,7 @@ class SearchViewModel : ViewModel() {
 
     fun updateQuery(value: String) {
         query = value
-        if(_uiState.value.selectedSection.isLocal())
+        if (_uiState.value.selectedSection.isLocal())
             this.requestSearch()
     }
 
@@ -152,26 +152,26 @@ class SearchViewModel : ViewModel() {
         subsonicViewModel: SubsonicViewModel,
         selectedSearchChips: Collection<SearchChips>,
     ) {
+        if (this.query.isBlank()) {
+            dataViewModel.loadMediaImplList(list = sortedSetOf())
+            this@SearchViewModel.finishSearch()
+            return
+        }
         searchJob?.cancel()
         searchJob = searchCoroutine.launch {
             _uiState.update { currentState: SearchUiState ->
                 currentState.copy(isSearching = true)
             }
-            if (this@SearchViewModel.query.isNotBlank())
-                when (selectedSection) {
-                    SearchSection.LOCAL -> localSearch(
-                        dataViewModel = dataViewModel,
-                        selectedSearchChips = selectedSearchChips
-                    )
+            when (selectedSection) {
+                SearchSection.LOCAL -> localSearch(
+                    dataViewModel = dataViewModel,
+                    selectedSearchChips = selectedSearchChips
+                )
 
-                    SearchSection.SUBSONIC -> subsonicSearch(
-                        subsonicViewModel = subsonicViewModel,
-                        dataViewModel = dataViewModel
-                    )
-                }
-            else {
-                dataViewModel.loadMediaImplList(list = sortedSetOf())
-                this@SearchViewModel.finishSearch()
+                SearchSection.SUBSONIC -> subsonicSearch(
+                    subsonicViewModel = subsonicViewModel,
+                    dataViewModel = dataViewModel
+                )
             }
         }
     }

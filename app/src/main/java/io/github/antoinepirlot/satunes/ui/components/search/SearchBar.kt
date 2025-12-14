@@ -40,15 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.search.SearchSection
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 /**
  * @author Antoine Pirlot 13/12/2025
@@ -58,41 +58,22 @@ import kotlinx.coroutines.launch
 fun SearchBar(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
-
     val selectedSection: SearchSection = searchUiState.selectedSection
-    val isSearchRequested: Boolean = searchViewModel.isSearchRequested
     val query: String = searchViewModel.query
-    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
+    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
+    val focusRequester: FocusRequester = remember { FocusRequester() }
     val searchCoroutine: CoroutineScope = rememberCoroutineScope()
 
-    var searchJob: Job? = null
-    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size, key3 = isSearchRequested) {
-        if (selectedSection != SearchSection.LOCAL && !isSearchRequested) return@LaunchedEffect
+    HandleUiChange(searchCoroutine = searchCoroutine)
 
-        if (searchJob != null && searchJob!!.isActive)
-            searchJob!!.cancel()
+    HandleQueryChange(searchCoroutine = searchCoroutine)
 
-        searchJob = searchCoroutine.launch {
-            searchViewModel.search(
-                selectedSection = selectedSection,
-                dataViewModel = dataViewModel,
-                subsonicViewModel = subsonicViewModel,
-                selectedSearchChips = selectedSearchChips,
-            )
-        }
-    }
-
-    val focusRequester: FocusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         // Request focus after composable becomes visible
         focusRequester.requestFocus()
     }
-
-    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
 
     SearchBar(
         modifier = modifier.focusRequester(focusRequester),
@@ -103,7 +84,7 @@ fun SearchBar(
                 onQueryChange = { searchViewModel.updateQuery(value = it) },
                 onSearch = {
                     keyboard?.hide()
-                    if (selectedSection != SearchSection.LOCAL)
+                    if (selectedSection.isCloud())
                         searchViewModel.requestSearch()
                 },
                 placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
@@ -116,4 +97,59 @@ fun SearchBar(
         windowInsets = WindowInsets(top = 0.dp), //Remove top padding of search bar introduced in API 35 (Android 15 Vanilla Ice Cream)
         content = { /* Content if expanded is true but never used */ }
     )
+}
+
+@Composable
+fun HandleQueryChange(
+    searchViewModel: SearchViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
+    searchCoroutine: CoroutineScope,
+) {
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
+    val isSearchRequested: Boolean = searchViewModel.isSearchRequested
+    val selectedSection: SearchSection = searchUiState.selectedSection
+    val query: String = searchViewModel.query
+
+    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size, key3 = isSearchRequested) {
+        if (!isSearchRequested) return@LaunchedEffect
+        searchViewModel.search(
+            searchCoroutine = searchCoroutine,
+            selectedSection = selectedSection,
+            dataViewModel = dataViewModel,
+            subsonicViewModel = subsonicViewModel,
+            selectedSearchChips = selectedSearchChips,
+        )
+    }
+}
+
+@Composable
+private fun HandleUiChange(
+    satunesViewModel: SatunesViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
+    searchCoroutine: CoroutineScope,
+) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
+    val selectedSection: SearchSection = searchUiState.selectedSection
+
+    LaunchedEffect(key1 = satunesUiState.mode) {
+        if (satunesUiState.mode.isOffline())
+            searchViewModel.selectSection(section = SearchSection.LOCAL)
+    }
+
+
+    LaunchedEffect(key1 = searchUiState.selectedSection) {
+        searchViewModel.search(
+            searchCoroutine = searchCoroutine,
+            selectedSection = selectedSection,
+            dataViewModel = dataViewModel,
+            subsonicViewModel = subsonicViewModel,
+            selectedSearchChips = selectedSearchChips,
+        )
+    }
 }

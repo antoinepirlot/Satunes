@@ -805,30 +805,28 @@ class SatunesViewModel : ViewModel() {
         subsonicViewModel: SubsonicViewModel
     ) {
         if (_uiState.value.mode == SatunesModes.ONLINE)
-            turnOffCloud(subsonicViewModel = subsonicViewModel)
+            turnOffCloud()
         else
             subsonicViewModel.connect(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
                 onFinished = { isConnected: Boolean ->
                     if (isConnected)
-                        turnOnCloud(subsonicViewModel = subsonicViewModel)
+                        turnOnCloud()
                 }
             )
     }
 
-    fun turnOffCloud(subsonicViewModel: SubsonicViewModel) {
+    fun turnOffCloud() {
         if (_uiState.value.mode == SatunesModes.ONLINE) {
-//        NavBarSection.MUSICS.isEnabled.value = true
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(mode = SatunesModes.OFFLINE)
             }
         }
     }
 
-    fun turnOnCloud(subsonicViewModel: SubsonicViewModel) {
+    fun turnOnCloud() {
         if (_uiState.value.mode == SatunesModes.OFFLINE) {
-//        NavBarSection.MUSICS.isEnabled.value = false
             _uiState.update { currentState: SatunesUiState ->
                 currentState.copy(mode = SatunesModes.ONLINE)
             }

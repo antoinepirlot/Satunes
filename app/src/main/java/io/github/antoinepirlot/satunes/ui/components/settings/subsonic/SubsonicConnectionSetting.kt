@@ -158,9 +158,9 @@ private fun Buttons(
                     snackbarHostState = snackbarHostState,
                     onFinished = { isConnected: Boolean ->
                         if (isConnected)
-                            satunesViewModel.turnOnCloud(subsonicViewModel = subsonicViewModel)
+                            satunesViewModel.turnOnCloud()
                         else
-                            satunesViewModel.turnOffCloud(subsonicViewModel = subsonicViewModel)
+                            satunesViewModel.turnOffCloud()
                         isLoading = false
                     }
                 )

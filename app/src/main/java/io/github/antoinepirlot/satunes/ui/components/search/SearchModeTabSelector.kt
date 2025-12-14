@@ -54,7 +54,7 @@ fun SearchModeTabSelector(
             Tab(
                 selected = searchUiState.selectedSection.ordinal == index,
                 onClick = {
-                    searchViewModel.selectSection(selectedSection = section)
+                    searchViewModel.selectSection(section = section)
                 },
                 text = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

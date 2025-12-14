@@ -31,7 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.ui.components.search.SearchBar
 import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelector
@@ -44,8 +46,10 @@ import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelecto
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel()
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
 
     Column(
@@ -54,7 +58,8 @@ internal fun SearchView(
         verticalArrangement = Arrangement.Top,
     ) {
         SearchBar()
-        SearchModeTabSelector()
+        if(satunesUiState.mode.isOnline())
+            SearchModeTabSelector()
         searchUiState.selectedSection.composable()
     }
 }

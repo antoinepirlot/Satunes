@@ -30,5 +30,8 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
  */
 enum class SatunesModes(val icon: JetpackLibsIcons) {
     OFFLINE(icon = JetpackLibsIcons.CLOUD_OFF_ICON),
-    ONLINE(icon = JetpackLibsIcons.CLOUD_ON_ICON)
+    ONLINE(icon = JetpackLibsIcons.CLOUD_ON_ICON);
+
+    fun isOffline(): Boolean = this == OFFLINE
+    fun isOnline(): Boolean = this == ONLINE
 }

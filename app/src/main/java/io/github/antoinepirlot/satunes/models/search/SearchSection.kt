@@ -43,5 +43,8 @@ enum class SearchSection(
     SUBSONIC(
         stringId = R.string.subsonic_section_text,
         icon = JetpackLibsIcons.CLOUD_ON_ICON,
-        composable = { SubsonicSearchSection() })
+        composable = { SubsonicSearchSection() });
+
+    fun isCloud(): Boolean = this == SUBSONIC
+    fun isLocal(): Boolean = this == LOCAL
 }

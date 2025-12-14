@@ -42,10 +42,13 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMe
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
 import io.github.antoinepirlot.satunes.models.search.SearchSection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.SortedSet
 
@@ -70,6 +73,8 @@ class SearchViewModel : ViewModel() {
 
     var query: String by mutableStateOf("")
 
+    var searchJob: Job? = null
+
     /**
      * If the user clicks on the enter key, it starts a manual search.
      *
@@ -84,6 +89,8 @@ class SearchViewModel : ViewModel() {
 
     fun updateQuery(value: String) {
         query = value
+        if(_uiState.value.selectedSection.isLocal())
+            this.requestSearch()
     }
 
     fun requestSearch() {
@@ -139,29 +146,33 @@ class SearchViewModel : ViewModel() {
      * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
      */
     fun search(
+        searchCoroutine: CoroutineScope,
         selectedSection: SearchSection,
         dataViewModel: DataViewModel,
         subsonicViewModel: SubsonicViewModel,
         selectedSearchChips: Collection<SearchChips>,
     ) {
-        _uiState.update { currentState: SearchUiState ->
-            currentState.copy(isSearching = true)
-        }
-        if (this.query.isNotBlank())
-            when (selectedSection) {
-                SearchSection.LOCAL -> localSearch(
-                    dataViewModel = dataViewModel,
-                    selectedSearchChips = selectedSearchChips
-                )
-
-                SearchSection.SUBSONIC -> subsonicSearch(
-                    subsonicViewModel = subsonicViewModel,
-                    dataViewModel = dataViewModel
-                )
+        searchJob?.cancel()
+        searchJob = searchCoroutine.launch {
+            _uiState.update { currentState: SearchUiState ->
+                currentState.copy(isSearching = true)
             }
-        else {
-            dataViewModel.loadMediaImplList(list = sortedSetOf())
-            this.finishSearch()
+            if (this@SearchViewModel.query.isNotBlank())
+                when (selectedSection) {
+                    SearchSection.LOCAL -> localSearch(
+                        dataViewModel = dataViewModel,
+                        selectedSearchChips = selectedSearchChips
+                    )
+
+                    SearchSection.SUBSONIC -> subsonicSearch(
+                        subsonicViewModel = subsonicViewModel,
+                        dataViewModel = dataViewModel
+                    )
+                }
+            else {
+                dataViewModel.loadMediaImplList(list = sortedSetOf())
+                this@SearchViewModel.finishSearch()
+            }
         }
     }
 
@@ -277,9 +288,9 @@ class SearchViewModel : ViewModel() {
         )
     }
 
-    fun selectSection(selectedSection: SearchSection) {
+    fun selectSection(section: SearchSection) {
         _uiState.update { currentState: SearchUiState ->
-            currentState.copy(selectedSection = selectedSection)
+            currentState.copy(selectedSection = section)
         }
     }
 }

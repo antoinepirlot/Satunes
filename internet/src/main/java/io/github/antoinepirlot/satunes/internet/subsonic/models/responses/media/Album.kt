@@ -45,12 +45,14 @@ internal data class Album(
     @SerialName(value = "year") val year: Int? = null,
 ) : SubsonicData {
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
-        return (DataManager.getSubsonicAlbum(id = id) ?: SubsonicAlbum(
+        return (DataManager.getSubsonicAlbum(id = id) ?: DataManager.addAlbum(
+            album = SubsonicAlbum(
             subsonicId = this.id,
             title = this.title,
             artist = getOrCreateArtist(id = this.artistId, title = this.artistTitle),
 //            isCompilation = false,
             year = this.year,
+            )
         )) as SubsonicMedia //TODO use separated artist list in datamanger
     }
 }

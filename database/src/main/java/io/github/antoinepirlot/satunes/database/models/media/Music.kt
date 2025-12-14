@@ -90,9 +90,8 @@ open class Music(
         if (!this.isSubsonic())
             DataManager.addMusic(music = this)
         album.addMusic(music = this)
-        if (SettingsManager.compilationMusic) {
+        if (SettingsManager.compilationMusic)
             album.artist.addMusic(music = this)
-        }
         this.addedDate = Date(addedDateMs)
         artist.addMusic(music = this)
         genre.addMusic(music = this)

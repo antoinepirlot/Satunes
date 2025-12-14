@@ -37,9 +37,11 @@ data class Artist(
     @SerialName(value = "coverArt") val coverArt: String? = null
 ) : SubsonicData {
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
-        return (DataManager.getSubsonicArtist(id = id) ?: SubsonicArtist(
+        return (DataManager.getSubsonicArtist(id = id) ?: DataManager.addArtist(
+            artist = SubsonicArtist(
             subsonicId = this.id,
             title = this.title
+            )
         )) as SubsonicMedia //TODO use separated artist list in datamanger
     }
 

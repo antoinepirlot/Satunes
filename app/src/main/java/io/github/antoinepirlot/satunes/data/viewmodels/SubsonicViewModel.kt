@@ -165,9 +165,17 @@ class SubsonicViewModel : ViewModel() {
      *
      * @param query the query to send to the API.
      */
-    fun search(query: String, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
+    fun search(
+        query: String,
+        onFinished: () -> Unit,
+        onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
+    ) {
         CoroutineScope(context = Dispatchers.IO).launch {
-            apiRequester.search(query, onDataRetrieved)
+            apiRequester.search(
+                query = query,
+                onFinished = onFinished,
+                onDataRetrieved = onDataRetrieved
+            )
         }
     }
 }

@@ -37,15 +37,18 @@ internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
     private val onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
     onSucceed: (() -> Unit)? = null,
+    onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
+    onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         this.onDataRetrieved(this.subsonicResponse!!.toMusics(subsonicApiRequester = subsonicApiRequester))
         this.onSucceed?.invoke()
+        this.onFinished?.invoke()
     }
 }

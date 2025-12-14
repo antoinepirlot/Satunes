@@ -69,7 +69,6 @@ class SearchViewModel : ViewModel() {
     val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var query: String by mutableStateOf("")
-        private set
 
     /**
      * If the user clicks on the enter key, it starts a manual search.
@@ -145,6 +144,9 @@ class SearchViewModel : ViewModel() {
         subsonicViewModel: SubsonicViewModel,
         selectedSearchChips: Collection<SearchChips>,
     ) {
+        _uiState.update { currentState: SearchUiState ->
+            currentState.copy(isSearching = true)
+        }
         if (this.query.isNotBlank())
             when (selectedSection) {
                 SearchSection.LOCAL -> localSearch(
@@ -157,8 +159,19 @@ class SearchViewModel : ViewModel() {
                     dataViewModel = dataViewModel
                 )
             }
-        else
+        else {
             dataViewModel.loadMediaImplList(list = sortedSetOf())
+            this.finishSearch()
+        }
+    }
+
+    /**
+     * Search is finished, set the [SearchUiState.isSearching] value to false
+     */
+    private fun finishSearch() {
+        _uiState.update { currentState: SearchUiState ->
+            currentState.copy(isSearching = false)
+        }
     }
 
     /**
@@ -239,6 +252,7 @@ class SearchViewModel : ViewModel() {
             }
         }
         dataViewModel.loadMediaImplList(list = mediaImplSet)
+        this.finishSearch()
     }
 
     /**
@@ -255,7 +269,8 @@ class SearchViewModel : ViewModel() {
     ) {
         isSearchRequested = false
         subsonicViewModel.search(
-            this.query,
+            query = this.query,
+            onFinished = { this.finishSearch() },
             onDataRetrieved = { medias: Collection<SubsonicMedia> ->
                 dataViewModel.loadMediaImplList(list = medias)
             }

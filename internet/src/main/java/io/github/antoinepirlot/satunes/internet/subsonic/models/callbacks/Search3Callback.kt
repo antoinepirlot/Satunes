@@ -35,17 +35,20 @@ import okhttp3.Response
 internal class Search3Callback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
+    onFinished: (() -> Unit)? = null,
     private val onDataRetrieved: (Collection<SubsonicMedia>) -> Unit,
     onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
+    onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         if (this.processData())
             this.onSucceed?.invoke()
+        this.onFinished?.invoke()
     }
 
     private fun processData(): Boolean {
@@ -62,7 +65,6 @@ internal class Search3Callback(
                 mediaSet.add(element = song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
             }
         }
-        //TODO crash on opening artist and maybe album
         this.onDataRetrieved(mediaSet.sorted())
         return true
     }

@@ -169,7 +169,7 @@ class SubsonicApiRequester(
      * @param query the [String] to send to api to find matching media.
      * @param onDataRetrieved the function to run when got data from API.
      */
-    suspend fun search(query: String, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
+    suspend fun search(query: String, onFinished: () -> Unit, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
         if (query.isBlank()) return
         get(
             url = getCommandUrl(
@@ -178,6 +178,7 @@ class SubsonicApiRequester(
             ),
             resCallback = Search3Callback(
                 subsonicApiRequester = this,
+                onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved
             )
         )

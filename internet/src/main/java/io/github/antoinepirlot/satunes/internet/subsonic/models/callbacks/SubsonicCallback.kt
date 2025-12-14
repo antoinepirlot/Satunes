@@ -49,6 +49,7 @@ internal abstract class SubsonicCallback(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
     protected val onError: ((Error?) -> Unit)?,
+    protected val onFinished: (() -> Unit)?
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
@@ -57,6 +58,7 @@ internal abstract class SubsonicCallback(
     override fun onFailure(call: Call, e: IOException) {
         _logger?.severe(e.message)
         onError?.invoke(null)
+        this.onFinished?.invoke()
     }
 
     @OptIn(ExperimentalSerializationApi::class)

@@ -30,10 +30,13 @@ import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -44,11 +47,16 @@ fun SubsonicSearchSection(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
-    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
 
-    MediaListView(
+    if(searchUiState.isSearching)
+        LoadingView()
+    else
+        MediaListView(
+        modifier = modifier,
         canBeSorted = false,
         emptyViewText = stringResource(id = R.string.no_result),
         onMediaClick = { mediaImpl: Media ->

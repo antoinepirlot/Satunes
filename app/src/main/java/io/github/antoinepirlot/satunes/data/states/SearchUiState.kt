@@ -33,5 +33,6 @@ data class SearchUiState(
     val genresFilter: Boolean = SettingsManager.genresFilter,
     val foldersFilter: Boolean = SettingsManager.foldersFilter,
     val playlistsFilter: Boolean = SettingsManager.playlistsFilter,
-    val selectedSection: SearchSection = SearchSection.LOCAL //TODO add setting
+    val selectedSection: SearchSection = SearchSection.LOCAL, //TODO add setting
+    val isSearching: Boolean = false,
 )

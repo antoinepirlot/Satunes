@@ -37,10 +37,12 @@ import okhttp3.Response
 internal class PingCallback(
     subsonicApiRequester: SubsonicApiRequester,
     onSucceed: (() -> Unit)? = null,
+    onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
 ) : SubsonicCallback(
     subsonicApiRequester = subsonicApiRequester,
     onSucceed = onSucceed,
+    onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
@@ -52,5 +54,6 @@ internal class PingCallback(
         SubsonicApiRequester.serverVersion = response.serverVersion
         SubsonicApiRequester.openSubsonic = response.openSubsonic
         this.onSucceed?.invoke()
+        this.onFinished?.invoke()
     }
 }

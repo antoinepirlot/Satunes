@@ -33,7 +33,7 @@ open class Artist(
     id = id ?: nextId,
     title = title
 ) {
-    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
+    private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     companion object {
         var nextId: Long = 1
@@ -45,18 +45,18 @@ open class Artist(
 
     fun addAlbum(album: Album): Boolean {
         if (!contains(album = album)) {
-            albumSortedSet.add(element = album)
+            _albumSortedSet.add(element = album)
             return true
         }
         return false
     }
 
     fun getAlbumSet(): Set<Album> {
-        return this.albumSortedSet
+        return this._albumSortedSet
     }
 
     fun contains(album: Album): Boolean {
-        return this.albumSortedSet.contains(album)
+        return this._albumSortedSet.contains(album)
     }
 
     override fun isArtist(): Boolean = true

@@ -46,6 +46,7 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 internal object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
+        println("YEAH ÇA MARCHE")
 
         updateMediaPlaying() //Keep it prevent first media not showing when only opening via AA
         if (isPlaying) {
@@ -65,7 +66,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     internal fun updateMediaPlaying() {
         val context: Context = SatunesCarMusicService.instance.applicationContext
         val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
-        var artwork: Bitmap = musicPlaying.getAlbumArtwork(context = context)
+        val artwork: Bitmap = musicPlaying.getAlbumArtwork(context = context)
         val metaData: MediaMetadataCompat = MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, musicPlaying.id.toString())
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, musicPlaying.title)

@@ -152,7 +152,7 @@ object DataManager {
     }
 
     fun getFolder(id: Long): Folder? {
-        return folderMapById[id]!!
+        return folderMapById[id]
     }
 
     fun addFolder(folder: Folder) {

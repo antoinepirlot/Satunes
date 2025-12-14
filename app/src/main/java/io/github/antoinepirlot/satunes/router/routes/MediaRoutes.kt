@@ -122,7 +122,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             var artist: Artist? by rememberSaveable { mutableStateOf(value = null) }
 
-            LaunchedEffect(key1 = dataUiState.isFetching) {
+            LaunchedEffect(key1 = Unit) {
                 dataViewModel.getArtist(
                     id = artistId,
                     onFetched = { fetchedArtist: SubsonicArtist -> artist = fetchedArtist }

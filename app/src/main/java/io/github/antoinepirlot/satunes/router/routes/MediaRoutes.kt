@@ -24,6 +24,9 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -116,16 +119,21 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val artist: Artist? = dataViewModel.getArtist(id = artistId)
+            var artist: Artist? by rememberSaveable { mutableStateOf(value = null) }
+
+            LaunchedEffect(key1 = Unit) {
+                artist = dataViewModel.getArtist(id = artistId)
+            }
+
             if (dataUiState.isFetching)
                 LoadingView()
             else if (artist == null)
                 EmptyView(text = stringResource(R.string.error_while_fetching_text))
             else {
                 LaunchedEffect(key1 = Unit) {
-                    navigationViewModel.setCurrentMediaImpl(mediaImpl = artist)
+                    navigationViewModel.setCurrentMediaImpl(mediaImpl = artist!!)
                 }
-                ArtistView(artist = artist)
+                ArtistView(artist = artist!!)
             }
         }
     }

@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.services.data
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.media.Album
@@ -47,18 +45,30 @@ import java.util.SortedSet
 
 object DataManager {
     // All public map and sortedmap has bool state to recompose as Map are not supported for recomposition
+
     private var subsonicRootFolder: SubsonicFolder =
         SubsonicFolder(subsonicId = 0, title = SubsonicFolder.SUBSONIC_FOLDER_TITLE)
+
+    @get:Synchronized
     private val musicSortedSet: SortedSet<Music> = sortedSetOf()
+
+    @get:Synchronized
     private val musicsMapById: MutableMap<Long, Music> = mutableMapOf()
+
+    @get:Synchronized
     private val musicMapByAbsolutePath: MutableMap<String, Music> = mutableMapOf()
+
+    @get:Synchronized
     private val subsonicMusicsMapById: MutableMap<Long, SubsonicMusic> = mutableMapOf()
+
+    @get:Synchronized
     private val subsonicMusicsSortedMap: SortedMap<SubsonicMusic, SubsonicMusic> = sortedMapOf()
 
     /**
      * [Collection] of [SubsonicMusic] got by the random music query
      * This [Collection] contains a maximum of 500 [SubsonicMusic] due to the API's limitation
      */
+    @get:Synchronized
     private val subsonicRandomMusicsSortedMap: SortedMap<SubsonicMusic, SubsonicMusic> =
         sortedMapOf()
 
@@ -69,29 +79,53 @@ object DataManager {
      */
     private val _backFolder: BackFolder
         get() = BackFolder()
+
+    @get:Synchronized
     private val folderMapById: MutableMap<Long, Folder> = mutableMapOf()
+
+    @get:Synchronized
     private val folderSortedSet: SortedSet<Folder> = sortedSetOf()
+
+    @get:Synchronized
     private val subsonicFoldersMapById: MutableMap<Long, SubsonicFolder> = mutableMapOf()
 
+    @get:Synchronized
     private val artistsMapById: MutableMap<Long, Artist> = mutableMapOf()
+
+    @get:Synchronized
     private val artistMap: SortedMap<Artist, Artist> = sortedMapOf()
+
+    @get:Synchronized
     private val subsonicArtistsMapById: MutableMap<Long, SubsonicArtist> = mutableMapOf()
 
+    @get:Synchronized
     private val albumsMapById: MutableMap<Long, Album> = mutableMapOf()
 
-    // Used to know if Album is already in set. This avoid Log(N) process
+    @get:Synchronized
     private val albumSortedMap: SortedMap<Album, Album> = sortedMapOf()
+
+    @get:Synchronized
     private val subsonicAlbumsMapById: MutableMap<Long, SubsonicAlbum> = mutableMapOf()
 
+    @get:Synchronized
     private val genresMapById: MutableMap<Long, Genre> = mutableMapOf()
+
+    @get:Synchronized
     private val subsonicGenreMapById: MutableMap<Long, SubsonicGenre> = mutableMapOf()
+
+    @get:Synchronized
     private val genreMap: SortedMap<String, Genre> = sortedMapOf()
 
+    @get:Synchronized
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
-    private val playlistsMapByTitle: MutableMap<String, Playlist> = mutableMapOf()
-    private val playlistsSortedMap: SortedMap<Playlist, Playlist> = sortedMapOf()
-    val playlistsMapUpdated: MutableState<Boolean> = mutableStateOf(false)
 
+    @get:Synchronized
+    private val playlistsMapByTitle: MutableMap<String, Playlist> = mutableMapOf()
+
+    @get:Synchronized
+    private val playlistsSortedMap: SortedMap<Playlist, Playlist> = sortedMapOf()
+
+    @Synchronized
     fun getMusic(id: Long): Music {
         return try {
             this.musicsMapById[id]!!
@@ -123,6 +157,7 @@ object DataManager {
         return this.subsonicRandomMusicsSortedMap.keys.toSet()
     }
 
+    @Synchronized
     fun addMusic(music: Music): Music {
         if (!this.musicsMapById.contains(key = music.id)) {
             this.musicSortedSet.add(element = music)
@@ -132,6 +167,7 @@ object DataManager {
         return this.musicsMapById[music.id]!!
     }
 
+    @Synchronized
     fun addMusic(music: SubsonicMusic): SubsonicMusic {
         if (!this.subsonicMusicsMapById.contains(key = music.subsonicId))
             this.subsonicMusicsMapById[music.subsonicId] = music
@@ -144,6 +180,7 @@ object DataManager {
      *
      * @param musics the newly added [Collection] of [SubsonicMusic].
      */
+    @Synchronized
     fun addRandomMusic(musics: Collection<SubsonicMusic>) {
         for (music: SubsonicMusic in musics)
             this.addRandomMusic(subsonicMusic = music)
@@ -156,6 +193,7 @@ object DataManager {
      *
      * @return [SubsonicMusic] that has been added.
      */
+    @Synchronized
     fun addRandomMusic(subsonicMusic: SubsonicMusic): SubsonicMusic {
         if (!this.subsonicRandomMusicsSortedMap.contains(key = subsonicMusic))
             this.subsonicRandomMusicsSortedMap[subsonicMusic] = subsonicMusic
@@ -199,6 +237,7 @@ object DataManager {
 
     fun hasSubsonicArtists(): Boolean = this.subsonicArtistsMapById.isNotEmpty()
 
+    @Synchronized
     fun addArtist(artist: Artist): Artist {
         if (!artistMap.contains(key = artist)) {
             artistMap[artist] = artist
@@ -207,12 +246,14 @@ object DataManager {
         return this.artistMap[artist]!!
     }
 
+    @Synchronized
     fun addArtist(artist: SubsonicArtist): SubsonicArtist {
         if (!subsonicArtistsMapById.contains(key = artist.subsonicId))
             subsonicArtistsMapById[artist.subsonicId] = artist
         return subsonicArtistsMapById[artist.subsonicId]!!
     }
 
+    @Synchronized
     fun removeArtist(artist: Artist) {
         if (artistMap.contains(artist)) {
             artistMap.remove(key = artist)
@@ -233,7 +274,6 @@ object DataManager {
         return this.albumSortedMap.keys
     }
 
-    @Synchronized
     fun getSubsonicAlbumsSet(): Collection<Album> {
         return this.subsonicAlbumsMapById.values
     }
@@ -242,6 +282,7 @@ object DataManager {
         return this.subsonicAlbumsMapById.isNotEmpty()
     }
 
+    @Synchronized
     fun addAlbum(album: Album): Album {
         if (!this.albumSortedMap.contains(key = album)) {
             this.albumSortedMap[album] = album
@@ -250,12 +291,14 @@ object DataManager {
         return this.albumSortedMap[album]!!
     }
 
+    @Synchronized
     fun addAlbum(album: SubsonicAlbum): SubsonicAlbum {
         if (!subsonicAlbumsMapById.contains(key = album.subsonicId))
             this.subsonicAlbumsMapById[album.subsonicId] = album
         return subsonicAlbumsMapById[album.subsonicId]!!
     }
 
+    @Synchronized
     fun removeAlbum(album: Album) {
         if (this.albumSortedMap.contains(key = album)) {
             albumSortedMap.remove(key = album)
@@ -273,10 +316,11 @@ object DataManager {
     /**
      * Returns the subsonic folder if it has been created, null otherwise.
      */
-    fun getSubsonicRootFolder(): Folder? {
+    fun getSubsonicRootFolder(): Folder {
         return this.subsonicRootFolder
     }
 
+    @Synchronized
     fun addFolder(folder: Folder) {
         if (!folderSortedSet.contains(folder)) {
             this.folderMapById[folder.id] = folder
@@ -284,6 +328,7 @@ object DataManager {
         }
     }
 
+    @Synchronized
     fun addFolder(folder: SubsonicFolder): SubsonicFolder {
         if (!subsonicFoldersMapById.contains(folder.subsonicId))
             this.subsonicFoldersMapById[folder.subsonicId] = folder
@@ -293,6 +338,7 @@ object DataManager {
     /**
      * Remove folder and its subfolder from data
      */
+    @Synchronized
     fun removeFolder(folder: Folder) {
         if (this.folderSortedSet.contains(element = folder)) {
             this.folderSortedSet.remove(element = folder)
@@ -316,6 +362,7 @@ object DataManager {
         return this.genreMap.values.toSortedSet()
     }
 
+    @Synchronized
     fun addGenre(genre: Genre): Genre {
         if (!this.genreMap.contains(key = genre.title)) {
             genreMap[genre.title] = genre
@@ -325,12 +372,14 @@ object DataManager {
         return genreMap[genre.title]!!
     }
 
+    @Synchronized
     fun addGenre(genre: SubsonicGenre): SubsonicGenre {
         if (!this.subsonicGenreMapById.contains(key = genre.subsonicId))
             this.subsonicGenreMapById[genre.subsonicId] = genre
         return this.subsonicGenreMapById[genre.subsonicId]!!
     }
 
+    @Synchronized
     fun removeGenre(genre: Genre) {
         genreMap.remove(genre.title)
         genresMapById.remove(genre.id)
@@ -345,25 +394,26 @@ object DataManager {
         return this.playlistsSortedMap.keys
     }
 
+    @Synchronized
     fun addPlaylist(playlist: Playlist): Playlist {
         if (!playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap[playlist] = playlist
             playlistsMapById[playlist.id] = playlist
             playlistsMapByTitle[playlist.title] = playlist
-            playlistsMapUpdated.value = true
         }
         return this.playlistsMapById[playlist.id]!!
     }
 
+    @Synchronized
     fun removePlaylist(playlist: Playlist) {
         if (playlistsSortedMap.contains(playlist)) {
             playlistsSortedMap.remove(playlist)
             playlistsMapById.remove(playlist.id)
             playlistsMapByTitle.remove(playlist.title)
-            playlistsMapUpdated.value = true
         }
     }
 
+    @Synchronized
     internal fun resetAllData() {
         musicSortedSet.clear()
         musicsMapById.clear()
@@ -380,9 +430,9 @@ object DataManager {
         playlistsMapById.clear()
         playlistsMapByTitle.clear()
         playlistsSortedMap.clear()
-        playlistsMapUpdated.value = true
     }
 
+    @Synchronized
     fun remove(music: Music) {
         this.musicsMapById.remove(music.id)
         this.musicMapByAbsolutePath.remove(music.absolutePath)

@@ -396,6 +396,7 @@ internal class PlaybackController private constructor(
     @OptIn(UnstableApi::class)
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
+        if (this.playlist === playlist) return
         this.playlist = playlist
 
         this.mediaController!!.clearMediaItems()

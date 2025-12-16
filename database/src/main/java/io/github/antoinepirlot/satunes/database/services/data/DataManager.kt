@@ -262,11 +262,7 @@ object DataManager {
         }
     }
 
-    fun getAlbum(id: Long): Album? {
-        return if (this.albumsMapById.contains(key = id)) this.albumsMapById[id]!!
-        else if (this.subsonicAlbumsMapById.contains(key = id)) this.subsonicAlbumsMapById[id]!!
-        else null
-    }
+    fun getAlbum(id: Long): Album? = this.albumsMapById[id]
 
     fun getSubsonicAlbum(id: Long): SubsonicAlbum? = this.subsonicAlbumsMapById[id]
 

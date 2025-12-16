@@ -219,7 +219,11 @@ class SubsonicApiRequester() {
         )
     }
 
-    fun getAlbum(albumId: Long, onDataRetrieved: (SubsonicAlbum) -> Unit, onFinished: () -> Unit) {
+    suspend fun getAlbum(
+        albumId: Long,
+        onDataRetrieved: (SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)?
+    ) {
         if (albumId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(
             url = getCommandUrl(

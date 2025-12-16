@@ -23,6 +23,9 @@ package io.github.antoinepirlot.satunes.router.routes
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -33,17 +36,20 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
+import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
@@ -62,6 +68,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
 internal fun NavGraphBuilder.mediaRoutes(
     satunesViewModel: SatunesViewModel,
     dataViewModel: DataViewModel,
+    subsonicViewModel: SubsonicViewModel,
     navigationViewModel: NavigationViewModel,
     onStart: (NavBackStackEntry) -> Unit,
     onMediaOpen: (media: Media) -> Unit
@@ -169,12 +176,23 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album = dataViewModel.getAlbum(albumId)
-            LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = album)
-                onMediaOpen(album)
+            var album: Album? by rememberSaveable {
+                mutableStateOf(value = dataViewModel.getSubsonicAlbum(id = albumId))
             }
-            AlbumView(album = album)
+
+            LaunchedEffect(key1 = Unit) {
+                if (album == null)
+                    subsonicViewModel.getAlbum(
+                        albumId = albumId,
+                        onDataRetrieved = { subsonicAlbum: SubsonicAlbum ->
+                            album = subsonicAlbum
+                            navigationViewModel.setCurrentMediaImpl(mediaImpl = subsonicAlbum)
+                            onMediaOpen(subsonicAlbum)
+                        }
+                    )
+            }
+            if (album != null) AlbumView(album = album!!)
+            else NoDataFoundView()
         }
     }
 

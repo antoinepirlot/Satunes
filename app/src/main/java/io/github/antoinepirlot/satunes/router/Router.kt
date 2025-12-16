@@ -45,6 +45,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
@@ -62,6 +63,7 @@ import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 internal fun Router(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
@@ -129,6 +131,7 @@ internal fun Router(
     ) {
         mediaRoutes(
             satunesViewModel = satunesViewModel,
+            subsonicViewModel = subsonicViewModel,
             navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {

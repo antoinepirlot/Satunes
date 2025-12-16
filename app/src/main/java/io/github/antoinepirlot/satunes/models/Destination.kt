@@ -45,7 +45,6 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ALBUMS
     ),
-
     ARTISTS(
         link = "/artists",
         category = DestinationCategory.MEDIA,

@@ -175,7 +175,11 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun getAlbum(albumId: Long, onDataRetrieved: (SubsonicAlbum) -> Unit, onFinished: () -> Unit) {
+    fun getAlbum(
+        albumId: Long,
+        onDataRetrieved: (SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = albumId,

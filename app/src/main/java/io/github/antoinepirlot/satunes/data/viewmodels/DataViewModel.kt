@@ -55,6 +55,7 @@ import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -141,6 +142,7 @@ class DataViewModel : ViewModel() {
 
     fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> =
         DataManager.getSubsonicRandomMusicsCollection()
+
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
@@ -175,6 +177,8 @@ class DataViewModel : ViewModel() {
     }
 
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
+    fun getSubsonicAlbum(id: Long): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
+
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)
     fun getPlaylist(title: String): Playlist? = DataManager.getPlaylist(title = title)

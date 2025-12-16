@@ -183,4 +183,5 @@
     <string name="subsonic_section_text">on Cloud</string>
     <string name="local_section_text">On device</string>
     <string name="error_while_fetching_text">An error occurred while fetching data.</string>
+    <string name="no_data_found_view_text">No data has been found.</string>
 </resources>

@@ -156,4 +156,5 @@
     <string name="subsonic_section_text">Sur le cloud</string>
     <string name="local_section_text">Sur l\'appareil</string>
     <string name="error_while_fetching_text">Une erreur est survenue lors de la récupération des données.</string>
+    <string name="no_data_found_view_text">Aucune donnée trouvée.</string>
 </resources>

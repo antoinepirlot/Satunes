@@ -224,10 +224,10 @@ class SubsonicApiRequester() {
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)?
     ) {
-        if (albumId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
+        if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
         get(
             url = getCommandUrl(
-                command = "getArtist",
+                command = "getAlbum",
                 parameters = arrayOf("id=$albumId")
             ),
             resCallback = GetAlbumCallback(

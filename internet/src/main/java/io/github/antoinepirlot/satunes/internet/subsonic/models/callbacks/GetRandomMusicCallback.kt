@@ -48,8 +48,8 @@ internal class GetRandomMusicCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-
-        this.onSucceed?.invoke()
+        if (this.processData())
+            this.onSucceed?.invoke()
         this.onFinished?.invoke()
     }
 

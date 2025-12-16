@@ -52,7 +52,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
@@ -73,7 +72,6 @@ internal fun TopAppBar(
     satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
 ) {
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current

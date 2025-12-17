@@ -67,7 +67,7 @@ fun FoldersPathRow(
             if (targetFolder != endFolder) onClick = {
                 navigationViewModel.navigate(
                     navController = navController,
-                    mediaImpl = targetFolder
+                    media = targetFolder
                 )
             }
             if (targetFolder == folders.first())

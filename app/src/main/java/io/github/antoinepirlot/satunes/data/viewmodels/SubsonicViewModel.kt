@@ -31,21 +31,35 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicViewModel : ViewModel() {
+    private val _uiState: MutableStateFlow<SubsonicUiState> = MutableStateFlow(SubsonicUiState())
+
     var hasBeenUpdated: Boolean by mutableStateOf(false)
         private set
+
+    private val _apiRequester: SubsonicApiRequester
+        get() = SubsonicApiRequester()
+
+    val uiState: StateFlow<SubsonicUiState> = this._uiState.asStateFlow()
 
     var user: User = User(
         url = SettingsManager.subsonicUrl,
@@ -54,8 +68,8 @@ class SubsonicViewModel : ViewModel() {
         salt = SettingsManager.subsonicSalt
     )
 
-    private val _apiRequester: SubsonicApiRequester
-        get() = SubsonicApiRequester()
+    var error: Error? by mutableStateOf(value = null)
+        private set
 
     fun updateSubsonicUrl(url: String) {
         this.user.url = url
@@ -175,17 +189,32 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun getAlbum(
-        albumId: Long,
-        onDataRetrieved: (SubsonicAlbum) -> Unit,
-        onFinished: (() -> Unit)? = null
-    ) {
+    fun loadAlbum(albumId: Long) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = albumId,
-                onDataRetrieved = onDataRetrieved,
-                onFinished = onFinished
+                onDataRetrieved = { this.updateMediaRetrieved(media = it) },
+                onError = { this@SubsonicViewModel.error = it }
             )
+        }
+    }
+
+    /**
+     * Load album's information and update it with the information from server.
+     */
+    fun loadAlbum(album: SubsonicAlbum) {
+        runIOThread {
+            _apiRequester.getAlbum(
+                albumId = album.subsonicId,
+                onDataRetrieved = { album.update(it) },
+                onError = { this@SubsonicViewModel.error = it }
+            )
+        }
+    }
+
+    private fun updateMediaRetrieved(media: Media) {
+        this._uiState.update { currentState: SubsonicUiState ->
+            currentState.copy(mediaRetrieved = media)
         }
     }
 }

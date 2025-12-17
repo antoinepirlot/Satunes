@@ -23,16 +23,14 @@ package io.github.antoinepirlot.satunes.router.routes
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -78,7 +76,7 @@ internal fun NavGraphBuilder.mediaRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
             val folder: Folder = DataManager.getRootFolder()
-            navigationViewModel.setCurrentMediaImpl(mediaImpl = folder)
+            navigationViewModel.setCurrentMediaImpl(media = folder)
             onMediaOpen(folder)
         }
 
@@ -100,7 +98,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val folderId = it.arguments!!.getString("id")!!.toLong()
             val folder: Folder = dataViewModel.getFolder(id = folderId)
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = folder)
+                navigationViewModel.setCurrentMediaImpl(media = folder)
                 onMediaOpen(folder)
             }
             FolderView(folder = folder)
@@ -128,8 +126,8 @@ internal fun NavGraphBuilder.mediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-            val artist: Media? = satunesUiState.currentMedia
+            val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+            val artist: Media? = navigationUiState.currentMediaImpl
             if (artist?.isArtist() == false) return@composable //In case of animation to another media view
             artist as Artist?
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
@@ -147,7 +145,7 @@ internal fun NavGraphBuilder.mediaRoutes(
                 EmptyView(text = stringResource(R.string.error_while_fetching_text))
             else {
                 LaunchedEffect(key1 = Unit) {
-                    navigationViewModel.setCurrentMediaImpl(mediaImpl = artist)
+                    navigationViewModel.setCurrentMediaImpl(media = artist)
                     onMediaOpen(artist)
                 }
                 ArtistView(artist = artist)
@@ -176,23 +174,39 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            var album: Album? by rememberSaveable {
-                mutableStateOf(value = dataViewModel.getSubsonicAlbum(id = albumId))
-            }
+            val album: Album = dataViewModel.getAlbum(id = albumId)
 
             LaunchedEffect(key1 = Unit) {
-                if (album == null)
-                    subsonicViewModel.getAlbum(
-                        albumId = albumId,
-                        onDataRetrieved = { subsonicAlbum: SubsonicAlbum ->
-                            album = subsonicAlbum
-                            navigationViewModel.setCurrentMediaImpl(mediaImpl = subsonicAlbum)
-                            onMediaOpen(subsonicAlbum)
-                        }
-                    )
+                onMediaOpen(album)
             }
-            if (album != null) AlbumView(album = album!!)
-            else NoDataFoundView()
+
+            AlbumView(album = album)
+            NoDataFoundView()
+        }
+    }
+
+    composable(route = Destination.SUBSONIC_ALBUM.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
+            LoadingView()
+        } else {
+            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+            val albumId: Long = it.arguments!!.getString("id")!!.toLong()
+            val album: SubsonicAlbum? = subsonicUiState.mediaRetrieved as SubsonicAlbum?
+
+            LaunchedEffect(key1 = album) {
+                if (album == null)
+                    subsonicViewModel.loadAlbum(albumId = albumId)
+                else
+                    onMediaOpen(album)
+            }
+            if (album != null)
+                AlbumView(album = album)
+            else
+                NoDataFoundView()
         }
     }
 
@@ -219,7 +233,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val genreId: Long = it.arguments!!.getString("id")!!.toLong()
             val genre: Genre = dataViewModel.getGenre(id = genreId)
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = genre)
+                navigationViewModel.setCurrentMediaImpl(media = genre)
                 onMediaOpen(genre)
             }
             GenreView(genre = genre)
@@ -249,7 +263,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)!!
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = playlist)
+                navigationViewModel.setCurrentMediaImpl(media = playlist)
                 onMediaOpen(playlist)
             }
             PlaylistView(playlist = playlist)

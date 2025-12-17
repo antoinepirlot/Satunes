@@ -834,10 +834,4 @@ class SatunesViewModel : ViewModel() {
 // TODO        subsonicViewModel.removeOnlineMusic()
         }
     }
-
-    fun updateCurrentMediaImpl(media: Media?) {
-        _uiState.update { currentState: SatunesUiState ->
-            currentState.copy(currentMedia = media)
-        }
-    }
 }

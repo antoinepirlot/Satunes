@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.data.states
 
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -32,5 +33,5 @@ import io.github.antoinepirlot.satunes.models.Destination
  */
 data class NavigationUiState(
     val currentDestination: Destination = Destination.getDestination(SettingsManager.defaultNavBarSection.value),
-    val currentMediaImpl: MediaImpl? = null
+    val currentMediaImpl: Media? = null
 )

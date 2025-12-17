@@ -66,7 +66,7 @@ class NavigationViewModel : ViewModel() {
             }
 
         private val DEFAULT_CURRENT_MEDIA_IMPL: MediaImpl? = null
-        private var _currentMediaImpl: MediaImpl? = DEFAULT_CURRENT_MEDIA_IMPL
+        private var _currentMediaImpl: Media? = DEFAULT_CURRENT_MEDIA_IMPL
             set(value) {
                 field = value
                 updateUiState()
@@ -74,7 +74,7 @@ class NavigationViewModel : ViewModel() {
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
-        private fun push(destination: Destination, mediaImpl: Media?) {
+        private fun push(destination: Destination, media: Media?) {
             /*
             _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
@@ -113,7 +113,7 @@ class NavigationViewModel : ViewModel() {
             return this._currentRoute
         }
 
-        private fun getCurrentMediaImpl(): MediaImpl? {
+        private fun getCurrentMediaImpl(): Media? {
 //            return this._routesStack.peekFirst()?.second
             return this._currentMediaImpl
         }
@@ -131,9 +131,9 @@ class NavigationViewModel : ViewModel() {
         if (isInitialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
         if (defaultDestination == Destination.FOLDERS)
-            push(destination = defaultDestination, mediaImpl = DataManager.getRootFolder())
+            push(destination = defaultDestination, media = DataManager.getRootFolder())
         else
-            push(destination = defaultDestination, mediaImpl = null)
+            push(destination = defaultDestination, media = null)
         isInitialised = true
     }
 
@@ -148,19 +148,19 @@ class NavigationViewModel : ViewModel() {
         navController: NavController,
         destination: Destination
     ) {
-        push(destination = destination, mediaImpl = null)
+        push(destination = destination, media = null)
         navController.navigate(route = destination.link)
     }
 
     fun navigate(
         navController: NavController,
-        mediaImpl: Media?
+        media: Media?
     ) {
-        val destination: Destination = this.getDestinationOf(mediaImpl = mediaImpl)
-        push(destination = destination, mediaImpl = mediaImpl)
+        val destination: Destination = this.getDestinationOf(media = media)
+        push(destination = destination, media = media)
         val route: String =
-            if (mediaImpl == null || destination == Destination.PLAYBACK || destination == Destination.FOLDERS) destination.link
-            else this.getRoute(destination = destination, mediaImpl = mediaImpl)
+            if (media == null || destination == Destination.PLAYBACK || destination == Destination.FOLDERS) destination.link
+            else this.getRoute(destination = destination, media = media)
         navController.navigate(route = route)
     }
 
@@ -192,24 +192,26 @@ class NavigationViewModel : ViewModel() {
 
     /**
      * Return the destination of mediaImpl (folder, artists or music).
-     * If [mediaImpl] is null returns [Destination.PLAYBACK]
+     * If [media] is null returns [Destination.PLAYBACK]
      *
-     * @param mediaImpl the mediaImpl to get the destination
+     * @param media the mediaImpl to get the destination
      *
      * @return the destination matching [MediaImpl]
      */
-    private fun getDestinationOf(mediaImpl: Media?): Destination {
-        return if (mediaImpl == null) Destination.PLAYBACK // same as else
-        else if (mediaImpl.isRootFolder() || mediaImpl.isFolder()) Destination.FOLDERS
-        else if (mediaImpl.isArtist()) Destination.ARTIST
-        else if (mediaImpl.isAlbum()) Destination.ALBUM
-        else if (mediaImpl.isGenre()) Destination.GENRE
-        else if (mediaImpl.isPlaylist()) Destination.PLAYLIST
+    private fun getDestinationOf(media: Media?): Destination {
+        return if (media == null) Destination.PLAYBACK // same as else
+        else if (media.isRootFolder() || media.isFolder()) Destination.FOLDERS
+        else if (media.isArtist()) Destination.ARTIST
+        else if (media.isAlbum())
+            if(media.isSubsonic()) Destination.SUBSONIC_ALBUM
+            else Destination.ALBUM
+        else if (media.isGenre()) Destination.GENRE
+        else if (media.isPlaylist()) Destination.PLAYLIST
         else Destination.PLAYBACK // same as first
     }
 
-    private fun getRoute(destination: Destination, mediaImpl: Media): String {
-        return "${destination.link.removeSuffix("/{id}")}/${mediaImpl.id}"
+    private fun getRoute(destination: Destination, media: Media): String {
+        return "${destination.link.removeSuffix("/{id}")}/${media.id}"
     }
 
     /**
@@ -220,7 +222,7 @@ class NavigationViewModel : ViewModel() {
      *
      *      Artist: navigate to the media's destination
      *
-     * @param media the mediaImpl to open
+     * @param media the [Media] to open
      */
     fun openMedia(
         playbackViewModel: PlaybackViewModel,
@@ -232,7 +234,7 @@ class NavigationViewModel : ViewModel() {
             startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media, reset = reset)
 
         if (navController != null)
-            this.navigate(navController = navController, mediaImpl = media)
+            this.navigate(navController = navController, media = media)
     }
 
 
@@ -248,7 +250,7 @@ class NavigationViewModel : ViewModel() {
             Logger.getLogger()?.severe(message)
             throw IllegalStateException(message)
         }
-        this.navigate(navController = navController, mediaImpl = musicPlaying)
+        this.navigate(navController = navController, media = musicPlaying)
     }
 
     fun isInPlaybackView(): Boolean {
@@ -279,7 +281,7 @@ class NavigationViewModel : ViewModel() {
     /**
      * TODO remove when solution for back gesture found
      */
-    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
-        _currentMediaImpl = mediaImpl
+    fun setCurrentMediaImpl(media: Media?) {
+        _currentMediaImpl = media
     }
 }

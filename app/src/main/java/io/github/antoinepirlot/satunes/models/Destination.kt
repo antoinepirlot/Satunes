@@ -45,6 +45,11 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ALBUMS
     ),
+    SUBSONIC_ALBUM(
+        link = ALBUMS.link + "/subsonic/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ALBUMS
+    ),
     ARTISTS(
         link = "/artists",
         category = DestinationCategory.MEDIA,
@@ -52,6 +57,11 @@ enum class Destination(
     ),
     ARTIST(
         link = ARTISTS.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.ARTISTS
+    ),
+    SUBSONIC_ARTIST(
+        link = ARTISTS.link + "/subsonic/{id}",
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.ARTISTS
     ),
@@ -72,6 +82,11 @@ enum class Destination(
     ),
     GENRE(
         link = GENRES.link + "/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.GENRES
+    ),
+    SUBSONIC_GENRE(
+        link = GENRES.link + "/subsonic/{id}",
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.GENRES
     ),

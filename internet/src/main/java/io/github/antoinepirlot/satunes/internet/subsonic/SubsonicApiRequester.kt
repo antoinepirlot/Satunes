@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRan
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -222,7 +223,8 @@ class SubsonicApiRequester() {
     suspend fun getAlbum(
         albumId: Long,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
-        onFinished: (() -> Unit)?
+        onFinished: (() -> Unit)? = null,
+        onError: ((Error?) -> Unit)? = null
     ) {
         if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
         get(
@@ -233,6 +235,7 @@ class SubsonicApiRequester() {
             resCallback = GetAlbumCallback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
+                onError = onError,
                 onDataRetrieved = onDataRetrieved
             )
         )

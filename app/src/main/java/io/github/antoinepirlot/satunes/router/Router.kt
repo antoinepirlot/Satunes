@@ -104,7 +104,7 @@ internal fun Router(
                     )
                     navigationViewModel.navigate(
                         navController = navController,
-                        mediaImpl = playlist
+                        media = playlist
                     )
                 }
             }
@@ -135,7 +135,7 @@ internal fun Router(
             navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
-                satunesViewModel.updateCurrentMediaImpl(media = null)
+                navigationViewModel.setCurrentMediaImpl(media = null)
                 navigationViewModel.resetCurrentMediaImpl()
                 navigationViewModel.resetCurrentDestination()
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -147,7 +147,7 @@ internal fun Router(
                 )
             },
             onMediaOpen = {
-                satunesViewModel.updateCurrentMediaImpl(media = it)
+                navigationViewModel.setCurrentMediaImpl(media = it)
             }
         )
         searchRoutes(

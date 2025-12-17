@@ -110,7 +110,7 @@ internal fun MediaCardList(
                                 navigationUiState.currentMediaImpl as Folder
                             navigationViewModel.navigate(
                                 navController = navController,
-                                mediaImpl = currentMediaImpl.parentFolder
+                                media = currentMediaImpl.parentFolder
                             )
                             mediaImpl.clicked()
                             return@MediaCard

@@ -33,6 +33,7 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
@@ -59,7 +60,7 @@ internal fun MusicOptionsDialog(
     onDismissRequest: () -> Unit,
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val currentMediaImpl: MediaImpl? = navigationUiState.currentMediaImpl
+    val currentMediaImpl: Media? = navigationUiState.currentMediaImpl
 
     AlertDialog(
         modifier = modifier,

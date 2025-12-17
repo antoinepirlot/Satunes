@@ -42,10 +42,6 @@ data class SatunesUiState(
     val includeExcludeSeen: Boolean = SettingsManager.includeExcludeSeen,
     val extraButtons: (@Composable () -> Unit)? = null,
     /**
-     * The current [MediaImpl] associated to the view of single media.
-     */
-    val currentMedia: Media? = null,
-    /**
      * Use this in UiSate and ViewModel as it is a particular value. It could change but most of the time it won't change
      */
     val isAudioAllowed: Boolean = isAudioAllowed(context = MainActivity.instance.applicationContext),

@@ -34,7 +34,6 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
@@ -120,13 +119,13 @@ internal fun MusicOptionsDialog(
                  * Redirections
                  */
                 if (currentMediaImpl != music.album)
-                    NavigateToMediaMusicOption(mediaImpl = music.album)
+                    NavigateToMediaMusicOption(media = music.album)
                 if (currentMediaImpl != music.artist)
-                    NavigateToMediaMusicOption(mediaImpl = music.artist)
+                    NavigateToMediaMusicOption(media = music.artist)
                 if (currentMediaImpl != music.genre)
-                    NavigateToMediaMusicOption(mediaImpl = music.genre)
+                    NavigateToMediaMusicOption(media = music.genre)
                 if (currentMediaImpl != music.folder)
-                    NavigateToMediaMusicOption(mediaImpl = music.folder)
+                    NavigateToMediaMusicOption(media = music.folder)
             }
         },
         onDismissRequest = { onDismissRequest() },

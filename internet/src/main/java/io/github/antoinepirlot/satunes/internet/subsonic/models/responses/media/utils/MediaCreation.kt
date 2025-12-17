@@ -20,10 +20,11 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils
 
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 
 /**
@@ -31,24 +32,30 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
  */
 
 /**
- * Get the artist matching the [artistId] or create a new one if it doesn't exist.
+ * Get the subsonic artist matching the [id] or create a new one if it doesn't exist.
  */
-internal fun getOrCreateArtist(id: Long, title: String): Artist {
-    return DataManager.getArtist(id = id) ?: createArtist(id = id, title = title)
+internal fun getOrCreateSubsonicArtist(id: Long, title: String): SubsonicArtist {
+    return DataManager.getSubsonicArtist(id = id) ?: createSubsonicArtist(id = id, title = title)
 }
 
 /**
  * Create a new artist matching data
  */
-private fun createArtist(id: Long, title: String): Artist = Artist(id = id, title = title)
+private fun createSubsonicArtist(id: Long, title: String): SubsonicArtist =
+    SubsonicArtist(subsonicId = id, title = title)
 
-internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder()!! //TODO
+internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() //TODO
 
 /**
  * Get the subsonic album matching the album or creates a new one and returns it if it is not known
  */
-internal fun getOrCreateAlbum(id: Long, title: String, artistId: Long, artistTitle: String): Album {
-    return DataManager.getAlbum(id = id) ?: createAlbum(
+internal fun getOrCreateAlbum(
+    id: Long,
+    title: String,
+    artistId: Long,
+    artistTitle: String
+): SubsonicAlbum {
+    return DataManager.getSubsonicAlbum(id = id) ?: createSubsonicAlbum(
         id = id,
         title = title,
         artistId = artistId,
@@ -58,22 +65,23 @@ internal fun getOrCreateAlbum(id: Long, title: String, artistId: Long, artistTit
 }
 
 /**
- * Create a new Album and returns it.
+ * Create a new [SubsonicAlbum] and returns it.
  */
-private fun createAlbum(
+private fun createSubsonicAlbum(
     id: Long,
     title: String,
     artistId: Long,
     artistTitle: String,
     year: Int?
-): Album {
-    return Album(
-        id = id,
+): SubsonicAlbum {
+    return SubsonicAlbum(
+        subsonicId = id,
         title = title,
-        artist = getOrCreateArtist(id = artistId, title = artistTitle),
+        artist = getOrCreateSubsonicArtist(id = artistId, title = artistTitle),
 //            isCompilation = false,
-        year = year
+        year = year,
     )
 }
 
-internal fun getGenre(): Genre = Genre(title = "UNKNOWN CLOUD GENRE") //TODO
+internal fun getSubsonicGenre(): Genre =
+    SubsonicGenre(subsonicId = 1, title = "UNKNOWN CLOUD GENRE") //TODO

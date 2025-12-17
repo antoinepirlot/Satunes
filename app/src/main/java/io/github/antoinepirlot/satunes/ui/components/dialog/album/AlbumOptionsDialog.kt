@@ -101,7 +101,7 @@ internal fun AlbumOptionsDialog(
                  * Redirections
                  */
                 if (navigationUiState.currentDestination != Destination.ARTIST)
-                    NavigateToMediaMusicOption(mediaImpl = album.artist)
+                    NavigateToMediaMusicOption(media = album.artist)
             }
         }
     )

@@ -24,7 +24,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateArtist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -49,7 +49,7 @@ internal data class Album(
             album = SubsonicAlbum(
             subsonicId = this.id,
             title = this.title,
-            artist = getOrCreateArtist(id = this.artistId, title = this.artistTitle),
+                artist = getOrCreateSubsonicArtist(id = this.artistId, title = this.artistTitle),
 //            isCompilation = false,
             year = this.year,
             )

@@ -135,8 +135,10 @@ enum class Destination(
         private val destinationsMap: MutableMap<String, Destination> = mutableMapOf(
             Pair(first = ALBUMS.link, second = ALBUMS),
             Pair(first = ALBUM.link, second = ALBUM),
+            Pair(first = SUBSONIC_ALBUM.link, second = SUBSONIC_ALBUM),
             Pair(first = ANDROID_AUTO_SETTINGS.link, second = ANDROID_AUTO_SETTINGS),
             Pair(first = ARTISTS.link, second = ARTISTS),
+            Pair(first = SUBSONIC_ARTIST.link, second = SUBSONIC_ARTIST),
             Pair(first = ARTIST.link, second = ARTIST),
             Pair(first = BATTERY_SETTINGS.link, second = BATTERY_SETTINGS),
             Pair(first = LIBRARY_SETTINGS.link, second = LIBRARY_SETTINGS),
@@ -144,6 +146,7 @@ enum class Destination(
             Pair(first = FOLDER.link, second = FOLDER),
             Pair(first = GENRES.link, second = GENRES),
             Pair(first = GENRE.link, second = GENRE),
+            Pair(first = SUBSONIC_GENRE.link, second = SUBSONIC_GENRE),
             Pair(first = DESIGN_SETTINGS.link, second = DESIGN_SETTINGS),
             Pair(first = LOGS_SETTINGS.link, second = LOGS_SETTINGS),
             Pair(first = MUSICS.link, second = MUSICS),
@@ -164,9 +167,7 @@ enum class Destination(
             this.destinationsMap[UPDATES_SETTINGS.link] = UPDATES_SETTINGS
         }
 
-        fun getDestination(destination: String): Destination {
-            return this.destinationsMap[destination]!!
-        }
+        fun getDestination(destination: String): Destination = this.destinationsMap[destination]!!
 
         fun getDestination(navBarSection: NavBarSection): Destination {
             return when (navBarSection) {

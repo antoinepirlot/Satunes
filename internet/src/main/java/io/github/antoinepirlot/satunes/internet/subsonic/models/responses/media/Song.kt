@@ -25,10 +25,10 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMe
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateAlbum
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getSubsonicGenre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -76,14 +76,14 @@ internal data class Song constructor(
             cdTrackNumber = this.track,
             addedDateMs = 0,//TODO,
             folder = getOrCreateFolder(),
-            artist = getOrCreateArtist(id = this.artistId, title = this.artistTitle),
+                artist = getOrCreateSubsonicArtist(id = this.artistId, title = this.artistTitle),
             album = getOrCreateAlbum(
                 id = this.albumId,
                 title = this.albumTitle,
                 artistId = this.artistId,
                 artistTitle = this.artistTitle
             ), //Must be after artist, otherwise album is not added in artist
-            genre = getGenre(),
+                genre = getSubsonicGenre(),
             uri = url.toUri(),
             )
         )

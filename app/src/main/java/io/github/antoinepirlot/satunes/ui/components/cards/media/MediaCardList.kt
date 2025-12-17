@@ -138,7 +138,7 @@ internal fun MediaCardList(
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(
-                    mediaImpl = mediaImpl,
+                    media = mediaImpl,
                     onDismissRequest = {
                         showMediaOptions = false
                     }

@@ -120,7 +120,6 @@ internal fun NavGraphBuilder.localMediaRoutes(
             }
 
             ArtistView(artist = artist)
-            NoDataFoundView()
         }
     }
 

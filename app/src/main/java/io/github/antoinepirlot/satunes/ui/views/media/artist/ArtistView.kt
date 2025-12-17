@@ -51,7 +51,7 @@ internal fun ArtistView(
 ) {
 
     LaunchedEffect(key1 = Unit) {
-        val albums: Collection<Album> = artist.getAlbumSet()
+        val albums: Collection<Album> = artist.getAlbumCollection()
         for (album: Album in albums)
             if (album.isSubsonic())
                 subsonicViewModel.loadAlbum(album = album as SubsonicAlbum, onDataRetrieved = {})
@@ -68,7 +68,7 @@ internal fun ArtistView(
     }
 
     //TODO use recomposition for album list
-    val albumCollection: Collection<Album> = artist.getAlbumSet()
+    val albumCollection: Collection<Album> = artist.getAlbumCollection()
     MediaListView(
         modifier = modifier,
         header = if (albumCollection.isNotEmpty()) {

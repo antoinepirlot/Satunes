@@ -10,6 +10,7 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
@@ -74,15 +75,26 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             artist as SubsonicArtist?
 
             LaunchedEffect(key1 = Unit) {
-                if (artist == null)
-                    subsonicViewModel.getArtist(artistId = artistId, onDataRetrieved = onMediaOpen)
+                if (artist == null) {
+                    subsonicViewModel.getArtist(
+                        artistId = artistId,
+                        onDataRetrieved = { artist: SubsonicArtist ->
+                            onMediaOpen(artist)
+                            artist.getAlbumCollection().forEach { album: Album ->
+                                if (album.isSubsonic())
+                                    subsonicViewModel.getAlbum(
+                                        albumId = (album as SubsonicAlbum).subsonicId,
+                                        onDataRetrieved = { album: SubsonicAlbum ->
+                                            artist.addMusics(musics = album.musicCollection)
+                                        }
+                                    )
+                            }
+                        }
+                    )
+                }
             }
 
             if (artist != null) {
-                LaunchedEffect(key1 = Unit) {
-                    onMediaOpen(artist)
-                }
-
                 ArtistView(artist = artist)
             } else
                 NoDataFoundView()

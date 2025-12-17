@@ -51,9 +51,7 @@ open class Artist(
         return false
     }
 
-    fun getAlbumSet(): Set<Album> {
-        return this._albumSortedSet
-    }
+    fun getAlbumCollection(): Collection<Album> = this._albumSortedSet
 
     fun contains(album: Album): Boolean {
         return this._albumSortedSet.contains(album)

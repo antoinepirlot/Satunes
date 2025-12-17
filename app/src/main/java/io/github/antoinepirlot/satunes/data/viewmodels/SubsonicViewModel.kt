@@ -32,7 +32,7 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.User
-import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -182,10 +182,10 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun getAlbum(albumId: Long, onDataRetrieved: (media: Media) -> Unit) {
+    fun getAlbum(albumId: Long, onDataRetrieved: (media: SubsonicAlbum) -> Unit) {
         val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
         if (album != null)
-            this.loadAlbum(album = album, onDataRetrieved = onDataRetrieved)
+            this.loadAlbum(album = album, onDataRetrieved = { onDataRetrieved?.invoke(it) })
         else
             runIOThread {
                 _apiRequester.getAlbum(
@@ -199,7 +199,7 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Load album's information and update it with the information from server.
      */
-    fun loadAlbum(album: SubsonicAlbum, onDataRetrieved: (media: Media) -> Unit) {
+    fun loadAlbum(album: SubsonicAlbum, onDataRetrieved: (media: SubsonicAlbum) -> Unit) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
@@ -209,7 +209,7 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun getArtist(artistId: Long, onDataRetrieved: (media: Media) -> Unit) {
+    fun getArtist(artistId: Long, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
         val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
         if (artist != null)
             this.loadArtist(artist = artist, onDataRetrieved = onDataRetrieved)
@@ -223,14 +223,40 @@ class SubsonicViewModel : ViewModel() {
             }
     }
 
+    fun getArtistWithMusics(artistId: Long, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
+        this.getArtist(
+            artistId = artistId,
+            onDataRetrieved = { artist: SubsonicArtist ->
+                var queriesInProgress: Int = 0
+                artist.getAlbumCollection().forEach { album: Album ->
+                    if (album.isSubsonic()) {
+                        queriesInProgress++
+                        this.getAlbum(
+                            albumId = (album as SubsonicAlbum).subsonicId,
+                            onDataRetrieved = { album: SubsonicAlbum ->
+                                artist.addMusics(musics = album.musicCollection)
+                                queriesInProgress--
+                            }
+                        )
+                    }
+                }
+                runIOThread {
+                    while (queriesInProgress > 0);
+                    onDataRetrieved.invoke(artist)
+                }
+            }
+        )
+
+    }
+
     /**
      * Load artist's information and update it with the information from server.
      */
-    fun loadArtist(artist: SubsonicArtist, onDataRetrieved: (media: Media) -> Unit) {
+    fun loadArtist(artist: SubsonicArtist, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
         runIOThread {
             _apiRequester.getArtist(
                 artistId = artist.subsonicId,
-                onDataRetrieved = { onDataRetrieved(artist.toSubsonicArtist(artist = it)) },
+                onDataRetrieved = { onDataRetrieved.invoke(artist.toSubsonicArtist(artist = it)) },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }

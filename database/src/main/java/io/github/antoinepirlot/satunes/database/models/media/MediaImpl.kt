@@ -68,7 +68,10 @@ abstract class MediaImpl(
      */
     protected open var addedDate: Date? = null
 
+    @get:Synchronized
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
+
+    @get:Synchronized
     override val musicCollection: Collection<Music> = mutableStateListOf()
 
     override fun isEmpty(): Boolean {
@@ -81,6 +84,7 @@ abstract class MediaImpl(
 
     override fun isStoredLocally(): Boolean = isDownloaded
 
+    @Synchronized
     override fun clearMusicList() {
         this.musicSortedSet.clear()
         this.musicCollection as MutableList<Music>
@@ -95,6 +99,7 @@ abstract class MediaImpl(
         else this.musicCollection.containsAll(elements = mediaImpl.musicCollection)
     }
 
+    @Synchronized
     override fun addMusic(music: Music) {
         if (!this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.add(element = music)
@@ -103,6 +108,7 @@ abstract class MediaImpl(
         }
     }
 
+    @Synchronized
     override fun addMusics(musics: Collection<Music>) {
         this.musicSortedSet.addAll(musics)
         this.musicCollection as MutableList
@@ -110,6 +116,7 @@ abstract class MediaImpl(
         (this.musicCollection as MutableList<Music>).addAll(this.musicSortedSet)
     }
 
+    @Synchronized
     override fun removeMusic(music: Music) {
         if (this.musicSortedSet.contains(element = music)) {
             this.musicSortedSet.remove(music)

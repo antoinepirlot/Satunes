@@ -15,6 +15,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
+import io.github.antoinepirlot.satunes.ui.views.SubsonicErrorView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
@@ -54,7 +55,8 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
                 }
 
                 AlbumView(album = album)
-            }
+            } else if (subsonicViewModel.error != null)
+                SubsonicErrorView(error = subsonicViewModel.error!!)
             else
                 NoDataFoundView()
         }
@@ -74,19 +76,19 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             artist as SubsonicArtist?
 
             LaunchedEffect(key1 = Unit) {
-                if (artist == null) {
-                    subsonicViewModel.getArtistWithMusics(
-                        artistId = artistId,
-                        onDataRetrieved = { artist: SubsonicArtist ->
-                            onMediaOpen(artist)
-                        }
-                    )
-                }
+                subsonicViewModel.getArtistWithMusics(
+                    artistId = artistId,
+                    onDataRetrieved = { artist: SubsonicArtist ->
+                        onMediaOpen(artist)
+                    }
+                )
             }
 
             if (artist != null) {
                 ArtistView(artist = artist)
-            } else
+            } else if (subsonicViewModel.error != null)
+                SubsonicErrorView(error = subsonicViewModel.error!!)
+            else
                 NoDataFoundView()
         }
     }

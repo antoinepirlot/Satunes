@@ -60,7 +60,6 @@ internal fun ArtistView(
             satunesViewModel.clearExtraButtons()
     }
 
-    //TODO use recomposition for album list
     val albumCollection: Collection<Album> = artist.albumCollection
     MediaListView(
         modifier = modifier,

@@ -207,6 +207,12 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun loadArtist(artistId: Long) {
-        TODO()
+        runIOThread {
+            _apiRequester.getArtist(
+                artistId = artistId,
+                onDataRetrieved = { this.mediaRetrieved = it },
+                onError = { this@SubsonicViewModel.error = it }
+            )
+        }
     }
 }

@@ -204,7 +204,8 @@ class SubsonicApiRequester() {
     fun getArtist(
         artistId: Long,
         onFinished: (() -> Unit)? = null,
-        onDataRetrieved: (SubsonicArtist) -> Unit
+        onDataRetrieved: (SubsonicArtist) -> Unit,
+        onError: ((Error?) -> Unit)? = null
     ) {
         if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(

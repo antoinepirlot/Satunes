@@ -53,7 +53,7 @@ internal fun ArtistView(
     LaunchedEffect(key1 = Unit) {
         for (album: Album in artist.getAlbumSet())
             if (album.isSubsonic())
-                subsonicViewModel.loadAlbum(album = album as SubsonicAlbum)
+                subsonicViewModel.getAlbum(album = album as SubsonicAlbum)
         dataViewModel.loadMediaImplList(list = artist.musicCollection)
     }
 

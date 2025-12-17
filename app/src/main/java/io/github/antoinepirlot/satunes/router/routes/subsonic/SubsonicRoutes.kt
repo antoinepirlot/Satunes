@@ -43,9 +43,9 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             if (album != null && !album.isAlbum()) return@composable
             album as SubsonicAlbum?
 
-            LaunchedEffect(key1 = album) {
+            LaunchedEffect(key1 = Unit) {
                 if (album == null)
-                    subsonicViewModel.loadAlbum(albumId = albumId)
+                    subsonicViewModel.getAlbum(albumId = albumId, onDataRetrieved = onMediaOpen)
             }
 
             if (album != null) {
@@ -73,9 +73,9 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             if (artist != null && !artist.isAlbum()) return@composable
             artist as SubsonicArtist?
 
-            LaunchedEffect(key1 = artist) {
+            LaunchedEffect(key1 = Unit) {
                 if (artist == null)
-                    subsonicViewModel.loadArtist(artistId = artistId)
+                    subsonicViewModel.getArtist(artistId = artistId, onDataRetrieved = onMediaOpen)
             }
 
             if (artist != null) {

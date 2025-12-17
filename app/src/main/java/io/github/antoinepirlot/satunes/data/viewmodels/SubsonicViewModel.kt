@@ -62,9 +62,6 @@ class SubsonicViewModel : ViewModel() {
     var error: Error? by mutableStateOf(value = null)
         private set
 
-    var mediaRetrieved: Media? = null
-        private set
-
     fun updateSubsonicUrl(url: String) {
         this.user.url = url
         this.hasBeenUpdated = true
@@ -183,11 +180,11 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun loadAlbum(albumId: Long) {
+    fun getAlbum(albumId: Long, onDataRetrieved: (media: Media) -> Unit) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = albumId,
-                onDataRetrieved = { this.mediaRetrieved = it },
+                onDataRetrieved = onDataRetrieved,
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
@@ -196,7 +193,7 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Load album's information and update it with the information from server.
      */
-    fun loadAlbum(album: SubsonicAlbum) {
+    fun getAlbum(album: SubsonicAlbum) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
@@ -206,11 +203,11 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    fun loadArtist(artistId: Long) {
+    fun getArtist(artistId: Long, onDataRetrieved: (media: Media) -> Unit) {
         runIOThread {
             _apiRequester.getArtist(
                 artistId = artistId,
-                onDataRetrieved = { this.mediaRetrieved = it },
+                onDataRetrieved = onDataRetrieved,
                 onError = { this@SubsonicViewModel.error = it }
             )
         }

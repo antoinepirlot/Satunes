@@ -185,7 +185,7 @@ class SubsonicViewModel : ViewModel() {
     fun getAlbum(albumId: Long, onDataRetrieved: (media: SubsonicAlbum) -> Unit) {
         val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
         if (album != null)
-            this.loadAlbum(album = album, onDataRetrieved = { onDataRetrieved?.invoke(it) })
+            this.loadAlbum(album = album, onDataRetrieved = { onDataRetrieved.invoke(it) })
         else
             runIOThread {
                 _apiRequester.getAlbum(
@@ -224,29 +224,44 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getArtistWithMusics(artistId: Long, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
-        this.getArtist(
-            artistId = artistId,
-            onDataRetrieved = { artist: SubsonicArtist ->
-                var queriesInProgress: Int = 0
-                artist.getAlbumCollection().forEach { album: Album ->
-                    if (album.isSubsonic()) {
-                        queriesInProgress++
-                        this.getAlbum(
-                            albumId = (album as SubsonicAlbum).subsonicId,
-                            onDataRetrieved = { album: SubsonicAlbum ->
-                                artist.addMusics(musics = album.musicCollection)
-                                queriesInProgress--
-                            }
-                        )
-                    }
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            this.loadArtist(
+                artist = artist,
+                onDataRetrieved = { artist: SubsonicArtist ->
+                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
                 }
-                runIOThread {
-                    while (queriesInProgress > 0);
-                    onDataRetrieved.invoke(artist)
+            )
+        else
+            this.getArtist(
+                artistId = artistId,
+                onDataRetrieved = { artist: SubsonicArtist ->
+                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
                 }
-            }
-        )
+            )
+    }
 
+    private fun loadArtistWithMusics(
+        artist: SubsonicArtist,
+        onDataRetrieved: (media: SubsonicArtist) -> Unit
+    ) {
+        var queriesInProgress: Int = 0
+        artist.albumCollection.forEach { album: Album ->
+            if (album.isSubsonic()) {
+                queriesInProgress++
+                this.getAlbum(
+                    albumId = (album as SubsonicAlbum).subsonicId,
+                    onDataRetrieved = { album: SubsonicAlbum ->
+                        artist.addMusics(musics = album.musicCollection)
+                        queriesInProgress--
+                    }
+                )
+            }
+        }
+        runIOThread {
+            while (queriesInProgress > 0);
+            onDataRetrieved.invoke(artist)
+        }
     }
 
     /**

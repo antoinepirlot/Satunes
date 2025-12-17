@@ -29,10 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
@@ -46,15 +44,10 @@ internal fun ArtistView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel(),
     artist: Artist,
 ) {
 
     LaunchedEffect(key1 = Unit) {
-        val albums: Collection<Album> = artist.getAlbumCollection()
-        for (album: Album in albums)
-            if (album.isSubsonic())
-                subsonicViewModel.loadAlbum(album = album as SubsonicAlbum, onDataRetrieved = {})
         dataViewModel.loadMediaImplList(list = artist.musicCollection)
     }
 
@@ -68,7 +61,7 @@ internal fun ArtistView(
     }
 
     //TODO use recomposition for album list
-    val albumCollection: Collection<Album> = artist.getAlbumCollection()
+    val albumCollection: Collection<Album> = artist.albumCollection
     MediaListView(
         modifier = modifier,
         header = if (albumCollection.isNotEmpty()) {

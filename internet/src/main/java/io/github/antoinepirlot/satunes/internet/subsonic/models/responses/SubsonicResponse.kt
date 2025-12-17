@@ -24,11 +24,8 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
-import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -55,16 +52,4 @@ internal data class SubsonicResponse(
         private const val FAILED_STATUS = "failed"
     }
     fun isError(): Boolean = this.status == FAILED_STATUS
-
-    /**
-     * Constructs [SubsonicMusic] objects from what has been received
-     */
-    fun toMusics(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicMusic> {
-        if (this.randomSongs == null)
-            throw IllegalStateException("Can't convert data to songs, object not compatible")
-        val set: MutableCollection<SubsonicMusic> = mutableSetOf()
-        for (song: Song in this.randomSongs)
-            set.add(song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicMusic)
-        return set.toSortedSet()
-    }
 }

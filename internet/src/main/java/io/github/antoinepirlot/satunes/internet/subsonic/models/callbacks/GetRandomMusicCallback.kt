@@ -56,7 +56,11 @@ internal class GetRandomMusicCallback(
     override fun processData(): Boolean {
         if (!super.processData()) return false
         if (this.subsonicResponse == null) return false
-        this.onDataRetrieved(this.subsonicResponse!!.toMusics(subsonicApiRequester = subsonicApiRequester))
+        this.onDataRetrieved(
+            this.subsonicResponse!!.randomSongs!!.toSubsonicMusicCollection(
+                subsonicApiRequester = subsonicApiRequester
+            )
+        )
         return true
     }
 }

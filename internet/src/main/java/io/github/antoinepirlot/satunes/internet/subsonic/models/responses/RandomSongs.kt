@@ -20,6 +20,8 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -30,6 +32,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class RandomSongs(
     @SerialName(value = "song") private val songs: List<Song>
-) : Iterable<Song> {
-    override fun iterator(): Iterator<Song> = songs.iterator()
+) {
+    fun toSubsonicMusicCollection(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicMusic> {
+        val collection: MutableCollection<SubsonicMusic> = mutableSetOf()
+        for (song: Song in songs)
+            collection.add(
+                element = song
+                    .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicMusic
+            )
+        return collection
+    }
 }

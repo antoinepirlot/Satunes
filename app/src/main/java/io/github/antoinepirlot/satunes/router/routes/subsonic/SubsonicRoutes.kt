@@ -70,7 +70,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             val artist: Media? = navigationUiState.currentMediaImpl
-            if (artist != null && !artist.isAlbum()) return@composable
+            if (artist != null && !artist.isArtist()) return@composable
             artist as SubsonicArtist?
 
             LaunchedEffect(key1 = Unit) {

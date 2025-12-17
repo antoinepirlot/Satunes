@@ -30,6 +30,7 @@ internal fun NavGraphBuilder.mediaRoutes(
     subsonicMediaRoutes(
         satunesViewModel = satunesViewModel,
         subsonicViewModel = subsonicViewModel,
+        navigationViewModel = navigationViewModel,
         onStart = onStart,
         onMediaOpen = onMediaOpen,
     )

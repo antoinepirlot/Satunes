@@ -31,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.MainActivity
-import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
@@ -42,24 +41,16 @@ import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<SubsonicUiState> = MutableStateFlow(SubsonicUiState())
-
     var hasBeenUpdated: Boolean by mutableStateOf(false)
         private set
 
     private val _apiRequester: SubsonicApiRequester
         get() = SubsonicApiRequester()
-
-    val uiState: StateFlow<SubsonicUiState> = this._uiState.asStateFlow()
 
     var user: User = User(
         url = SettingsManager.subsonicUrl,
@@ -69,6 +60,9 @@ class SubsonicViewModel : ViewModel() {
     )
 
     var error: Error? by mutableStateOf(value = null)
+        private set
+
+    var mediaRetrieved: Media? = null
         private set
 
     fun updateSubsonicUrl(url: String) {
@@ -193,7 +187,7 @@ class SubsonicViewModel : ViewModel() {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = albumId,
-                onDataRetrieved = { this.updateMediaRetrieved(media = it) },
+                onDataRetrieved = { this.mediaRetrieved = it },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
@@ -212,9 +206,7 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    private fun updateMediaRetrieved(media: Media) {
-        this._uiState.update { currentState: SubsonicUiState ->
-            currentState.copy(mediaRetrieved = media)
-        }
+    fun loadArtist(artistId: Long) {
+        TODO()
     }
 }

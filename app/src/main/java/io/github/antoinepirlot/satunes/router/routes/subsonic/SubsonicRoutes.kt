@@ -6,15 +6,18 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
+import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
 
 /**
  * @author Antoine Pirlot 17/12/2025
@@ -22,6 +25,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 internal fun NavGraphBuilder.subsonicMediaRoutes(
     satunesViewModel: SatunesViewModel,
     subsonicViewModel: SubsonicViewModel,
+    navigationViewModel: NavigationViewModel,
     onStart: (NavBackStackEntry) -> Unit,
     onMediaOpen: (media: Media) -> Unit
 ) {
@@ -33,19 +37,51 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+            val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: SubsonicAlbum? = subsonicUiState.mediaRetrieved as SubsonicAlbum?
+            val album: SubsonicAlbum? = navigationUiState.currentMediaImpl as SubsonicAlbum?
 
             LaunchedEffect(key1 = album) {
                 if (album == null)
                     subsonicViewModel.loadAlbum(albumId = albumId)
-                else
-                    onMediaOpen(album)
             }
-            if (album != null)
+
+            if (album != null) {
+                LaunchedEffect(key1 = Unit) {
+                    onMediaOpen(album)
+                }
+
                 AlbumView(album = album)
+            }
             else
+                NoDataFoundView()
+        }
+    }
+
+    composable(route = Destination.SUBSONIC_ARTIST.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+        if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
+            LoadingView()
+        } else {
+            val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+            val artistId: Long = it.arguments!!.getString("id")!!.toLong()
+            val artist: SubsonicArtist? = navigationUiState.currentMediaImpl as SubsonicArtist?
+
+
+            LaunchedEffect(key1 = artist) {
+                if (artist == null)
+                    subsonicViewModel.loadArtist(artistId = artistId)
+            }
+
+            if (artist != null) {
+                LaunchedEffect(key1 = Unit) {
+                    onMediaOpen(artist)
+                }
+
+                ArtistView(artist = artist)
+            } else
                 NoDataFoundView()
         }
     }

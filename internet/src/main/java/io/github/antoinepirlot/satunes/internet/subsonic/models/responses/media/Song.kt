@@ -25,8 +25,8 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMe
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateFolder
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getSubsonicGenre
 import kotlinx.serialization.SerialName
@@ -77,7 +77,7 @@ internal data class Song constructor(
             addedDateMs = 0,//TODO,
             folder = getOrCreateFolder(),
                 artist = getOrCreateSubsonicArtist(id = this.artistId, title = this.artistTitle),
-            album = getOrCreateAlbum(
+                album = getOrCreateSubsonicAlbum(
                 id = this.albumId,
                 title = this.albumTitle,
                 artistId = this.artistId,

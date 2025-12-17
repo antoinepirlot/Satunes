@@ -49,7 +49,7 @@ internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() /
 /**
  * Get the subsonic album matching the album or creates a new one and returns it if it is not known
  */
-internal fun getOrCreateAlbum(
+internal fun getOrCreateSubsonicAlbum(
     id: Long,
     title: String,
     artistId: Long,

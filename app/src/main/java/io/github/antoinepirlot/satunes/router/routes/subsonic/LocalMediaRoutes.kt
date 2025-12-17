@@ -25,7 +25,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -55,7 +54,6 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
 internal fun NavGraphBuilder.localMediaRoutes(
     satunesViewModel: SatunesViewModel,
     dataViewModel: DataViewModel,
-    navigationViewModel: NavigationViewModel,
     onStart: (NavBackStackEntry) -> Unit,
     onMediaOpen: (media: Media) -> Unit
 ) {

@@ -21,7 +21,6 @@ internal fun NavGraphBuilder.mediaRoutes(
 ) {
     localMediaRoutes(
         satunesViewModel = satunesViewModel,
-        navigationViewModel = navigationViewModel,
         dataViewModel = dataViewModel,
         onStart = onStart,
         onMediaOpen = onMediaOpen,

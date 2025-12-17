@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
@@ -57,10 +58,14 @@ internal fun AlbumView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     album: Album,
 ) {
 
     LaunchedEffect(key1 = Unit) {
+//        if(album.isSubsonic())
+//            subs
+//        else
         dataViewModel.loadMediaImplList(list = album.musicCollection)
     }
 

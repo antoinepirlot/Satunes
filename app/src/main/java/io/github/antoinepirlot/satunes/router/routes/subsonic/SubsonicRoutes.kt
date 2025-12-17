@@ -45,8 +45,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             album as SubsonicAlbum?
 
             LaunchedEffect(key1 = Unit) {
-                if (album == null)
-                    subsonicViewModel.getAlbum(albumId = albumId, onDataRetrieved = onMediaOpen)
+                subsonicViewModel.getAlbum(albumId = albumId, onDataRetrieved = onMediaOpen)
             }
 
             if (album != null) {

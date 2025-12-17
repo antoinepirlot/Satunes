@@ -21,15 +21,9 @@
 package io.github.antoinepirlot.satunes.router.routes.subsonic
 
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.DataUiState
-import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -39,10 +33,8 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
@@ -116,34 +108,19 @@ internal fun NavGraphBuilder.localMediaRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
             LoadingView()
         } else {
-            val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-            val artist: Media? = navigationUiState.currentMediaImpl
-            if (artist?.isArtist() == false) return@composable //In case of animation to another media view
-            artist as Artist?
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
+            val artist: Artist = dataViewModel.getArtist(id = artistId)
 
             LaunchedEffect(key1 = Unit) {
-                dataViewModel.getArtist(
-                    id = artistId,
-                    onFetched = { fetchedArtist: SubsonicArtist -> onMediaOpen(fetchedArtist) }
-                )
+                onMediaOpen(artist)
             }
 
-            if (dataUiState.isFetching)
-                LoadingView()
-            else if (artist == null)
-                EmptyView(text = stringResource(R.string.error_while_fetching_text))
-            else {
-                LaunchedEffect(key1 = Unit) {
-                    onMediaOpen(artist)
-                }
-                ArtistView(artist = artist)
-            }
+            ArtistView(artist = artist)
+            NoDataFoundView()
         }
     }
 

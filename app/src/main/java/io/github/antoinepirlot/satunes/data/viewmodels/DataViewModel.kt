@@ -56,7 +56,6 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
@@ -146,35 +145,9 @@ class DataViewModel : ViewModel() {
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
-    fun getArtist(id: Long, onFetched: (SubsonicArtist) -> Unit): Artist? {
-        val artist: Artist? = DataManager.getArtist(id = id)
-        if (artist == null) this.fetchArtist(subsonicId = id, onFetched = onFetched)
-        return artist
-    }
+    fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
 
-    /**
-     * Fetch artist from Subsonic API
-     */
-    private fun fetchArtist(subsonicId: Long, onFetched: (SubsonicArtist) -> Unit) {
-        this.startFetching()
-        this._apiRequester.getArtist(
-            artistId = subsonicId,
-            onDataRetrieved = { onFetched(DataManager.addArtist(artist = it)) },
-            onFinished = { this.stopFetching() }
-        )
-    }
-
-    private fun startFetching() {
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(isFetching = true)
-        }
-    }
-
-    private fun stopFetching() {
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(isFetching = false)
-        }
-    }
+    fun getSubsonicArtist(id: Long) = DataManager.getSubsonicArtist(id = id)!!
 
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
     fun getSubsonicAlbum(id: Long): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)

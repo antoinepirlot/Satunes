@@ -39,7 +39,9 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
         } else {
             val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: SubsonicAlbum? = navigationUiState.currentMediaImpl as SubsonicAlbum?
+            val album: Media? = navigationUiState.currentMediaImpl
+            if (album != null && !album.isAlbum()) return@composable
+            album as SubsonicAlbum?
 
             LaunchedEffect(key1 = album) {
                 if (album == null)
@@ -67,8 +69,9 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
         } else {
             val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
-            val artist: SubsonicArtist? = navigationUiState.currentMediaImpl as SubsonicArtist?
-
+            val artist: Media? = navigationUiState.currentMediaImpl
+            if (artist != null && !artist.isAlbum()) return@composable
+            artist as SubsonicArtist?
 
             LaunchedEffect(key1 = artist) {
                 if (artist == null)

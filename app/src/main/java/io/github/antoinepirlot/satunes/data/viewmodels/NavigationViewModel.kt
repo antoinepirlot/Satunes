@@ -201,7 +201,9 @@ class NavigationViewModel : ViewModel() {
     private fun getDestinationOf(media: Media?): Destination {
         return if (media == null) Destination.PLAYBACK // same as else
         else if (media.isRootFolder() || media.isFolder()) Destination.FOLDERS
-        else if (media.isArtist()) Destination.ARTIST
+        else if (media.isArtist())
+            if (media.isSubsonic()) Destination.SUBSONIC_ARTIST
+            else Destination.ARTIST
         else if (media.isAlbum())
             if(media.isSubsonic()) Destination.SUBSONIC_ALBUM
             else Destination.ALBUM

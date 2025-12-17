@@ -49,10 +49,10 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
+import io.github.antoinepirlot.satunes.router.routes.subsonic.mediaRoutes
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 
 /**
@@ -150,6 +150,7 @@ internal fun Router(
                 navigationViewModel.setCurrentMediaImpl(media = it)
             }
         )
+
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
@@ -176,6 +177,7 @@ internal fun Router(
                 )
             }
         )
+
         settingsRoutes()
     }
 }

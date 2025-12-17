@@ -216,7 +216,8 @@ class SubsonicApiRequester() {
             resCallback = GetArtistCallback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
-                onDataRetrieved = onDataRetrieved
+                onDataRetrieved = onDataRetrieved,
+                onError = onError
             )
         )
     }

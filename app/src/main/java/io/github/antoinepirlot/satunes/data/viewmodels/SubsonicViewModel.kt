@@ -34,8 +34,10 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
@@ -181,33 +183,54 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getAlbum(albumId: Long, onDataRetrieved: (media: Media) -> Unit) {
-        runIOThread {
-            _apiRequester.getAlbum(
-                albumId = albumId,
-                onDataRetrieved = onDataRetrieved,
-                onError = { this@SubsonicViewModel.error = it }
-            )
-        }
+        val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
+        if (album != null)
+            this.loadAlbum(album = album, onDataRetrieved = onDataRetrieved)
+        else
+            runIOThread {
+                _apiRequester.getAlbum(
+                    albumId = albumId,
+                    onDataRetrieved = onDataRetrieved,
+                    onError = { this@SubsonicViewModel.error = it }
+                )
+            }
     }
 
     /**
      * Load album's information and update it with the information from server.
      */
-    fun getAlbum(album: SubsonicAlbum) {
+    fun loadAlbum(album: SubsonicAlbum, onDataRetrieved: (media: Media) -> Unit) {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
-                onDataRetrieved = { album.update(it) },
+                onDataRetrieved = { onDataRetrieved(album.toSubsonicAlbum(album = it)) },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
     }
 
     fun getArtist(artistId: Long, onDataRetrieved: (media: Media) -> Unit) {
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            this.loadArtist(artist = artist, onDataRetrieved = onDataRetrieved)
+        else
+            runIOThread {
+                _apiRequester.getArtist(
+                    artistId = artistId,
+                    onDataRetrieved = onDataRetrieved,
+                    onError = { this@SubsonicViewModel.error = it }
+                )
+            }
+    }
+
+    /**
+     * Load artist's information and update it with the information from server.
+     */
+    fun loadArtist(artist: SubsonicArtist, onDataRetrieved: (media: Media) -> Unit) {
         runIOThread {
             _apiRequester.getArtist(
-                artistId = artistId,
-                onDataRetrieved = onDataRetrieved,
+                artistId = artist.subsonicId,
+                onDataRetrieved = { onDataRetrieved(artist.toSubsonicArtist(artist = it)) },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }

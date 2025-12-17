@@ -54,11 +54,15 @@ open class Album(
         artist.addAlbum(album = this)
     }
 
+    fun updateArtist(artist: Artist) {
+        this.artist = artist
+    }
+
     /**
      * Transform this [Album] to [SubsonicAlbum].
      * After that, this [Album] can't no more be used
      */
-    open fun update(album: SubsonicAlbum): SubsonicAlbum {
+    open fun toSubsonicAlbum(album: SubsonicAlbum): SubsonicAlbum {
         val newAlbum: SubsonicAlbum = SubsonicAlbum(
             id = this.id,
             subsonicId = album.subsonicId,

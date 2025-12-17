@@ -21,16 +21,38 @@
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
 import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicArtist(
     override var subsonicId: Long,
+    id: Long = subsonicId,
     title: String,
 ) : SubsonicMedia, Artist(
     id = subsonicId,
     title = title,
 ) {
     override fun isSubsonic(): Boolean = true
+
+    /**
+     * Transform this [Artist] to [SubsonicArtist].
+     * After that, this [Artist] can't no more be used
+     */
+    open fun toSubsonicArtist(artist: SubsonicArtist): SubsonicArtist {
+        val newArtist: SubsonicArtist = SubsonicArtist(
+            id = this.id,
+            subsonicId = artist.subsonicId,
+            title = this.title
+        )
+        for (music: Music in this.musicSortedSet) {
+            music.updateArtist(artist = newArtist)
+            music.album.updateArtist(artist = newArtist)
+        }
+        DataManager.removeArtist(artist = this)
+        DataManager.addArtist(artist = newArtist)
+        return newArtist
+    }
 }

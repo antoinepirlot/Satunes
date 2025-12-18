@@ -51,6 +51,7 @@ import io.github.antoinepirlot.satunes.database.models.media.BackFolder
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
@@ -84,7 +85,11 @@ internal fun MediaCardList(
     ) {
         items(
             items = mediaImplList,
-            key = { it.javaClass.name + '-' + it.id }
+            key = {
+                it.javaClass.name + '-' +
+                        if (it.isSubsonic()) (it as SubsonicMedia).subsonicId
+                        else it.id
+            }
         ) { mediaImpl: Media ->
             val isFirst: Boolean = mediaImpl == mediaImplList.first()
             if (isFirst) header?.invoke()

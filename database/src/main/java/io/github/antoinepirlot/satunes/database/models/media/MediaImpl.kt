@@ -153,8 +153,6 @@ abstract class MediaImpl(
         return compared
     }
 
-    override fun isSubsonic(): Boolean = false
-
     override fun musicCount(): Int = this.musicSortedSet.size
     override fun isRootFolder(): Boolean = false
 

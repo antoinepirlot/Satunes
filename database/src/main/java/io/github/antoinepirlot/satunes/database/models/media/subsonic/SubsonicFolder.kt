@@ -33,6 +33,4 @@ class SubsonicFolder(
     companion object {
         const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
     }
-
-    override fun isSubsonic(): Boolean = true
 }

@@ -65,7 +65,6 @@ class SubsonicMusic(
     genre = genre,
     uri = uri,
 ) {
-    override fun isSubsonic(): Boolean = true
 
     /**
      * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical

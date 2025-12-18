@@ -28,7 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMu
 interface Media : MediaData, Comparable<Media> {
     val musicCollection: Collection<Music>
 
-    fun isSubsonic(): Boolean
+    fun isSubsonic(): Boolean = false
     fun isEmpty(): Boolean
     fun isNotEmpty(): Boolean
 

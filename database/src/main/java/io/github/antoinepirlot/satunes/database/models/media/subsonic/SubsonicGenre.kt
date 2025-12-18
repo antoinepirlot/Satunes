@@ -31,6 +31,4 @@ class SubsonicGenre(
 ) : SubsonicMedia, Genre(
     id = subsonicId,
     title = title,
-) {
-    override fun isSubsonic(): Boolean = true
-}
+)

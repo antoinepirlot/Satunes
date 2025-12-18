@@ -27,4 +27,6 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
  */
 interface SubsonicMedia : Media {
     var subsonicId: Long
+
+    override fun isSubsonic(): Boolean = true
 }

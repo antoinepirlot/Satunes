@@ -39,6 +39,4 @@ class SubsonicAlbum(
     artist = artist,
     isCompilation = isCompilation,
     year = year
-) {
-    override fun isSubsonic(): Boolean = true
-}
+)

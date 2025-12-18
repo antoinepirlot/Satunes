@@ -35,7 +35,6 @@ class SubsonicArtist(
     id = subsonicId,
     title = title,
 ) {
-    override fun isSubsonic(): Boolean = true
 
     /**
      * Transform this [Artist] to [SubsonicArtist].

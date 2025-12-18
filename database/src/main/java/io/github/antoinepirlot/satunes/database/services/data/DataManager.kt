@@ -248,6 +248,10 @@ object DataManager {
 
     @Synchronized
     fun addArtist(artist: SubsonicArtist): SubsonicArtist {
+        if (this.artistMap.contains(key = artist)) {
+            this.removeArtist(artist = artist)
+            this.addArtist(artist = artist as Artist) //TODO check if it will loop or not.
+        }
         if (!subsonicArtistsMapById.contains(key = artist.subsonicId))
             subsonicArtistsMapById[artist.subsonicId] = artist
         return subsonicArtistsMapById[artist.subsonicId]!!

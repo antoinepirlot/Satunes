@@ -42,7 +42,7 @@ internal fun getOrCreateSubsonicArtist(id: Long, title: String): SubsonicArtist 
  * Create a new artist matching data
  */
 private fun createSubsonicArtist(id: Long, title: String): SubsonicArtist =
-    SubsonicArtist(subsonicId = id, title = title)
+    DataManager.addArtist(artist = SubsonicArtist(subsonicId = id, title = title))
 
 internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() //TODO
 
@@ -73,15 +73,16 @@ private fun createSubsonicAlbum(
     artistId: Long,
     artistTitle: String,
     year: Int?
-): SubsonicAlbum {
-    return SubsonicAlbum(
-        subsonicId = id,
-        title = title,
-        artist = getOrCreateSubsonicArtist(id = artistId, title = artistTitle),
-//            isCompilation = false,
-        year = year,
+): SubsonicAlbum =
+    DataManager.addAlbum(
+        album = SubsonicAlbum(
+            subsonicId = id,
+            title = title,
+            artist = getOrCreateSubsonicArtist(id = artistId, title = artistTitle),
+            //            isCompilation = false,
+            year = year
+        )
     )
-}
 
 internal fun getSubsonicGenre(): Genre =
     SubsonicGenre(subsonicId = 1, title = "UNKNOWN CLOUD GENRE") //TODO

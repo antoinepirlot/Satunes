@@ -57,9 +57,7 @@ open class Artist(
         return false
     }
 
-    fun contains(album: Album): Boolean {
-        return this._albumSortedSet.contains(album)
-    }
+    fun contains(album: Album): Boolean = this._albumSortedSet.contains(album)
 
     fun updateAlbum(album: Album) {
         if (this.contains(album = album)) {

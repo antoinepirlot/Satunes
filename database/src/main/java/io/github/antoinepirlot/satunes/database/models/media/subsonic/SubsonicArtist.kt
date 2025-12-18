@@ -50,7 +50,6 @@ class SubsonicArtist(
             music.updateArtist(artist = newArtist)
             music.album.updateArtist(artist = newArtist)
         }
-        DataManager.removeArtist(artist = this)
         DataManager.addArtist(artist = newArtist)
         return newArtist
     }

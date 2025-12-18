@@ -203,7 +203,11 @@ class SubsonicViewModel : ViewModel() {
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
-                onDataRetrieved = { onDataRetrieved(album.toSubsonicAlbum(album = it)) },
+                onDataRetrieved = {
+                    if (!album.isSubsonic())
+                        onDataRetrieved(album.toSubsonicAlbum(album = it))
+                    else onDataRetrieved(it)
+                },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
@@ -271,7 +275,11 @@ class SubsonicViewModel : ViewModel() {
         runIOThread {
             _apiRequester.getArtist(
                 artistId = artist.subsonicId,
-                onDataRetrieved = { onDataRetrieved.invoke(artist.toSubsonicArtist(artist = it)) },
+                onDataRetrieved = {
+                    if (!artist.isSubsonic())
+                        onDataRetrieved.invoke(artist.toSubsonicArtist(artist = it))
+                    else onDataRetrieved(it)
+                },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }

@@ -138,12 +138,17 @@ class SubsonicApiRequester() {
     /**
      * Ping API
      */
-    fun ping(onSucceed: (() -> Unit)? = null, onError: (() -> Unit)? = null) {
+    fun ping(
+        onSucceed: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null
+    ) {
         this.get(
             url = this.getCommandUrl(command = "ping", parameters = arrayOf()),
             resCallback = PingCallback(
                 subsonicApiRequester = this,
                 onSucceed = onSucceed,
+                onFinished = onFinished,
                 onError = { onError?.invoke() }
             ),
         )
@@ -201,7 +206,7 @@ class SubsonicApiRequester() {
      * @param artistId the id of artist located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
-    fun getArtist(
+    suspend fun getArtist(
         artistId: Long,
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit,

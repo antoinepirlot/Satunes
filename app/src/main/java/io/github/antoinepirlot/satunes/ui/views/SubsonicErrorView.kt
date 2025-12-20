@@ -25,7 +25,6 @@ fun SubsonicErrorView(
     modifier: Modifier = Modifier,
     error: Error
 ) {
-
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

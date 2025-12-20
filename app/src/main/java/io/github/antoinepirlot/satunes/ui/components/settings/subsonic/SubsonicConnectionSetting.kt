@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,13 +50,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.LoadingCircle
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.ui.components.settings.SubSettings
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -136,9 +132,6 @@ private fun Buttons(
     satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
-
     var isLoading: Boolean by rememberSaveable { mutableStateOf(value = false) }
 
     Row(modifier = modifier) {
@@ -154,8 +147,6 @@ private fun Buttons(
             onClick = {
                 isLoading = true
                 subsonicViewModel.connect(
-                    scope = scope,
-                    snackbarHostState = snackbarHostState,
                     onFinished = { isConnected: Boolean ->
                         if (isConnected)
                             satunesViewModel.turnOnCloud()

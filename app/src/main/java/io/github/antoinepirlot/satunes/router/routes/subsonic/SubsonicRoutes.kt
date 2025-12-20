@@ -15,7 +15,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
-import io.github.antoinepirlot.satunes.ui.views.SubsonicErrorView
+import io.github.antoinepirlot.satunes.ui.views.SubsonicView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
@@ -48,16 +48,16 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
                 subsonicViewModel.getAlbum(albumId = albumId, onDataRetrieved = onMediaOpen)
             }
 
-            if (album != null) {
-                LaunchedEffect(key1 = Unit) {
-                    onMediaOpen(album)
-                }
+            SubsonicView(subsonicViewModel = subsonicViewModel) {
+                if (album != null) {
+                    LaunchedEffect(key1 = Unit) {
+                        onMediaOpen(album)
+                    }
 
-                AlbumView(album = album)
-            } else if (subsonicViewModel.error != null)
-                SubsonicErrorView(error = subsonicViewModel.error!!)
-            else
-                NoDataFoundView()
+                    AlbumView(album = album)
+                } else
+                    NoDataFoundView()
+            }
         }
     }
 
@@ -83,12 +83,12 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
                 )
             }
 
-            if (artist != null) {
-                ArtistView(artist = artist)
-            } else if (subsonicViewModel.error != null)
-                SubsonicErrorView(error = subsonicViewModel.error!!)
-            else
-                NoDataFoundView()
+            SubsonicView(subsonicViewModel = subsonicViewModel) {
+                if (artist != null)
+                    ArtistView(artist = artist)
+                else
+                    NoDataFoundView()
+            }
         }
     }
 }

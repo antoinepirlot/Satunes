@@ -44,7 +44,6 @@ import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
-import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -800,17 +799,11 @@ class SatunesViewModel : ViewModel() {
      * Change the cloud mode.
      * It pings the server if is turning on
      */
-    fun switchCloudMode(
-        scope: CoroutineScope,
-        snackbarHostState: SnackbarHostState,
-        subsonicViewModel: SubsonicViewModel
-    ) {
+    fun switchCloudMode(subsonicViewModel: SubsonicViewModel) {
         if (_uiState.value.mode == SatunesModes.ONLINE)
             turnOffCloud()
         else
             subsonicViewModel.connect(
-                scope = scope,
-                snackbarHostState = snackbarHostState,
                 onFinished = { isConnected: Boolean ->
                     if (isConnected)
                         turnOnCloud()

@@ -24,13 +24,13 @@
 package io.github.antoinepirlot.satunes.data.viewmodels
 
 import android.content.Context
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.MainActivity
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
@@ -41,18 +41,25 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
-import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicViewModel : ViewModel() {
-    var hasBeenUpdated: Boolean by mutableStateOf(false)
-        private set
+    private val _uiState: MutableStateFlow<SubsonicUiState> =
+        MutableStateFlow(value = SubsonicUiState())
 
     private val _apiRequester: SubsonicApiRequester
         get() = SubsonicApiRequester()
+
+    val uiState: StateFlow<SubsonicUiState> = _uiState.asStateFlow()
+
+    var hasBeenUpdated: Boolean by mutableStateOf(false)
+        private set
 
     var user: User = User(
         url = SettingsManager.subsonicUrl,
@@ -63,6 +70,8 @@ class SubsonicViewModel : ViewModel() {
 
     var error: Error? by mutableStateOf(value = null)
         private set
+
+    private var nbReq: Int = 0
 
     fun updateSubsonicUrl(url: String) {
         this.user.url = url
@@ -91,58 +100,62 @@ class SubsonicViewModel : ViewModel() {
         this.hasBeenUpdated = false
     }
 
+    @Synchronized
+    private fun initRequest() {
+        if (this.nbReq++ < 0)
+            throw IllegalStateException("nbReq < 0 in initRequest, there's a problem.")
+        this.error = null
+        if (!_uiState.value.isFetching)
+            _uiState.update { currentState: SubsonicUiState ->
+                currentState.copy(isFetching = true)
+            }
+    }
+
+    @Synchronized
+    private fun finishRequest() {
+        if (this.nbReq-- == 0)
+            throw IllegalStateException("nbReq will be < 0 in finishRequest, there's a problem.")
+        if (this.nbReq == 0)
+            _uiState.update { currentState: SubsonicUiState ->
+                currentState.copy(isFetching = false)
+            }
+
+        error = Error(code = 5, message = "Test error")
+    }
+
     /**
      * Send ping to server to check if it is available and credentials corrects.
      */
-    fun connect(
-        scope: CoroutineScope,
-        snackbarHostState: SnackbarHostState,
-        onFinished: (Boolean) -> Unit
-    ) {
+    fun connect(onFinished: (Boolean) -> Unit) {
         val context: Context = MainActivity.instance.applicationContext
+        this.initRequest()
         runIOThread {
-            try {
-                SettingsManager.updateSubsonicUrl(
-                    context = context,
-                    url = this@SubsonicViewModel.user.url
-                )
-                SettingsManager.updateSubsonicUsername(
-                    context = context,
-                    username = this@SubsonicViewModel.user.username
-                )
-                SettingsManager.updateSubsonicPassword(
-                    context = context,
-                    password = this@SubsonicViewModel.user.password
-                )
-                SettingsManager.updateSubsonicSalt(
-                    context = context,
-                    salt = this@SubsonicViewModel.user.salt
-                )
-                this@SubsonicViewModel.hasBeenUpdated = false
-                if (!user.isFilled()) {
-                    onFinished(false)
-                    return@runIOThread
-                }
-                _apiRequester.ping(
-                    onSucceed = {
-                        onFinished(true)
-//                        subsonicApiRequester.loadAll()
-                    },
-                    onError = { onFinished(false) }
-                ) //TODO
-            } catch (_: Throwable) {
-                showErrorSnackBar(
-                    scope = scope,
-                    snackBarHostState = snackbarHostState,
-                    action = {
-                        connect(
-                            scope = scope,
-                            snackbarHostState = snackbarHostState,
-                            onFinished = onFinished
-                        )
-                    }
-                )
+            SettingsManager.updateSubsonicUrl(
+                context = context,
+                url = this@SubsonicViewModel.user.url
+            )
+            SettingsManager.updateSubsonicUsername(
+                context = context,
+                username = this@SubsonicViewModel.user.username
+            )
+            SettingsManager.updateSubsonicPassword(
+                context = context,
+                password = this@SubsonicViewModel.user.password
+            )
+            SettingsManager.updateSubsonicSalt(
+                context = context,
+                salt = this@SubsonicViewModel.user.salt
+            )
+            this@SubsonicViewModel.hasBeenUpdated = false
+            if (!user.isFilled()) {
+                onFinished(false)
+                return@runIOThread
             }
+            _apiRequester.ping(
+                onSucceed = { onFinished(true) },
+                onFinished = { this.finishRequest() },
+                onError = { onFinished(false) }
+            )
         }
     }
 
@@ -158,6 +171,7 @@ class SubsonicViewModel : ViewModel() {
      * Get random song from API
      */
     fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
+        this.initRequest()
         runIOThread {
             _apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
         }
@@ -173,33 +187,56 @@ class SubsonicViewModel : ViewModel() {
         onFinished: () -> Unit,
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
     ) {
+        this.initRequest()
         runIOThread {
             _apiRequester.search(
                 query = query,
-                onFinished = onFinished,
+                onFinished = {
+                    onFinished.invoke()
+                    this.finishRequest()
+                },
                 onDataRetrieved = onDataRetrieved
             )
         }
     }
 
-    fun getAlbum(albumId: Long, onDataRetrieved: (media: SubsonicAlbum) -> Unit) {
+    fun getAlbum(
+        albumId: Long,
+        onDataRetrieved: (media: SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
         val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
         if (album != null)
-            this.loadAlbum(album = album, onDataRetrieved = { onDataRetrieved.invoke(it) })
-        else
+            this.loadAlbum(
+                album = album,
+                onDataRetrieved = { onDataRetrieved.invoke(it) },
+                onFinished = onFinished
+            )
+        else {
+            this.initRequest()
             runIOThread {
                 _apiRequester.getAlbum(
                     albumId = albumId,
                     onDataRetrieved = onDataRetrieved,
-                    onError = { this@SubsonicViewModel.error = it }
+                    onError = { this@SubsonicViewModel.error = it },
+                    onFinished = {
+                        onFinished?.invoke()
+                        this.finishRequest()
+                    },
                 )
             }
+        }
     }
 
     /**
      * Load album's information and update it with the information from server.
      */
-    fun loadAlbum(album: SubsonicAlbum, onDataRetrieved: (media: SubsonicAlbum) -> Unit) {
+    fun loadAlbum(
+        album: SubsonicAlbum,
+        onDataRetrieved: (media: SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
+        this.initRequest()
         runIOThread {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
@@ -208,40 +245,64 @@ class SubsonicViewModel : ViewModel() {
                         onDataRetrieved(album.toSubsonicAlbum(album = it))
                     else onDataRetrieved(it)
                 },
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
     }
 
-    fun getArtist(artistId: Long, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
+    fun getArtist(
+        artistId: Long,
+        onDataRetrieved: (media: SubsonicArtist) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
         val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
         if (artist != null)
-            this.loadArtist(artist = artist, onDataRetrieved = onDataRetrieved)
-        else
+            this.loadArtist(
+                artist = artist,
+                onDataRetrieved = onDataRetrieved,
+                onFinished = onFinished
+            )
+        else {
+            this.initRequest()
             runIOThread {
                 _apiRequester.getArtist(
                     artistId = artistId,
                     onDataRetrieved = onDataRetrieved,
+                    onFinished = {
+                        onFinished?.invoke()
+                        this.finishRequest()
+                    },
                     onError = { this@SubsonicViewModel.error = it }
                 )
             }
+        }
     }
 
-    fun getArtistWithMusics(artistId: Long, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
+    fun getArtistWithMusics(
+        artistId: Long,
+        onDataRetrieved: (media: SubsonicArtist) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
         val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
         if (artist != null)
             this.loadArtist(
                 artist = artist,
                 onDataRetrieved = { artist: SubsonicArtist ->
                     this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-                }
+                },
+                onFinished = onFinished
             )
         else
             this.getArtist(
                 artistId = artistId,
                 onDataRetrieved = { artist: SubsonicArtist ->
                     this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-                }
+                },
+                onFinished = onFinished
             )
     }
 
@@ -257,8 +318,8 @@ class SubsonicViewModel : ViewModel() {
                     albumId = (album as SubsonicAlbum).subsonicId,
                     onDataRetrieved = { album: SubsonicAlbum ->
                         artist.addMusics(musics = album.musicCollection)
-                        queriesInProgress--
-                    }
+                    },
+                    onFinished = { queriesInProgress-- },
                 )
             }
         }
@@ -271,7 +332,12 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Load artist's information and update it with the information from server.
      */
-    fun loadArtist(artist: SubsonicArtist, onDataRetrieved: (media: SubsonicArtist) -> Unit) {
+    fun loadArtist(
+        artist: SubsonicArtist,
+        onDataRetrieved: (media: SubsonicArtist) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
+        this.initRequest()
         runIOThread {
             _apiRequester.getArtist(
                 artistId = artist.subsonicId,
@@ -279,6 +345,10 @@ class SubsonicViewModel : ViewModel() {
                     if (!artist.isSubsonic())
                         onDataRetrieved.invoke(artist.toSubsonicArtist(artist = it))
                     else onDataRetrieved(it)
+                },
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
                 },
                 onError = { this@SubsonicViewModel.error = it }
             )

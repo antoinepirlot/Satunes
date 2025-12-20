@@ -40,7 +40,7 @@ interface Media : MediaData, Comparable<Media> {
 
     fun clearMusicList()
 
-    fun contains(mediaImpl: MediaImpl): Boolean
+    fun contains(media: Media): Boolean
 
     fun addMusic(music: Music)
 

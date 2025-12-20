@@ -30,6 +30,4 @@ interface SubsonicMedia : Media {
 
     override fun isSubsonic(): Boolean = true
 
-    override fun equals(other: Any?): Boolean
-    override fun hashCode(): Int
 }

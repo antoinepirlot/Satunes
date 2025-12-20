@@ -19,6 +19,10 @@ GET {{baseUrl}}/getRandomSongs?{{auth_params}}
 
 ###
 
+GET {{baseUrl}}/getAlbum?{{get_album_params}}
+
+###
+
 GET {{baseUrl}}/getArtist?{{get_artist_params}}
 
 ###

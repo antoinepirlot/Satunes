@@ -91,17 +91,18 @@ abstract class MediaImpl(
         (this.musicCollection as MutableList<Music>).clear()
     }
 
-    override fun contains(mediaImpl: MediaImpl): Boolean {
-        return if (mediaImpl.isMusic())
-            this.musicCollection.contains(mediaImpl)
-        else if (mediaImpl.isFolder())
-            this.musicCollection.containsAll(elements = (mediaImpl as Folder).getAllMusic())
-        else this.musicCollection.containsAll(elements = mediaImpl.musicCollection)
+    override fun contains(media: Media): Boolean {
+        //TODO hashing collision using the set collection.
+        return if (media.isMusic())
+            this.musicCollection.contains(element = media)
+        else if (media.isFolder())
+            this.musicCollection.containsAll(elements = (media as Folder).getAllMusic())
+        else this.musicCollection.containsAll(elements = media.musicCollection)
     }
 
     @Synchronized
     override fun addMusic(music: Music) {
-        if (!this.musicSortedSet.contains(element = music)) {
+        if (!this.contains(media = music)) {
             this.musicSortedSet.add(element = music)
             (this.musicCollection as MutableList<Music>).add(element = music)
             (this.musicCollection as MutableList<Music>).sort()
@@ -110,15 +111,12 @@ abstract class MediaImpl(
 
     @Synchronized
     override fun addMusics(musics: Collection<Music>) {
-        this.musicSortedSet.addAll(musics)
-        this.musicCollection as MutableList
-        (this.musicCollection as MutableList<Music>).clear()
-        (this.musicCollection as MutableList<Music>).addAll(this.musicSortedSet)
+        for(music: Music in musics) this.addMusic(music = music)
     }
 
     @Synchronized
     override fun removeMusic(music: Music) {
-        if (this.musicSortedSet.contains(element = music)) {
+        if (this.contains(media = music)) {
             this.musicSortedSet.remove(music)
             (this.musicCollection as MutableList<Music>).remove(element = music)
         }

@@ -29,13 +29,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -45,6 +44,7 @@ import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 @Composable
 fun SubsonicSearchSection(
     modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
     searchViewModel: SearchViewModel = viewModel(),
@@ -61,8 +61,7 @@ fun SubsonicSearchSection(
         emptyViewText = stringResource(id = R.string.no_result),
         onMediaClick = { mediaImpl: Media ->
             if (mediaImpl.isMusic())
-            //TODO start streaming radio and not playing single element
-                playbackViewModel.loadMusics(musics = listOf(mediaImpl as Music))
+                playbackViewModel.loadMusics(musics = dataViewModel.getMusicSet())
             navigationViewModel.openMedia(
                 playbackViewModel = playbackViewModel,
                 media = mediaImpl,

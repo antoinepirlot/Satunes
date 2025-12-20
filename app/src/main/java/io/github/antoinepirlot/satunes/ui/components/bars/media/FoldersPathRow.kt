@@ -61,16 +61,13 @@ fun FoldersPathRow(
     ) {
         items(
             items = folders,
-            key = {
-                if (it.isSubsonic()) "cloud-${it.id}"
-                else it.id
-            },
+            key = { it.javaClass.name + '-' + it.id }
         ) { targetFolder: Folder ->
             var onClick: (() -> Unit)? = null
             if (targetFolder != endFolder) onClick = {
                 navigationViewModel.navigate(
                     navController = navController,
-                    mediaImpl = targetFolder
+                    media = targetFolder
                 )
             }
             if (targetFolder == folders.first())

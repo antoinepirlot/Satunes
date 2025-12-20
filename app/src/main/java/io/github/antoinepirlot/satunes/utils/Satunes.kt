@@ -23,8 +23,6 @@ package io.github.antoinepirlot.satunes.utils
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.OptIn
-import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -83,7 +81,6 @@ internal fun removeSatunesDownloadedApkFiles(context: Context) {
 /**
  * When the user click on playing notification, the app is opened.
  */
-@OptIn(UnstableApi::class)
 internal fun setNotificationOnClick(context: Context) {
     Logger.getLogger()?.info("Set Notification On Click")
     val intent = Intent(context.applicationContext, MainActivity::class.java)

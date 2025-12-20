@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -47,19 +46,15 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.SatunesModes
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -73,10 +68,7 @@ internal fun TopAppBar(
     satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
@@ -121,11 +113,7 @@ internal fun TopAppBar(
                 IconButton(
                     jetpackLibsIcons = mode.icon,
                     onClick = {
-                        satunesViewModel.switchCloudMode(
-                            scope = scope,
-                            snackbarHostState = snackbarHostState,
-                            subsonicViewModel = subsonicViewModel
-                        )
+                        satunesViewModel.switchCloudMode(subsonicViewModel = subsonicViewModel)
                     }
                 )
             }

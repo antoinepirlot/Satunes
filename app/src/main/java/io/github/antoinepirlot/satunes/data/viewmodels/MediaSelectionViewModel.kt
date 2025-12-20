@@ -109,14 +109,14 @@ class MediaSelectionViewModel : ViewModel() {
         return if (mediaImpl.isMusic()) {
             mediaImpl as Music
             //Check in playlist
-            if ((_currentMediaImpl as Playlist).contains(mediaImpl = mediaImpl)) {
+            if ((_currentMediaImpl as Playlist).contains(media = mediaImpl)) {
                 this.addMusic(music = mediaImpl)
                 true
             } else this._checkedMusics.contains(element = mediaImpl)
         } else if (mediaImpl.isPlaylist()) {
             mediaImpl as Playlist
             //Check for selected media
-            if (mediaImpl.contains(mediaImpl = _currentMediaImpl!!)) {
+            if (mediaImpl.contains(media = _currentMediaImpl!!)) {
                 this.addPlaylist(playlist = mediaImpl)
                 true
             } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)

@@ -20,13 +20,13 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
  * @author Antoine Pirlot on 22/12/2024
  */
-object SortByTitleComparator : MediaComparator<MediaImpl>() {
-    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
+object SortByTitleComparator : MediaComparator<Media>() {
+    override fun compare(mediaImpl1: Media, mediaImpl2: Media): Int {
         return this.getFinalCmp(cmp = StringComparator.compare(mediaImpl1.title, mediaImpl2.title))
     }
 }

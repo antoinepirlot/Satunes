@@ -67,7 +67,7 @@ internal fun AlbumOptionsDialog(
         icon = {
             MediaArtwork(
                 modifier = Modifier.size(100.dp),
-                mediaImpl = album
+                media = album
             )
         },
         title = {
@@ -101,7 +101,7 @@ internal fun AlbumOptionsDialog(
                  * Redirections
                  */
                 if (navigationUiState.currentDestination != Destination.ARTIST)
-                    NavigateToMediaMusicOption(mediaImpl = album.artist)
+                    NavigateToMediaMusicOption(media = album.artist)
             }
         }
     )

@@ -24,15 +24,15 @@
 package io.github.antoinepirlot.satunes.database.models.comparators
 
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import java.util.Date
 
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByAddedDateComparator : MediaComparator<MediaImpl>() {
-    override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
+object SortByAddedDateComparator : MediaComparator<Media>() {
+    override fun compare(o1: Media, o2: Media): Int {
         var cmp: Int =
             if (o1.isMusic()) {
                 o1 as Music

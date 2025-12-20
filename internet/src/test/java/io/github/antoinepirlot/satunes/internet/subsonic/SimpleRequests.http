@@ -19,4 +19,15 @@ GET {{baseUrl}}/getRandomSongs?{{auth_params}}
 
 ###
 
-GET {{baseUrl}}/getArtist?{{auth_params}}
+GET {{baseUrl}}/getAlbum?{{get_album_params}}
+
+###
+
+GET {{baseUrl}}/getArtist?{{get_artist_params}}
+
+###
+GET {{baseUrl}}/search3?{{search_params}}
+
+###
+
+GET {{baseUrl}}/getCoverArt?{{cover_art_params}}

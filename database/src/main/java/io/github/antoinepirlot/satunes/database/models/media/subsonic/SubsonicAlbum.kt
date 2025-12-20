@@ -18,17 +18,34 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs
+package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
-@Serializable
-internal class RandomSongs(
-    @SerialName(value = "song") private val songs: List<Song>
-) : Iterable<Song> {
-    override fun iterator(): Iterator<Song> = songs.iterator()
+class SubsonicAlbum(
+    override var subsonicId: Long,
+    id: Long = subsonicId,
+    title: String,
+    artist: Artist,
+    isCompilation: Boolean = false,
+    year: Int? = null,
+) : SubsonicMedia, Album(
+    id = id,
+    title = title,
+    artist = artist,
+    isCompilation = isCompilation,
+    year = year
+) {
+    override fun equals(other: Any?): Boolean {
+        return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
 }

@@ -49,9 +49,11 @@ internal fun PlaylistView(
     playlist: Playlist,
 ) {
 
-    LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = playlist.getMusicSet())
+    LaunchedEffect(key1 = playlist.musicCollection.size) {
+        dataViewModel.loadMediaImplList(list = playlist.musicCollection)
+    }
 
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
         if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(
                 extraButtons = {

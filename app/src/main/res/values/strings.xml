@@ -180,4 +180,10 @@
     <string name="subsonic_connection_title">Connection Credentials</string>
     <string name="salt_label">Salt</string>
     <string name="salt_placeholder">Anything you want</string>
+    <string name="subsonic_section_text">on Cloud</string>
+    <string name="local_section_text">On device</string>
+    <string name="error_while_fetching_title">Error</string>
+    <string name="no_data_found_view_text">No data has been found.</string>
+    <string name="error_code_text">Error code: %1$s</string>
+    <string name="error_message_text">Error message: %1$s</string>
 </resources>

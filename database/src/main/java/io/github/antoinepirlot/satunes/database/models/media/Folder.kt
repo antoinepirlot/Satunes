@@ -187,7 +187,7 @@ open class Folder(
         return absolutePath.hashCode()
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         var compared: Int = super.compareTo(other)
         if (compared == 0 && this != other) {
             compared = 1

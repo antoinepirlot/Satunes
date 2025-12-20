@@ -45,27 +45,32 @@ import java.io.InputStream
  * @author Antoine Pirlot 03/09/2025
  */
 
-internal abstract class SubsonicCallback(
+internal abstract class SubsonicCallback<T>(
     protected val subsonicApiRequester: SubsonicApiRequester,
+    protected val onDataRetrieved: (T) -> Unit,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
     protected val onError: ((Error?) -> Unit)?,
+    protected val onFinished: (() -> Unit)?
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
-    protected var response: SubsonicResponse? = null
+    protected var subsonicResponse: SubsonicResponse? = null
 
     override fun onFailure(call: Call, e: IOException) {
         _logger?.severe(e.message)
         onError?.invoke(null)
+        this.onFinished?.invoke()
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun onResponse(call: Call, response: Response) {
-        if (response.code >= 400) {
-            //TODO
-            return
-        }
         try {
+            if (response.code >= 400) {
+                //TODO
+                return
+            }
+            if (this.isGetCoverArtCallback()) return
+
             val input: InputStream = response.body.byteStream()
             try {
                 val format = Json { ignoreUnknownKeys = true }
@@ -73,7 +78,7 @@ internal abstract class SubsonicCallback(
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
 
                 if (response.isError()) this.onError?.invoke(response.error!!)
-                this.response = response
+                this.subsonicResponse = response
 
             } catch (e: SerializationException) {
                 _logger?.severe(e.message)
@@ -92,4 +97,13 @@ internal abstract class SubsonicCallback(
             SubsonicCall.executionFinished(subsonicCallback = this)
         }
     }
+
+    open fun processData(): Boolean {
+        return if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
+            this.onError?.invoke(this.subsonicResponse!!.error)
+            false
+        } else true
+    }
+
+    protected open fun isGetCoverArtCallback(): Boolean = false
 }

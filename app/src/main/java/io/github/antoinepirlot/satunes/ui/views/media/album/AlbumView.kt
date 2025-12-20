@@ -61,8 +61,10 @@ internal fun AlbumView(
 ) {
 
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = album.getMusicSet())
+        dataViewModel.loadMediaImplList(list = album.musicCollection)
+    }
 
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
         if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
@@ -97,7 +99,7 @@ private fun Header(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),
-            mediaImpl = album
+            media = album
         )
         Title(
             bottomPadding = 0.dp,

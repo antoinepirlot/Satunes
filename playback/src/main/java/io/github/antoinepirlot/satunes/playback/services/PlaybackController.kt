@@ -22,11 +22,9 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.ComponentName
 import android.content.Context
-import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
@@ -82,14 +80,12 @@ internal class PlaybackController private constructor(
             WidgetPlaybackManager.refreshWidgets()
         }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
-        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
             PlaybackService.updateCustomCommands()
             PlaybackManager.repeatMode.intValue = value
         }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
-        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
             PlaybackService.updateCustomCommands()
@@ -161,7 +157,6 @@ internal class PlaybackController private constructor(
             return _instance!!
         }
 
-        @OptIn(UnstableApi::class)
         fun initInstance(
             context: Context,
             listener: Player.Listener? = null,
@@ -194,20 +189,12 @@ internal class PlaybackController private constructor(
                 if (listener != null && listener != this._instance?.listener) {
                     _logger?.info("Update listener")
 
-                    while (!isInitialized()) {
-                        _logger?.info("Waiting")
+                    _logger?.info("Waiting")
+                    while (!isInitialized());
+                    _logger?.info("PlaybackListener initialized")
                         // Wait it is initializing
-                    }
-                    val wasPlaying: Boolean = _instance!!.isPlaying
-                    if (_instance!!.isPlaying) {
-                        _instance!!.pause()
-                    }
                     _instance!!.mediaController!!.removeListener(_instance!!.listener)
                     _instance!!.mediaController!!.addListener(listener)
-                    _instance!!.mediaController!!.prepare()
-                    if (wasPlaying) {
-                        _instance!!.play()
-                    }
                 }
             }
 
@@ -393,9 +380,9 @@ internal class PlaybackController private constructor(
         this.loadMusics(playlist = playlist)
     }
 
-    @OptIn(UnstableApi::class)
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
+        if (this.playlist === playlist) return
         this.playlist = playlist
 
         this.mediaController!!.clearMediaItems()
@@ -438,7 +425,7 @@ internal class PlaybackController private constructor(
             hasNext = true
         } else if (mediaImpl.isFolder())
             addToQueue(mediaImplList = (mediaImpl as Folder).getAllMusic())
-        else addToQueue(mediaImplList = mediaImpl.getMusicSet())
+        else addToQueue(mediaImplList = mediaImpl.musicCollection)
     }
 
     fun removeFromQueue(mediaImplList: Collection<MediaImpl>) {
@@ -460,7 +447,7 @@ internal class PlaybackController private constructor(
             }
         } else if (mediaImpl.isFolder())
             removeFromQueue(mediaImplList = (mediaImpl as Folder).getAllMusic())
-        else removeFromQueue(mediaImplList = mediaImpl.getMusicSet())
+        else removeFromQueue(mediaImplList = mediaImpl.musicCollection)
     }
 
     private fun updateHasNext() {
@@ -504,7 +491,7 @@ internal class PlaybackController private constructor(
             // reversed because each music will be added next to it's added after the current music
             addNext(mediaImplList = (mediaImpl as Folder).getAllMusic().reversed())
         // reversed because each music will be added next to it's added after the current music
-        else addNext(mediaImplList = mediaImpl.getMusicSet().reversed())
+        else addNext(mediaImplList = mediaImpl.musicCollection.reversed())
     }
 
     private fun moveMusic(music: Music, newIndex: Int) {
@@ -537,7 +524,6 @@ internal class PlaybackController private constructor(
      *      1) If the shuffle mode is disabling then undo shuffle.
      *      2) If the shuffle mode is enabling shuffle the playlistDB
      */
-    @OptIn(UnstableApi::class)
     fun switchShuffleMode() {
         isShuffle = !isShuffle
         if (playlist!!.musicCount() > 1) {
@@ -555,7 +541,6 @@ internal class PlaybackController private constructor(
      * Move music playing to the first index and remove other
      * the music playing has to take its original place.
      */
-    @OptIn(UnstableApi::class)
     private fun shuffle() {
         if (this.musicPlaying == null) {
             // No music playing
@@ -587,7 +572,6 @@ internal class PlaybackController private constructor(
      * Restore the original playlistDB.
      *
      */
-    @OptIn(UnstableApi::class)
     private fun undoShuffle() {
         this.playlist!!.undoShuffle()
         if (this.musicPlaying == null) {

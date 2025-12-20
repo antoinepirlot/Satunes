@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.PlaybackUiState
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.models.media.Folder
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -108,8 +109,8 @@ class PlaybackViewModel : ViewModel() {
                 (media as Folder).getAllMusic()
             } else {
                 val musicSet: MutableSet<Music> = mutableSetOf()
-                media.getMusicSet().forEach { music: Music ->
-                    musicSet.addAll(elements = music.getMusicSet())
+                media.musicCollection.forEach { music: Music ->
+                    musicSet.addAll(elements = music.musicCollection)
                 }
                 musicSet
             }
@@ -121,7 +122,7 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun loadMusicFromMedias(
-        medias: Collection<MediaImpl>,
+        medias: Collection<Media>,
         currentDestination: Destination,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
@@ -131,16 +132,16 @@ class PlaybackViewModel : ViewModel() {
         val isInFolderView: Boolean =
             currentDestination == Destination.FOLDERS || currentDestination == Destination.FOLDER
         if (isInFolderView)
-            medias.forEach { media: MediaImpl ->
+            medias.forEach { media: Media ->
                 if (media.isMusic()) musicSet.add(media as Music)
                 else return@forEach
             }
 
-        medias.forEach { mediaImpl: MediaImpl ->
+        medias.forEach { mediaImpl: Media ->
             if (isInFolderView && mediaImpl.isMusic()) return@forEach
             if (mediaImpl.isMusic()) musicSet.add(mediaImpl as Music)
             else if (mediaImpl.isFolder()) musicSet.addAll((mediaImpl as Folder).getAllMusic())
-            else musicSet.addAll(mediaImpl.getMusicSet())
+            else musicSet.addAll(mediaImpl.musicCollection)
         }
         this.loadMusics(
             musics = musicSet,

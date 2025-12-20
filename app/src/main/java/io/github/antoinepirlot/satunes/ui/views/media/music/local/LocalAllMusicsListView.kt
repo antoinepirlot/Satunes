@@ -18,31 +18,31 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.internet.subsonic.models.media
+package io.github.antoinepirlot.satunes.ui.views.media.music.local
 
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
- * @author Antoine Pirlot 26/09/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-
-@Serializable
-internal data class SubsonicFolder(
-    val id: Long,
-    val name: String
+@Composable
+fun LocalAllMusicsListView(
+    modifier: Modifier = Modifier,
+    dataViewModel: DataViewModel = viewModel(),
 ) {
-    fun toFolder(parentFolder: Folder? = null): Folder {
-        var folder: Folder? = DataManager.getFolder(id = id)
-        if (folder == null) {
-            folder = Folder(
-                id = id,
-                title = name,
-                parentFolder = parentFolder
-            )
-            parentFolder?.addSubfolder(folder = folder)
-        }
-        return folder
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
     }
+
+    MediaListView(
+        modifier = modifier,
+        emptyViewText = stringResource(id = R.string.no_music)
+    )
 }

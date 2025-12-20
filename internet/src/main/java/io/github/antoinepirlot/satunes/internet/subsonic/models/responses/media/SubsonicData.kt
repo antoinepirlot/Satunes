@@ -18,19 +18,14 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media
+package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
+
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 
 /**
- * @author Antoine Pirlot 11/12/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-class SubsonicFolder(
-    id: Long,
-    title: String
-) : Folder(id = id, title = title) {
-
-    companion object {
-        const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
-    }
-
-    override fun isSubsonic(): Boolean = true
+internal interface SubsonicData {
+    fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia
 }

@@ -21,20 +21,9 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 /**
- * @author Antoine Pirlot 11/12/2025
+ * @author Antoine Pirlot 13/12/2025
  */
-class SubsonicAlbum(
-    id: Long,
-    title: String,
-    artist: Artist,
-    isCompilation: Boolean = false,
-    year: Int? = null
-) : Album(
-    id = id,
-    title = title,
-    artist = artist,
-    isCompilation = isCompilation,
-    year = year
-) {
-    override fun isSubsonic(): Boolean = true
+interface MediaData { //Can't be set internal as the Media interface is public and could not be an abstract class
+    val id: Long
+    var title: String
 }

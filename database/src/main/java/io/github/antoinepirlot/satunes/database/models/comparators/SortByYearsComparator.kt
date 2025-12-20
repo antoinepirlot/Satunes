@@ -21,13 +21,13 @@
 package io.github.antoinepirlot.satunes.database.models.comparators
 
 import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByYearsComparator : MediaComparator<MediaImpl>() {
+object SortByYearsComparator : MediaComparator<Media>() {
 
     /**
      * Sort o1 and o2 by dates.
@@ -38,7 +38,7 @@ object SortByYearsComparator : MediaComparator<MediaImpl>() {
      *         0 if the year of o1 is the same as the year of o2.
      *         > 0 if the year of o1 is after the year of o2.
      */
-    override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
+    override fun compare(o1: Media, o2: Media): Int {
         val year1: Int? = if (o1.isMusic()) (o1 as Music).getYear()
         else if (o1.isAlbum()) (o1 as Album).year
         else throw UnsupportedOperationException("Only Musics and Albums can be sorted by year")

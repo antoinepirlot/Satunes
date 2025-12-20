@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
@@ -44,8 +45,8 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 @Composable
 fun FirstMedia(
     modifier: Modifier = Modifier,
-    mediaImpl: MediaImpl,
-    mediaImplList: Collection<MediaImpl>,
+    mediaImpl: Media,
+    mediaImplList: Collection<Media>,
     sortOptions: SortOptions
 ) {
     if (!mediaImpl.isMusic() && !mediaImpl.isAlbum())
@@ -70,8 +71,8 @@ fun FirstMedia(
         else -> throw IllegalArgumentException("${sortOptions.name} not accepted.")
     }
 
-    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first {
-        val media: MediaImpl = when (sortOptions) {
+    val firstWithLetterMediaImpl: Media = mediaImplList.first {
+        val media: Media = when (sortOptions) {
             SortOptions.ARTIST -> {
                 if (it.isMusic()) (it as Music).artist
                 else if (it.isAlbum()) (it as Album).artist

@@ -24,8 +24,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.satunes.database.models.media.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
@@ -36,25 +35,32 @@ import okhttp3.Response
  */
 internal class GetRandomMusicCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    private val onDataRetrieved: (Set<SubsonicMusic>) -> Unit,
+    onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
     onSucceed: (() -> Unit)? = null,
+    onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback(
+) : SubsonicCallback<Collection<SubsonicMusic>>(
     subsonicApiRequester = subsonicApiRequester,
+    onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
+    onFinished = onFinished,
     onError = onError
 ) {
-    private val _logger: Logger? = Logger.getLogger()
-
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        this.processData()
-//        this.dataProcessed()
-        this.onSucceed?.invoke()
+        if (this.processData())
+            this.onSucceed?.invoke()
+        this.onFinished?.invoke()
     }
 
-    private fun processData() {
-        this.onDataRetrieved(this.response!!.toMusics(subsonicApiRequester = subsonicApiRequester))
+    override fun processData(): Boolean {
+        if (!super.processData()) return false
+        if (this.subsonicResponse == null) return false
+        this.onDataRetrieved(
+            this.subsonicResponse!!.randomSongs!!.toSubsonicMusicCollection(
+                subsonicApiRequester = subsonicApiRequester
+            )
+        )
+        return true
     }
 }

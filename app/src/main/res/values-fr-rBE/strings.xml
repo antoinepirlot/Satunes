@@ -153,4 +153,10 @@
     <string name="subsonic_connection_title">Identifiants de connexion</string>
     <string name="salt_label">Graine</string>
     <string name="salt_placeholder">Ce que tu veux</string>
+    <string name="subsonic_section_text">Sur le cloud</string>
+    <string name="local_section_text">Sur l\'appareil</string>
+    <string name="error_while_fetching_title">Error</string>
+    <string name="no_data_found_view_text">Aucune donnée trouvée.</string>
+    <string name="error_code_text">Code d\'erreur: %1$s</string>
+    <string name="error_message_text">Message d\'erreur: %1$s</string>
 </resources>

@@ -29,5 +29,6 @@ data class DataUiState(
     val showExportPlaylistDialog: Boolean = false,
     val showImportPlaylistDialog: Boolean = false,
     val changeFileRootPath: Boolean = false,
-    val multipleFiles: Boolean = false
+    val multipleFiles: Boolean = false,
+    val isFetching: Boolean = false
 )

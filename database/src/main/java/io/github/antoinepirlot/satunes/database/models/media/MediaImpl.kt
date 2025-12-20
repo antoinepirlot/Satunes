@@ -22,10 +22,12 @@ package io.github.antoinepirlot.satunes.database.models.media
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
 import java.util.SortedSet
@@ -36,8 +38,14 @@ import java.util.SortedSet
 abstract class MediaImpl(
     override val id: Long,
     title: String
-) : Media, Comparable<MediaImpl> {
-    protected val _logger: Logger? = Logger.getLogger()
+) : Media {
+    protected val logger: Logger? = Logger.getLogger()
+    protected var isDownloaded: Boolean = !this.isSubsonic()
+        set(value) {
+            if (!this.isSubsonic())
+                throw IllegalStateException("Can't change value of isDownloaded for a local media.")
+            field = value
+        }
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is
@@ -52,7 +60,7 @@ abstract class MediaImpl(
             else title.split(".").first()
     )
 
-    var artwork: Bitmap? by mutableStateOf(null)
+    var artwork: Bitmap? = null
         internal set
 
     /**
@@ -60,51 +68,76 @@ abstract class MediaImpl(
      */
     protected open var addedDate: Date? = null
 
+    @get:Synchronized
     protected open val musicSortedSet: SortedSet<Music> = sortedSetOf()
 
-    open fun isEmpty(): Boolean {
+    @get:Synchronized
+    override val musicCollection: Collection<Music> = mutableStateListOf()
+
+    override fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
     }
 
-    open fun isNotEmpty(): Boolean {
+    override fun isNotEmpty(): Boolean {
         return this.musicSortedSet.isNotEmpty()
     }
 
-    fun getMusicSet(): Set<Music> {
-        return this.musicSortedSet
-    }
+    override fun isStoredLocally(): Boolean = isDownloaded
 
-    open fun isSubsonic(): Boolean = false
-
-    fun clearMusicSet(triggerUpdate: Boolean = true) {
+    @Synchronized
+    override fun clearMusicList() {
         this.musicSortedSet.clear()
+        this.musicCollection as MutableList<Music>
+        (this.musicCollection as MutableList<Music>).clear()
     }
 
-    fun contains(mediaImpl: MediaImpl): Boolean {
-        return if (mediaImpl.isMusic())
-            this.getMusicSet().contains(mediaImpl)
-        else if (mediaImpl.isFolder())
-            this.getMusicSet().containsAll(elements = (mediaImpl as Folder).getAllMusic())
-        else this.getMusicSet().containsAll(elements = mediaImpl.getMusicSet())
+    override fun contains(media: Media): Boolean {
+        //TODO hashing collision using the set collection.
+        return if (media.isMusic())
+            this.musicCollection.contains(element = media)
+        else if (media.isFolder())
+            this.musicCollection.containsAll(elements = (media as Folder).getAllMusic())
+        else this.musicCollection.containsAll(elements = media.musicCollection)
     }
 
-    open fun addMusic(music: Music, triggerUpdate: Boolean = true) {
-        if (!this.musicSortedSet.contains(element = music)) {
+    @Synchronized
+    override fun addMusic(music: Music) {
+        if (!this.contains(media = music)) {
             this.musicSortedSet.add(element = music)
+            (this.musicCollection as MutableList<Music>).add(element = music)
+            (this.musicCollection as MutableList<Music>).sort()
         }
     }
 
-    open fun addMusics(musics: Collection<Music>) {
-        this.musicSortedSet.addAll(musics)
+    @Synchronized
+    override fun addMusics(musics: Collection<Music>) {
+        for(music: Music in musics) this.addMusic(music = music)
     }
 
-    open fun removeMusic(music: Music) {
-        if (this.musicSortedSet.contains(element = music)) {
+    @Synchronized
+    override fun removeMusic(music: Music) {
+        if (this.contains(media = music)) {
             this.musicSortedSet.remove(music)
+            (this.musicCollection as MutableList<Music>).remove(element = music)
         }
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    /**
+     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     * If it is already stored, do nothing
+     */
+    override fun download() {
+        if (this.isStoredLocally()) return
+        TODO("Saving in cache is not yet implemented.")
+    }
+
+    override fun removeFromStorage() {
+        if (!this.isStoredLocally()) return
+        TODO("Remove from storage is not yet implemented")
+    }
+
+    override fun compareTo(other: Media): Int {
+        other as MediaImpl //Ensure no other class is added in the future that extends Media and is not MediaImpl
         if (this == other) return 0
         var compared: Int = StringComparator.compare(o1 = this.title, o2 = other.title)
         if (compared == 0 && this.javaClass != other.javaClass) {
@@ -118,14 +151,14 @@ abstract class MediaImpl(
         return compared
     }
 
-    open fun musicCount(): Int = this.musicSortedSet.size
-    open fun isRootFolder(): Boolean = false
+    override fun musicCount(): Int = this.musicSortedSet.size
+    override fun isRootFolder(): Boolean = false
 
-    open fun isFolder(): Boolean = false
-    open fun isBackFolder(): Boolean = false
-    open fun isMusic(): Boolean = false
-    open fun isAlbum(): Boolean = false
-    open fun isGenre(): Boolean = false
-    open fun isArtist(): Boolean = false
-    open fun isPlaylist(): Boolean = false
+    override fun isFolder(): Boolean = false
+    override fun isBackFolder(): Boolean = false
+    override fun isMusic(): Boolean = false
+    override fun isAlbum(): Boolean = false
+    override fun isGenre(): Boolean = false
+    override fun isArtist(): Boolean = false
+    override fun isPlaylist(): Boolean = false
 }

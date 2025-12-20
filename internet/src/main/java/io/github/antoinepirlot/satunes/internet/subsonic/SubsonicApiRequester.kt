@@ -23,37 +23,32 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic
 
-import android.content.Context
+import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.User
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.models.internet.ApiError
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetIndexesCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetMusicFoldersCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.lang.UnsupportedOperationException
 
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-class SubsonicApiRequester(
-    private val user: User,
-) {
+class SubsonicApiRequester() : ApiRequester {
     companion object {
         const val SONG_MEDIA_TYPE = "song"
         private const val CLIENT_NAME = "Satunes"
@@ -65,8 +60,15 @@ class SubsonicApiRequester(
         internal var openSubsonic: Boolean? = null
     }
 
+    private val _user: User = User(
+        url = SettingsManager.subsonicUrl,
+        username = SettingsManager.subsonicUsername,
+        password = SettingsManager.subsonicPassword,
+        salt = SettingsManager.subsonicSalt
+    )
+
     val inUrlMandatoryParams: String
-        get() = "u=${user.username}&t=${user.getMd5Password()}&s=${user.salt}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
+        get() = "u=${_user.username}&t=${_user.getMd5Password()}&s=${_user.salt}&c=$CLIENT_NAME&v=$version&f=$JSON_FORMAT"
 
     /**
      * Returns the url as https://example.org/rest/[command]?[inUrlMandatoryParams]&[parameters]
@@ -90,14 +92,14 @@ class SubsonicApiRequester(
     }
 
     private fun getSubsonicCommandUrl(command: String, vararg parameters: String): String {
-        var toReturn = "${user.url}/rest/$command?$inUrlMandatoryParams"
+        var toReturn = "${_user.url}/rest/$command?$inUrlMandatoryParams"
         for (parameter: String in parameters)
             toReturn += "&$parameter"
         return toReturn
     }
 
     private fun getFunkwhaleCommandUrl(command: String, vararg parameters: String): String {
-        return "${user.url}/api/v1/$command"
+        return "${_user.url}/api/v1/$command"
     }
 
     private fun getBody(vararg parameters: String) {
@@ -121,7 +123,7 @@ class SubsonicApiRequester(
      */
     private fun get(
         url: String,
-        resCallback: SubsonicCallback,
+        resCallback: SubsonicCallback<*>,
     ) {
         val client = OkHttpClient()
         val req: Request = Request.Builder()
@@ -136,115 +138,27 @@ class SubsonicApiRequester(
             .enqueue()
     }
 
-    /**
-     * Ping API
-     */
-    fun ping(onSucceed: (() -> Unit)? = null, onError: (() -> Unit)? = null) {
+    override suspend fun ping(
+        onSucceed: (() -> Unit)?,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?
+    ) {
         this.get(
             url = this.getCommandUrl(command = "ping", parameters = arrayOf()),
             resCallback = PingCallback(
                 subsonicApiRequester = this,
                 onSucceed = onSucceed,
+                onFinished = onFinished,
                 onError = { onError?.invoke() }
             ),
         )
     }
 
-    /**
-     * Load all data from server.
-     * (Not recommended if the server is not the personal one as it could have a lot of data).
-     *
-     * It gets data in this order:
-     *      * MusicFolders -> Music Folder
-     *      * Indexes -> Artists
-     *      * Single Artist from Indexes -> Albums
-     *      * Single Album from Artist -> Songs
-     *      * Songs from album
-     *
-     * @param context the [Context] of the app.
-     */
-    private fun loadAll() {
-        this.loadMusicFolders()
-    }
-
-    /**
-     * Load all artists.
-     */
-    private fun loadArtists() {
-        for (folder: Folder in DataManager.getRootSubsonicFolders()) {
-            this.get(
-                url = this@SubsonicApiRequester.getCommandUrl(
-                    command = "getIndexes",
-                    parameters = arrayOf("musicFolderId=${folder.id}")
-                ),
-                resCallback = GetIndexesCallback(subsonicApiRequester = this@SubsonicApiRequester)
-            )
-        }
-    }
-
-    /**
-     * Load albums  query based on each subsonic artist.
-     */
-    private fun loadAlbums() {
-        if (!DataManager.hasSubsonicArtists()) return
-        for (artist: Artist in DataManager.getSubsonicArtistSet()) {
-            this.loadArtist(artistId = artist.id)
-        }
-    }
-
-    /**
-     * Load artist's information containing albums by using "getArtist" query.
-     */
-    private fun loadArtist(artistId: Long) {
-        this.get(
-            url = this.getCommandUrl(command = "getArtist", parameters = arrayOf("id=$artistId")),
-            resCallback = GetArtistCallback(
-                subsonicApiRequester = this,
-                onSucceed = { this.loadSongs() }
-            )
-        )
-    }
-
-    /**
-     * Load songs of received albums.
-     */
-    private fun loadSongs() {
-        return //TODO
-        if (!DataManager.hasSubsonicAlbums()) return
-        for (album: Album in DataManager.getSubsonicAlbumsSet()) {
-            this.loadAlbum(albumId = album.id)
-        }
-    }
-
-    /**
-     * Load album by its id and get songs of it.
-     */
-    private fun loadAlbum(albumId: Long) {
-        this.get(
-            url = this.getCommandUrl(command = "getAlbum", parameters = arrayOf("id=$albumId")),
-            resCallback = GetAlbumCallback(subsonicApiRequester = this)
-        )
-    }
-
-    private fun loadMusicFolders() {
-        this.get(
-            url = this.getCommandUrl(command = "getMusicFolders", parameters = arrayOf()),
-            resCallback = GetMusicFoldersCallback(
-                subsonicApiRequester = this,
-                onSucceed = { this.loadArtists() }
-            )
-        )
-    }
-
-    /**
-     * Get randomly [size] musics.
-     *
-     * @param size the number of music to get (default 10, max 500).
-     *
-     * @return musics //TODO
-     */
-    fun getRandomSongs(size: Int = 10, onDataRetrieved: ((Set<Music>) -> Unit)) {
-        if (size < 1 || size > 500)
+    override suspend fun getRandomSongs(
+        size: Int,
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
+    ) {
+        if (size !in 1..500)
             throw IllegalArgumentException("Can't get $size musics")
         get(
             url = getCommandUrl(
@@ -253,6 +167,100 @@ class SubsonicApiRequester(
             ),
             resCallback = GetRandomMusicCallback(
                 subsonicApiRequester = this@SubsonicApiRequester,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    /**
+     * Query subsonic to get matching media to the [query].
+     * If the [query] is blank, nothing is done.
+     *
+     * @param query the [String] to send to api to find matching media.
+     * @param onDataRetrieved the function to run when got data from API.
+     */
+    override suspend fun search(
+        query: String,
+        onFinished: () -> Unit,
+        onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
+    ) {
+        if (query.isBlank()) return
+        get(
+            url = getCommandUrl(
+                command = "search3",
+                parameters = arrayOf("query=$query")
+            ),
+            resCallback = Search3Callback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    /**
+     * Get artist from Subsonic
+     *
+     * @param artistId the id of artist located on the server
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     */
+    override suspend fun getArtist(
+        artistId: Long,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicArtist) -> Unit,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
+        get(
+            url = getCommandUrl(
+                command = "getArtist",
+                parameters = arrayOf("id=$artistId")
+            ),
+            resCallback = GetArtistCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = onDataRetrieved,
+                onError = onError
+            )
+        )
+    }
+
+    override suspend fun getAlbum(
+        albumId: Long,
+        onDataRetrieved: (SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)?,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
+        get(
+            url = getCommandUrl(
+                command = "getAlbum",
+                parameters = arrayOf("id=$albumId")
+            ),
+            resCallback = GetAlbumCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onError = onError,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    override suspend fun getCoverArt(
+        coverArtId: String,
+        onDataRetrieved: (Bitmap?) -> Unit
+    ) {
+        if (coverArtId.isBlank())
+            throw IllegalArgumentException("Can't get coverArt from blank id")
+        get(
+            url = getCommandUrl(
+                command = "getCoverArt",
+                parameters = arrayOf("id=$coverArtId")
+            ),
+            resCallback = GetCoverArtCallback(
+                subsonicApiRequester = this@SubsonicApiRequester,
+                onFinished = null,
+                onError = null,
                 onDataRetrieved = onDataRetrieved
             )
         )

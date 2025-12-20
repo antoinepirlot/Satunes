@@ -24,6 +24,8 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedSet
 
 /**
@@ -49,6 +51,32 @@ open class Album(
     val year: Int? = if (year != null && year < 1) null else year
     init {
         nextId++
+        artist.addAlbum(album = this)
+    }
+
+    fun updateArtist(artist: Artist) {
+        this.artist = artist
+    }
+
+    /**
+     * Transform this [Album] to [SubsonicAlbum].
+     * After that, this [Album] can't no more be used
+     */
+    open fun toSubsonicAlbum(album: SubsonicAlbum): SubsonicAlbum {
+        val newAlbum: SubsonicAlbum = SubsonicAlbum(
+            id = this.id,
+            subsonicId = album.subsonicId,
+            title = this.title,
+            artist = this.artist,
+            isCompilation = this.isCompilation,
+            year = this.year,
+        )
+        for (music: Music in this.musicSortedSet) {
+            music.updateAlbum(album = newAlbum)
+            music.artist.updateAlbum(album = newAlbum)
+        }
+        DataManager.addAlbum(album = newAlbum)
+        return newAlbum
     }
 
     override fun isAlbum(): Boolean = true
@@ -71,7 +99,7 @@ open class Album(
         return result
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         var compared: Int = super.compareTo(other)
         if (compared == 0 && other.isAlbum()) {
             compared = this.artist.compareTo((other as Album).artist)

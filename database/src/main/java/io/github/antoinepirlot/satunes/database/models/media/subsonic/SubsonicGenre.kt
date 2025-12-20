@@ -18,17 +18,27 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.models.media
+package io.github.antoinepirlot.satunes.database.models.media.subsonic
+
+import io.github.antoinepirlot.satunes.database.models.media.Genre
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicGenre(
-    id: Long,
+    override var subsonicId: Long,
     title: String,
-) : Genre(
-    id = id,
+) : SubsonicMedia, Genre(
+    id = subsonicId,
     title = title,
 ) {
-    override fun isSubsonic(): Boolean = true
+
+    override fun equals(other: Any?): Boolean {
+        return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicGenre).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
 }

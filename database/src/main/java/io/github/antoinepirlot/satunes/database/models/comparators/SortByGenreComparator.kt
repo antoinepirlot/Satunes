@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.database.models.comparators
 
 import com.mpatric.mp3agic.NotSupportedException
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 
@@ -33,8 +34,8 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
  *
  *  @author Antoine Pirlot on 22/12/2024
  */
-object SortByGenreComparator : MediaComparator<MediaImpl>() {
-    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
+object SortByGenreComparator : MediaComparator<Media>() {
+    override fun compare(mediaImpl1: Media, mediaImpl2: Media): Int {
         val cmp: Int = if (mediaImpl1.isMusic()) {
             mediaImpl1 as Music
             if (mediaImpl2.isMusic()) {

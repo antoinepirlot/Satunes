@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.database.models.media
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.SortedSet
 
 /**
@@ -46,7 +45,6 @@ open class Genre(
 
     init {
         nextId++
-        DataManager.addGenre(genre = this)
     }
 
     fun getAlbumSet(): Set<Album> {

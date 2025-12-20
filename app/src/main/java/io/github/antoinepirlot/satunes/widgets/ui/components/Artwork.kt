@@ -41,12 +41,13 @@ internal fun Artwork(
     modifier: GlanceModifier = GlanceModifier,
     music: Music,
 ) {
+    //TODO test viewModel here
     val context: Context = LocalContext.current
-    var artwork: Bitmap = music.getAlbumArtwork(context = context)
+    val artwork: Bitmap? = music.artwork
 
     Image(
         modifier = modifier,
-        provider = ImageProvider(bitmap = artwork),
+        provider = ImageProvider(bitmap = artwork ?: music.getAlbumArtwork(context = context)),
         contentDescription = "Artwork",
     )
 }

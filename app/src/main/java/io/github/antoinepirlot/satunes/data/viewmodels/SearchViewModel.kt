@@ -38,12 +38,17 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
+import io.github.antoinepirlot.satunes.models.search.SearchSection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.SortedSet
 
@@ -67,6 +72,15 @@ class SearchViewModel : ViewModel() {
     val selectedSearchChips: MutableList<SearchChips> = mutableStateListOf()
 
     var query: String by mutableStateOf("")
+
+    var searchJob: Job? = null
+
+    /**
+     * If the user clicks on the enter key, it starts a manual search.
+     *
+     * On local storage, every query modification triggers search while in cloud it is triggered only when enter key pressed.
+     */
+    var isSearchRequested: Boolean by mutableStateOf(false)
         private set
 
     init {
@@ -75,29 +89,12 @@ class SearchViewModel : ViewModel() {
 
     fun updateQuery(value: String) {
         query = value
+        if (_uiState.value.selectedSection.isLocal())
+            this.requestSearch()
     }
 
-    fun resetSelectedChips() {
-        try {
-            runBlocking {
-                selectedSearchChips.clear()
-                SettingsManager.loadFilters(context = MainActivity.instance.applicationContext)
-                _filtersList[SearchChips.MUSICS] = SettingsManager.musicsFilter
-                _filtersList[SearchChips.ALBUMS] = SettingsManager.albumsFilter
-                _filtersList[SearchChips.ARTISTS] = SettingsManager.artistsFilter
-                _filtersList[SearchChips.GENRES] = SettingsManager.genresFilter
-                _filtersList[SearchChips.FOLDERS] = SettingsManager.foldersFilter
-                _filtersList[SearchChips.PLAYLISTS] = SettingsManager.playlistsFilter
-                _filtersList.forEach { (searchChip: SearchChips, checked: Boolean) ->
-                    if (checked) {
-                        selectedSearchChips.add(searchChip)
-                    }
-                }
-            }
-        } catch (e: Throwable) {
-            _logger?.severe(e.message)
-            throw e
-        }
+    fun requestSearch() {
+        isSearchRequested = true
     }
 
     fun select(searchChip: SearchChips) {
@@ -136,16 +133,72 @@ class SearchViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Search matching [MediaImpl] with the [query].
+     *
+     * These media are sorted.
+     *
+     * If the query is blank, no results.
+     *
+     * @param selectedSection the [SearchSection] where the search algorithm must search.
+     * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally.
+     * @param subsonicViewModel the [SubsonicViewModel] used to ask the API.
+     * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
+     */
     fun search(
+        searchCoroutine: CoroutineScope,
+        selectedSection: SearchSection,
         dataViewModel: DataViewModel,
-        selectedSearchChips: List<SearchChips>,
+        subsonicViewModel: SubsonicViewModel,
+        selectedSearchChips: Collection<SearchChips>,
     ) {
-        val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
-        if (this.query.isBlank()) { // Prevent loop if string is "" or " "
-            dataViewModel.loadMediaImplList(list = mediaImplSet)
+        if (this.query.isBlank()) {
+            dataViewModel.loadMediaImplList(list = sortedSetOf())
+            this@SearchViewModel.finishSearch()
             return
         }
+        searchJob?.cancel()
+        searchJob = searchCoroutine.launch {
+            _uiState.update { currentState: SearchUiState ->
+                currentState.copy(isSearching = true)
+            }
+            when (selectedSection) {
+                SearchSection.LOCAL -> localSearch(
+                    dataViewModel = dataViewModel,
+                    selectedSearchChips = selectedSearchChips
+                )
 
+                SearchSection.SUBSONIC -> subsonicSearch(
+                    subsonicViewModel = subsonicViewModel,
+                    dataViewModel = dataViewModel
+                )
+            }
+        }
+    }
+
+    /**
+     * Search is finished, set the [SearchUiState.isSearching] value to false
+     */
+    private fun finishSearch() {
+        _uiState.update { currentState: SearchUiState ->
+            currentState.copy(isSearching = false)
+        }
+    }
+
+    /**
+     * Search matching [MediaImpl] with the [query].
+     * It searches on media stored on the user's devices and not elsewhere.
+     *
+     * These media are sorted.
+     *
+     * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally
+     * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
+     */
+    private fun localSearch(
+        dataViewModel: DataViewModel,
+        selectedSearchChips: Collection<SearchChips>,
+    ) {
+        val mediaImplSet: SortedSet<MediaImpl> = sortedSetOf()
         val query: String = this.query.trim().lowercase()
         val musicSet: Set<Music> = dataViewModel.getMusicSet()
         val artistSet: Set<Artist> = dataViewModel.getArtistSet()
@@ -210,5 +263,34 @@ class SearchViewModel : ViewModel() {
             }
         }
         dataViewModel.loadMediaImplList(list = mediaImplSet)
+        this.finishSearch()
+    }
+
+    /**
+     * Search matching [MediaImpl] with the [query].
+     * It request the subsonic api to search according to the query.
+     *
+     * These media are sorted.
+     *
+     * @param subsonicViewModel the [SubsonicViewModel] which query the API.
+     */
+    private fun subsonicSearch(
+        subsonicViewModel: SubsonicViewModel,
+        dataViewModel: DataViewModel,
+    ) {
+        isSearchRequested = false
+        subsonicViewModel.search(
+            query = this.query,
+            onFinished = { this.finishSearch() },
+            onDataRetrieved = { medias: Collection<SubsonicMedia> ->
+                dataViewModel.loadMediaImplList(list = medias)
+            }
+        )
+    }
+
+    fun selectSection(section: SearchSection) {
+        _uiState.update { currentState: SearchUiState ->
+            currentState.copy(selectedSection = section)
+        }
     }
 }

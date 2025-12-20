@@ -26,7 +26,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
@@ -43,43 +43,43 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.PlaylistOpt
 @Composable
 internal fun MediaOptionsDialog(
     modifier: Modifier = Modifier,
-    mediaImpl: MediaImpl,
+    media: Media,
     onDismissRequest: () -> Unit
 ) {
-    if (mediaImpl.isMusic())
+    if (media.isMusic())
         MusicOptionsDialog(
             modifier = modifier,
-            music = mediaImpl as Music,
+            music = media as Music,
             onDismissRequest = onDismissRequest
         )
-    else if (mediaImpl.isArtist())
+    else if (media.isArtist())
         ArtistOptionsDialog(
             modifier = modifier,
-            artist = mediaImpl as Artist,
+            artist = media as Artist,
             onDismissRequest = onDismissRequest
         )
-    else if (mediaImpl.isAlbum())
+    else if (media.isAlbum())
         AlbumOptionsDialog(
             modifier = modifier,
-            album = mediaImpl as Album,
+            album = media as Album,
             onDismissRequest = onDismissRequest
         )
-    else if (mediaImpl.isGenre())
+    else if (media.isGenre())
         GenreOptionsDialog(
             modifier = modifier,
-            genre = mediaImpl as Genre,
+            genre = media as Genre,
             onDismissRequest = onDismissRequest
         )
-    else if (mediaImpl.isPlaylist())
+    else if (media.isPlaylist())
         PlaylistOptionsDialog(
             modifier = modifier,
-            playlist = mediaImpl as Playlist,
+            playlist = media as Playlist,
             onDismissRequest = onDismissRequest
         )
-    else if (mediaImpl.isFolder())
+    else if (media.isFolder())
         FolderOptionsDialog(
             modifier = modifier,
-            folder = mediaImpl as Folder,
+            folder = media as Folder,
             onDismissRequest = onDismissRequest
         )
 }

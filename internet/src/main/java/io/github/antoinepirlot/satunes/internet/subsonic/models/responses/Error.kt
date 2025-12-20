@@ -23,14 +23,14 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import kotlinx.serialization.SerialName
+import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import kotlinx.serialization.Serializable
 
 /**
  * @author Antoine Pirlot 04/09/2025
  */
 @Serializable
-internal data class Error(
-    val code: Int,
-    val message: String
-)
+data class Error(
+    override val code: Int,
+    override val message: String
+) : ApiError

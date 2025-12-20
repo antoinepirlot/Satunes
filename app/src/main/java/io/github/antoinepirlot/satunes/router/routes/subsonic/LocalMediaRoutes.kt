@@ -18,24 +18,24 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.router.routes
+package io.github.antoinepirlot.satunes.router.routes.subsonic
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.LoadingView
+import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AllAlbumsListView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.AllArtistsListView
@@ -51,17 +51,19 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
  * @author Antoine Pirlot on 15/07/2024
  */
 
-internal fun NavGraphBuilder.mediaRoutes(
+internal fun NavGraphBuilder.localMediaRoutes(
     satunesViewModel: SatunesViewModel,
     dataViewModel: DataViewModel,
-    navigationViewModel: NavigationViewModel,
-    onStart: AnimatedContentScope.(NavBackStackEntry) -> Unit
+    onStart: (NavBackStackEntry) -> Unit,
+    onMediaOpen: (media: Media) -> Unit
 ) {
     composable(Destination.FOLDERS.link) {
         // /!\ This route prevent back gesture to exit the app
         LaunchedEffect(key1 = Unit) {
             onStart(it)
-            navigationViewModel.setCurrentMediaImpl(mediaImpl = DataManager.getRootFolder())
+            val folder: Folder = DataManager.getRootFolder()
+
+            onMediaOpen(folder)
         }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) {
@@ -82,7 +84,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val folderId = it.arguments!!.getString("id")!!.toLong()
             val folder: Folder = dataViewModel.getFolder(id = folderId)
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = folder)
+                onMediaOpen(folder)
             }
             FolderView(folder = folder)
         }
@@ -110,9 +112,11 @@ internal fun NavGraphBuilder.mediaRoutes(
         } else {
             val artistId: Long = it.arguments!!.getString("id")!!.toLong()
             val artist: Artist = dataViewModel.getArtist(id = artistId)
+
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = artist)
+                onMediaOpen(artist)
             }
+
             ArtistView(artist = artist)
         }
     }
@@ -138,11 +142,14 @@ internal fun NavGraphBuilder.mediaRoutes(
             LoadingView()
         } else {
             val albumId: Long = it.arguments!!.getString("id")!!.toLong()
-            val album: Album = dataViewModel.getAlbum(albumId)
+            val album: Album = dataViewModel.getAlbum(id = albumId)
+
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = album)
+                onMediaOpen(album)
             }
+
             AlbumView(album = album)
+            NoDataFoundView()
         }
     }
 
@@ -169,7 +176,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val genreId: Long = it.arguments!!.getString("id")!!.toLong()
             val genre: Genre = dataViewModel.getGenre(id = genreId)
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = genre)
+                onMediaOpen(genre)
             }
             GenreView(genre = genre)
         }
@@ -198,7 +205,7 @@ internal fun NavGraphBuilder.mediaRoutes(
             val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
             val playlist: Playlist = dataViewModel.getPlaylist(id = playlistId)!!
             LaunchedEffect(key1 = Unit) {
-                navigationViewModel.setCurrentMediaImpl(mediaImpl = playlist)
+                onMediaOpen(playlist)
             }
             PlaylistView(playlist = playlist)
         }

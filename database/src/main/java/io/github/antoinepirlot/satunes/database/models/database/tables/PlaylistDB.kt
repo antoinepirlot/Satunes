@@ -25,7 +25,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.serialization.Serializable
@@ -42,7 +42,7 @@ internal data class PlaylistDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long = 0,
     @ColumnInfo(name = "title") override var title: String,
-) : Media {
+) : MediaData {
     @Ignore
     @Transient
     var playlist: Playlist? = DataManager.getPlaylist(title = this.title)

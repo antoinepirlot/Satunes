@@ -22,47 +22,21 @@ package io.github.antoinepirlot.satunes.ui.views.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.SearchUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
-import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.ui.components.chips.MediaChipList
-import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import io.github.antoinepirlot.satunes.ui.components.search.SearchBar
+import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelector
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -72,82 +46,21 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun SearchView(
     modifier: Modifier = Modifier,
-    playbackViewModel: PlaybackViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
-    searchViewModel: SearchViewModel = viewModel(),
-    navigationViewModel: NavigationViewModel = viewModel(),
+    satunesViewModel: SatunesViewModel = viewModel(),
+    searchViewModel: SearchViewModel = viewModel()
 ) {
-    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val navController: NavHostController = LocalNavController.current
-    val query: String = searchViewModel.query
-    val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
-    val searchCoroutine: CoroutineScope = rememberCoroutineScope()
-    var searchJob: Job? = null
-    LaunchedEffect(key1 = query, key2 = selectedSearchChips.size) {
-        if (searchJob != null && searchJob!!.isActive) {
-            searchJob!!.cancel()
-        }
-        searchJob = searchCoroutine.launch {
-            searchViewModel.search(
-                dataViewModel = dataViewModel,
-                selectedSearchChips = selectedSearchChips,
-            )
-        }
-    }
-
-    val focusRequester: FocusRequester = remember { FocusRequester() }
-    LaunchedEffect(key1 = true) {
-        // Request focus after composable becomes visible
-        focusRequester.requestFocus()
-    }
-
-    val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        SearchBar(
-            modifier = Modifier.focusRequester(focusRequester),
-            inputField = {
-                SearchBarDefaults.InputField(
-                    modifier = Modifier.focusRequester(focusRequester),
-                    query = query,
-                    onQueryChange = { searchViewModel.updateQuery(value = it) },
-                    onSearch = {
-                        searchViewModel.updateQuery(value = it)
-                        keyboard?.hide()
-                    },
-                    placeholder = { NormalText(text = stringResource(id = R.string.search_placeholder)) },
-                    expanded = false,
-                    onExpandedChange = { /* Do not use expanded mode */ },
-                )
-            },
-            expanded = false,
-            onExpandedChange = { /* Do not use expanded mode */ },
-            windowInsets = WindowInsets(top = 0.dp), //Remove top padding of search bar introduced in API 35 (Android 15 Vanilla Ice Cream)
-            content = { /* Content if expanded is true but never used */ }
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        MediaChipList()
-        MediaListView(
-            canBeSorted = false,
-            emptyViewText = stringResource(id = R.string.no_result),
-            onMediaClick = { mediaImpl: MediaImpl ->
-                if (mediaImpl.isMusic())
-                    playbackViewModel.loadMusicFromMedias(
-                        medias = DataManager.getMusicSet(),
-                        currentDestination = navigationUiState.currentDestination,
-                        musicToPlay = mediaImpl as Music
-                    )
-                navigationViewModel.openMedia(
-                    playbackViewModel = playbackViewModel,
-                    media = mediaImpl,
-                    navController = navController
-                )
-            }
-        )
+        SearchBar()
+        if(satunesUiState.mode.isOnline())
+            SearchModeTabSelector()
+        searchUiState.selectedSection.composable()
     }
 }
 

@@ -35,7 +35,7 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
@@ -58,13 +58,13 @@ internal fun MediaListView(
     /**
      * Overrides the base onClick on media behavior
      */
-    onMediaClick: ((MediaImpl) -> Unit)? = null
+    onMediaClick: ((Media) -> Unit)? = null
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    val listToShow: List<MediaImpl> = dataViewModel.mediaImplListOnScreen
+    val listToShow: List<Media> = dataViewModel.mediaImplListOnScreen
     val sortOption: SortOptions = dataViewModel.sortOption
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
     val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder

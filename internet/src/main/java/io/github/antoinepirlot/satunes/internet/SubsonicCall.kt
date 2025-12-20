@@ -35,12 +35,12 @@ import java.util.Stack
  */
 class SubsonicCall private constructor(
     private val _call: Call,
-    internal val callBack: SubsonicCallback
+    internal val callBack: SubsonicCallback<*>
 ) {
     companion object {
         private const val MAX_REQUESTS: Int = 5
         private val nextCalls: Stack<SubsonicCall> = Stack()
-        private val currentCalls: MutableMap<SubsonicCallback, SubsonicCall> = mutableMapOf()
+        private val currentCalls: MutableMap<SubsonicCallback<*>, SubsonicCall> = mutableMapOf()
 
         var nbRequests: Int by mutableIntStateOf(0)
         private var size: Int = 0
@@ -76,7 +76,7 @@ class SubsonicCall private constructor(
         }
 
         @Synchronized
-        internal fun executionFinished(subsonicCallback: SubsonicCallback) {
+        internal fun executionFinished(subsonicCallback: SubsonicCallback<*>) {
             if (this.getSize() <= 0)
                 throw IllegalStateException("No call to finish.")
             this.currentCalls.remove(key = subsonicCallback)
@@ -100,7 +100,7 @@ class SubsonicCall private constructor(
 
     internal class Builder() {
         private lateinit var _call: Call
-        private lateinit var _callBack: SubsonicCallback
+        private lateinit var _callBack: SubsonicCallback<*>
 
         fun setCall(call: Call): Builder {
             if (this::_call.isInitialized) throw IllegalStateException("Call already set.")
@@ -108,7 +108,7 @@ class SubsonicCall private constructor(
             return this
         }
 
-        fun setCallBack(callBack: SubsonicCallback): Builder {
+        fun setCallBack(callBack: SubsonicCallback<*>): Builder {
             if (this::_callBack.isInitialized)
                 throw IllegalStateException("Callback already set.")
             this._callBack = callBack

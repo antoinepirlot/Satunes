@@ -22,17 +22,20 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.Intent
 import android.os.Environment
-import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.DatabaseProvider
+import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
@@ -51,6 +54,13 @@ class PlaybackService : MediaSessionService() {
     companion object {
         private var _logger: Logger? = null
         var mediaSession: MediaSession? = null
+
+        var databaseProvider: DatabaseProvider? = null
+            private set(value) {
+                if (field != null)
+                    throw IllegalStateException("Database provider must not be changed. It's a singleton")
+                field = value
+            }
 
         internal fun updateCustomCommands() {
             _logger?.info("Updating custom commands for notification")
@@ -76,15 +86,13 @@ class PlaybackService : MediaSessionService() {
 
     private lateinit var _exoPlayer: ExoPlayer
 
-    @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
         Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
         _logger = Logger.getLogger()
 
-        val factory =
-            DefaultDataSourceFactory(applicationContext, OkHttpDataSource.Factory(CallFactory()))
+
         _exoPlayer = ExoPlayer.Builder(applicationContext)
             .setHandleAudioBecomingNoisy(SettingsManager.pauseIfNoisyChecked) // Pause when bluetooth or headset disconnect
             .setAudioAttributes(
@@ -92,9 +100,7 @@ class PlaybackService : MediaSessionService() {
                 SettingsManager.pauseIfAnotherPlayback
             )
             .setMediaSourceFactory(
-                DefaultMediaSourceFactory(applicationContext).setDataSourceFactory(
-                    factory
-                )
+                DefaultMediaSourceFactory(applicationContext).setDataSourceFactory(getFactory())
             )
             .setWakeMode(C.WAKE_MODE_LOCAL)
             .build()
@@ -105,6 +111,7 @@ class PlaybackService : MediaSessionService() {
             .setIsGaplessSupportRequired(true)
             .build()
 
+
         if (SettingsManager.audioOffloadChecked) {
             _exoPlayer.trackSelectionParameters = _exoPlayer.trackSelectionParameters
                 .buildUpon()
@@ -112,9 +119,27 @@ class PlaybackService : MediaSessionService() {
                 .build()
         }
 
+
+
         mediaSession = MediaSession.Builder(applicationContext, _exoPlayer)
             .setCallback(PlaybackSessionCallback)
             .build()
+    }
+
+    private fun getFactory(): CacheDataSource.Factory {
+        if (databaseProvider == null)
+            databaseProvider = StandaloneDatabaseProvider(applicationContext)
+
+        //TODO change max bytes to a setting the user can change
+        //The value hardcoded means 1GB and must be changed
+        val cache =
+            SimpleCache(cacheDir, LeastRecentlyUsedCacheEvictor(134200000), databaseProvider!!)
+
+        val factory =
+            DefaultDataSourceFactory(applicationContext, OkHttpDataSource.Factory(CallFactory()))
+        return CacheDataSource.Factory()
+            .setCache(cache)
+            .setUpstreamDataSourceFactory(factory)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

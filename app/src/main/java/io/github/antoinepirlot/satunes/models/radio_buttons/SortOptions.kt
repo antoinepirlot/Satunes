@@ -29,7 +29,7 @@ import io.github.antoinepirlot.satunes.database.models.comparators.SortByArtistC
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByGenreComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByTitleComparator
 import io.github.antoinepirlot.satunes.database.models.comparators.SortByYearsComparator
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 enum class SortOptions(
     val jetpackLibsIcons: JetpackLibsIcons,
     val stringId: Int,
-    val comparator: MediaComparator<MediaImpl>?
+    val comparator: MediaComparator<Media>?
 ) {
     ALBUM(
         jetpackLibsIcons = JetpackLibsIcons.ALBUM,

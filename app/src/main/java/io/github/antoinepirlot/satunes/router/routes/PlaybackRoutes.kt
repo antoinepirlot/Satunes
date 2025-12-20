@@ -46,7 +46,7 @@ internal fun NavGraphBuilder.playbackRoutes(
     composable(Destination.PLAYBACK.link) {
         LaunchedEffect(key1 = Unit) {
             onStart(it)
-            navigationViewModel.setCurrentMediaImpl(mediaImpl = playbackViewModel.musicPlaying!!)
+            navigationViewModel.setCurrentMediaImpl(media = playbackViewModel.musicPlaying!!)
         }
 
         if (satunesViewModel.isLoadingData || !satunesViewModel.isDataLoaded) LoadingView()

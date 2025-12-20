@@ -24,6 +24,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Subtitle
@@ -51,7 +53,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
@@ -68,13 +70,13 @@ internal fun MediaCard(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImpl: MediaImpl,
+    media: Media,
     onClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
-    val title: String = getMediaTitle(mediaImpl = mediaImpl)
+    val title: String = getMediaTitle(mediaImpl = media)
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val boxModifier: Modifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
@@ -98,7 +100,7 @@ internal fun MediaCard(
                     val imageModifier: Modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                    if (mediaImpl == playbackViewModel.musicPlaying) {
+                    if (media == playbackViewModel.musicPlaying) {
                         val playingJetpackLibsIcons: JetpackLibsIcons =
                             JetpackLibsIcons.MUSIC_PLAYING
                         Icon(
@@ -107,37 +109,36 @@ internal fun MediaCard(
                             contentDescription = playingJetpackLibsIcons.description
                         )
                     } else {
-                        MediaArtwork(mediaImpl = mediaImpl)
+                        MediaArtwork(media = media)
                     }
                 }
             },
             headlineContent = {
                 Column {
-                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl.isMusic() && (mediaImpl as Music).cdTrackNumber != null)
-                        NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
+                    if (navigationUiState.currentDestination == Destination.ALBUM && media.isMusic() && (media as Music).cdTrackNumber != null)
+                        NormalText(text = media.cdTrackNumber.toString() + " - " + title)
                     else
                         NormalText(text = title)
 
                     //Use these as for the same thing the builder doesn't like in one
-                    if (mediaImpl.isAlbum()) {
-                        mediaImpl as Album
-                        Subtitle(text = mediaImpl.artist.title)
-                    } else if (mediaImpl.isMusic()) {
-                        mediaImpl as Music
-                        Subtitle(text = mediaImpl.album.title + " - " + mediaImpl.artist.title)
+                    if (media.isAlbum()) {
+                        media as Album
+                        Subtitle(text = media.artist.title)
+                    } else if (media.isMusic()) {
+                        media as Music
+                        Subtitle(text = media.album.title + " - " + media.artist.title)
                     }
                 }
             },
             trailingContent = {
-                if (mediaImpl.isMusic()) {
-                    mediaImpl as Music
-                    val liked: Boolean by mediaImpl.liked
-                    if (liked) {
-                        val likedJetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.LIKED
-                        Icon(
-                            imageVector = likedJetpackLibsIcons.imageVector,
-                            contentDescription = likedJetpackLibsIcons.description
-                        )
+                Row {
+                    if (media.isSubsonic())
+                        Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_NOT_SAVED_ICON)
+                    if (media.isMusic()) {
+                        media as Music
+                        val liked: Boolean by media.liked
+                        if (liked)
+                            Icon(jetpackLibsIcons = JetpackLibsIcons.LIKED)
                     }
                 }
             }
@@ -164,7 +165,7 @@ private fun CardPreview() {
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        mediaImpl = music,
+        media = music,
         onClick = null,
         onLongClick = null
     )

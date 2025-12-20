@@ -45,13 +45,14 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
+import io.github.antoinepirlot.satunes.router.routes.subsonic.mediaRoutes
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 
 /**
@@ -62,6 +63,7 @@ import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
 internal fun Router(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
@@ -102,7 +104,7 @@ internal fun Router(
                     )
                     navigationViewModel.navigate(
                         navController = navController,
-                        mediaImpl = playlist
+                        media = playlist
                     )
                 }
             }
@@ -129,9 +131,11 @@ internal fun Router(
     ) {
         mediaRoutes(
             satunesViewModel = satunesViewModel,
+            subsonicViewModel = subsonicViewModel,
             navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                navigationViewModel.setCurrentMediaImpl(media = null)
                 navigationViewModel.resetCurrentMediaImpl()
                 navigationViewModel.resetCurrentDestination()
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -141,8 +145,12 @@ internal fun Router(
                     navigationViewModel = navigationViewModel,
                     navigationUiState = navigationUiState
                 )
+            },
+            onMediaOpen = {
+                navigationViewModel.setCurrentMediaImpl(media = it)
             }
         )
+
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
@@ -169,6 +177,7 @@ internal fun Router(
                 )
             }
         )
+
         settingsRoutes()
     }
 }

@@ -22,10 +22,8 @@
 
 package io.github.antoinepirlot.satunes.playback.models
 
-import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController
 
@@ -66,7 +64,6 @@ open class PlaybackListener : Player.Listener {
     /**
      * Prevents MediaController to shuffle music
      */
-    @OptIn(UnstableApi::class)
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
 

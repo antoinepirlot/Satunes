@@ -4,13 +4,10 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with Satunes.
- *
  * If not, see <https://www.gnu.org/licenses/>.
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
@@ -19,39 +16,45 @@
  *
  * My Codeberg link is: https://codeberg.org/antoinepirlot
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
- *
  */
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.SubsonicResponse
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.random_songs.Song
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 27/09/2025
+ * @author Antoine Pirlot 14/12/2025
  */
 internal class GetAlbumCallback(
     subsonicApiRequester: SubsonicApiRequester,
+    onDataRetrieved: (SubsonicAlbum) -> Unit,
     onSucceed: (() -> Unit)? = null,
+    onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-): SubsonicCallback(
+) : SubsonicCallback<SubsonicAlbum>(
     subsonicApiRequester = subsonicApiRequester,
+    onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
+    onFinished = onFinished,
     onError = onError
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-//        if(!this.hasReceivedData()) return
-        val response: SubsonicResponse = this.response!!
-        if(!response.hasAlbum()) throw IllegalStateException("No media found.")
-        for (song: Song in response.album!!.songs)
-            DataManager.addMusic(music = song.toMusic(subsonicApiRequester = subsonicApiRequester))
-//        this.dataProcessed()
-        this.onSucceed?.invoke()
+        if (this.processData())
+            this.onSucceed?.invoke()
+        this.onFinished?.invoke()
+    }
+
+    override fun processData(): Boolean {
+        if (!super.processData()) return false
+        this.onDataRetrieved(
+            this.subsonicResponse!!.album!!
+                .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicAlbum
+        )
+        return true
     }
 }

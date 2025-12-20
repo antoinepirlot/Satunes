@@ -37,7 +37,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
  * Extra Button list to show on scaffold.
@@ -61,7 +61,7 @@ internal fun ExtraButtonList(
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val mediaImplCollection: Collection<MediaImpl> = dataViewModel.mediaImplListOnScreen
+    val mediaImplCollection: Collection<Media> = dataViewModel.mediaImplListOnScreen
 
     Column(
         modifier = modifier,

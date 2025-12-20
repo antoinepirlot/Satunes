@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -36,32 +33,31 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
+import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.utils.utils.toCircularBitmap
 import java.util.Date
-import io.github.antoinepirlot.satunes.icons.R as RIcon
 
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Music(
+open class Music(
     id: Long,
     title: String,
     displayName: String,
-    val absolutePath: String,
-    val duration: Long = 0,
-    val size: Int = 0,
+    absolutePath: String,
+    open val durationMs: Long = 0,
+    open val size: Int = 0,
     cdTrackNumber: Int? = null,
     addedDateMs: Long,
-    var folder: Folder,
-    val artist: Artist,
-    val album: Album,
-    val genre: Genre,
+    folder: Folder,
+    artist: Artist,
+    album: Album,
+    genre: Genre,
     uri: Uri? = null,
 ) : MediaImpl(
     id = id,
@@ -73,29 +69,42 @@ class Music(
      */
     private val _playlistsOrderMap: MutableMap<Playlist, Long> = mutableMapOf()
 
-    val relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+    var absolutePath: String = absolutePath
+        protected set
 
-    val cdTrackNumber: Int?
+    var cdTrackNumber: Int? = cdTrackNumber
+        protected set
+
+    var folder: Folder = folder
+        protected set
+
+    var artist: Artist = artist
+        protected set
+
+    var album: Album = album
+        protected set
+
+    var genre: Genre = genre
+        protected set
+
+    var relativePath: String = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+        protected set
 
     public override var addedDate: Date? = null
 
     var liked: MutableState<Boolean> = mutableStateOf(false)
         private set
 
-    val uri: Uri? = uri ?: encode(absolutePath).toUri() // Must be init before media item
+    var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
+        protected set
 
     val mediaItem: MediaItem = getMediaMetadata()
 
     init {
-        if (cdTrackNumber != null && cdTrackNumber < 1)
-            this.cdTrackNumber = null
-        else
-            this.cdTrackNumber = cdTrackNumber
-        DataManager.addMusic(music = this)
+        this.updateCdTrackNumber(cdTrackNumber = cdTrackNumber)
         album.addMusic(music = this)
-        if (SettingsManager.compilationMusic) {
+        if (SettingsManager.compilationMusic)
             album.artist.addMusic(music = this)
-        }
         this.addedDate = Date(addedDateMs)
         artist.addMusic(music = this)
         genre.addMusic(music = this)
@@ -130,7 +139,8 @@ class Music(
             .build()
     }
 
-    fun getAlbumArtwork(context: Context): Bitmap {
+    open fun getAlbumArtwork(context: Context): Bitmap {
+        if (artwork != null) return artwork!!.applyShape()
         var bitmap: Bitmap? = try {
             val mediaMetadataRetriever = MediaMetadataRetriever()
             mediaMetadataRetriever.setDataSource(context, uri)
@@ -139,16 +149,27 @@ class Music(
             if (artwork == null) null
             else BitmapFactory.decodeByteArray(artwork, 0, artwork.size)
         } catch (e: Throwable) {
-            _logger?.warning(e.message)
+            logger?.warning(e.message)
             null
         }
         if (bitmap == null)
-            bitmap = AppCompatResources.getDrawable(
-                context,
-                RIcon.mipmap.empty_album_artwork_foreground
-            )!!.toBitmap()
-        return if (SettingsManager.artworkCircleShape.value) bitmap.toCircularBitmap() else bitmap
+            bitmap = getEmptyAlbumArtwork(context = context)
+        return bitmap.applyShape()
     }
+
+    /**
+     * Apply circle shape if user enabled it.
+     *
+     * @return the shaped [Bitmap]
+     */
+    protected fun Bitmap.applyShape(): Bitmap {
+        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
+    }
+
+    protected fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
+        context,
+        R.mipmap.empty_album_artwork_foreground
+    )!!.toBitmap()
 
     /**
      * Link this [Music] to [Playlist] with its order in the [Playlist].
@@ -184,12 +205,42 @@ class Music(
         return this._playlistsOrderMap[playlist] ?: -1
     }
 
+    fun updateFolder(folder: Folder) {
+        this.folder = folder
+        this.absolutePath = "${folder.absolutePath}/${this.absolutePath.split("/").last()}"
+        this.relativePath = this.absolutePath.replace("$DEFAULT_ROOT_FILE_PATH/", "")
+    }
+
+    fun updateCdTrackNumber(cdTrackNumber: Int?) {
+        if (cdTrackNumber != null && cdTrackNumber < 1)
+            this.cdTrackNumber = null
+        else
+            this.cdTrackNumber = cdTrackNumber
+    }
+
+    fun updateAlbum(album: Album) {
+        this.album = album
+    }
+
+    fun updateArtist(artist: Artist) {
+        this.artist = artist
+    }
+
+    fun updateGenre(genre: Genre) {
+        this.genre = genre
+    }
+
+    override fun isMusic(): Boolean = true
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as Music
 
+        //TODO update as the music should not be the same as id.
+        //Using id is usefull to detect duplications by the user but not for the online system.
+        //The name, artist, albums and so on must be used to detect local and online music.
         return this.id == other.id
     }
 
@@ -197,7 +248,7 @@ class Music(
         return this.id.hashCode()
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         val compared: Int = super.compareTo(other)
         if (compared == 0 && this != other) return 1
         return compared

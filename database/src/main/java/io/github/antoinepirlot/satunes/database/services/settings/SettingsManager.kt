@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -30,18 +27,18 @@ import androidx.compose.runtime.MutableState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.BarSpeed
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.custom_action.CustomActions
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.design.DesignSettings
 import io.github.antoinepirlot.satunes.database.services.settings.library.LibrarySettings
 import io.github.antoinepirlot.satunes.database.services.settings.playback.PlaybackSettings
 import io.github.antoinepirlot.satunes.database.services.settings.search.SearchSettings
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 02-03-24
@@ -49,7 +46,7 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 object SettingsManager {
     private val PREFERENCES_DATA_STORE = preferencesDataStore("settings")
-    private val _logger = SatunesLogger.getLogger()
+    private val _logger = Logger.getLogger()
     internal val Context.dataStore: DataStore<Preferences> by PREFERENCES_DATA_STORE
     private var _isLoaded: Boolean = false
 
@@ -104,10 +101,21 @@ object SettingsManager {
         get() = SearchSettings.musicsFilter
 
     // Library Settings
-    val foldersPathsIncludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsIncludingCollection
-    val foldersPathsExcludingCollection: Collection<String> =
-        LibrarySettings.foldersPathsExcludingCollection
+    val foldersPathsIncludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsIncludingCollection
+    val foldersPathsExcludingCollection: Collection<String>
+        get() = LibrarySettings.foldersPathsExcludingCollection
+    val subsonicUrl: String
+        get() = LibrarySettings.subsonicUrl
+
+    val subsonicUsername: String
+        get() = LibrarySettings.subsonicUsername
+
+    val subsonicPassword: String
+        get() = LibrarySettings.subsonicPassword
+
+    val subsonicSalt: String
+        get() = LibrarySettings.subsonicSalt
 
     //Update Settings
     val updateChannel: MutableState<UpdateChannel>
@@ -134,12 +142,12 @@ object SettingsManager {
             return
         }
         SatunesSettings.loadSettings(context = context)
-        SatunesLogger.enabled = this.logsActivation.value
+        Logger.enabled = this.logsActivation.value
         DesignSettings.loadSettings(context = context)
         PlaybackSettings.loadSettings(context = context)
         loadFilters(context = context)
         LibrarySettings.loadSettings(context = context)
-        DataLoader.loadFoldersPaths()
+        LocalDataLoader.loadFoldersPaths()
         _isLoaded = true
     }
 
@@ -303,12 +311,9 @@ object SettingsManager {
 
     suspend fun resetAll(context: Context) {
         SatunesSettings.reset(context = context)
-        this.resetFoldersSettings(context = context)
-        this.resetLoadingLogicSettings(context = context)
-        this.resetBatterySettings(context = context)
-        this.resetPlaybackBehaviorSettings(context = context)
-        this.resetPlaybackModesSettings(context = context)
-        this.resetDefaultSearchFiltersSettings(context = context)
+        PlaybackSettings.resetAll(context = context)
+        SearchSettings.resetAll(context = context)
+        LibrarySettings.resetAll(context = context)
         DesignSettings.resetAll(context = context)
     }
 
@@ -330,10 +335,10 @@ object SettingsManager {
 
     suspend fun switchLogsActivation(context: Context) {
         SatunesSettings.switchLogsActivation(context)
-        SatunesLogger.getLogger()?.info(
+        Logger.getLogger()?.info(
             if (this.logsActivation.value) "Logs enabled." else "Logs Disabled."
         )
-        SatunesLogger.enabled = this.logsActivation.value
+        Logger.enabled = this.logsActivation.value
     }
 
     suspend fun resetArtworkSettings(context: Context) {
@@ -350,5 +355,21 @@ object SettingsManager {
 
     suspend fun selectUpdateChannel(context: Context, channel: UpdateChannel) {
         SatunesSettings.selectUpdateChannel(context = context, channel = channel)
+    }
+
+    suspend fun updateSubsonicUrl(context: Context, url: String) {
+        LibrarySettings.updateSubsonicUrl(context = context, url = url)
+    }
+
+    suspend fun updateSubsonicUsername(context: Context, username: String) {
+        LibrarySettings.updateSubsonicUsername(context = context, username = username)
+    }
+
+    suspend fun updateSubsonicPassword(context: Context, password: String) {
+        LibrarySettings.updateSubsonicPassword(context = context, password = password)
+    }
+
+    suspend fun updateSubsonicSalt(context: Context, salt: String) {
+        LibrarySettings.updateSubsonicSalt(context = context, salt = salt)
     }
 }

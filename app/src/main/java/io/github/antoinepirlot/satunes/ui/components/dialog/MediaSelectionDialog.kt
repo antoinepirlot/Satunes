@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -43,8 +44,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import kotlinx.coroutines.CoroutineScope
@@ -63,7 +62,7 @@ internal fun MediaSelectionDialog(
     mediaImplCollection: Collection<MediaImpl>,
     mediaDestination: MediaImpl,
     playlistTitle: String? = null,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
 ) {
     val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
 
@@ -84,7 +83,7 @@ internal fun MediaSelectionDialog(
             onConfirm = onConfirm,
             mediaImplCollection = mediaImplCollection,
             playlistTitle = playlistTitle,
-            icon = icon
+            jetpackLibsIcons = jetpackLibsIcons
         )
     }
 }
@@ -124,17 +123,20 @@ private fun MediaSelectionDialogList(
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
     playlistTitle: String? = null,
-    icon: SatunesIcons,
+    jetpackLibsIcons: JetpackLibsIcons,
 ) {
     AlertDialog(
         modifier = modifier.padding(vertical = 50.dp),
         icon = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         },
         title = {
             if (mediaImplCollection.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
-            } else if (mediaImplCollection.first() is Music) {
+            } else if (mediaImplCollection.first().isMusic()) {
                 if (playlistTitle == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
@@ -188,10 +190,10 @@ private fun cancel(mediaSelectionViewModel: MediaSelectionViewModel, onDismissRe
 @Composable
 private fun PlaylistSelectionDialogPreview() {
     MediaSelectionDialog(
-        icon = SatunesIcons.PLAYLIST_ADD,
+        jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         onDismissRequest = {},
         onConfirm = {},
-        mediaDestination = Genre(""),
+        mediaDestination = Genre(title = ""),
         mediaImplCollection = listOf()
     )
 }

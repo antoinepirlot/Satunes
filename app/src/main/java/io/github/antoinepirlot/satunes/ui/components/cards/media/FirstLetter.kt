@@ -26,10 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.database.models.media.BackFolder
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.getTitleToCompare
@@ -47,12 +45,11 @@ import java.text.Normalizer
 @Composable
 fun FirstLetter(
     modifier: Modifier = Modifier,
-    dataViewModel: DataViewModel = viewModel(),
-    mediaImpl: MediaImpl,
-    mediaImplList: Collection<MediaImpl>,
+    mediaImpl: Media,
+    mediaImplList: Collection<Media>,
     sortOption: SortOptions
 ) {
-    if (mediaImpl is BackFolder) return
+    if (mediaImpl.isBackFolder()) return
 
     val titleToCompare: String =
         getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
@@ -61,7 +58,7 @@ fun FirstLetter(
         .normalize(titleToCompare.first().uppercase(), Normalizer.Form.NFD)
         .first()
 
-    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first { mediaImpl: MediaImpl ->
+    val firstWithLetterMediaImpl: Media = mediaImplList.first { mediaImpl: Media ->
         val itTitle: String =
             getTitleToCompare(mediaImpl = mediaImpl, sortOption = sortOption) ?: return
         Normalizer.normalize(

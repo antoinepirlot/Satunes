@@ -29,11 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 
 /**
  * @author Antoine Pirlot on 27/05/2024
@@ -50,7 +50,7 @@ internal fun InformationDialog(
     AlertDialog(
         modifier = modifier,
         icon = {
-            Icon(icon = SatunesIcons.INFO)
+            Icon(jetpackLibsIcons = JetpackLibsIcons.INFO)
         },
         title = {
             Title(text = title, fontSize = 25.sp, maxLines = 2)

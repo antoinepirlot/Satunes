@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -35,7 +36,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 
@@ -56,11 +56,11 @@ internal fun PlaylistExtraButtonList(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ExtraButton(
-            icon = SatunesIcons.EXPORT,
+            jetpackLibsIcons = JetpackLibsIcons.EXPORT,
             onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
         )
         ExtraButton(
-            icon = SatunesIcons.ADD,
+            jetpackLibsIcons = JetpackLibsIcons.ADD,
             onClick = { satunesViewModel.showMediaSelectionDialog() },
         )
     }
@@ -78,7 +78,7 @@ internal fun PlaylistExtraButtonList(
                 satunesViewModel.hideMediaSelectionDialog()
             },
             mediaImplCollection = dataViewModel.getMusicSet(),
-            icon = SatunesIcons.PLAYLIST_ADD,
+            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
             mediaDestination = playlist,
             playlistTitle = playlist.title
         )

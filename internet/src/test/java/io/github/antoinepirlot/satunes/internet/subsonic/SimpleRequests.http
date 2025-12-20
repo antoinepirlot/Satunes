@@ -1,0 +1,33 @@
+GET {{baseUrl}}/ping?{{auth_params}}
+
+###
+
+#Used to get all musics as subsonic 1.16.1 doesn't provide to get all musics.
+GET {{baseUrl}}/getIndexes?{{auth_params}}
+
+###
+
+GET {{baseUrl}}/getMusicFolders?{{auth_params}}
+
+
+###
+
+GET {{baseUrl}}/stream?{{stream_params}}
+
+###
+GET {{baseUrl}}/getRandomSongs?{{auth_params}}
+
+###
+
+GET {{baseUrl}}/getAlbum?{{get_album_params}}
+
+###
+
+GET {{baseUrl}}/getArtist?{{get_artist_params}}
+
+###
+GET {{baseUrl}}/search3?{{search_params}}
+
+###
+
+GET {{baseUrl}}/getCoverArt?{{cover_art_params}}

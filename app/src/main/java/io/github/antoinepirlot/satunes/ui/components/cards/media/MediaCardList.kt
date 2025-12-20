@@ -49,8 +49,9 @@ import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.BackFolder
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.MediaOptionsDialog
 
@@ -65,11 +66,11 @@ internal fun MediaCardList(
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImplList: List<MediaImpl>,
+    mediaImplList: List<Media>,
     header: @Composable (() -> Unit)? = null,
     scrollToMusicPlaying: Boolean = false,
     showGroupIndication: Boolean = true,
-    onMediaClick: ((MediaImpl) -> Unit)? = null,
+    onMediaClick: ((Media) -> Unit)? = null,
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
@@ -84,8 +85,12 @@ internal fun MediaCardList(
     ) {
         items(
             items = mediaImplList,
-            key = { it.javaClass.name + '-' + it.id }
-        ) { mediaImpl: MediaImpl ->
+            key = {
+                it.javaClass.name + '-' +
+                        if (it.isSubsonic()) (it as SubsonicMedia).subsonicId
+                        else it.id
+            }
+        ) { mediaImpl: Media ->
             val isFirst: Boolean = mediaImpl == mediaImplList.first()
             if (isFirst) header?.invoke()
 
@@ -98,27 +103,28 @@ internal fun MediaCardList(
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
                 modifier = modifier,
-                mediaImpl = mediaImpl,
+                media = mediaImpl,
                 onClick = {
                     if (onMediaClick != null) {
                         onMediaClick.invoke(mediaImpl)
                     } else {
-                        if (mediaImpl is BackFolder) {
+                        if (mediaImpl.isBackFolder()) {
+                            mediaImpl as BackFolder
                             if (mediaImpl.hasBeenClicked()) return@MediaCard
                             val currentMediaImpl: Folder =
                                 navigationUiState.currentMediaImpl as Folder
                             navigationViewModel.navigate(
                                 navController = navController,
-                                mediaImpl = currentMediaImpl.parentFolder
+                                media = currentMediaImpl.parentFolder
                             )
                             mediaImpl.clicked()
                             return@MediaCard
                         }
-                        if (mediaImpl is Music && !isInPlaybackView)
+                        if (mediaImpl.isMusic() && !isInPlaybackView)
                             playbackViewModel.loadMusicFromMedias(
                                 medias = mediaImplList,
                                 currentDestination = navigationUiState.currentDestination,
-                                musicToPlay = mediaImpl
+                                musicToPlay = mediaImpl as Music?
                             )
                         navigationViewModel.openMedia(
                             playbackViewModel = playbackViewModel,
@@ -128,7 +134,7 @@ internal fun MediaCardList(
                     }
                 },
                 onLongClick = {
-                    if (mediaImpl is BackFolder) return@MediaCard
+                    if (mediaImpl.isBackFolder()) return@MediaCard
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     showMediaOptions = true
                 }
@@ -137,7 +143,7 @@ internal fun MediaCardList(
             // Media option dialog
             if (showMediaOptions) {
                 MediaOptionsDialog(
-                    mediaImpl = mediaImpl,
+                    media = mediaImpl,
                     onDismissRequest = {
                         showMediaOptions = false
                     }
@@ -165,8 +171,8 @@ internal fun MediaCardList(
 private fun Indicator(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
-    mediaImpl: MediaImpl,
-    mediaImplList: List<MediaImpl>
+    mediaImpl: Media,
+    mediaImplList: List<Media>
 ) {
     val sortOption: SortOptions = dataViewModel.sortOption
 

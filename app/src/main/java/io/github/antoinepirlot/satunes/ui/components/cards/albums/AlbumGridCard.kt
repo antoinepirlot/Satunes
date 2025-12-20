@@ -79,7 +79,7 @@ internal fun AlbumGridCard(
         ) {
             MediaArtwork(
                 modifier.size(artworkSize),
-                mediaImpl = album,
+                media = album,
                 isClickable = true
             )
             NormalText(

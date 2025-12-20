@@ -24,33 +24,34 @@
 package io.github.antoinepirlot.satunes.database.models.comparators
 
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import java.util.Date
 
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-object SortByAddedDateComparator : MediaComparator<MediaImpl>() {
-    override fun compare(o1: MediaImpl, o2: MediaImpl): Int {
+object SortByAddedDateComparator : MediaComparator<Media>() {
+    override fun compare(o1: Media, o2: Media): Int {
         var cmp: Int =
-            when (o1) {
-                is Music -> when (o2) {
-                    is Music -> this.getCmp(date1 = o1.addedDate, date2 = o2.addedDate)
-                    is Folder -> this.getCmp(date1 = o1.addedDate, date2 = o2.addedDate)
-                    else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
-                }
+            if (o1.isMusic()) {
+                o1 as Music
+                if (o2.isMusic()) this.getCmp(date1 = o1.addedDate, date2 = (o2 as Music).addedDate)
+                else if (o2.isFolder()) this.getCmp(
+                    date1 = o1.addedDate,
+                    date2 = (o2 as Folder).addedDate
+                )
+                else throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
+            } else if (o1.isFolder()) {
+                o1 as Folder
+                if (o2.isMusic()) this.getCmp(date1 = o1.addedDate, date2 = (o2 as Music).addedDate)
+                else if (o2.isFolder()) -this.getCmp(
+                    date1 = o1.addedDate,
+                    date2 = (o2 as Folder).addedDate
+                )
+                else throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
+            } else throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
 
-                is Folder -> {
-                    when (o2) {
-                        is Music -> this.getCmp(date1 = o1.addedDate, date2 = o2.addedDate)
-                        is Folder -> -this.getCmp(date1 = o1.addedDate, date2 = o2.addedDate)
-                        else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
-                    }
-                }
-
-                else -> throw UnsupportedOperationException("Can't sort non music or folder medias by added date.")
-            }
         cmp = if (cmp == 0) o1.compareTo(o2) else cmp
         return this.getFinalCmp(cmp = cmp)
     }

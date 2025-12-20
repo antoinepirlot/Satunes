@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
@@ -37,7 +38,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
@@ -62,18 +62,11 @@ internal fun AddToPlaylistMediaOption(
     DialogOption(
         modifier = modifier,
         onClick = { satunesViewModel.showMediaSelectionDialog() },
-        icon = SatunesIcons.PLAYLIST_ADD,
+        jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (satunesUiState.showMediaSelectionDialog) {
         val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
-        //Recompose if data changed
-        val mapChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (mapChanged) {
-            dataViewModel.playlistSetUpdated()
-            dataViewModel.listSetUpdatedUnprocessed()
-        }
-        //
 
         MediaSelectionDialog(
             onDismissRequest = {
@@ -92,7 +85,7 @@ internal fun AddToPlaylistMediaOption(
             },
             mediaImplCollection = playlistSet,
             mediaDestination = mediaImpl,
-            icon = SatunesIcons.PLAYLIST_ADD,
+            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
         )
     }
 }
@@ -104,19 +97,18 @@ private fun updateMediaPlaylists(
     mediaSelectionViewModel: MediaSelectionViewModel,
     mediaImpl: MediaImpl
 ) {
-    when (mediaImpl) {
-        is Music -> dataViewModel.updateMusicPlaylist(
+    if (mediaImpl.isMusic()) {
+        mediaImpl as Music
+        dataViewModel.updateMusicPlaylist(
             scope = scope,
             snackBarHostState = snackBarHostState,
             music = mediaImpl,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
-
-        else -> dataViewModel.updateMediaImplToPlaylists(
-            scope = scope,
-            snackBarHostState = snackBarHostState,
-            mediaImpl = mediaImpl,
-            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
-        )
-    }
+    } else dataViewModel.updateMediaImplToPlaylists(
+        scope = scope,
+        snackBarHostState = snackBarHostState,
+        mediaImpl = mediaImpl,
+        playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
+    )
 }

@@ -28,9 +28,11 @@ import android.webkit.MimeTypeMap
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.defaultSortingOption
@@ -48,19 +50,22 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.BackFolder
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
 import io.github.antoinepirlot.satunes.utils.getNow
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -81,19 +86,18 @@ class DataViewModel : ViewModel() {
         private var _playlistToExport: Playlist? = null
     }
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-    private val _playlistSetUpdated: MutableState<Boolean> = DataManager.playlistsMapUpdated
+    private val _logger: Logger? = Logger.getLogger()
     private val _db: DatabaseManager =
         DatabaseManager.initInstance(context = MainActivity.instance.applicationContext)
-    private val _isLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _isLoaded: MutableState<Boolean> = LocalDataLoader.isLoaded
     private var _updatePlaylistsJob: Job? = null
+
+    private val _apiRequester: SubsonicApiRequester
+        get() = SubsonicApiRequester()
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
-    var playlistSetUpdated: Boolean by _playlistSetUpdated
-        private set
-    var listSetUpdatedProcessed: Boolean = true
-        private set
+    val mediaImplListOnScreen: List<Media> = mutableStateListOf()
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
@@ -125,19 +129,6 @@ class DataViewModel : ViewModel() {
     val isExportSinglePlaylist: Boolean
         get() = _playlistToExport != null
 
-    fun playlistSetUpdated() {
-        this._playlistSetUpdated.value = false
-        this.listSetUpdatedProcessed = false
-    }
-
-    fun listSetUpdatedUnprocessed() {
-        this.listSetUpdatedProcessed = false
-    }
-
-    fun listSetUpdatedProcessed() {
-        this.listSetUpdatedProcessed = true
-    }
-
     fun getRootFolder(): RootFolder = DataManager.getRootFolder()
     fun getBackFolder(): BackFolder = DataManager.getBackFolder()
     fun getFolderSet(): Set<Folder> = DataManager.getFolderSet()
@@ -145,11 +136,22 @@ class DataViewModel : ViewModel() {
     fun getAlbumSet(): Set<Album> = DataManager.getAlbumSet()
     fun getGenreSet(): Set<Genre> = DataManager.getGenreSet()
     fun getMusicSet(): Set<Music> = DataManager.getMusicSet()
+    fun getSubsonicMusicsCollection(): Collection<SubsonicMusic> =
+        DataManager.getSubsonicMusicsCollection()
+
+    fun getSubsonicRandomMusicsCollection(): Collection<SubsonicMusic> =
+        DataManager.getSubsonicRandomMusicsCollection()
+
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
     fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
+
+    fun getSubsonicArtist(id: Long) = DataManager.getSubsonicArtist(id = id)!!
+
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
+    fun getSubsonicAlbum(id: Long): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
+
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)
     fun getPlaylist(title: String): Playlist? = DataManager.getPlaylist(title = title)
@@ -164,6 +166,10 @@ class DataViewModel : ViewModel() {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
+                this@DataViewModel.mediaImplListOnScreen as MutableList<Media>
+                (this@DataViewModel.mediaImplListOnScreen).add(element = playlist)
+                this@DataViewModel.mediaImplListOnScreen.sort()
+
                 onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
                     scope = scope,
@@ -278,16 +284,12 @@ class DataViewModel : ViewModel() {
         playlist: Playlist,
     ) {
         this._updatePlaylistsJob?.cancel()
-        val oldMusicsSet: Set<Music> = playlist.getMusicSet().toSet()
+        val oldMusicsList: Collection<Music> = playlist.musicCollection.toList()
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.updatePlaylistMusics(
-                    playlist = playlist,
-                    newMusicCollection = musics,
-                    triggerUpdate = false
-                )
-                playlist.clearMusicSet(triggerUpdate = false)
+                _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
+                playlist.clearMusicList()
                 playlist.addMusics(musics = musics)
                 showSnackBar(
                     scope = scope,
@@ -298,7 +300,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = oldMusicsSet,
+                            musics = oldMusicsList,
                             playlist = playlist
                         )
                     }
@@ -426,9 +428,9 @@ class DataViewModel : ViewModel() {
         this._updatePlaylistsJob?.cancel()
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (mediaImpl is Music)
+                if (mediaImpl.isMusic())
                     _db.updateMusicToPlaylists(
-                        music = mediaImpl,
+                        music = mediaImpl as Music,
                         newPlaylistsCollection = playlists
                     )
                 else
@@ -621,19 +623,15 @@ class DataViewModel : ViewModel() {
         try {
             var paths: Array<String> = arrayOf()
 
-            when (media) {
-                is Music -> paths += media.absolutePath
-                is Folder -> {
-                    media.getAllMusic().forEach { music: Music ->
-                        paths += music.absolutePath
-                    }
+            if (media.isMusic()) paths += (media as Music).absolutePath
+            else if (media.isFolder()) {
+                (media as Folder).getAllMusic().forEach { music: Music ->
+                    paths += music.absolutePath
                 }
-
-                else -> {
-                    @Suppress("NAME_SHADOWING")
-                    media.getMusicSet().forEach { media: Music ->
-                        paths += media.absolutePath
-                    }
+            } else {
+                @Suppress("NAME_SHADOWING")
+                media.musicCollection.forEach { media: Music ->
+                    paths += media.absolutePath
                 }
             }
 
@@ -938,30 +936,20 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Set the mediaImpl list shown on screen in the uiState
-     *
-     * @param mediaImplCollection the list of mediaImpl shown on screen
-     */
-    fun setMediaImplListOnScreen(mediaImplCollection: Collection<MediaImpl>) {
-        _uiState.update { currentState: DataUiState ->
-            currentState.copy(mediaImplListOnScreen = mediaImplCollection)
-        }
-    }
-
-    fun sort(navigationUiState: NavigationUiState, list: MutableList<MediaImpl>) {
+    fun sort(navigationUiState: NavigationUiState) {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
+        mediaImplListOnScreen as MutableList<Media>
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
             val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
-            list.sortBy { mediaImpl: MediaImpl ->
+            mediaImplListOnScreen.sortBy { mediaImpl: Media ->
                 if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
                 else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
             sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
-            list.sortWith(comparator = sortOption.comparator!!)
+            mediaImplListOnScreen.sortWith(comparator = sortOption.comparator!!)
         }
     }
 
@@ -1017,5 +1005,18 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(multipleFiles = !currentState.multipleFiles)
         }
+    }
+
+    /**
+     * Add [Collection] of [SubsonicMusic] to [DataManager.subsonicRandomMusics] from the getRandomMusic query
+     */
+    fun addRandomMusics(musics: Collection<SubsonicMusic>) {
+        DataManager.addRandomMusic(musics = musics)
+    }
+
+    fun loadMediaImplList(list: Collection<Media>) {
+        this.mediaImplListOnScreen as MutableList<Media>
+        this.mediaImplListOnScreen.clear()
+        this.mediaImplListOnScreen.addAll(list)
     }
 }

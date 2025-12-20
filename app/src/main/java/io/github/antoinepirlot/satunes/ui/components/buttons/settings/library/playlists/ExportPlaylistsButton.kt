@@ -25,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
  * @author Antoine Pirlot on 12/09/2024
@@ -46,7 +46,7 @@ fun ExportPlaylistsButton(
 
     ButtonWithIcon(
         modifier = modifier,
-        icon = SatunesIcons.EXPORT,
+        jetpackLibsIcons = JetpackLibsIcons.EXPORT,
         onClick = { dataViewModel.openExportPlaylistDialog() },
         text = stringResource(id = R.string.export)
     )

@@ -26,13 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
 
@@ -60,7 +60,7 @@ internal fun RemoveFromQueueOption(
             )
             onDismissRequest()
         },
-        icon = SatunesIcons.REMOVE_FROM_QUEUE,
+        jetpackLibsIcons = JetpackLibsIcons.REMOVE_FROM_QUEUE,
         text = stringResource(id = R.string.remove_from_queue_option)
     )
 }

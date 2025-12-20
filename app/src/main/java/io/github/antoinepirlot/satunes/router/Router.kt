@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -20,8 +21,6 @@
 package io.github.antoinepirlot.satunes.router
 
 import android.content.Context
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,6 +36,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.satunes.data.allNavBarSections
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
@@ -44,16 +45,15 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.models.listeners.OnBackPressedListener
-import io.github.antoinepirlot.satunes.router.routes.mediaRoutes
 import io.github.antoinepirlot.satunes.router.routes.playbackRoutes
 import io.github.antoinepirlot.satunes.router.routes.searchRoutes
 import io.github.antoinepirlot.satunes.router.routes.settingsRoutes
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
+import io.github.antoinepirlot.satunes.router.routes.subsonic.mediaRoutes
 import io.github.antoinepirlot.satunes.utils.checkDefaultPlaylistSetting
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 23-01-24
@@ -63,11 +63,12 @@ import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 internal fun Router(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
-    SatunesLogger.getLogger()?.info("Router Composable")
+    Logger.getLogger()?.info("Router Composable")
 
     val context: Context = LocalContext.current
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
@@ -75,11 +76,13 @@ internal fun Router(
     val navController: NavHostController = LocalNavController.current
     val isAudioAllowed: Boolean = satunesUiState.isAudioAllowed
     var defaultDestination: Destination? by rememberSaveable { mutableStateOf(null) }
+    val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
 
     if (defaultDestination == null) {
+        val isMusicsNavBarEnabled: Boolean by rememberSaveable { NavBarSection.MUSICS.isEnabled }
         LaunchedEffect(key1 = Unit) {
             defaultDestination =
-                getNavBarSectionDestination(navBarSection = satunesViewModel.defaultNavBarSection)
+                Destination.getDestination(navBarSection = satunesViewModel.defaultNavBarSection)
             navigationViewModel.reset()
         }
         return
@@ -88,7 +91,7 @@ internal fun Router(
 //    HandleBackButtonPressed()
 
     LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if(!navigationViewModel.isInitialised) {
+        if (!navigationViewModel.isInitialised) {
             navigationViewModel.init(defaultDestination = defaultDestination!!)
             if (defaultDestination == Destination.PLAYLISTS && dataViewModel.isLoaded) {
                 checkDefaultPlaylistSetting(context = context)
@@ -101,7 +104,7 @@ internal fun Router(
                     )
                     navigationViewModel.navigate(
                         navController = navController,
-                        mediaImpl = playlist
+                        media = playlist
                     )
                 }
             }
@@ -109,6 +112,15 @@ internal fun Router(
     }
 
     // Start handle destination change
+
+    LaunchedEffect(key1 = satunesUiState.mode) {
+        if (!isMusicsNavBarEnabled && navigationUiState.currentDestination == Destination.MUSICS) {
+            navController.popBackStack()
+            navController.navigate(
+                route = Destination.getDestination(navBarSection = getFirstCompatibleNavBar()!!).link
+            )
+        }
+    }
 
     NavHost(
         modifier = modifier,
@@ -119,9 +131,11 @@ internal fun Router(
     ) {
         mediaRoutes(
             satunesViewModel = satunesViewModel,
+            subsonicViewModel = subsonicViewModel,
             navigationViewModel = navigationViewModel,
             dataViewModel = dataViewModel,
             onStart = {
+                navigationViewModel.setCurrentMediaImpl(media = null)
                 navigationViewModel.resetCurrentMediaImpl()
                 navigationViewModel.resetCurrentDestination()
                 navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
@@ -131,8 +145,12 @@ internal fun Router(
                     navigationViewModel = navigationViewModel,
                     navigationUiState = navigationUiState
                 )
+            },
+            onMediaOpen = {
+                navigationViewModel.setCurrentMediaImpl(media = it)
             }
         )
+
         searchRoutes(
             satunesViewModel = satunesViewModel,
             onStart = {
@@ -159,28 +177,8 @@ internal fun Router(
                 )
             }
         )
-        settingsRoutes(
-            satunesViewModel = satunesViewModel, // Pass it as param to fix no recomposition when permission granted
-            onStart = {
-                navigationViewModel.setCurrentDestination(destination = it.destination.route!!)
-            }
-        )
-    }
-}
 
-@Composable
-private fun HandleBackButtonPressed(navigationViewModel: NavigationViewModel = viewModel()) {
-    val navController = LocalNavController.current
-    val backPressedDispatcher: OnBackPressedDispatcher? =
-        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-
-    LaunchedEffect(key1 = Unit) {
-        backPressedDispatcher?.addCallback(
-            onBackPressedCallback = OnBackPressedListener(
-                navigationViewModel = navigationViewModel,
-                navController = navController
-            )
-        )
+        settingsRoutes()
     }
 }
 
@@ -209,4 +207,12 @@ private fun checkIfAllowed(
         return false
     }
     return true
+}
+
+private fun getFirstCompatibleNavBar(): NavBarSection? {
+    for (navBarSection in allNavBarSections) {
+        if (navBarSection.isEnabled.value)
+            return navBarSection
+    }
+    return null
 }

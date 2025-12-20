@@ -33,21 +33,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.WidgetPlaybackManager
 import io.github.antoinepirlot.satunes.utils.getNow
 import io.github.antoinepirlot.satunes.utils.initSatunes
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.widgets.PlaybackWidget.setRefreshWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,7 +90,7 @@ internal class MainActivity : ComponentActivity() {
     private var _fileExtension: FileExtensions? = null
     private var _rootPlaylistsFilesPath: String = DEFAULT_ROOT_FILE_PATH
     private var multipleFiles: Boolean = false
-    private var _logger: SatunesLogger? = null
+    private var _logger: Logger? = null
     private var _playlistToExport: Playlist? = null
     var handledMusic: Music? by mutableStateOf(null)
         private set
@@ -105,9 +105,9 @@ internal class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SatunesLogger.DOCUMENTS_PATH =
+        Logger.DOCUMENTS_PATH =
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!.path
-        _logger = SatunesLogger.getLogger()
+        _logger = Logger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
         if (intentToHandle != intent) intentToHandle = intent
@@ -279,7 +279,7 @@ internal class MainActivity : ComponentActivity() {
             this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
         } catch (_: NullPointerException) {
             //Music has not been loaded by Satunes
-            this.handledMusic = DataLoader.load(context = getContext(), uri = uri)
+            this.handledMusic = LocalDataLoader.load(context = getContext(), uri = uri)
             DataManager.remove(music = this.handledMusic!!)
             if (this.handledMusic!!.album.musicCount() == 1)
                 DataManager.removeAlbum(album = this.handledMusic!!.album)

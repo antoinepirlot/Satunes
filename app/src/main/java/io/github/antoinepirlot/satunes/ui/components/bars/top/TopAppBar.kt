@@ -21,7 +21,7 @@
 package io.github.antoinepirlot.satunes.ui.components.bars.top
 
 import android.annotation.SuppressLint
-import android.os.Build
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,18 +40,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.components.buttons.IconButton
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
-import io.github.antoinepirlot.satunes.ui.components.buttons.IconButton
+import io.github.antoinepirlot.satunes.models.SatunesModes
 
 /**
  * @author Antoine Pirlot on 16/01/24
@@ -63,8 +66,10 @@ internal fun TopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
 ) {
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -79,28 +84,37 @@ internal fun TopAppBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-            val screenWidth: Int = LocalConfiguration.current.screenWidthDp
-            if (
-                currentDestination.category == DestinationCategory.PLAYBACK &&
-                screenWidth < ScreenSizes.LARGE
-            ) {
+            Row {
+                val screenWidth: Int = LocalConfiguration.current.screenWidthDp
+                if (
+                    currentDestination.category == DestinationCategory.PLAYBACK &&
+                    screenWidth < ScreenSizes.LARGE
+                ) {
+                    IconButton(
+                        jetpackLibsIcons = JetpackLibsIcons.PLAYBACK,
+                        onClick = {
+                            onPlaybackQueueButtonClick(
+                                uiState = navigationUiState,
+                                navController = navController,
+                                navigationViewModel = navigationViewModel
+                            )
+                        }
+                    )
+                } else if (
+                    currentDestination.category == DestinationCategory.MEDIA &&
+                    getSortOptions(destination = navigationUiState.currentDestination).size > 1
+                ) {
+                    IconButton(
+                        jetpackLibsIcons = JetpackLibsIcons.SORT,
+                        onClick = { satunesViewModel.showSortDialog() }
+                    )
+                }
+                val mode: SatunesModes = satunesUiState.mode
                 IconButton(
-                    icon = SatunesIcons.PLAYBACK,
+                    jetpackLibsIcons = mode.icon,
                     onClick = {
-                        onPlaybackQueueButtonClick(
-                            uiState = navigationUiState,
-                            navController = navController,
-                            navigationViewModel = navigationViewModel
-                        )
+                        satunesViewModel.switchCloudMode(subsonicViewModel = subsonicViewModel)
                     }
-                )
-            } else if (
-                currentDestination.category == DestinationCategory.MEDIA &&
-                getSortOptions(destination = navigationUiState.currentDestination).size > 1
-            ) {
-                IconButton(
-                    icon = SatunesIcons.SORT,
-                    onClick = { satunesViewModel.showSortDialog() }
                 )
             }
         },
@@ -115,7 +129,7 @@ internal fun TopAppBar(
             if (currentDestination.category != DestinationCategory.SETTING) {
                 // Search Button
                 IconButton(
-                    icon = SatunesIcons.SEARCH,
+                    jetpackLibsIcons = JetpackLibsIcons.SEARCH,
                     onClick = {
                         onSearchButtonClick(
                             uiState = navigationUiState,
@@ -128,7 +142,7 @@ internal fun TopAppBar(
 
             //Setting Button
             IconButton(
-                icon = SatunesIcons.SETTINGS,
+                jetpackLibsIcons = JetpackLibsIcons.SETTINGS,
                 onClick = {
                     onSettingButtonClick(
                         uiState = navigationUiState,
@@ -167,6 +181,7 @@ private fun onPlaybackQueueButtonClick(
             navController = navController,
             destination = Destination.PLAYBACK_QUEUE
         )
+
         Destination.PLAYBACK_QUEUE -> navigationViewModel.popBackStack(navController = navController)
         else -> throw UnsupportedOperationException("Not available when current destination is: ${uiState.currentDestination}")
     }
@@ -182,9 +197,7 @@ private fun onSettingButtonClick(
     satunesViewModel: SatunesViewModel,
     navigationViewModel: NavigationViewModel
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        satunesViewModel.resetUpdatesStatus()
-    }
+    satunesViewModel.resetUpdatesStatus()
     val currentDestination: Destination = uiState.currentDestination
     if (currentDestination.category == DestinationCategory.SETTING) {
         navigationViewModel.popBackStack(navController = navController)

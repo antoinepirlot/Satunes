@@ -146,4 +146,17 @@
     <string name="export_multiple_files_text">Un fichier par playlist?</string>
     <string name="reverse_order">Inverser l\'ordre</string>
     <string name="is_music_title_display_name_text">Utiliser le nom du fichier comme titre de la musique?</string>
+    <string name="subsonic_title">Subsonic API (Serveur)</string>
+    <string name="subsonic_connection_text">Entre les informations de ton serveur Subsonic (l\'utilisation de HTTPS est recommandé pour la sécurité)</string>
+    <string name="test_connection_button_text">Tester la connexion</string>
+    <string name="subsonic_state_title">État</string>
+    <string name="subsonic_connection_title">Identifiants de connexion</string>
+    <string name="salt_label">Graine</string>
+    <string name="salt_placeholder">Ce que tu veux</string>
+    <string name="subsonic_section_text">Sur le cloud</string>
+    <string name="local_section_text">Sur l\'appareil</string>
+    <string name="error_while_fetching_title">Error</string>
+    <string name="no_data_found_view_text">Aucune donnée trouvée.</string>
+    <string name="error_code_text">Code d\'erreur: %1$s</string>
+    <string name="error_message_text">Message d\'erreur: %1$s</string>
 </resources>

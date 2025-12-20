@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.database.models.comparators
 
 import com.mpatric.mp3agic.NotSupportedException
 import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 
@@ -33,27 +34,21 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
  *
  *  @author Antoine Pirlot on 22/12/2024
  */
-object SortByAlbumComparator : MediaComparator<MediaImpl>() {
-    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
-        val cmp: Int = when (mediaImpl1) {
-            is Music -> {
-                when (mediaImpl2) {
-                    is Music -> {
-                        val cmp: Int =
-                            mediaImpl1.album.compareTo(mediaImpl2.album)
-                        if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
-                        else cmp
-                    }
-                    else -> 1 // mediaImpl2 is not a music, so the mediaImpl2 goes to the end
-                }
+object SortByAlbumComparator : MediaComparator<Media>() {
+    override fun compare(mediaImpl1: Media, mediaImpl2: Media): Int {
+        val cmp: Int =
+            if (mediaImpl1.isMusic()) {
+                mediaImpl1 as Music
+                if (mediaImpl2.isMusic()) {
+                    mediaImpl2 as Music
+                    val cmp: Int = mediaImpl1.album.compareTo(mediaImpl2.album)
+                    if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
+                    else cmp
+                } else 1 // mediaImpl2 is not a music, so the mediaImpl2 goes to the end
+            } else {
+                if (mediaImpl2.isMusic()) -1 // mediaImpl1 is not a music, so the mediaImpl1 goes to the end
+                else throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by album.")
             }
-
-            else ->
-                when (mediaImpl2) {
-                    is Music -> -1 // mediaImpl1 is not a music, so the mediaImpl1 goes to the end
-                    else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by album.")
-                }
-        }
         return this.getFinalCmp(cmp = cmp)
     }
 }

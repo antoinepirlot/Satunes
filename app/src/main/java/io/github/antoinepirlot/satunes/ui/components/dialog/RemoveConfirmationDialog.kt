@@ -28,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 09/07/2024
@@ -38,14 +38,17 @@ import io.github.antoinepirlot.satunes.icons.SatunesIcons
 @Composable
 internal fun RemoveConfirmationDialog(
     modifier: Modifier = Modifier,
-    icon: SatunesIcons = SatunesIcons.REMOVE_ICON,
+    jetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.REMOVE_ICON,
     onDismissRequest: () -> Unit,
     onRemoveRequest: () -> Unit
 ) {
     AlertDialog(
         modifier = modifier,
         icon = {
-            Icon(imageVector = icon.imageVector, contentDescription = icon.description)
+            Icon(
+                imageVector = jetpackLibsIcons.imageVector,
+                contentDescription = jetpackLibsIcons.description
+            )
         },
         title = {
             NormalText(text = stringResource(id = R.string.remove_dialog_title))

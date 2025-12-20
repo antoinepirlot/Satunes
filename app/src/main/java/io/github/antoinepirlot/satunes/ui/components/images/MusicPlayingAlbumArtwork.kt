@@ -40,7 +40,7 @@ internal fun MusicPlayingAlbumArtwork(
 ) {
     MediaArtwork(
         modifier = modifier,
-        mediaImpl = playbackViewModel.musicPlaying!!,
+        media = playbackViewModel.musicPlaying!!,
         isClickable = true,
         shape = if (satunesViewModel.artworkAnimation) CircleShape else null
     )
@@ -50,6 +50,6 @@ internal fun MusicPlayingAlbumArtwork(
 @Composable
 private fun MusicPlayingAlbumArtworkPreview() {
     val playbackViewModel: PlaybackViewModel = viewModel()
-    MediaArtwork(mediaImpl = playbackViewModel.musicPlaying!!)
+    MediaArtwork(media = playbackViewModel.musicPlaying!!)
 }
 

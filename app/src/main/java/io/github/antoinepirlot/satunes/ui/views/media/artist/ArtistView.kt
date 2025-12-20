@@ -22,10 +22,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.artist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +31,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
@@ -51,19 +46,13 @@ internal fun ArtistView(
     dataViewModel: DataViewModel = viewModel(),
     artist: Artist,
 ) {
-    val musicSet: Set<Music> = artist.getMusicSet()
 
-    //Recompose if data changed
-    var musicSetChanged: Boolean by rememberSaveable { artist.musicSetUpdated }
-    if (musicSetChanged) {
-        musicSetChanged = false
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = artist.musicCollection)
     }
-    //
 
-    val albumSet: Set<Album> = artist.getAlbumSet()
-
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (albumSet.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
@@ -71,22 +60,14 @@ internal fun ArtistView(
             satunesViewModel.clearExtraButtons()
     }
 
+    val albumCollection: Collection<Album> = artist.albumCollection
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
-        collectionChanged = musicSetChanged,
-        header = if (albumSet.isNotEmpty()) {
+        header = if (albumCollection.isNotEmpty()) {
             {
-                //Recompose if data changed
-                var albumMapChanged: Boolean by remember { artist.albumSortedSetUpdate }
-                if (albumMapChanged) {
-                    albumMapChanged = false
-                }
-                //
-
                 MediaWithAlbumsHeaderView(
                     mediaImpl = artist,
-                    albumCollection = albumSet,
+                    albumCollection = albumCollection,
                 )
             }
         } else null,

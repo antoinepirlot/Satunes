@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -37,10 +34,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
 /**
@@ -65,7 +62,7 @@ fun FolderPathButton(
     Row(modifier = modifier) {
         Icon(
             Modifier.padding(vertical = padding),
-            icon = SatunesIcons.RIGHT_ARROW
+            jetpackLibsIcons = JetpackLibsIcons.RIGHT_ARROW
         )
         Box(
             modifier = boxModifier

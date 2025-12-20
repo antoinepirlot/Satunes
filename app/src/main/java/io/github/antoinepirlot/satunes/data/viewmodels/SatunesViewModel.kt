@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -27,7 +24,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.DocumentsContract
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -37,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.MainActivity.Companion.DEFAULT_URI
 import io.github.antoinepirlot.satunes.R
@@ -48,16 +45,16 @@ import io.github.antoinepirlot.satunes.database.models.FoldersSelection
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
 import io.github.antoinepirlot.satunes.internet.updates.UpdateDownloadManager
+import io.github.antoinepirlot.satunes.models.SatunesModes
 import io.github.antoinepirlot.satunes.ui.utils.showErrorSnackBar
 import io.github.antoinepirlot.satunes.ui.utils.showSnackBar
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,18 +91,16 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
-    private val _isLoadingData: MutableState<Boolean> = DataLoader.isLoading
-    private val _isDataLoaded: MutableState<Boolean> = DataLoader.isLoaded
+    private val _logger: Logger? = Logger.getLogger()
+    private val _isLoadingData: MutableState<Boolean> = LocalDataLoader.isLoading
+    private val _isDataLoaded: MutableState<Boolean> = LocalDataLoader.isLoaded
     private val _defaultNavBarSection: MutableState<NavBarSection> =
         SettingsManager.defaultNavBarSection
     private val _defaultPlaylistId: MutableLongState = SettingsManager.defaultPlaylistId
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private val _updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         UpdateCheckManager.updateAvailableStatus
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private val _downloadStatus: MutableState<APKDownloadStatus> = UpdateCheckManager.downloadStatus
     private val _artworkAnimation: MutableState<Boolean> = SettingsManager.artworkAnimation
     private val _artworkCircleShape: MutableState<Boolean> = SettingsManager.artworkCircleShape
@@ -118,15 +113,12 @@ class SatunesViewModel : ViewModel() {
     val isLoadingData: Boolean by _isLoadingData
     val isDataLoaded: Boolean by _isDataLoaded
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var updateAvailableStatus: UpdateAvailableStatus by _updateAvailableStatus
         private set
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var isCheckingUpdate: Boolean by mutableStateOf(false)
         private set
 
-    @delegate:RequiresApi(Build.VERSION_CODES.M)
     var downloadStatus: APKDownloadStatus by _downloadStatus
         private set
 
@@ -217,7 +209,7 @@ class SatunesViewModel : ViewModel() {
 
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            LocalDataLoader.loadAllData(context = MainActivity.instance.applicationContext)
         }
     }
 
@@ -230,7 +222,7 @@ class SatunesViewModel : ViewModel() {
                 // run from MAIN thread as media controller seems to not be reachable from IO thread
                 playbackViewModel.stop()
             }
-            DataLoader.resetAllData()
+            LocalDataLoader.resetAllData()
             this@SatunesViewModel.loadAllData()
         }
     }
@@ -423,14 +415,12 @@ class SatunesViewModel : ViewModel() {
      * Reset update status.
      * @param force will make it always work if it's true. Otherwise it will be reset only if the status is not Available.
      */
-    @RequiresApi(Build.VERSION_CODES.M)
     fun resetUpdatesStatus(force: Boolean = false) {
         if (force || updateAvailableStatus != UpdateAvailableStatus.AVAILABLE) {
             updateAvailableStatus = UpdateAvailableStatus.UNDEFINED
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun checkUpdate(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         isCheckingUpdate = true
         CoroutineScope(Dispatchers.IO).launch {
@@ -489,7 +479,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun getCurrentVersion(): String {
         try {
             return UpdateCheckManager.getCurrentVersion(context = MainActivity.instance.applicationContext)
@@ -499,7 +488,6 @@ class SatunesViewModel : ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun downloadUpdateApk(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
@@ -793,7 +781,6 @@ class SatunesViewModel : ViewModel() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun selectUpdateChannel(channel: UpdateChannel) {
         try {
             CoroutineScope(Dispatchers.IO).launch {
@@ -805,6 +792,39 @@ class SatunesViewModel : ViewModel() {
             }
         } catch (_: Throwable) {
             _logger?.severe("Error while selecting update channel '${channel.name}'")
+        }
+    }
+
+    /**
+     * Change the cloud mode.
+     * It pings the server if is turning on
+     */
+    fun switchCloudMode(subsonicViewModel: SubsonicViewModel) {
+        if (_uiState.value.mode == SatunesModes.ONLINE)
+            turnOffCloud()
+        else
+            subsonicViewModel.connect(
+                onFinished = { isConnected: Boolean ->
+                    if (isConnected)
+                        turnOnCloud()
+                }
+            )
+    }
+
+    fun turnOffCloud() {
+        if (_uiState.value.mode == SatunesModes.ONLINE) {
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.OFFLINE)
+            }
+        }
+    }
+
+    fun turnOnCloud() {
+        if (_uiState.value.mode == SatunesModes.OFFLINE) {
+            _uiState.update { currentState: SatunesUiState ->
+                currentState.copy(mode = SatunesModes.ONLINE)
+            }
+// TODO        subsonicViewModel.removeOnlineMusic()
         }
     }
 }

@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.antoinepirlot.jetpack_libs.components.buttons.ButtonWithIcon
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 
 /**
  * @author Antoine Pirlot on 22/11/2024
@@ -44,16 +44,17 @@ internal fun ResetButton(
     text: String? = null,
     onClick: () -> Unit,
 ) {
-    var icon: SatunesIcons by rememberSaveable { mutableStateOf(SatunesIcons.RESET_SETTINGS) }
+    var jetpackLibsIcons: JetpackLibsIcons by rememberSaveable { mutableStateOf(JetpackLibsIcons.RESET_SETTINGS) }
 
     ButtonWithIcon(
         modifier = modifier.width(width = 190.dp),
-        icon = icon,
+        jetpackLibsIcons = jetpackLibsIcons,
         onClick = {
             onClick()
-            icon = SatunesIcons.DONE
+            jetpackLibsIcons = JetpackLibsIcons.DONE
         },
-        text = if (icon == SatunesIcons.DONE) null else text ?: stringResource(R.string.reset_text)
+        text = if (jetpackLibsIcons == JetpackLibsIcons.DONE) null else text
+            ?: stringResource(R.string.reset_text)
     )
 }
 

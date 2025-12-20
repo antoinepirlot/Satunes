@@ -38,4 +38,6 @@ class BackFolder : Folder(title = BACK_FOLDER_TITLE) {
     fun clicked() {
         this._clicked = true
     }
+
+    override fun isBackFolder(): Boolean = true
 }

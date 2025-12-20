@@ -29,8 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 26/01/24
@@ -45,11 +45,11 @@ internal fun NextMusicButton(
         modifier = modifier.size(45.dp),
         onClick = { playbackViewModel.playNext() }
     ) {
-        val icon: SatunesIcons = SatunesIcons.SKIP_NEXT
+        val jetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.SKIP_NEXT
         Icon(
             modifier = modifier.size(45.dp),
-            imageVector = icon.imageVector,
-            contentDescription = icon.description
+            imageVector = jetpackLibsIcons.imageVector,
+            contentDescription = jetpackLibsIcons.description
         )
     }
 }

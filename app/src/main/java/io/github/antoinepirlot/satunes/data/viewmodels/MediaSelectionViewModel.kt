@@ -106,25 +106,21 @@ class MediaSelectionViewModel : ViewModel() {
      * then it add it to [_checkedMusics] or [_checkedPlaylistWithMusics].
      */
     fun isChecked(mediaImpl: MediaImpl): Boolean {
-        return when (mediaImpl) {
-            is Music -> {
-                //Check in playlist
-                if ((_currentMediaImpl as Playlist).contains(mediaImpl = mediaImpl)) {
-                    this.addMusic(music = mediaImpl)
-                    true
-                } else this._checkedMusics.contains(element = mediaImpl)
-            }
-
-            is Playlist -> {
-                //Check for selected media
-                if (mediaImpl.contains(mediaImpl = _currentMediaImpl!!)) {
-                    this.addPlaylist(playlist = mediaImpl)
-                    true
-                } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
-            }
-
-            else -> throw IllegalArgumentException("The media is not a music or playlist")
-        }
+        return if (mediaImpl.isMusic()) {
+            mediaImpl as Music
+            //Check in playlist
+            if ((_currentMediaImpl as Playlist).contains(media = mediaImpl)) {
+                this.addMusic(music = mediaImpl)
+                true
+            } else this._checkedMusics.contains(element = mediaImpl)
+        } else if (mediaImpl.isPlaylist()) {
+            mediaImpl as Playlist
+            //Check for selected media
+            if (mediaImpl.contains(media = _currentMediaImpl!!)) {
+                this.addPlaylist(playlist = mediaImpl)
+                true
+            } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
+        } else throw IllegalArgumentException("The media is not a music or playlist")
     }
 
     fun setCurrentMediaImpl(mediaImpl: MediaImpl) {

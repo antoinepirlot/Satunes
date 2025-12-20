@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.getSortOptions
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
@@ -36,12 +38,10 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SortListViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.models.SwitchSettings
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.buttons.RadioButton
 import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 
 /**
  * @author Antoine Pirlot on 29/11/2024
@@ -59,7 +59,7 @@ internal fun SortListDialog(
 
     Dialog(
         modifier = modifier,
-        icon = SatunesIcons.SORT,
+        jetpackLibsIcons = JetpackLibsIcons.SORT,
         title = stringResource(R.string.sort_list_title),
         onDismissRequest = {
             satunesViewModel.hideSortDialog()
@@ -77,7 +77,7 @@ internal fun SortListDialog(
                 getSortOptions(destination = navigationUiState.currentDestination)
             if (sortOptions.isEmpty()) {
                 val message = "Can't sort in ${navigationUiState.currentDestination.link}"
-                SatunesLogger.getLogger()?.severe(message)
+                Logger.getLogger()?.severe(message)
                 throw UnsupportedOperationException(message)
             }
             SwitchSetting(
@@ -90,7 +90,7 @@ internal fun SortListDialog(
                 RadioButton(
                     selected = sortListViewModel.selectedSortOption == sortOption,
                     onClick = { sortListViewModel.selectSortOption(sortRadioButton = sortOption) },
-                    icon = sortOption.icon,
+                    jetpackLibsIcons = sortOption.jetpackLibsIcons,
                     text = stringResource(sortOption.stringId),
                     maxLine = 2
                 )

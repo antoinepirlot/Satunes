@@ -25,37 +25,31 @@ import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 11/08/2024
  */
 
-fun getMediaTitle(mediaImpl: MediaImpl): String {
+fun getMediaTitle(mediaImpl: Media): String {
     val context: Context = MainActivity.instance.applicationContext
-    return when (mediaImpl) {
-        is Playlist -> {
-            if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-                MainActivity.instance.getString(RDb.string.likes_playlist_title)
-            } else {
-                mediaImpl.title
-            }
+    return if (mediaImpl.isPlaylist()) {
+        if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
+            MainActivity.instance.getString(RDb.string.likes_playlist_title)
+        } else {
+            mediaImpl.title
         }
-
-        is Folder -> {
-            if (
-                mediaImpl.parentFolder != null
-                && mediaImpl.parentFolder!!.isRoot()
-                && mediaImpl.title != context.getString(RDb.string.this_device)
-            ) {
-                MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
-            } else mediaImpl.title
-        }
-
-        else -> mediaImpl.title
-    }
+    } else if (mediaImpl.isFolder()) {
+        mediaImpl as Folder
+        if (
+            mediaImpl.parentFolder != null
+            && mediaImpl.parentFolder!!.isRootFolder()
+            && mediaImpl.title != context.getString(RDb.string.this_device)
+        ) {
+            MainActivity.instance.getString(R.string.external_storage) + ": " + mediaImpl.title
+        } else mediaImpl.title
+    } else mediaImpl.title
 }
 
 /**
@@ -63,7 +57,7 @@ fun getMediaTitle(mediaImpl: MediaImpl): String {
  */
 fun getTheFirstVisibleFolder(folder: Folder): Folder {
     val subFolders: Collection<Folder> = folder.getSubFolderSet()
-    if (subFolders.size == 1 && folder.getMusicSet().isEmpty())
+    if (subFolders.size == 1 && folder.musicCollection.isEmpty())
         return getTheFirstVisibleFolder(subFolders.first())
     return folder
 }

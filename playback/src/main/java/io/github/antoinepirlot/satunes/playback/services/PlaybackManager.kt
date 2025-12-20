@@ -1,15 +1,16 @@
 /*
  * This file is part of Satunes.
+ *
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *  Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with Satunes.
+ * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -27,10 +28,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.models.Playlist
@@ -44,7 +46,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Comp
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_IS_SHUFFLE
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_MUSIC_PLAYING
 import io.github.antoinepirlot.satunes.playback.services.PlaybackController.Companion.DEFAULT_REPEAT_MODE
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -53,7 +54,7 @@ import kotlinx.coroutines.runBlocking
  */
 object PlaybackManager {
 
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
     private var _playbackController: PlaybackController? = null
 
     internal var playlist: Playlist? = null
@@ -102,20 +103,26 @@ object PlaybackManager {
         reset()
     }
 
-    private fun playbackControllerNotExists(): Boolean =
-        this._playbackController == null && !PlaybackController.isInitialized()
+    /**
+     * Change the listener of playback controller
+     */
+    fun updateListener(listener: PlaybackListener?) {
+        this.listener = listener
+        PlaybackController.updateListener(listener = this.listener)
+    }
 
-    fun isConfigured(): Boolean = !this.playbackControllerNotExists()
+    fun playbackControllerExists(): Boolean =
+        this._playbackController != null || PlaybackController.isInitialized()
 
-    private fun initPlaybackWithAllMusics(
+    fun initPlaybackWithAllMusics(
         context: Context,
         listener: PlaybackListener? = this.listener
     ) {
         _logger?.info("Init playback with all musics")
-        if (!DataLoader.isLoaded.value && !DataLoader.isLoading.value) {
-            DataLoader.resetAllData()
+        if (!LocalDataLoader.isLoaded.value && !LocalDataLoader.isLoading.value) {
+            LocalDataLoader.resetAllData()
             runBlocking(Dispatchers.IO) {
-                DataLoader.loadAllData(context = context)
+                LocalDataLoader.loadAllData(context = context)
             }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
@@ -129,36 +136,32 @@ object PlaybackManager {
         }
     }
 
+    /**
+     * Checks if the PlaybackController is initialized.
+     * If that's not the case, it starts the process of creating new one.
+     *
+     * @param context the [Context] of the app
+     * @param listener the [PlaybackListener] to use.
+     * @param loadAllMusics is a [Boolean] value that is
+     *          true means it will load all musics if the playback controller doesn't exists.
+     *          false means it won't load all musics in the playback controller if it doesn't exist.
+     * @param log a [Boolean] value that indicates to log in this function.
+     */
     fun checkPlaybackController(
         context: Context,
         listener: PlaybackListener? = this.listener,
-        loadAllMusics: Boolean = true,
-        reset: Boolean = false,
-        musicToPlay: Music? = null,
+        loadAllMusics: Boolean = false,
         log: Boolean = true
     ) {
         if (log) _logger?.info("Check Playback Controller")
-        if (playbackControllerNotExists()) {
-            if (loadAllMusics) {
-                this.initPlaybackWithAllMusics(context = context, listener = listener)
-            } else {
-                this.initPlayback(context = context, listener = listener)
-            }
+        if (playbackControllerExists()) return
+        if (loadAllMusics) {
+            this.initPlaybackWithAllMusics(
+                context = context,
+                listener = listener
+            )
         } else {
-            if (this.isLoading.value) return
-            PlaybackController.updateListener(listener = listener)
-            if (loadAllMusics) {
-                if (
-                    reset
-                    || this.playlist == null
-                    || (this.playlist!!.musicCount() == 0 && DataManager.getMusicSet().isNotEmpty())
-                ) {
-                    this._playbackController!!.loadMusics(
-                        musics = DataManager.getMusicSet(),
-                        musicToPlay = musicToPlay
-                    )
-                }
-            }
+            this.initPlayback(context = context, listener = listener)
         }
     }
 
@@ -177,7 +180,13 @@ object PlaybackManager {
 
     fun start(context: Context, musicToPlay: Music? = null, reset: Boolean = false) {
         _logger?.info("Start")
-        checkPlaybackController(context = context, reset = reset, musicToPlay = musicToPlay)
+        checkPlaybackController(context = context, loadAllMusics = true)
+        if (reset) {
+            this._playbackController!!.loadMusics(
+                musics = DataManager.getMusicSet(),
+                musicToPlay = musicToPlay
+            )
+        }
         this._playbackController!!.start(musicToPlay = musicToPlay)
     }
 
@@ -189,7 +198,7 @@ object PlaybackManager {
 
     fun play(context: Context) {
         _logger?.info("Play")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, loadAllMusics = true)
         if (musicPlaying.value == null) {
             this._playbackController!!.start()
         } else {
@@ -279,7 +288,7 @@ object PlaybackManager {
             return
         }
         if (this.isLoading.value) return
-        checkPlaybackController(context = context, loadAllMusics = false)
+        checkPlaybackController(context = context)
         this._playbackController!!.loadMusics(
             musics = musics,
             shuffleMode = shuffleMode,

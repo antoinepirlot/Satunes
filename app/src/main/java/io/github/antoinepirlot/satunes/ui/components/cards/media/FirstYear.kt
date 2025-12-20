@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 
@@ -44,21 +45,19 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 @Composable
 fun FirstYear(
     modifier: Modifier = Modifier,
-    mediaImpl: MediaImpl,
-    mediaImplList: Collection<MediaImpl>
+    mediaImpl: Media,
+    mediaImplList: Collection<Media>
 ) {
-    val yearToCompare: Int? = when (mediaImpl) {
-        is Music -> mediaImpl.getYear()
-        is Album -> mediaImpl.year
-        else -> throw UnsupportedOperationException()
-    }
+    val yearToCompare: Int? = if (mediaImpl.isMusic()) (mediaImpl as Music).getYear()
+    else if (mediaImpl.isAlbum()) (mediaImpl as Album).year
+    else throw UnsupportedOperationException()
 
-    val firstWithLetterMediaImpl: MediaImpl = mediaImplList.first {
-        when (it) {
-            is Music -> it.getYear() == yearToCompare
-            is Album -> it.year == yearToCompare
-            else -> false
-        }
+    val firstWithLetterMediaImpl: Media = mediaImplList.first {
+        if (it.isMusic()) {
+            (it as Music).getYear() == yearToCompare
+        } else if (it.isAlbum()) {
+            (it as Album).year == yearToCompare
+        } else false
     }
 
     if (mediaImpl == firstWithLetterMediaImpl)

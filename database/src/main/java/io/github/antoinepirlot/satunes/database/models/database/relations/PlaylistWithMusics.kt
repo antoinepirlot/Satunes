@@ -27,15 +27,13 @@ import androidx.room.Relation
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
-import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
-
-// TODO choose which one to use
 
 @Serializable
 internal data class PlaylistWithMusics(
@@ -46,7 +44,7 @@ internal data class PlaylistWithMusics(
         associateBy = Junction(MusicsPlaylistsRel::class)
     )
     val musics: MutableList<MusicDB>
-) : Media {
+) : MediaData {
     @Ignore
     @Transient
     override lateinit var title: String // Not used

@@ -147,4 +147,8 @@ internal object SearchSettings {
             preferences[PLAYLISTS_FILTER_KEY] = this.playlistsFilter
         }
     }
+
+    suspend fun resetAll(context: Context) {
+        this.resetDefaultSearchFiltersSettings(context = context)
+    }
 }

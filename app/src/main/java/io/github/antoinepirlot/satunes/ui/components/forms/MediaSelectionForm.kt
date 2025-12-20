@@ -74,7 +74,7 @@ internal fun MediaSelectionForm(
         LazyColumn(state = lazyState) {
             items(
                 items = mediaList,
-                key = { it.id }
+                key = { it.javaClass.name + '-' + it.id }
             ) { mediaImpl: MediaImpl ->
                 MediaSelectionCheckbox(mediaImpl = mediaImpl)
             }

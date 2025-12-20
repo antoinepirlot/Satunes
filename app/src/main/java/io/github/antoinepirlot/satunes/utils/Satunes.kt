@@ -23,17 +23,14 @@ package io.github.antoinepirlot.satunes.utils
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.OptIn
-import androidx.media3.common.util.UnstableApi
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
-import io.github.antoinepirlot.satunes.database.services.data.DataLoader
+import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +44,7 @@ internal fun initSatunes(
     context: Context,
     satunesViewModel: SatunesViewModel?,
 ) {
-    SatunesLogger.getLogger()?.info("Init Satunes")
+    Logger.getLogger()?.info("Init Satunes")
     loadSatunesData(context = context, satunesViewModel = satunesViewModel)
     PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
     setNotificationOnClick(context = context)
@@ -62,13 +59,13 @@ internal fun loadSatunesData(
     context: Context,
     satunesViewModel: SatunesViewModel?
 ) {
-    SatunesLogger.getLogger()?.info("Load Satunes Data")
+    Logger.getLogger()?.info("Load Satunes Data")
     if (satunesViewModel == null) {
         runBlocking {
             SettingsManager.loadSettings(context = context)
         }
         CoroutineScope(Dispatchers.IO).launch {
-            DataLoader.loadAllData(context = context)
+            LocalDataLoader.loadAllData(context = context)
         }
     } else {
         satunesViewModel.loadSettings()
@@ -77,21 +74,15 @@ internal fun loadSatunesData(
 }
 
 internal fun removeSatunesDownloadedApkFiles(context: Context) {
-    SatunesLogger.getLogger()?.info("Remove Satunes Downloaded Apk Files")
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        DataCleanerManager.removeApkFiles(context = context)
-    } else {
-        SatunesLogger.getLogger()
-            ?.warning("Can't remove apk files with API: ${Build.VERSION.SDK_INT}")
-    }
+    Logger.getLogger()?.info("Remove Satunes Downloaded Apk Files")
+    DataCleanerManager.removeApkFiles(context = context)
 }
 
 /**
  * When the user click on playing notification, the app is opened.
  */
-@OptIn(UnstableApi::class)
 internal fun setNotificationOnClick(context: Context) {
-    SatunesLogger.getLogger()?.info("Set Notification On Click")
+    Logger.getLogger()?.info("Set Notification On Click")
     val intent = Intent(context.applicationContext, MainActivity::class.java)
     CoroutineScope(Dispatchers.IO).launch {
         while (PlaybackService.mediaSession == null) {

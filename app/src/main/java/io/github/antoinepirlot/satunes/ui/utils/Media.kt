@@ -20,27 +20,18 @@
 
 package io.github.antoinepirlot.satunes.ui.utils
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.ALBUM
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.ARTIST
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.FOLDER
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.GENRES
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.MUSIC
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.PLAYLIST
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.ALBUM
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.ARTIST
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.FOLDER
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.GENRES
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.MUSIC
-import io.github.antoinepirlot.satunes.icons.SatunesIcons.PLAYLIST
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 27/01/2024
@@ -54,21 +45,16 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 
 internal fun startMusic(
     playbackViewModel: PlaybackViewModel,
-    mediaToPlay: MediaImpl? = null,
+    mediaToPlay: Media? = null,
     reset: Boolean = false
 ) {
-    when (mediaToPlay) {
-        is Music -> {
-            playbackViewModel.start(mediaToPlay, reset = reset)
-        }
-
-        is Folder -> {
-            playbackViewModel.start(reset = reset)
-        }
-
-        null -> {
-            playbackViewModel.start(reset = reset)
-        }
+    if (mediaToPlay == null) {
+        playbackViewModel.start(reset = reset)
+    } else if (mediaToPlay.isMusic()) {
+        mediaToPlay as Music
+        playbackViewModel.start(mediaToPlay = mediaToPlay, reset = reset)
+    } else if (mediaToPlay.isFolder()) {
+        playbackViewModel.start(reset = reset)
     }
 }
 
@@ -88,13 +74,16 @@ fun getRightIconAndDescription(navBarSection: NavBarSection): Pair<ImageVector, 
     }
 }
 
-fun getRightIconAndDescription(media: MediaImpl): SatunesIcons {
-    return when (media) {
-        is Folder -> FOLDER
-        is Artist -> ARTIST
-        is Album -> ALBUM
-        is Genre -> GENRES
-        is Playlist -> PLAYLIST
-        else -> MUSIC // In that case, mediaImpl is Music
-    }
+fun getRightIconAndDescription(media: Media): JetpackLibsIcons {
+    return if (media.isFolder())
+        FOLDER
+    else if (media.isArtist())
+        ARTIST
+    else if (media.isAlbum())
+        ALBUM
+    else if (media.isGenre())
+        GENRES
+    else if (media.isPlaylist())
+        PLAYLIST
+    else MUSIC // In that case, mediaImpl is Music
 }

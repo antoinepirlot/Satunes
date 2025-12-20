@@ -29,8 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.antoinepirlot.jetpack_libs.components.LoadingCircle
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.ui.components.LoadingCircle
 
 /**
  * @author Antoine Pirlot on 26/04/2024

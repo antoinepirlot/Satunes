@@ -37,14 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.images.Icon
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -70,8 +70,8 @@ internal fun DefaultPlaylistSection(
             TextButton(onClick = { expanded = true }) {
                 Row {
                     Icon(
-                        icon = if (expanded) SatunesIcons.CLOSE_DROPDOWN_MENU
-                        else SatunesIcons.OPEN_DROPDOWN_MENU
+                        jetpackLibsIcons = if (expanded) JetpackLibsIcons.CLOSE_DROPDOWN_MENU
+                        else JetpackLibsIcons.OPEN_DROPDOWN_MENU
                     )
                     val text: String =
                         if (selectedPlaylist == null) stringResource(id = R.string.no_playlist_selected)

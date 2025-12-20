@@ -22,42 +22,38 @@ package io.github.antoinepirlot.satunes.database.models.comparators
 
 import com.mpatric.mp3agic.NotSupportedException
 import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot on 22/12/2024
  */
-object SortByArtistComparator : MediaComparator<MediaImpl>() {
-    override fun compare(mediaImpl1: MediaImpl, mediaImpl2: MediaImpl): Int {
-        val cmp: Int = when (mediaImpl1) {
-            is Music -> {
-                val cmp: Int =
-                when (mediaImpl2) {
-                    is Music -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
-                    is Album -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
-                    else -> 1 // mediaImpl2 is not a music or album, so the mediaImpl2 goes to the end
-                }
-                if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
-                else cmp
-            }
+object SortByArtistComparator : MediaComparator<Media>() {
+    override fun compare(mediaImpl1: Media, mediaImpl2: Media): Int {
+        val cmp: Int = if (mediaImpl1.isMusic()) {
+            mediaImpl1 as Music
+            val cmp: Int = if ((mediaImpl2.isMusic()))
+                mediaImpl1.artist.compareTo((mediaImpl2 as Music).artist)
+            else if (mediaImpl2.isAlbum())
+                mediaImpl1.artist.compareTo((mediaImpl2 as Album).artist)
+            else 1 // mediaImpl2 is not a music or album, so the mediaImpl2 goes to the end
 
-            is Album -> {
-                val cmp: Int =
-                    when (mediaImpl2) {
-                        is Music -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
-                        is Album -> mediaImpl1.artist.compareTo(mediaImpl2.artist)
-                        else -> 1 // mediaImpl2 is not a music or album, so the mediaImpl2 goes to the end
-                    }
-                if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
-                else cmp
-            }
+            if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
+            else cmp
+        } else if (mediaImpl1.isAlbum()) {
+            mediaImpl1 as Album
+            val cmp: Int =
+                if (mediaImpl2.isMusic())
+                    mediaImpl1.artist.compareTo((mediaImpl2 as Music).artist)
+                else if (mediaImpl2.isAlbum())
+                    mediaImpl1.artist.compareTo((mediaImpl2 as Music).artist)
+                else 1 // mediaImpl2 is not a music or album, so the mediaImpl2 goes to the end
 
-            else ->
-                when (mediaImpl2) {
-                    is Music, is Album -> -1 // mediaImpl1 is not a music or album, so the mediaImpl1 goes to the end
-                    else -> throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by artist.")
-                }
+            if (cmp == 0) SortByTitleComparator.compare(mediaImpl1, mediaImpl2)
+            else cmp
+        } else {
+            if (mediaImpl2.isMusic() || mediaImpl2.isAlbum()) -1
+            else throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by artist.")
         }
         return this.getFinalCmp(cmp = cmp)
     }

@@ -25,15 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 
 /**
@@ -45,7 +43,7 @@ internal fun NavigateToMediaMusicOption(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImpl: MediaImpl,
+    media: Media,
 ) {
     val navController: NavHostController = LocalNavController.current
 
@@ -54,18 +52,17 @@ internal fun NavigateToMediaMusicOption(
         onClick = {
             navigationViewModel.openMedia(
                 playbackViewModel = playbackViewModel,
-                media = mediaImpl,
+                media = media,
                 navController = navController
             )
         },
-        icon = when (mediaImpl) {
-            is Album -> SatunesIcons.ALBUM
-            is Artist -> SatunesIcons.ARTIST
-            is Genre -> SatunesIcons.GENRES
-            is Folder -> SatunesIcons.FOLDER
-            else -> throw IllegalArgumentException("${mediaImpl.javaClass} is not allowed")
-        },
-        text = mediaImpl.title
+        jetpackLibsIcons =
+            if (media.isAlbum()) JetpackLibsIcons.ALBUM
+            else if (media.isArtist()) JetpackLibsIcons.ARTIST
+            else if (media.isGenre()) JetpackLibsIcons.GENRES
+            else if (media.isFolder()) JetpackLibsIcons.FOLDER
+            else throw IllegalArgumentException("${media.javaClass} is not allowed"),
+        text = media.title
     )
 }
 
@@ -73,6 +70,6 @@ internal fun NavigateToMediaMusicOption(
 @Composable
 private fun NavigateToMediaMusicOptionPreview() {
     NavigateToMediaMusicOption(
-        mediaImpl = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
+        media = Album(title = "Album Title", artist = Artist(title = "Artist Title")),
     )
 }

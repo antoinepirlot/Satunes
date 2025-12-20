@@ -20,44 +20,57 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot on 27/03/2024
  */
 
-class Artist(
+open class Artist(
+    id: Long? = null,
     title: String,
-) : MediaImpl(id = nextId, title = title) {
-    private val albumSortedSet: SortedSet<Album> = sortedSetOf()
-
-    val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
-
+) : MediaImpl(
+    id = id ?: nextId,
+    title = title
+) {
     companion object {
         var nextId: Long = 1
     }
+
+    private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
+
+    val albumCollection: Collection<Album> = mutableStateListOf()
 
     init {
         nextId++
     }
 
     fun addAlbum(album: Album): Boolean {
-        if (!contains(album = album)) {
-            albumSortedSet.add(element = album)
+        if (!this.contains(album = album)) {
+            this.albumCollection as MutableList
+            _albumSortedSet.add(element = album)
+            this.albumCollection.add(element = album)
+            this.albumCollection.sort()
             return true
         }
         return false
     }
 
-    fun getAlbumSet(): Set<Album> {
-        return this.albumSortedSet
+    fun contains(album: Album): Boolean = this._albumSortedSet.contains(album)
+
+    fun updateAlbum(album: Album) {
+        if (this.contains(album = album)) {
+            albumCollection as MutableList
+            this._albumSortedSet.remove(element = album) //If it is equals, reference may be different
+            this.albumCollection.remove(element = album)
+            this._albumSortedSet.add(element = album)
+            this.albumCollection.add(element = album)
+            this.albumCollection.sort()
+        }
     }
 
-    fun contains(album: Album): Boolean {
-        return this.albumSortedSet.contains(album)
-    }
+    override fun isArtist(): Boolean = true
 
     override fun toString(): String {
         return this.title

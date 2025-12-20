@@ -83,7 +83,7 @@ internal fun MusicPositionBar(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val maxDuration: Long = musicPlaying!!.duration
+            val maxDuration: Long = musicPlaying!!.durationMs
             val currentPositionTimeText =
                 if (isUpdating) getMillisToTimeText((newPositionPercentage * maxDuration).toLong())
                 else getMillisToTimeText((currentPositionPercentage * maxDuration).toLong())

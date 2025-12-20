@@ -21,21 +21,21 @@
 package io.github.antoinepirlot.satunes.ui.utils
 
 import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 
 /**
  * @author Antoine Pirlot 30/01/2025
  */
-fun getTitleToCompare(mediaImpl: MediaImpl, sortOption: SortOptions): String? {
+fun getTitleToCompare(mediaImpl: Media, sortOption: SortOptions): String? {
     return when (sortOption) {
         SortOptions.TITLE -> mediaImpl.title
-        SortOptions.ALBUM -> if (mediaImpl is Music) mediaImpl.album.title else null
-        SortOptions.ARTIST -> when (mediaImpl) {
-            is Music -> mediaImpl.artist.title
-            is Album -> mediaImpl.artist.title
-            else -> null
+        SortOptions.ALBUM -> if (mediaImpl.isMusic()) (mediaImpl as Music).album.title else null
+        SortOptions.ARTIST -> {
+            if (mediaImpl.isMusic()) (mediaImpl as Music).artist.title
+            else if (mediaImpl.isAlbum()) (mediaImpl as Album).artist.title
+            else null
         }
 
         else -> null

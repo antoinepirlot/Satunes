@@ -24,12 +24,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
-import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -43,10 +43,10 @@ internal data class MusicDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo("music_id") override val id: Long = 0,
     @ColumnInfo("absolute_path") var absolutePath: String,
-) : Media {
+) : MediaData {
     @Transient
     @Ignore
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     @Ignore
     @Transient

@@ -1,4 +1,0 @@
-<resources>
-    <string name="file_not_found">Fichier non trouvé</string>
-    <string name="file_security_exception">Pas d\'accès au fichier</string>
-</resources>

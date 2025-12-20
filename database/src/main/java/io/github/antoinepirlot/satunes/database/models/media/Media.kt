@@ -20,10 +20,57 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
-internal interface Media {
-    val id: Long
-    var title: String
+interface Media : MediaData, Comparable<Media> {
+    val musicCollection: Collection<Music>
+
+    fun isSubsonic(): Boolean = false
+    fun isEmpty(): Boolean
+    fun isNotEmpty(): Boolean
+
+    /**
+     * If the media is stored on the device, it returns true.
+     * If the media is subsonic and is downloaded on the phone then it returns true, false otherwise
+     */
+    fun isStoredLocally(): Boolean
+
+    fun clearMusicList()
+
+    fun contains(media: Media): Boolean
+
+    fun addMusic(music: Music)
+
+    fun addMusics(musics: Collection<Music>)
+
+    fun removeMusic(music: Music)
+
+    /**
+     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     * If it is already stored, do nothing
+     */
+    fun download()
+
+    /**
+     * Remove this media impl from storage.
+     */
+    fun removeFromStorage()
+
+    fun musicCount(): Int
+    fun isRootFolder(): Boolean
+
+    fun isFolder(): Boolean
+    fun isBackFolder(): Boolean
+    fun isMusic(): Boolean
+    fun isAlbum(): Boolean
+    fun isGenre(): Boolean
+    fun isArtist(): Boolean
+    fun isPlaylist(): Boolean
+
+    override fun equals(other: Any?): Boolean
+
+    override fun hashCode(): Int
 }

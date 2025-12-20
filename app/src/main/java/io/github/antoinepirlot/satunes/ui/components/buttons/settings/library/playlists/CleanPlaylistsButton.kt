@@ -32,13 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.ui.components.buttons.ButtonWithIcon
 import io.github.antoinepirlot.satunes.ui.components.dialog.WarningDialog
 import kotlinx.coroutines.CoroutineScope
 
@@ -55,7 +55,7 @@ internal fun CleanPlaylistsButton(
 
     ButtonWithIcon(
         modifier = modifier.fillMaxWidth(),
-        icon = SatunesIcons.CLEANING,
+        jetpackLibsIcons = JetpackLibsIcons.CLEANING,
         onClick = { showDialog = true },
         text = stringResource(id = R.string.clean_playlist_button_text),
     )

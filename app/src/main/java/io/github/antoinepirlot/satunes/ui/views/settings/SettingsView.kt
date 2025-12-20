@@ -37,8 +37,7 @@ import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
-import io.github.antoinepirlot.satunes.models.Destination
+import io.github.antoinepirlot.satunes.models.SettingsViews
 import io.github.antoinepirlot.satunes.ui.components.buttons.settings.SettingButton
 import io.github.antoinepirlot.satunes.ui.components.settings.about.AboutSettings
 
@@ -57,111 +56,15 @@ internal fun SettingsView(
         Title(text = stringResource(id = R.string.settings))
         HorizontalDivider()
         Column {
-            SettingButton(
-                text = "Android Auto",
-                icon = SatunesIcons.ANDROID_AUTO,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.ANDROID_AUTO_SETTINGS
+            for (settingView: SettingsViews in SettingsViews.entries)
+                if (Build.VERSION.SDK_INT >= settingView.minSdk)
+                    SettingButton(
+                        text = stringResource(settingView.stringId),
+                        jetpackLibsIcons = settingView.icon,
+                        onClick = {
+                            navController.navigate(settingView.destination.link)
+                        }
                     )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.design_setting_title),
-                icon = SatunesIcons.SETTING_INTERFACE,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.DESIGN_SETTINGS
-                    )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.playback_settings),
-                icon = SatunesIcons.PLAYBACK,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.PLAYBACK_SETTINGS
-                    )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.search_setting_title),
-                icon = SatunesIcons.SEARCH,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.SEARCH_SETTINGS
-                    )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.battery_settings),
-                icon = SatunesIcons.BATTERY,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.BATTERY_SETTINGS
-                    )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.library_settings),
-                icon = SatunesIcons.SETTING_LIBRARY,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.LIBRARY_SETTINGS
-                    )
-                }
-            )
-            SettingButton(
-                text = stringResource(id = R.string.permissions),
-                icon = SatunesIcons.SETTING_PERMISSIONS,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.PERMISSIONS_SETTINGS
-                    )
-                }
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                SettingButton(
-                    text = stringResource(id = R.string.version),
-                    icon = SatunesIcons.SETTING_UPDATE,
-                    onClick = {
-                        navigationViewModel.navigate(
-                            navController = navController,
-                            destination = Destination.UPDATES_SETTINGS
-                        )
-                    }
-                )
-            }
-
-            SettingButton(
-                text = stringResource(id = R.string.reset_settings),
-                icon = SatunesIcons.RESET_SETTINGS,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.RESET_SETTINGS
-                    )
-                }
-            )
-
-            SettingButton(
-                text = stringResource(id = R.string.logs_settings),
-                icon = SatunesIcons.SETTING_LOGS,
-                onClick = {
-                    navigationViewModel.navigate(
-                        navController = navController,
-                        destination = Destination.LOGS_SETTINGS
-                    )
-                }
-            )
 
             AboutSettings(modifier.padding(bottom = 16.dp)) // Bottom padding for a little space
         }

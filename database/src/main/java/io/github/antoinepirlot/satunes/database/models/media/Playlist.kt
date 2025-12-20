@@ -34,8 +34,8 @@ class Playlist(
     title: String
 ) : MediaImpl(id = id, title = title) {
 
-    override fun addMusic(music: Music, triggerUpdate: Boolean) {
-        super.addMusic(music, triggerUpdate)
+    override fun addMusic(music: Music) {
+        super.addMusic(music)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val order: Long =
@@ -45,23 +45,23 @@ class Playlist(
                     order = order
                 )
             } catch (e: Throwable) {
-                _logger?.severe(e.message)
+                logger?.severe(e.message)
                 throw e
             }
         }
     }
 
-    override fun addMusics(musics: Collection<Music>, triggerUpdate: Boolean) {
-        for (music: Music in musics) {
-            this.addMusic(music = music, triggerUpdate = false)
-        }
-        if (triggerUpdate) this.listUpdated()
+    override fun addMusics(musics: Collection<Music>) {
+        for (music: Music in musics)
+            this.addMusic(music = music)
     }
 
-    override fun removeMusic(music: Music, triggerUpdate: Boolean) {
-        super.removeMusic(music, triggerUpdate)
+    override fun removeMusic(music: Music) {
+        super.removeMusic(music)
         music.removeOrderInPlaylist(playlist = this)
     }
+
+    override fun isPlaylist(): Boolean = true
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -69,14 +69,14 @@ class Playlist(
 
         other as Playlist
 
-        return title.lowercase() == other.title.lowercase()
+        return title.equals(other.title, ignoreCase = true)
     }
 
     override fun hashCode(): Int {
         return title.lowercase().hashCode()
     }
 
-    override fun compareTo(other: MediaImpl): Int {
+    override fun compareTo(other: Media): Int {
         if (this.title == LIKES_PLAYLIST_TITLE || other.title == LIKES_PLAYLIST_TITLE) {
             if (this.title == other.title) {
                 return 0

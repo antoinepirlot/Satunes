@@ -22,13 +22,13 @@ package io.github.antoinepirlot.satunes.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.android.utils.logger.Logger
 
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
 internal object MigrationFrom1To2 : Migration(1, 2) {
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {
         try {

@@ -24,11 +24,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -47,7 +47,7 @@ internal fun FavoriteCustomAction(
 
     CustomActionButton(
         modifier = modifier,
-        icon = if (music.liked.value) SatunesIcons.LIKED else SatunesIcons.UNLIKED,
+        jetpackLibsIcons = if (music.liked.value) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
         onClick = {
             dataViewModel.switchLike(
                 scope = scope,

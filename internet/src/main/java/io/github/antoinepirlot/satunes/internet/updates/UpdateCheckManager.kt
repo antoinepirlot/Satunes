@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -25,25 +22,21 @@ package io.github.antoinepirlot.satunes.internet.updates
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.ALPHA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.BETA
 import io.github.antoinepirlot.satunes.database.models.UpdateChannel.PREVIEW
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
-import io.github.antoinepirlot.satunes.internet.InternetManager
+import io.github.antoinepirlot.satunes.internet.InternetManager.Companion.getUrlResponse
 import io.github.antoinepirlot.satunes.internet.updates.Versions.ALPHA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.BETA_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.PREVIEW_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASES_URL
 import io.github.antoinepirlot.satunes.internet.updates.Versions.RELEASE_REGEX
 import io.github.antoinepirlot.satunes.internet.updates.Versions.TAG_RELEASE_URL
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
 
 
@@ -51,9 +44,8 @@ import okhttp3.Response
  * @author Antoine Pirlot on 11/04/2024
  */
 
-@RequiresApi(Build.VERSION_CODES.M)
 object UpdateCheckManager {
-    private val _logger: SatunesLogger? = SatunesLogger.getLogger()
+    private val _logger: Logger? = Logger.getLogger()
 
     val updateAvailableStatus: MutableState<UpdateAvailableStatus> =
         mutableStateOf(UpdateAvailableStatus.UNDEFINED)
@@ -61,30 +53,6 @@ object UpdateCheckManager {
     val downloadStatus: MutableState<APKDownloadStatus> =
         mutableStateOf(APKDownloadStatus.NOT_STARTED)
 
-    /**
-     * Create a httpclient and get the response matching url.
-     *
-     * @param context the context :p
-     * @param url the url to get the response
-     */
-    private fun getUrlResponse(context: Context, url: String): Response? {
-        return try {
-            val internetManager = InternetManager(context = context)
-            if (!internetManager.isConnected()) {
-                UpdateAvailableStatus.CANNOT_CHECK.updateLink = null
-                updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
-                return null
-            }
-            val httpClient = OkHttpClient()
-            val req: Request = Request.Builder()
-                .url(url)
-                .build()
-            httpClient.newCall(req).execute()
-        } catch (e: Throwable) {
-            _logger?.warning(e.message)
-            null
-        }
-    }
 
     /**
      * Checks if an update is available if there's an internet connection
@@ -101,7 +69,7 @@ object UpdateCheckManager {
                 updateAvailableStatus.value = UpdateAvailableStatus.CANNOT_CHECK
                 return
             }
-            val page: String = res.body!!.string()
+            val page: String = res.body.string()
             res.close()
 
             val currentVersion: String =

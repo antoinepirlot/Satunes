@@ -4,16 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
  * See the GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License along with Satunes.
- *
+ * You should have received a copy of the GNU General Public License along with Satunes.
  * If not, see <https://www.gnu.org/licenses/>.
  *
- * **** INFORMATION ABOUT THE AUTHOR *****
+ * *** INFORMATION ABOUT THE AUTHOR *****
  * The author of this file is Antoine Pirlot, the owner of this project.
  * You find this original project on Codeberg.
  *
@@ -29,23 +26,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.database.models.media.Album
-import io.github.antoinepirlot.satunes.database.models.media.Artist
-import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.DestinationCategory
 import io.github.antoinepirlot.satunes.models.listeners.OnDestinationChangedListener
-import io.github.antoinepirlot.satunes.router.utils.getNavBarSectionDestination
 import io.github.antoinepirlot.satunes.ui.utils.startMusic
-import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,7 +56,7 @@ class NavigationViewModel : ViewModel() {
             ArrayDeque() //TODO change structure as it add at first place
 
         private val DEFAULT_CURRENT_ROUTE: Destination =
-            getNavBarSectionDestination(SettingsManager.defaultNavBarSection.value)
+            Destination.getDestination(SettingsManager.defaultNavBarSection.value)
 
         private var _currentRoute: Destination =
             DEFAULT_CURRENT_ROUTE //TODO used instead of deque while no fix found for back gesture issues.
@@ -75,7 +66,7 @@ class NavigationViewModel : ViewModel() {
             }
 
         private val DEFAULT_CURRENT_MEDIA_IMPL: MediaImpl? = null
-        private var _currentMediaImpl: MediaImpl? = DEFAULT_CURRENT_MEDIA_IMPL
+        private var _currentMediaImpl: Media? = DEFAULT_CURRENT_MEDIA_IMPL
             set(value) {
                 field = value
                 updateUiState()
@@ -83,7 +74,7 @@ class NavigationViewModel : ViewModel() {
 
         private val _isInitialised: MutableState<Boolean> = mutableStateOf(false)
 
-        private fun push(destination: Destination, mediaImpl: MediaImpl?) {
+        private fun push(destination: Destination, media: Media?) {
             /*
             _routesStack.push(Pair(first = destination, second = mediaImpl))
             updateUiState()
@@ -122,7 +113,7 @@ class NavigationViewModel : ViewModel() {
             return this._currentRoute
         }
 
-        private fun getCurrentMediaImpl(): MediaImpl? {
+        private fun getCurrentMediaImpl(): Media? {
 //            return this._routesStack.peekFirst()?.second
             return this._currentMediaImpl
         }
@@ -140,9 +131,9 @@ class NavigationViewModel : ViewModel() {
         if (isInitialised)
             throw IllegalStateException("Can't initialise the NavigationViewModel twice")
         if (defaultDestination == Destination.FOLDERS)
-            push(destination = defaultDestination, mediaImpl = DataManager.getRootFolder())
+            push(destination = defaultDestination, media = DataManager.getRootFolder())
         else
-            push(destination = defaultDestination, mediaImpl = null)
+            push(destination = defaultDestination, media = null)
         isInitialised = true
     }
 
@@ -157,19 +148,19 @@ class NavigationViewModel : ViewModel() {
         navController: NavController,
         destination: Destination
     ) {
-        push(destination = destination, mediaImpl = null)
+        push(destination = destination, media = null)
         navController.navigate(route = destination.link)
     }
 
     fun navigate(
         navController: NavController,
-        mediaImpl: MediaImpl?
+        media: Media?
     ) {
-        val destination: Destination = this.getDestinationOf(mediaImpl = mediaImpl)
-        push(destination = destination, mediaImpl = mediaImpl)
+        val destination: Destination = this.getDestinationOf(media = media)
+        push(destination = destination, media = media)
         val route: String =
-            if (mediaImpl == null || destination == Destination.PLAYBACK || destination == Destination.FOLDERS) destination.link
-            else this.getRoute(destination = destination, mediaImpl = mediaImpl)
+            if (media == null || destination == Destination.PLAYBACK || destination == Destination.FOLDERS) destination.link
+            else this.getRoute(destination = destination, media = media)
         navController.navigate(route = route)
     }
 
@@ -201,26 +192,28 @@ class NavigationViewModel : ViewModel() {
 
     /**
      * Return the destination of mediaImpl (folder, artists or music).
-     * If [mediaImpl] is null returns [Destination.PLAYBACK]
+     * If [media] is null returns [Destination.PLAYBACK]
      *
-     * @param mediaImpl the mediaImpl to get the destination
+     * @param media the mediaImpl to get the destination
      *
      * @return the destination matching [MediaImpl]
      */
-    private fun getDestinationOf(mediaImpl: MediaImpl?): Destination {
-        return when (mediaImpl) {
-            is RootFolder -> Destination.FOLDERS
-            is Folder -> Destination.FOLDER
-            is Artist -> Destination.ARTIST
-            is Album -> Destination.ALBUM
-            is Genre -> Destination.GENRE
-            is Playlist -> Destination.PLAYLIST
-            else -> Destination.PLAYBACK
-        }
+    private fun getDestinationOf(media: Media?): Destination {
+        return if (media == null) Destination.PLAYBACK // same as else
+        else if (media.isRootFolder() || media.isFolder()) Destination.FOLDERS
+        else if (media.isArtist())
+            if (media.isSubsonic()) Destination.SUBSONIC_ARTIST
+            else Destination.ARTIST
+        else if (media.isAlbum())
+            if(media.isSubsonic()) Destination.SUBSONIC_ALBUM
+            else Destination.ALBUM
+        else if (media.isGenre()) Destination.GENRE
+        else if (media.isPlaylist()) Destination.PLAYLIST
+        else Destination.PLAYBACK // same as first
     }
 
-    private fun getRoute(destination: Destination, mediaImpl: MediaImpl): String {
-        return "${destination.link.removeSuffix("/{id}")}/${mediaImpl.id}"
+    private fun getRoute(destination: Destination, media: Media): String {
+        return "${destination.link.removeSuffix("/{id}")}/${media.id}"
     }
 
     /**
@@ -231,19 +224,19 @@ class NavigationViewModel : ViewModel() {
      *
      *      Artist: navigate to the media's destination
      *
-     * @param media the mediaImpl to open
+     * @param media the [Media] to open
      */
     fun openMedia(
         playbackViewModel: PlaybackViewModel,
-        media: MediaImpl? = null,
+        media: Media? = null,
         navController: NavController?,
         reset: Boolean = false
     ) {
-        if (media == null || media is Music)
+        if (media == null || media.isMusic())
             startMusic(playbackViewModel = playbackViewModel, mediaToPlay = media, reset = reset)
 
         if (navController != null)
-            this.navigate(navController = navController, mediaImpl = media)
+            this.navigate(navController = navController, media = media)
     }
 
 
@@ -256,10 +249,10 @@ class NavigationViewModel : ViewModel() {
         val musicPlaying: Music? = playbackViewModel.musicPlaying
         if (musicPlaying == null) {
             val message = "No music is currently playing, this button can be accessible"
-            SatunesLogger.getLogger()?.severe(message)
+            Logger.getLogger()?.severe(message)
             throw IllegalStateException(message)
         }
-        this.navigate(navController = navController, mediaImpl = musicPlaying)
+        this.navigate(navController = navController, media = musicPlaying)
     }
 
     fun isInPlaybackView(): Boolean {
@@ -290,7 +283,7 @@ class NavigationViewModel : ViewModel() {
     /**
      * TODO remove when solution for back gesture found
      */
-    fun setCurrentMediaImpl(mediaImpl: MediaImpl) {
-        _currentMediaImpl = mediaImpl
+    fun setCurrentMediaImpl(media: Media?) {
+        _currentMediaImpl = media
     }
 }

@@ -47,10 +47,10 @@ object MusicInAlbumComparator : MediaComparator<Music>() {
         if (o1.album != o2.album) throw NotInAlbumException()
         if (o1.cdTrackNumber != null && o2.cdTrackNumber == null) cmp = -1
         else if (o1.cdTrackNumber == null && o2.cdTrackNumber != null) cmp = 1
-        else if (o1.cdTrackNumber == null || o2.cdTrackNumber == null) cmp =
+        else if (o1.cdTrackNumber == null) cmp =
             o1.compareTo(o2) //both are null
-        else if (o1.cdTrackNumber > o2.cdTrackNumber) cmp = 1
-        else if (o1.cdTrackNumber < o2.cdTrackNumber) cmp = -1
+        else if (o1.cdTrackNumber!! > o2.cdTrackNumber!!) cmp = 1
+        else if (o1.cdTrackNumber!! < o2.cdTrackNumber!!) cmp = -1
         return this.getFinalCmp(cmp = cmp)
     }
 

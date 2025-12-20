@@ -26,8 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 01/06/2024
@@ -44,22 +44,22 @@ internal fun PlayPauseMusicButton(
         modifier = modifier,
         onClick = { playbackViewModel.playPause() }
     ) {
-        val icon: SatunesIcons =
+        val jetpackLibsIcons: JetpackLibsIcons =
             getPlayPauseIconWithDescription(isPlaying = isPlaying)
 
         Icon(
             modifier = modifier,
-            imageVector = icon.imageVector,
-            contentDescription = icon.description,
+            imageVector = jetpackLibsIcons.imageVector,
+            contentDescription = jetpackLibsIcons.description,
         )
     }
 }
 
-private fun getPlayPauseIconWithDescription(isPlaying: Boolean): SatunesIcons {
+private fun getPlayPauseIconWithDescription(isPlaying: Boolean): JetpackLibsIcons {
     return if (isPlaying) {
-        SatunesIcons.PAUSE
+        JetpackLibsIcons.PAUSE
     } else {
-        SatunesIcons.PLAY
+        JetpackLibsIcons.PLAY
     }
 }
 

@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,13 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -58,59 +57,44 @@ internal fun PlaylistListView(
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
+
         satunesViewModel.replaceExtraButtons {
             ExtraButton(
-                icon = SatunesIcons.EXPORT,
+                jetpackLibsIcons = JetpackLibsIcons.EXPORT,
                 onClick = {
                     dataViewModel.openExportPlaylistDialog()
                 }
             )
             ExtraButton(
-                icon = SatunesIcons.IMPORT,
+                jetpackLibsIcons = JetpackLibsIcons.IMPORT,
                 onClick = { dataViewModel.openImportPlaylistDialog() }
             )
-            ExtraButton(icon = SatunesIcons.PLAYLIST_ADD, onClick = { openAlertDialog = true })
+            ExtraButton(
+                jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
+                onClick = { openAlertDialog = true })
         }
     }
 
-    Column(modifier = modifier) {
-        var playlistSet: Set<Playlist>? by remember { mutableStateOf(null) }
-
-        //Recompose if data changed
-        val setChanged: Boolean = dataViewModel.playlistSetUpdated
-        if (setChanged) {
-            dataViewModel.playlistSetUpdated()
-            dataViewModel.listSetUpdatedUnprocessed()
-        }
-
-        LaunchedEffect(key1 = dataViewModel.playlistSetUpdated) {
-            playlistSet = dataViewModel.getPlaylistSet()
-        }
-
-        if (playlistSet == null) return
-
+    Box(modifier = modifier) {
         MediaListView(
-            mediaImplCollection = playlistSet!!,
-            collectionChanged = setChanged,
             emptyViewText = stringResource(id = R.string.no_playlists),
-            sort = false,
+            canBeSorted = false,
         )
 
-        when {
-            openAlertDialog -> {
-                PlaylistCreationForm(
-                    onConfirm = { playlistTitle: String ->
-                        dataViewModel.addOnePlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            playlistTitle = playlistTitle
-                        )
-                        openAlertDialog = false
-                    },
-                    onDismissRequest = { openAlertDialog = false }
-                )
-            }
+        if (openAlertDialog) {
+            PlaylistCreationForm(
+                onConfirm = { playlistTitle: String ->
+                    dataViewModel.addOnePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlistTitle = playlistTitle
+                    )
+                    openAlertDialog = false
+                },
+                onDismissRequest = { openAlertDialog = false }
+            )
         }
     }
 }

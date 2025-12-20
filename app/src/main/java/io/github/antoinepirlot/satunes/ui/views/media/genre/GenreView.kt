@@ -22,9 +22,6 @@ package io.github.antoinepirlot.satunes.ui.views.media.genre
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +31,6 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaWithAlbumsHeaderView
@@ -50,18 +46,14 @@ internal fun GenreView(
     dataViewModel: DataViewModel = viewModel(),
     genre: Genre,
 ) {
-    val musicSet: Set<Music> = genre.getMusicSet()
     val albumSet: Set<Album> = genre.getAlbumSet()
 
-    //Recompose if data changed
-    var setChanged: Boolean by rememberSaveable { genre.musicSetUpdated }
-    if (setChanged) {
-        setChanged = false
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = genre.musicCollection)
     }
-    //
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (musicSet.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
@@ -71,8 +63,6 @@ internal fun GenreView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = musicSet,
-        collectionChanged = setChanged,
         header = if (albumSet.isNotEmpty()) {
             {
                 MediaWithAlbumsHeaderView(
@@ -88,6 +78,6 @@ internal fun GenreView(
 @Preview
 @Composable
 private fun GenreViewPreview() {
-    GenreView(genre = Genre("Genre"))
+    GenreView(genre = Genre(title = "Genre"))
 }
 

@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
+import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.icons.SatunesIcons
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -51,9 +51,9 @@ internal fun PlaylistCreationForm(
 
     AlertDialog(
         icon = {
-            val icon: SatunesIcons = SatunesIcons.PLAYLIST_ADD
+            val jetpackLibsIcons: JetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD
             Icon(
-                imageVector = icon.imageVector,
+                imageVector = jetpackLibsIcons.imageVector,
                 contentDescription = "PlaylistDB Creation Button Icon"
             )
         },

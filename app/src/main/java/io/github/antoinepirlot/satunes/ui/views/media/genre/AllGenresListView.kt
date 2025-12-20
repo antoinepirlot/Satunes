@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -43,10 +42,13 @@ internal fun AllGenresListView(
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val genreSet: Set<Genre> = dataViewModel.getGenreSet()
 
-    LaunchedEffect(key1 = dataViewModel.isLoaded) {
-        if (genreSet.isNotEmpty())
+    LaunchedEffect(key1 = Unit) {
+        dataViewModel.loadMediaImplList(list = dataViewModel.getGenreSet())
+    }
+
+    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
+        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })
@@ -56,7 +58,6 @@ internal fun AllGenresListView(
 
     MediaListView(
         modifier = modifier,
-        mediaImplCollection = genreSet,
         emptyViewText = stringResource(id = R.string.no_genre)
     )
 }

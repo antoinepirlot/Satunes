@@ -2,6 +2,20 @@
 
 You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
+## 4.0 (Android 6.0 Marshmallow et ultérieur)
+
+### 4.0.0-alpha-1
+
+Nouvelles fonctionnalités :
+
+* Compatiblité avec l'API Subsonic
+
+Améliorations, optimisations et corrections de bugs :
+
+* La version minimum d'Android est 6.0 Marshallow pour la compatibilié avec certaines librairies
+* Révision du fonctionnement du playback
+* Quelques optimisations et résolution de bugs.
+
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
 ### 3.3.3

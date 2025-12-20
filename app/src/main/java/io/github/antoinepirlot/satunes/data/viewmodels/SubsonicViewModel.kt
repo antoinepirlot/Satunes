@@ -119,8 +119,6 @@ class SubsonicViewModel : ViewModel() {
             _uiState.update { currentState: SubsonicUiState ->
                 currentState.copy(isFetching = false)
             }
-
-        error = Error(code = 5, message = "Test error")
     }
 
     /**

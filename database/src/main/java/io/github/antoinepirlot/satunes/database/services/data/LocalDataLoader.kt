@@ -383,7 +383,7 @@ object LocalDataLoader {
             genre = genre,
             uri = uri
         )
-        return music
+        return DataManager.addMusic(music = music)
     }
 
     /**

@@ -103,8 +103,6 @@ open class Music(
 
     init {
         this.updateCdTrackNumber(cdTrackNumber = cdTrackNumber)
-        if (!this.isSubsonic())
-            DataManager.addMusic(music = this)
         album.addMusic(music = this)
         if (SettingsManager.compilationMusic)
             album.artist.addMusic(music = this)

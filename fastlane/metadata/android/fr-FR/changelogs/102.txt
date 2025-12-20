@@ -1,0 +1,9 @@
+Nouvelles fonctionnalités :
+
+* Compatiblité avec l'API Subsonic
+
+Améliorations, optimisations et corrections de bugs :
+
+* La version minimum d'Android est 6.0 Marshallow pour la compatibilié avec certaines librairies
+* Révision du fonctionnement du playback
+* Quelques optimisations et résolution de bugs.

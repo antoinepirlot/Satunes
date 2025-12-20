@@ -2,6 +2,20 @@
 
 Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
+## 4.0 (Android 6.0 Marshmallow and later)
+
+### 4.0.0-alpha-1
+
+New features:
+
+* Subsonic API compatibility
+
+Improvements, optimisations and bug fixes:
+
+* The minimum of Android version is 6.0 Marshmallow to satisfy some libraries requirements.
+* Revision of playback behavior
+* Some optimizations and bug fixes
+
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
 ### 3.3.3

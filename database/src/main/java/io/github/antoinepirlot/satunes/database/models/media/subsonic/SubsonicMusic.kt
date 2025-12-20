@@ -95,7 +95,7 @@ class SubsonicMusic(
     }
 
     override fun equals(other: Any?): Boolean {
-        return if (this.javaClass == other?.javaClass) this.id == (other as SubsonicMusic).id
+        return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicMusic).subsonicId
         else super.equals(other)
     }
 

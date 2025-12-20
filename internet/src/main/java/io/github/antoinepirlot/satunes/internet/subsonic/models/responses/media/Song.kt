@@ -67,24 +67,26 @@ internal data class Song constructor(
         )
         return DataManager.getSubsonicMusic(id = id) ?: DataManager.addMusic(
             music = SubsonicMusic(
-            subsonicId = this.id,
-            title = this.title,
-            displayName = this.path.split("/").last(),
-            absolutePath = this.path,
-            durationMs = this.durationSeconds * 1000,
-            size = this.size,
-            cdTrackNumber = this.track,
-            addedDateMs = 0,//TODO,
-            folder = getOrCreateFolder(),
+                subsonicId = this.id,
+                title = this.title,
+                coverArtId = this.coverArt,
+                displayName = this.path.split("/").last(),
+                absolutePath = this.path,
+                durationMs = this.durationSeconds * 1000,
+                size = this.size,
+                cdTrackNumber = this.track,
+                addedDateMs = 0,//TODO,
+                folder = getOrCreateFolder(),
                 artist = getOrCreateSubsonicArtist(id = this.artistId, title = this.artistTitle),
                 album = getOrCreateSubsonicAlbum(
-                id = this.albumId,
-                title = this.albumTitle,
-                artistId = this.artistId,
-                artistTitle = this.artistTitle
-            ), //Must be after artist, otherwise album is not added in artist
+                    id = this.albumId,
+                    title = this.albumTitle,
+                    artistId = this.artistId,
+                    artistTitle = this.artistTitle
+                ), //Must be after artist, otherwise album is not added in artist
                 genre = getSubsonicGenre(),
-            uri = url.toUri(),
+                uri = url.toUri(),
+                apiRequester = subsonicApiRequester
             )
         )
     }

@@ -36,7 +36,6 @@ import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
 import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
-import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
@@ -141,6 +140,7 @@ open class Music(
     }
 
     open fun getAlbumArtwork(context: Context): Bitmap {
+        if (artwork != null) return artwork!!.applyShape()
         var bitmap: Bitmap? = try {
             val mediaMetadataRetriever = MediaMetadataRetriever()
             mediaMetadataRetriever.setDataSource(context, uri)

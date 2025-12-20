@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic
 
+import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
@@ -35,6 +36,7 @@ import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
@@ -239,6 +241,26 @@ class SubsonicApiRequester() : ApiRequester {
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onError = onError,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    override suspend fun getCoverArt(
+        coverArtId: String,
+        onDataRetrieved: (Bitmap?) -> Unit
+    ) {
+        if (coverArtId.isBlank())
+            throw IllegalArgumentException("Can't get coverArt from blank id")
+        get(
+            url = getCommandUrl(
+                command = "getCoverArt",
+                parameters = arrayOf("id=$coverArtId")
+            ),
+            resCallback = GetCoverArtCallback(
+                subsonicApiRequester = this@SubsonicApiRequester,
+                onFinished = null,
+                onError = null,
                 onDataRetrieved = onDataRetrieved
             )
         )

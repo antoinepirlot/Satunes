@@ -29,5 +29,4 @@ interface SubsonicMedia : Media {
     var subsonicId: Long
 
     override fun isSubsonic(): Boolean = true
-
 }

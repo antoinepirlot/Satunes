@@ -70,13 +70,13 @@ internal fun MediaCard(
     modifier: Modifier = Modifier,
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImpl: Media,
+    media: Media,
     onClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?
 ) {
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
 
-    val title: String = getMediaTitle(mediaImpl = mediaImpl)
+    val title: String = getMediaTitle(mediaImpl = media)
     val screenWidthDp: Int = LocalConfiguration.current.screenWidthDp
     val boxModifier: Modifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
@@ -100,7 +100,7 @@ internal fun MediaCard(
                     val imageModifier: Modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                    if (mediaImpl == playbackViewModel.musicPlaying) {
+                    if (media == playbackViewModel.musicPlaying) {
                         val playingJetpackLibsIcons: JetpackLibsIcons =
                             JetpackLibsIcons.MUSIC_PLAYING
                         Icon(
@@ -109,35 +109,34 @@ internal fun MediaCard(
                             contentDescription = playingJetpackLibsIcons.description
                         )
                     } else {
-                        MediaArtwork(mediaImpl = mediaImpl)
+                        MediaArtwork(media = media)
                     }
                 }
             },
             headlineContent = {
                 Column {
-                    if (navigationUiState.currentDestination == Destination.ALBUM && mediaImpl.isMusic() && (mediaImpl as Music).cdTrackNumber != null)
-                        NormalText(text = mediaImpl.cdTrackNumber.toString() + " - " + title)
+                    if (navigationUiState.currentDestination == Destination.ALBUM && media.isMusic() && (media as Music).cdTrackNumber != null)
+                        NormalText(text = media.cdTrackNumber.toString() + " - " + title)
                     else
                         NormalText(text = title)
 
                     //Use these as for the same thing the builder doesn't like in one
-                    if (mediaImpl.isAlbum()) {
-                        mediaImpl as Album
-                        Subtitle(text = mediaImpl.artist.title)
-                    } else if (mediaImpl.isMusic()) {
-                        mediaImpl as Music
-                        Subtitle(text = mediaImpl.album.title + " - " + mediaImpl.artist.title)
+                    if (media.isAlbum()) {
+                        media as Album
+                        Subtitle(text = media.artist.title)
+                    } else if (media.isMusic()) {
+                        media as Music
+                        Subtitle(text = media.album.title + " - " + media.artist.title)
                     }
                 }
             },
             trailingContent = {
                 Row {
-                    if (mediaImpl.isSubsonic()) {
+                    if (media.isSubsonic())
                         Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_NOT_SAVED_ICON)
-                    }
-                    if (mediaImpl.isMusic()) {
-                        mediaImpl as Music
-                        val liked: Boolean by mediaImpl.liked
+                    if (media.isMusic()) {
+                        media as Music
+                        val liked: Boolean by media.liked
                         if (liked)
                             Icon(jetpackLibsIcons = JetpackLibsIcons.LIKED)
                     }
@@ -166,7 +165,7 @@ private fun CardPreview() {
     )
     MediaCard(
         modifier = Modifier.fillMaxSize(),
-        mediaImpl = music,
+        media = music,
         onClick = null,
         onLongClick = null
     )

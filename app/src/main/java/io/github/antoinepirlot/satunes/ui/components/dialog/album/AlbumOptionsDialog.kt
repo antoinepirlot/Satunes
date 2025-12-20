@@ -67,7 +67,7 @@ internal fun AlbumOptionsDialog(
         icon = {
             MediaArtwork(
                 modifier = Modifier.size(100.dp),
-                mediaImpl = album
+                media = album
             )
         },
         title = {

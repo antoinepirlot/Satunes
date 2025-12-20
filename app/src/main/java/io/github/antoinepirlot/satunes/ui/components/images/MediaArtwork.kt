@@ -71,6 +71,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 import kotlinx.coroutines.CoroutineScope
@@ -89,12 +90,11 @@ internal fun MediaArtwork(
     satunesViewModel: SatunesViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
-    mediaImpl: Media,
+    media: Media,
     isClickable: Boolean = false,
     contentAlignment: Alignment = Alignment.Center,
     shape: Shape? = null
 ) {
-
     val makeArtworkCircle: Boolean = satunesViewModel.artworkCircleShape || shape == CircleShape
     var mediaArtWorkModifier: Modifier = modifier.clip(
         shape = shape ?: if (makeArtworkCircle) CircleShape else RectangleShape
@@ -105,11 +105,11 @@ internal fun MediaArtwork(
     var showAlbumDialog: Boolean by rememberSaveable { mutableStateOf(false) }
     val navController: NavHostController = LocalNavController.current
 
-    val album: Album? = if (mediaImpl.isMusic()) (mediaImpl as Music).album
-    else if (mediaImpl.isAlbum()) mediaImpl as Album
+    val album: Album? = if (media.isMusic()) (media as Music).album
+    else if (media.isAlbum()) media as Album
     else null
 
-    if (satunesViewModel.artworkAnimation && mediaImpl == playbackViewModel.musicPlaying) {
+    if (satunesViewModel.artworkAnimation && media == playbackViewModel.musicPlaying) {
         var lastScaleState: Float by rememberSaveable { mutableFloatStateOf(0F) }
         var initialScale: Float by rememberSaveable { mutableFloatStateOf(lastScaleState) }
         if (isPlaying) {
@@ -171,24 +171,20 @@ internal fun MediaArtwork(
 
         var artwork: ImageBitmap? by remember { mutableStateOf(null) }
         var job: Job? = null
-        LaunchedEffect(key1 = mediaImpl) {
+        LaunchedEffect(key1 = media) {
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
-                var bitmap: Bitmap? =
-                    if (mediaImpl.isMusic()) (mediaImpl as Music).getAlbumArtwork(context = context)
-                    else if (mediaImpl.isAlbum()) {
-                        if (mediaImpl.isEmpty()) null
-                        else mediaImpl.musicCollection.first().getAlbumArtwork(context = context)
-                    } else null
-
-                if (bitmap != null
-                    && !satunesViewModel.artworkCircleShape
-                    && satunesViewModel.artworkAnimation
-                    && playbackViewModel.musicPlaying == mediaImpl
-                )
-                //In other words, it will make artwork circle if the mediaImpl is the playing music (the animation with rectangular shape is ugly on artwork
-                    bitmap = bitmap.toCircularBitmap()
-                artwork = bitmap?.asImageBitmap()
+                if (media.isSubsonic() && media.isMusic()) {
+                    (media as SubsonicMusic).loadAlbumArtwork(onDataRetrieved = { artwork = it })
+                } else {
+                    val bitmap: Bitmap? = getBitmap(
+                        context = context,
+                        media = media,
+                        satunesViewModel = satunesViewModel,
+                        playbackViewModel = playbackViewModel
+                    )
+                    artwork = bitmap?.asImageBitmap()
+                }
             }
         }
 
@@ -203,7 +199,7 @@ internal fun MediaArtwork(
                 modifier = Modifier
                     .size(30.dp)
                     .align(Alignment.Center),
-                jetpackLibsIcons = getRightIconAndDescription(media = mediaImpl)
+                jetpackLibsIcons = getRightIconAndDescription(media = media)
             )
         }
     }
@@ -221,8 +217,29 @@ internal fun MediaArtwork(
     }
 }
 
+private fun getBitmap(
+    context: Context,
+    satunesViewModel: SatunesViewModel,
+    playbackViewModel: PlaybackViewModel,
+    media: Media
+): Bitmap? {
+    var bitmap: Bitmap? = if (media.isMusic()) (media as Music).getAlbumArtwork(context = context)
+    else if (media.isAlbum()) {
+        if (media.isEmpty()) null
+        else media.musicCollection.first().getAlbumArtwork(context = context)
+    } else null
+    if (bitmap != null
+        && !satunesViewModel.artworkCircleShape
+        && satunesViewModel.artworkAnimation
+        && playbackViewModel.musicPlaying == media
+    )
+    //In other words, it will make artwork circle if the mediaImpl is the playing music (the animation with rectangular shape is ugly on artwork
+        bitmap = bitmap.toCircularBitmap()
+    return bitmap
+}
+
 @Composable
 @Preview
 private fun AlbumArtworkPreview() {
-    MediaArtwork(mediaImpl = Album(title = "", artist = Artist(title = "Artist Title")))
+    MediaArtwork(media = Album(title = "", artist = Artist(title = "Artist Title")))
 }

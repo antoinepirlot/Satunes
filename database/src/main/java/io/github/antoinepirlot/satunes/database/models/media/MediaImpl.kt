@@ -60,7 +60,7 @@ abstract class MediaImpl(
             else title.split(".").first()
     )
 
-    var artwork: Bitmap? by mutableStateOf(null)
+    var artwork: Bitmap? = null
         internal set
 
     /**

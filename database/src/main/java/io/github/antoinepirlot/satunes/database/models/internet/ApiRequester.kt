@@ -1,5 +1,6 @@
 package io.github.antoinepirlot.satunes.database.models.internet
 
+import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -9,7 +10,6 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMu
  * @author Antoine Pirlot 20/12/2025
  */
 interface ApiRequester {
-
     /**
      * Ping API
      */
@@ -62,4 +62,9 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onError: ((ApiError?) -> Unit)? = null
     )
+
+    /**
+     * Get cover art from API
+     */
+    suspend fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
 }

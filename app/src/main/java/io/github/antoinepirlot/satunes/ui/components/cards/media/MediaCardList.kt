@@ -103,7 +103,7 @@ internal fun MediaCardList(
             var showMediaOptions: Boolean by rememberSaveable { mutableStateOf(false) }
             MediaCard(
                 modifier = modifier,
-                mediaImpl = mediaImpl,
+                media = mediaImpl,
                 onClick = {
                     if (onMediaClick != null) {
                         onMediaClick.invoke(mediaImpl)

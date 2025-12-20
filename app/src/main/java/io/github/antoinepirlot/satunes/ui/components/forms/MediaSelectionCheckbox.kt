@@ -78,7 +78,7 @@ internal fun MediaSelectionCheckbox(
             )
             Spacer(modifier = Modifier.size(10.dp))
             MediaCard(
-                mediaImpl = mediaImpl,
+                media = mediaImpl,
                 onClick = null,
                 onLongClick = null
             )

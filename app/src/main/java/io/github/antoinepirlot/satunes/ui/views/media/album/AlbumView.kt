@@ -99,7 +99,7 @@ private fun Header(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(albumSize),
-            mediaImpl = album
+            media = album
         )
         Title(
             bottomPadding = 0.dp,

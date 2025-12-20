@@ -23,13 +23,15 @@ package io.github.antoinepirlot.satunes.database.models.media.subsonic
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import io.github.antoinepirlot.android.utils.utils.runIOThread
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
-import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import java.util.SortedSet
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -41,6 +43,7 @@ class SubsonicMusic(
      */
     override var subsonicId: Long,
     title: String,
+    private var coverArtId: String? = null,
     displayName: String,
     absolutePath: String,
     override var durationMs: Long = 0,
@@ -52,6 +55,7 @@ class SubsonicMusic(
     album: Album,
     genre: Genre,
     uri: Uri? = null,
+    private val apiRequester: ApiRequester
 ) : SubsonicMedia, Music(
     id = subsonicId,
     title = title,
@@ -92,8 +96,24 @@ class SubsonicMusic(
     }
 
     override fun getAlbumArtwork(context: Context): Bitmap {
-        //TODO
-        return this.getEmptyAlbumArtwork(context = context).applyShape()
+        return this.artwork?.applyShape() ?: this.getEmptyAlbumArtwork(context = context)
+            .applyShape()
+    }
+
+    /**
+     * Fetch artwork from network and stores it into [artwork]
+     */
+    fun loadAlbumArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        if (this.artwork != null) onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
+        runIOThread {
+            apiRequester.getCoverArt(
+                coverArtId = this.coverArtId!!,
+                onDataRetrieved = {
+                    this.artwork = it
+                    onDataRetrieved(it?.applyShape()?.asImageBitmap())
+                }
+            )
+        }
     }
 
     override fun equals(other: Any?): Boolean {

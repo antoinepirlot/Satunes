@@ -31,4 +31,14 @@ class SubsonicGenre(
 ) : SubsonicMedia, Genre(
     id = subsonicId,
     title = title,
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicGenre).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+}

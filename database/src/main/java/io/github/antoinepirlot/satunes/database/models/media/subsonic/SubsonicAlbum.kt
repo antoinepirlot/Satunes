@@ -39,4 +39,13 @@ class SubsonicAlbum(
     artist = artist,
     isCompilation = isCompilation,
     year = year
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+}

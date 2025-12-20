@@ -100,8 +100,6 @@ class SubsonicMusic(
     }
 
     override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + subsonicId.hashCode()
-        return result
+        return 31 * super.hashCode() + this.subsonicId.hashCode()
     }
 }

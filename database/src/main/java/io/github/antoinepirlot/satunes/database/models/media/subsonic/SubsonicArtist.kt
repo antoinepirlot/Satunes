@@ -53,4 +53,13 @@ class SubsonicArtist(
         DataManager.addArtist(artist = newArtist)
         return newArtist
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicArtist).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
 }

@@ -33,4 +33,13 @@ class SubsonicFolder(
     companion object {
         const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicFolder).subsonicId
+        else super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
 }

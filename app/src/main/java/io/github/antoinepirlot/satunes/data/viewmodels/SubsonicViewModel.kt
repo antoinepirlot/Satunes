@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.lang.Thread.sleep
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -257,14 +258,14 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-        if (artist != null)
-            this.loadArtist(
-                artist = artist,
-                onDataRetrieved = onDataRetrieved,
-                onFinished = onFinished
-            )
-        else {
+//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+//        if (artist != null)
+//            this.loadArtist(
+//                artist = artist,
+//                onDataRetrieved = onDataRetrieved,
+//                onFinished = onFinished
+//            )
+//        else {
             this.initRequest()
             runIOThread {
                 _apiRequester.getArtist(
@@ -277,7 +278,7 @@ class SubsonicViewModel : ViewModel() {
                     onError = { this@SubsonicViewModel.error = it }
                 )
             }
-        }
+//        }
     }
 
     fun getArtistWithMusics(
@@ -285,16 +286,16 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-        if (artist != null)
-            this.loadArtist(
-                artist = artist,
-                onDataRetrieved = { artist: SubsonicArtist ->
-                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-                },
-                onFinished = onFinished
-            )
-        else
+//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+//        if (artist != null)
+//            this.loadArtist(
+//                artist = artist,
+//                onDataRetrieved = { artist: SubsonicArtist ->
+//                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
+//                },
+//                onFinished = onFinished
+//            )
+//        else
             this.getArtist(
                 artistId = artistId,
                 onDataRetrieved = { artist: SubsonicArtist ->
@@ -322,7 +323,8 @@ class SubsonicViewModel : ViewModel() {
             }
         }
         runIOThread {
-            while (queriesInProgress > 0);
+            while (queriesInProgress > 0)
+                sleep(10) // Do not remove, without sleep, it can cause no data shown
             onDataRetrieved.invoke(artist)
         }
     }

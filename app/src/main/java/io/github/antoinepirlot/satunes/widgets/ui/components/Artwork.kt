@@ -42,7 +42,7 @@ internal fun Artwork(
     music: Music,
 ) {
     val context: Context = LocalContext.current
-    var artwork: Bitmap = music.getAlbumArtwork(context = context)
+    val artwork: Bitmap = music.getAlbumArtwork(context = context)
 
     Image(
         modifier = modifier,

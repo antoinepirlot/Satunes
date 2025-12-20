@@ -24,6 +24,8 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import io.github.antoinepirlot.satunes.database.models.User
+import io.github.antoinepirlot.satunes.database.models.internet.ApiError
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -37,7 +39,6 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRan
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -45,7 +46,7 @@ import okhttp3.Request
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-class SubsonicApiRequester() {
+class SubsonicApiRequester() : ApiRequester {
     companion object {
         const val SONG_MEDIA_TYPE = "song"
         private const val CLIENT_NAME = "Satunes"
@@ -135,13 +136,10 @@ class SubsonicApiRequester() {
             .enqueue()
     }
 
-    /**
-     * Ping API
-     */
-    fun ping(
-        onSucceed: (() -> Unit)? = null,
-        onError: (() -> Unit)? = null,
-        onFinished: (() -> Unit)? = null
+    override suspend fun ping(
+        onSucceed: (() -> Unit)?,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?
     ) {
         this.get(
             url = this.getCommandUrl(command = "ping", parameters = arrayOf()),
@@ -154,14 +152,8 @@ class SubsonicApiRequester() {
         )
     }
 
-    /**
-     * Get randomly [size] musics.
-     *
-     * @param size the number of music to get (default 10, max 500).
-     * @param onDataRetrieved the [Collection] function to run when got data from API.
-     */
-    suspend fun getRandomSongs(
-        size: Int = 10,
+    override suspend fun getRandomSongs(
+        size: Int,
         onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
     ) {
         if (size !in 1..500)
@@ -185,7 +177,11 @@ class SubsonicApiRequester() {
      * @param query the [String] to send to api to find matching media.
      * @param onDataRetrieved the function to run when got data from API.
      */
-    suspend fun search(query: String, onFinished: () -> Unit, onDataRetrieved: (Collection<SubsonicMedia>) -> Unit) {
+    override suspend fun search(
+        query: String,
+        onFinished: () -> Unit,
+        onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
+    ) {
         if (query.isBlank()) return
         get(
             url = getCommandUrl(
@@ -206,11 +202,11 @@ class SubsonicApiRequester() {
      * @param artistId the id of artist located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
-    suspend fun getArtist(
+    override suspend fun getArtist(
         artistId: Long,
-        onFinished: (() -> Unit)? = null,
+        onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicArtist) -> Unit,
-        onError: ((Error?) -> Unit)? = null
+        onError: ((ApiError?) -> Unit)?
     ) {
         if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(
@@ -227,11 +223,11 @@ class SubsonicApiRequester() {
         )
     }
 
-    suspend fun getAlbum(
+    override suspend fun getAlbum(
         albumId: Long,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
-        onFinished: (() -> Unit)? = null,
-        onError: ((Error?) -> Unit)? = null
+        onFinished: (() -> Unit)?,
+        onError: ((ApiError?) -> Unit)?
     ) {
         if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
         get(

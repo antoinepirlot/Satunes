@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
+import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import kotlinx.serialization.Serializable
 
 /**
@@ -30,6 +31,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Error(
-    val code: Int,
-    val message: String
-)
+    override val code: Int,
+    override val message: String
+) : ApiError

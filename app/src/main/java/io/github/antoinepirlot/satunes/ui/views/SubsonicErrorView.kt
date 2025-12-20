@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.components.texts.Title
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import io.github.antoinepirlot.satunes.ui.components.buttons.spacerSize
 
@@ -23,7 +24,7 @@ import io.github.antoinepirlot.satunes.ui.components.buttons.spacerSize
 @Composable
 fun SubsonicErrorView(
     modifier: Modifier = Modifier,
-    error: Error
+    error: ApiError
 ) {
     Column(
         modifier = modifier.fillMaxSize(),

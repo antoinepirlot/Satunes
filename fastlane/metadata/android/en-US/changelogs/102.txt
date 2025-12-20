@@ -1,0 +1,9 @@
+New features:
+
+* Subsonic API compatibility
+
+Improvements, optimisations and bug fixes:
+
+* The minimum of Android version is 6.0 Marshmallow to satisfy some libraries requirements.
+* Revision of playback behavior
+* Some optimizations and bug fixes

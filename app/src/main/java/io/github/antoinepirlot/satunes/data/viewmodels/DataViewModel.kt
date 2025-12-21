@@ -84,6 +84,8 @@ class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
         private var _playlistToExport: Playlist? = null
+
+        private val _mediaListOnScreen: List<Media> = mutableStateListOf()
     }
 
     private val _logger: Logger? = Logger.getLogger()
@@ -97,7 +99,7 @@ class DataViewModel : ViewModel() {
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
-    val mediaListOnScreen: List<Media> = mutableStateListOf()
+    val mediaListOnScreen: List<Media> = _mediaListOnScreen
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
@@ -166,9 +168,9 @@ class DataViewModel : ViewModel() {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
-                this@DataViewModel.mediaListOnScreen as MutableList<Media>
-                (this@DataViewModel.mediaListOnScreen).add(element = playlist)
-                this@DataViewModel.mediaListOnScreen.sort()
+                _mediaListOnScreen as MutableList<Media>
+                (_mediaListOnScreen).add(element = playlist)
+                _mediaListOnScreen.sort()
 
                 onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
@@ -940,16 +942,16 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
-        mediaListOnScreen as MutableList<Media>
+        _mediaListOnScreen as MutableList<Media>
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
             val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
-            mediaListOnScreen.sortBy { mediaImpl: Media ->
+            _mediaListOnScreen.sortBy { mediaImpl: Media ->
                 if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
                 else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
             sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
-            mediaListOnScreen.sortWith(comparator = sortOption.comparator!!)
+            _mediaListOnScreen.sortWith(comparator = sortOption.comparator!!)
         }
     }
 
@@ -1015,8 +1017,8 @@ class DataViewModel : ViewModel() {
     }
 
     fun loadMediaImplList(list: Collection<Media>) {
-        this.mediaListOnScreen as MutableList<Media>
-        this.mediaListOnScreen.clear()
-        this.mediaListOnScreen.addAll(list)
+        _mediaListOnScreen as MutableList<Media>
+        _mediaListOnScreen.clear()
+        _mediaListOnScreen.addAll(list)
     }
 }

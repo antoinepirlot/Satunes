@@ -69,22 +69,13 @@ internal fun MediaListView(
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
     val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
 
-//    LaunchedEffect(key1 = collectionChanged) { //TODO REMOVE
-//        // Prevent doing twice the same thing at launching and showing empty text temporarily
-//        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
-//    }
-
     LaunchedEffect(key1 = sortOption, key2 = reverseOrder) {
         if (canBeSorted && (sortOption != dataUiState.appliedSortOption || reverseOrder != previousReverseOrder)) {
             dataViewModel.sort(navigationUiState = navigationUiState)
-//            if (!collectionChanged)
-//                lazyListState.requestScrollToItem(0)
-//            else {
                 lazyListState.requestScrollToItem(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture
-//            }
         }
         if (reverseOrder != previousReverseOrder)
             dataViewModel.orderChanged()
@@ -115,8 +106,5 @@ internal fun MediaListView(
 @Composable
 @Preview
 private fun MediaListViewPreview() {
-    MediaListView(
-//        collectionChanged = false,
-        emptyViewText = "No data"
-    )
+    MediaListView(emptyViewText = "No data")
 }

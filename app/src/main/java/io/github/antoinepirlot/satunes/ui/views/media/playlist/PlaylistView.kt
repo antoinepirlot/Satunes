@@ -53,8 +53,8 @@ internal fun PlaylistView(
         dataViewModel.loadMediaImplList(list = playlist.musicCollection)
     }
 
-    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
-        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
+        if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(
                 extraButtons = {
                     //It's in a column

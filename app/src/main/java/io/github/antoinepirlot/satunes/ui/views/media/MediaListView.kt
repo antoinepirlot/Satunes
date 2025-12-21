@@ -64,7 +64,7 @@ internal fun MediaListView(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    val listToShow: List<Media> = dataViewModel.mediaImplListOnScreen
+    val listToShow: List<Media> = dataViewModel.mediaListOnScreen
     val sortOption: SortOptions = dataViewModel.sortOption
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
     val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder

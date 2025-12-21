@@ -53,8 +53,8 @@ internal fun AllMusicsListView(
         LocalAllMusicsListView(modifier = modifier)
 
     // /!\ put this launch effect here as it must be ran after media impl list loaded
-    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
-        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
+        if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })

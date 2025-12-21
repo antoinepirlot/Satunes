@@ -97,7 +97,7 @@ class DataViewModel : ViewModel() {
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
-    val mediaImplListOnScreen: List<Media> = mutableStateListOf()
+    val mediaListOnScreen: List<Media> = mutableStateListOf()
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
@@ -166,9 +166,9 @@ class DataViewModel : ViewModel() {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
-                this@DataViewModel.mediaImplListOnScreen as MutableList<Media>
-                (this@DataViewModel.mediaImplListOnScreen).add(element = playlist)
-                this@DataViewModel.mediaImplListOnScreen.sort()
+                this@DataViewModel.mediaListOnScreen as MutableList<Media>
+                (this@DataViewModel.mediaListOnScreen).add(element = playlist)
+                this@DataViewModel.mediaListOnScreen.sort()
 
                 onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
@@ -940,16 +940,16 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
-        mediaImplListOnScreen as MutableList<Media>
+        mediaListOnScreen as MutableList<Media>
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
             val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
-            mediaImplListOnScreen.sortBy { mediaImpl: Media ->
+            mediaListOnScreen.sortBy { mediaImpl: Media ->
                 if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
                 else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
             sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
-            mediaImplListOnScreen.sortWith(comparator = sortOption.comparator!!)
+            mediaListOnScreen.sortWith(comparator = sortOption.comparator!!)
         }
     }
 
@@ -1015,8 +1015,8 @@ class DataViewModel : ViewModel() {
     }
 
     fun loadMediaImplList(list: Collection<Media>) {
-        this.mediaImplListOnScreen as MutableList<Media>
-        this.mediaImplListOnScreen.clear()
-        this.mediaImplListOnScreen.addAll(list)
+        this.mediaListOnScreen as MutableList<Media>
+        this.mediaListOnScreen.clear()
+        this.mediaListOnScreen.addAll(list)
     }
 }

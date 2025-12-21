@@ -47,8 +47,8 @@ internal fun AllAlbumsListView(
         dataViewModel.loadMediaImplList(list = dataViewModel.getAlbumSet())
     }
 
-    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
-        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
+        if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })

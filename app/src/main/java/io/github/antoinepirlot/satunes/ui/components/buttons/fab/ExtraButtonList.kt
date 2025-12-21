@@ -31,7 +31,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -60,7 +59,6 @@ internal fun ExtraButtonList(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
     val mediaCollection: Collection<Media> = dataViewModel.mediaListOnScreen
 

@@ -241,7 +241,12 @@ class SubsonicViewModel : ViewModel() {
                 albumId = album.subsonicId,
                 onDataRetrieved = {
                     if (!album.isSubsonic())
-                        onDataRetrieved(album.toSubsonicAlbum(album = it))
+                        onDataRetrieved(
+                            album.toSubsonicAlbum(
+                                apiRequester = _apiRequester,
+                                album = it
+                            )
+                        )
                     else onDataRetrieved(it)
                 },
                 onFinished = {

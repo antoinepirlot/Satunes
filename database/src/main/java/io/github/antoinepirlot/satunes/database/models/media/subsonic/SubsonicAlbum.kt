@@ -38,6 +38,7 @@ class SubsonicAlbum(
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
+    private val apiRequester: ApiRequester
 ) : SubsonicMedia, Album(
     id = id,
     title = title,
@@ -49,10 +50,7 @@ class SubsonicAlbum(
     /**
      * Fetch artwork from network and stores it into [artwork]
      */
-    fun loadAlbumArtwork(
-        apiRequester: ApiRequester,
-        onDataRetrieved: (artwork: ImageBitmap?) -> Unit
-    ) {
+    override fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         if (this.artwork != null)
             onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
         else

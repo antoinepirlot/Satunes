@@ -26,6 +26,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -75,7 +76,7 @@ private fun createSubsonicAlbum(
     coverArtId: String?,
     artistId: Long,
     artistTitle: String,
-    year: Int?
+    year: Int?,
 ): SubsonicAlbum =
     DataManager.addAlbum(
         album = SubsonicAlbum(
@@ -84,7 +85,8 @@ private fun createSubsonicAlbum(
             coverArtId = coverArtId,
             artist = getOrCreateSubsonicArtist(id = artistId, title = artistTitle),
             //            isCompilation = false,
-            year = year
+            year = year,
+            apiRequester = SubsonicApiRequester()
         )
     )
 

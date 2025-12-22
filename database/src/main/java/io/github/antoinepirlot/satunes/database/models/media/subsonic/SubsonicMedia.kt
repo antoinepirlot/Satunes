@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import androidx.compose.ui.graphics.ImageBitmap
 import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
@@ -27,6 +28,10 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
  */
 interface SubsonicMedia : Media {
     var subsonicId: Long
+
+    fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        throw UnsupportedOperationException()
+    }
 
     override fun isSubsonic(): Boolean = true
 }

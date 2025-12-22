@@ -100,11 +100,8 @@ class SubsonicMusic(
     /**
      * Fetch artwork from network and stores it into [artwork]
      */
-    fun loadAlbumArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
-        (this.album as SubsonicAlbum).loadAlbumArtwork(
-            apiRequester = apiRequester,
-            onDataRetrieved = onDataRetrieved
-        )
+    override fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        (this.album as SubsonicAlbum).loadArtwork(onDataRetrieved = onDataRetrieved)
     }
 
     override fun equals(other: Any?): Boolean {

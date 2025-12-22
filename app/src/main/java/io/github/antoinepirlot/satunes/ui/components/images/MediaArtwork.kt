@@ -71,7 +71,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.ui.components.dialog.album.AlbumOptionsDialog
 import io.github.antoinepirlot.satunes.ui.utils.getRightIconAndDescription
 import kotlinx.coroutines.CoroutineScope
@@ -174,8 +174,8 @@ internal fun MediaArtwork(
         LaunchedEffect(key1 = media) {
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
-                if (media.isSubsonic() && media.isMusic()) {
-                    (media as SubsonicMusic).loadAlbumArtwork(onDataRetrieved = { artwork = it })
+                if (media.isSubsonic() && (media.isMusic() || media.isAlbum())) {
+                    (media as SubsonicMedia).loadArtwork(onDataRetrieved = { artwork = it })
                 } else {
                     val bitmap: Bitmap? = getBitmap(
                         context = context,

@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import androidx.compose.ui.graphics.ImageBitmap
 import io.github.antoinepirlot.satunes.database.models.media.Media
 
@@ -29,7 +30,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
 interface SubsonicMedia : Media {
     val subsonicId: Long
 
-    fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+    fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()
     }
 

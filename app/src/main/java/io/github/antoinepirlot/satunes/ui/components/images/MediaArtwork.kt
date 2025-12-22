@@ -175,7 +175,9 @@ internal fun MediaArtwork(
             job?.cancel()
             job = CoroutineScope(Dispatchers.IO).launch {
                 if (media.isSubsonic() && (media.isMusic() || media.isAlbum())) {
-                    (media as SubsonicMedia).loadArtwork(onDataRetrieved = { artwork = it })
+                    (media as SubsonicMedia).loadArtwork(
+                        context = context,
+                        onDataRetrieved = { artwork = it })
                 } else {
                     val bitmap: Bitmap? = getBitmap(
                         context = context,

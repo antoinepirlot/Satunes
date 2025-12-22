@@ -73,6 +73,7 @@ open class Album(
         val newAlbum: SubsonicAlbum = SubsonicAlbum(
             id = this.id,
             subsonicId = album.subsonicId,
+            coverArtId = this.coverArtId,
             title = this.title,
             artist = this.artist,
             isCompilation = this.isCompilation,

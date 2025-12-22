@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.github.antoinepirlot.android.utils.utils.runIOThread
@@ -34,7 +35,7 @@ class SubsonicAlbum(
     override var subsonicId: Long,
     id: Long = subsonicId,
     title: String,
-    coverArtId: String? = null,
+    coverArtId: String?,
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
@@ -50,9 +51,11 @@ class SubsonicAlbum(
     /**
      * Fetch artwork from network and stores it into [artwork]
      */
-    override fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+    override fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         if (this.artwork != null)
             onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
+        else if (this.coverArtId == null)
+            onDataRetrieved(this.getEmptyAlbumArtwork(context = context).asImageBitmap())
         else
             runIOThread {
                 apiRequester.getCoverArt(

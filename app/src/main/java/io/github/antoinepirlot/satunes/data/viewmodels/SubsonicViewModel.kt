@@ -206,11 +206,14 @@ class SubsonicViewModel : ViewModel() {
     ) {
         val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
         if (album != null)
-            this.loadAlbum(
-                album = album,
-                onDataRetrieved = { onDataRetrieved.invoke(it) },
-                onFinished = onFinished
-            )
+            if (album.isEmpty())
+                this.loadAlbum(
+                    album = album,
+                    onDataRetrieved = { onDataRetrieved.invoke(it) },
+                    onFinished = onFinished
+                )
+            else
+                onDataRetrieved(album)
         else {
             this.initRequest()
             runIOThread {
@@ -263,14 +266,17 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-//        if (artist != null)
-//            this.loadArtist(
-//                artist = artist,
-//                onDataRetrieved = onDataRetrieved,
-//                onFinished = onFinished
-//            )
-//        else {
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            if (artist.isEmpty())
+                this.loadArtist(
+                    artist = artist,
+                    onDataRetrieved = onDataRetrieved,
+                    onFinished = onFinished
+                )
+            else
+                onDataRetrieved(artist)
+        else {
             this.initRequest()
             runIOThread {
                 _apiRequester.getArtist(
@@ -283,7 +289,7 @@ class SubsonicViewModel : ViewModel() {
                     onError = { this@SubsonicViewModel.error = it }
                 )
             }
-//        }
+        }
     }
 
     fun getArtistWithMusics(
@@ -291,16 +297,21 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-//        if (artist != null)
-//            this.loadArtist(
-//                artist = artist,
-//                onDataRetrieved = { artist: SubsonicArtist ->
-//                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-//                },
-//                onFinished = onFinished
-//            )
-//        else
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            if (artist.isEmpty())
+                this.loadArtist(
+                    artist = artist,
+                    onDataRetrieved = { artist: SubsonicArtist ->
+                        this.loadArtistWithMusics(
+                            artist = artist,
+                            onDataRetrieved = onDataRetrieved
+                        )
+                    },
+                    onFinished = onFinished
+                )
+            else onDataRetrieved(artist)
+        else
             this.getArtist(
                 artistId = artistId,
                 onDataRetrieved = { artist: SubsonicArtist ->

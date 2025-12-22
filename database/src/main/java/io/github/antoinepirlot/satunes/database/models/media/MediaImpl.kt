@@ -41,8 +41,8 @@ abstract class MediaImpl(
     title: String
 ) : Media {
     protected val logger: Logger? = Logger.getLogger()
-    protected var isDownloaded: Boolean = !this.isSubsonic()
-        set(value) {
+    override var isDownloaded: Boolean = !this.isSubsonic()
+        protected set(value) {
             if (!this.isSubsonic())
                 throw IllegalStateException("Can't change value of isDownloaded for a local media.")
             field = value

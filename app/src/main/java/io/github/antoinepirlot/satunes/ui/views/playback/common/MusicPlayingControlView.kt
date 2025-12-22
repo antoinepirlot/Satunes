@@ -38,15 +38,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
+import io.github.antoinepirlot.satunes.ui.components.icons.MediaCloudIcon
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
@@ -96,7 +96,7 @@ internal fun MusicPlayingControlView(
                     fontSize = 20.sp
                 )
                 if (musicPlaying.isSubsonic())
-                    Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_NOT_SAVED_ICON)
+                    MediaCloudIcon(subsonicMedia = musicPlaying as SubsonicMusic)
             }
             ArtistBar(artist = musicPlaying.artist)
             PlaybackCustomActionsBar()

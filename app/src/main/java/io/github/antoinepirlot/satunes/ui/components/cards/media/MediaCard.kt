@@ -55,8 +55,10 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.cards.ListItem
+import io.github.antoinepirlot.satunes.ui.components.icons.MediaCloudIcon
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.utils.getMediaTitle
 
@@ -133,7 +135,7 @@ internal fun MediaCard(
             trailingContent = {
                 Row {
                     if (media.isSubsonic())
-                        Icon(jetpackLibsIcons = JetpackLibsIcons.CLOUD_NOT_SAVED_ICON)
+                        MediaCloudIcon(subsonicMedia = media as SubsonicMedia)
                     if (media.isMusic()) {
                         media as Music
                         val liked: Boolean by media.liked

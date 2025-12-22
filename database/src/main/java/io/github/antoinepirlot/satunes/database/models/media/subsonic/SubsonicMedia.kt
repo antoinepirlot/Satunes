@@ -27,7 +27,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
  * @author Antoine Pirlot 13/12/2025
  */
 interface SubsonicMedia : Media {
-    var subsonicId: Long
+    val subsonicId: Long
 
     fun loadArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()

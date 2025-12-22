@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,8 +44,10 @@ import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
+import io.github.antoinepirlot.satunes.ui.components.icons.MediaCloudIcon
 import io.github.antoinepirlot.satunes.ui.components.images.MediaArtwork
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -101,10 +104,14 @@ private fun Header(
                 .size(albumSize),
             media = album
         )
-        Title(
-            bottomPadding = 0.dp,
-            text = album.title
-        )
+        Row {
+            Title(
+                bottomPadding = 0.dp,
+                text = album.title
+            )
+            if (album.isSubsonic())
+                MediaCloudIcon(subsonicMedia = album as SubsonicMedia)
+        }
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center

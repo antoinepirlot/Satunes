@@ -26,15 +26,11 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
-import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -153,23 +149,9 @@ open class Music(
             null
         }
         if (bitmap == null)
-            bitmap = getEmptyAlbumArtwork(context = context)
+            bitmap = this.album.getEmptyAlbumArtwork(context = context)
         return bitmap.applyShape()
     }
-
-    /**
-     * Apply circle shape if user enabled it.
-     *
-     * @return the shaped [Bitmap]
-     */
-    protected fun Bitmap.applyShape(): Bitmap {
-        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
-    }
-
-    protected fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
-        context,
-        R.mipmap.empty_album_artwork_foreground
-    )!!.toBitmap()
 
     /**
      * Link this [Music] to [Playlist] with its order in the [Playlist].

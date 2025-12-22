@@ -52,12 +52,14 @@ internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() /
 internal fun getOrCreateSubsonicAlbum(
     id: Long,
     title: String,
+    coverArtId: String?,
     artistId: Long,
     artistTitle: String
 ): SubsonicAlbum {
     return DataManager.getSubsonicAlbum(id = id) ?: createSubsonicAlbum(
         id = id,
         title = title,
+        coverArtId = coverArtId,
         artistId = artistId,
         artistTitle = artistTitle,
         year = null
@@ -70,6 +72,7 @@ internal fun getOrCreateSubsonicAlbum(
 private fun createSubsonicAlbum(
     id: Long,
     title: String,
+    coverArtId: String?,
     artistId: Long,
     artistTitle: String,
     year: Int?
@@ -78,6 +81,7 @@ private fun createSubsonicAlbum(
         album = SubsonicAlbum(
             subsonicId = id,
             title = title,
+            coverArtId = coverArtId,
             artist = getOrCreateSubsonicArtist(id = artistId, title = artistTitle),
             //            isCompilation = false,
             year = year

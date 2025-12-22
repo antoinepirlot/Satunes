@@ -20,6 +20,10 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import io.github.antoinepirlot.android.utils.utils.runIOThread
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 
@@ -30,16 +34,39 @@ class SubsonicAlbum(
     override var subsonicId: Long,
     id: Long = subsonicId,
     title: String,
+    coverArtId: String? = null,
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
 ) : SubsonicMedia, Album(
     id = id,
     title = title,
+    coverArtId = coverArtId,
     artist = artist,
     isCompilation = isCompilation,
     year = year
 ) {
+    /**
+     * Fetch artwork from network and stores it into [artwork]
+     */
+    fun loadAlbumArtwork(
+        apiRequester: ApiRequester,
+        onDataRetrieved: (artwork: ImageBitmap?) -> Unit
+    ) {
+        if (this.artwork != null)
+            onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
+        else
+            runIOThread {
+                apiRequester.getCoverArt(
+                    coverArtId = this.coverArtId!!,
+                    onDataRetrieved = {
+                        this@SubsonicAlbum.artwork = it
+                        onDataRetrieved(it?.applyShape()?.asImageBitmap())
+                    }
+                )
+            }
+    }
+
     override fun equals(other: Any?): Boolean {
         return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
         else super.equals(other)

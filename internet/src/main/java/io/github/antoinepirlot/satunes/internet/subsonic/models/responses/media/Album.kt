@@ -40,7 +40,7 @@ internal data class Album(
     @SerialName(value = "created") val createdDate: String? = null,
     @SerialName(value = "duration") val durationSeconds: Int? = null,
     @SerialName(value = "playCount") val playCount: Long? = null,
-    @SerialName(value = "coverArt") val coverArt: String? = null,
+    @SerialName(value = "coverArt") val coverArtId: String? = null,
     @SerialName(value = "genre") val genreTitle: String? = null,
     @SerialName(value = "year") val year: Int? = null,
     @SerialName(value = "song") val songs: Collection<Song>? = null,
@@ -49,6 +49,7 @@ internal data class Album(
         val subsonicAlbum: SubsonicAlbum = getOrCreateSubsonicAlbum(
             id = id,
             title = title,
+            coverArtId = this.coverArtId,
             artistId = artistId,
             artistTitle = artistTitle,
         )

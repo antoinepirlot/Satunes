@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -134,6 +135,15 @@ abstract class MediaImpl(
     override fun removeFromStorage() {
         if (!this.isStoredLocally()) return
         TODO("Remove from storage is not yet implemented")
+    }
+
+    /**
+     * Apply circle shape if user enabled it.
+     *
+     * @return the shaped [Bitmap]
+     */
+    protected fun Bitmap.applyShape(): Bitmap {
+        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
     }
 
     override fun compareTo(other: Media): Int {

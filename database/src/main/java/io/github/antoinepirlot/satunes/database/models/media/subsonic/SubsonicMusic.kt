@@ -24,8 +24,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -43,7 +41,6 @@ class SubsonicMusic(
      */
     override var subsonicId: Long,
     title: String,
-    private var coverArtId: String? = null,
     displayName: String,
     absolutePath: String,
     override var durationMs: Long = 0,
@@ -96,7 +93,7 @@ class SubsonicMusic(
     }
 
     override fun getAlbumArtwork(context: Context): Bitmap {
-        return this.artwork?.applyShape() ?: this.getEmptyAlbumArtwork(context = context)
+        return this.artwork?.applyShape() ?: this.album.getEmptyAlbumArtwork(context = context)
             .applyShape()
     }
 
@@ -104,16 +101,10 @@ class SubsonicMusic(
      * Fetch artwork from network and stores it into [artwork]
      */
     fun loadAlbumArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
-        if (this.artwork != null) onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
-        runIOThread {
-            apiRequester.getCoverArt(
-                coverArtId = this.coverArtId!!,
-                onDataRetrieved = {
-                    this.artwork = it
-                    onDataRetrieved(it?.applyShape()?.asImageBitmap())
-                }
-            )
-        }
+        (this.album as SubsonicAlbum).loadAlbumArtwork(
+            apiRequester = apiRequester,
+            onDataRetrieved = onDataRetrieved
+        )
     }
 
     override fun equals(other: Any?): Boolean {

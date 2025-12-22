@@ -23,6 +23,11 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
+import android.content.Context
+import android.graphics.Bitmap
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
+import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.models.comparators.MusicInAlbumComparator
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -35,6 +40,7 @@ import java.util.SortedSet
 open class Album(
     id: Long? = null,
     title: String,
+    protected var coverArtId: String? = null,
     var artist: Artist,
     var isCompilation: Boolean = false,
     year: Int? = null
@@ -78,6 +84,11 @@ open class Album(
         DataManager.addAlbum(album = newAlbum)
         return newAlbum
     }
+
+    internal fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
+        context,
+        R.mipmap.empty_album_artwork_foreground
+    )!!.toBitmap()
 
     override fun isAlbum(): Boolean = true
 

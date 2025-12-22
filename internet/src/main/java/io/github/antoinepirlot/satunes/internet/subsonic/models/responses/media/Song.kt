@@ -52,7 +52,7 @@ internal data class Song constructor(
     @SerialName(value = "albumId") val albumId: Long,
     @SerialName(value = "artistId") val artistId: Long,
     @SerialName(value = "type") val type: String,
-    @SerialName(value = "coverArt") val coverArt: String? = null,
+    @SerialName(value = "coverArt") val coverArtId: String? = null,
     @SerialName(value = "bitrate") val bitrate: Int,
     @SerialName(value = "size") val size: Int,
     @SerialName(value = "year") val year: Int? = null,
@@ -69,7 +69,6 @@ internal data class Song constructor(
             music = SubsonicMusic(
                 subsonicId = this.id,
                 title = this.title,
-                coverArtId = this.coverArt,
                 displayName = this.path.split("/").last(),
                 absolutePath = this.path,
                 durationMs = this.durationSeconds * 1000,
@@ -81,6 +80,7 @@ internal data class Song constructor(
                 album = getOrCreateSubsonicAlbum(
                     id = this.albumId,
                     title = this.albumTitle,
+                    coverArtId = coverArtId,
                     artistId = this.artistId,
                     artistTitle = this.artistTitle
                 ), //Must be after artist, otherwise album is not added in artist

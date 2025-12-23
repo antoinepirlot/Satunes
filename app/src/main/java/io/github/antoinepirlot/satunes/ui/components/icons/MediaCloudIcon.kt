@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 
 /**
@@ -14,10 +15,10 @@ fun MediaCloudIcon(
     modifier: Modifier = Modifier,
     subsonicMedia: SubsonicMedia
 ) {
-    val icon: JetpackLibsIcons = if (subsonicMedia.isDownloaded)
-        JetpackLibsIcons.CLOUD_SAVED_ICON
-    else
-        JetpackLibsIcons.CLOUD_NOT_SAVED_ICON
-
+    val icon: JetpackLibsIcons = when (subsonicMedia.downloadStatus) {
+        DownloadStatus.NOT_DOWNLOADED -> JetpackLibsIcons.CLOUD_NOT_SAVED_ICON
+        DownloadStatus.DOWNLOADING -> JetpackLibsIcons.DOWNLOADING
+        DownloadStatus.DOWNLOADED -> JetpackLibsIcons.CLOUD_SAVED_ICON
+    }
     Icon(modifier = modifier, jetpackLibsIcons = icon)
 }

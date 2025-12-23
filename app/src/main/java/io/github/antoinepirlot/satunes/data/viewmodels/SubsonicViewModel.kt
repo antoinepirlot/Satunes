@@ -370,4 +370,13 @@ class SubsonicViewModel : ViewModel() {
             )
         }
     }
+
+    /**
+     * Download music(s) associated to the [media].
+     *
+     * @param media the [SubsonicMedia] to download.
+     */
+    fun download(media: SubsonicMedia) {
+        TODO()
+    }
 }

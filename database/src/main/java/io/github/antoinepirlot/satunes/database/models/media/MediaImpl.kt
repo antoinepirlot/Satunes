@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -41,12 +42,8 @@ abstract class MediaImpl(
     title: String
 ) : Media {
     protected val logger: Logger? = Logger.getLogger()
-    override var isDownloaded: Boolean = !this.isSubsonic()
-        protected set(value) {
-            if (!this.isSubsonic())
-                throw IllegalStateException("Can't change value of isDownloaded for a local media.")
-            field = value
-        }
+    override var downloadStatus: DownloadStatus by mutableStateOf(value = DownloadStatus.NOT_DOWNLOADED)
+        protected set
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is
@@ -83,7 +80,7 @@ abstract class MediaImpl(
         return this.musicSortedSet.isNotEmpty()
     }
 
-    override fun isStoredLocally(): Boolean = isDownloaded
+    override fun isStoredLocally(): Boolean = downloadStatus == DownloadStatus.DOWNLOADED
 
     @Synchronized
     override fun clearMusicList() {
@@ -129,6 +126,7 @@ abstract class MediaImpl(
      */
     override fun download() {
         if (this.isStoredLocally()) return
+        this.downloadStatus = DownloadStatus.DOWNLOADING
         TODO("Saving in cache is not yet implemented.")
     }
 

@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 
 /**
@@ -28,7 +29,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMu
 interface Media : MediaData, Comparable<Media> {
     val musicCollection: Collection<Music>
 
-    val isDownloaded: Boolean
+    val downloadStatus: DownloadStatus
 
     fun isSubsonic(): Boolean = false
     fun isEmpty(): Boolean

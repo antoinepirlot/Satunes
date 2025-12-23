@@ -66,4 +66,7 @@
     <string name="stable_channel_button_text" translatable="false">Stable</string>
     <string name="preview_channel_button_text" translatable="false">Preview</string>
     <string name="this_device">This Device</string>
+    <string name="download_text">Download</string>
+    <string name="downloaded_text">Remove</string>
+    <string name="downloading_text">Downloading…</string>
 </resources>

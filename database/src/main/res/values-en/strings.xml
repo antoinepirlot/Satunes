@@ -35,4 +35,7 @@
     <string name="playlist_added_date">Added in playlist order</string>
     <string name="custom_action_add_to_playlist">Add to playlist</string>
     <string name="this_device">This Device</string>
+    <string name="download_text">Download</string>
+    <string name="downloaded_text">Remove</string>
+    <string name="downloading_text">Downloading…</string>
 </resources>

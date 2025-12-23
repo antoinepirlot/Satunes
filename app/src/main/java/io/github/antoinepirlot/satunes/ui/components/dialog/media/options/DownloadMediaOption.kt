@@ -7,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
-import io.github.antoinepirlot.satunes.internet.R
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import io.github.antoinepirlot.satunes.utils.getDownloadIcon
 
@@ -27,6 +26,6 @@ fun DownloadMediaOption(
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
         onClick = { media.download(context = context) },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),
-        text = stringResource(id = R.string.download_text),
+        text = stringResource(id = downloadStatus.stringId),
     )
 }

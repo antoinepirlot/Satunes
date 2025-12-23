@@ -11,5 +11,4 @@
     <string name="downloading">Téléchargement en cours…</string>
     <string name="download_checking">Recherche du fichier…</string>
     <string name="checking_update">Recherche de mise à jour…</string>
-    <string name="download_text">Télécharger</string>
 </resources>

@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
 import android.content.Context
+import android.os.Environment
 import androidx.compose.ui.graphics.ImageBitmap
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.Media
@@ -29,6 +30,13 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
  * @author Antoine Pirlot 13/12/2025
  */
 interface SubsonicMedia : Media {
+
+    companion object {
+
+        fun getDownloadStorage(context: Context): String =
+            context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString()
+    }
+
     val subsonicId: Long
 
     fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {

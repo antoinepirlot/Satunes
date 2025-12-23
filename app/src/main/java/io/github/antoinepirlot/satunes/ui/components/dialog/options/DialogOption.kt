@@ -43,6 +43,7 @@ private val SPACER_SIZE = 10.dp
 @Composable
 internal fun DialogOption(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     jetpackLibsIcons: JetpackLibsIcons,
     text: String,
@@ -50,6 +51,7 @@ internal fun DialogOption(
 ) {
     TextButton(
         modifier = modifier,
+        enabled = enabled,
         onClick = onClick
     ) {
         Row(

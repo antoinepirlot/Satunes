@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
 import android.content.Context
 import androidx.compose.ui.graphics.ImageBitmap
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
@@ -33,6 +34,11 @@ interface SubsonicMedia : Media {
     fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()
     }
+
+    fun canBeDownloaded(): Boolean =
+        this.downloadStatus == DownloadStatus.NOT_DOWNLOADED || this.downloadStatus == DownloadStatus.ERROR
+
+    fun canDownloadBeRemoved(): Boolean = this.downloadStatus == DownloadStatus.DOWNLOADED
 
     /**
      * Stores [SubsonicMusic]s into Satunes' storage for offline usage.

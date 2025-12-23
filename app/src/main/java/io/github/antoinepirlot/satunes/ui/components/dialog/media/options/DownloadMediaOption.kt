@@ -25,8 +25,8 @@ fun DownloadMediaOption(
         modifier = modifier,
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
         onClick = {
-            if (downloadStatus == DownloadStatus.NOT_DOWNLOADED) media.download(context = context)
-            else media.removeDownload()
+            if (media.canBeDownloaded()) media.download(context = context)
+            else if (media.canDownloadBeRemoved()) media.removeDownload()
         },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),
         text = stringResource(id = downloadStatus.stringId),

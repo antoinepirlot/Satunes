@@ -34,5 +34,15 @@ interface SubsonicMedia : Media {
         throw UnsupportedOperationException()
     }
 
+    /**
+     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     * If it is already stored, do nothing
+     *
+     * @param context the [Context] to get the parent folder.
+     *
+     * @throws IllegalStateException if this media is not [SubsonicMedia]
+     */
+    fun download(context: Context)
+
     override fun isSubsonic(): Boolean = true
 }

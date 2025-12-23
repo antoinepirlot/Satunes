@@ -65,11 +65,11 @@ internal abstract class SubsonicCallback<T>(
     @OptIn(ExperimentalSerializationApi::class)
     override fun onResponse(call: Call, response: Response) {
         try {
-            if (response.code >= 400) {
-                //TODO
+            if (!response.isSuccessful) {
+                onError?.invoke(null)
                 return
             }
-            if (this.isGetCoverArtCallback()) return
+            if (!this.isReceivingJsonData()) return
 
             val input: InputStream = response.body.byteStream()
             try {
@@ -105,5 +105,5 @@ internal abstract class SubsonicCallback<T>(
         } else true
     }
 
-    protected open fun isGetCoverArtCallback(): Boolean = false
+    protected open fun isReceivingJsonData(): Boolean = true
 }

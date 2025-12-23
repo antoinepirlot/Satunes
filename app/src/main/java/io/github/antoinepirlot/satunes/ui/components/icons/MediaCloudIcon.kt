@@ -19,6 +19,7 @@ fun MediaCloudIcon(
         DownloadStatus.NOT_DOWNLOADED -> JetpackLibsIcons.CLOUD_NOT_SAVED_ICON
         DownloadStatus.DOWNLOADING -> JetpackLibsIcons.DOWNLOADING
         DownloadStatus.DOWNLOADED -> JetpackLibsIcons.CLOUD_SAVED_ICON
+        DownloadStatus.ERROR -> JetpackLibsIcons.DOWNLOAD_ERROR
     }
     Icon(modifier = modifier, jetpackLibsIcons = icon)
 }

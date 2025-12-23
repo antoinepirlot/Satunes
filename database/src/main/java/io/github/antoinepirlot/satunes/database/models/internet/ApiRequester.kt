@@ -5,6 +5,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import java.io.InputStream
 
 /**
  * @author Antoine Pirlot 20/12/2025
@@ -67,4 +68,11 @@ interface ApiRequester {
      * Get cover art from API
      */
     suspend fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
+
+    suspend fun download(
+        musicId: Long,
+        onDataRetrieved: (InputStream) -> Unit,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+    )
 }

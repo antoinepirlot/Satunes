@@ -68,6 +68,10 @@ class SubsonicAlbum(
             }
     }
 
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
+    }
+
     override fun equals(other: Any?): Boolean {
         return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
         else super.equals(other)

@@ -1,22 +1,21 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
 import okhttp3.Response
+import java.io.InputStream
 
 /**
- * @author Antoine Pirlot 20/12/2025
+ * @author Antoine Pirlot 23/12/2025
  */
-internal class GetCoverArtCallback(
+internal class DownloadCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onDataRetrieved: (Bitmap) -> Unit,
+    onDataRetrieved: (InputStream) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback<Bitmap>(
+) : SubsonicCallback<InputStream>(
     subsonicApiRequester = subsonicApiRequester,
     onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
@@ -25,12 +24,7 @@ internal class GetCoverArtCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        val bitmap: Bitmap? = BitmapFactory.decodeStream(response.body.byteStream())
-        if (bitmap != null) {
-            this.onDataRetrieved(bitmap)
-            this.onSucceed?.invoke()
-        }
-        this.onFinished?.invoke()
+        onDataRetrieved(response.body.byteStream())
     }
 
     override fun isReceivingJsonData(): Boolean = false

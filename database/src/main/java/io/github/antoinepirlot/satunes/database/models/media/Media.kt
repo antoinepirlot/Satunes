@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 
 /**
  * @author Antoine Pirlot on 11/07/2024
@@ -50,12 +49,6 @@ interface Media : MediaData, Comparable<Media> {
     fun addMusics(musics: Collection<Music>)
 
     fun removeMusic(music: Music)
-
-    /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
-     * If it is already stored, do nothing
-     */
-    fun download()
 
     /**
      * Remove this media impl from storage.

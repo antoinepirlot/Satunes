@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 
 /**
@@ -41,5 +42,9 @@ class SubsonicFolder(
 
     override fun hashCode(): Int {
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
     }
 }

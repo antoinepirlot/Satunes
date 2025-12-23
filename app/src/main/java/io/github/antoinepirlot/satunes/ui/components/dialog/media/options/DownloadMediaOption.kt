@@ -1,7 +1,9 @@
 package io.github.antoinepirlot.satunes.ui.components.dialog.media.options
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -17,12 +19,13 @@ fun DownloadMediaOption(
     modifier: Modifier = Modifier,
     media: SubsonicMedia
 ) {
+    val context: Context = LocalContext.current
     val downloadStatus: DownloadStatus = media.downloadStatus
 
     DialogOption(
         modifier = modifier,
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
-        onClick = { media.download() },
+        onClick = { media.download(context = context) },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),
         text = stringResource(id = R.string.download_text),
     )

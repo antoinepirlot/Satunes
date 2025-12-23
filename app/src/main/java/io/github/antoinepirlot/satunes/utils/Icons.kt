@@ -12,5 +12,6 @@ fun getDownloadIcon(status: DownloadStatus): JetpackLibsIcons {
         DownloadStatus.NOT_DOWNLOADED -> JetpackLibsIcons.DOWNLOAD
         DownloadStatus.DOWNLOADING -> JetpackLibsIcons.DOWNLOADING
         DownloadStatus.DOWNLOADED -> JetpackLibsIcons.DOWNLOADED
+        DownloadStatus.ERROR -> JetpackLibsIcons.DOWNLOAD_ERROR
     }
 }

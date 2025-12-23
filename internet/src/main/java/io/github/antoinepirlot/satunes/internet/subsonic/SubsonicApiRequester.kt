@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMu
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
@@ -44,6 +45,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Subson
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.InputStream
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -262,6 +264,28 @@ class SubsonicApiRequester() : ApiRequester {
                 onFinished = null,
                 onError = null,
                 onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    override suspend fun download(
+        musicId: Long,
+        onDataRetrieved: (InputStream) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+    ) {
+        if (musicId < 1) throw IllegalArgumentException("musicId is $musicId but must be >= 1.")
+
+        get(
+            url = getCommandUrl(
+                command = "stream",
+                parameters = arrayOf("id=$musicId")
+            ),
+            resCallback = DownloadCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onError = { onError?.invoke() },
+                onDataRetrieved = onDataRetrieved,
             )
         )
     }

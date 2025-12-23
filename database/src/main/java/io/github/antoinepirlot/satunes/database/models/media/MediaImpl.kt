@@ -29,7 +29,6 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
 import java.util.SortedSet
@@ -118,16 +117,6 @@ abstract class MediaImpl(
             this.musicSortedSet.remove(music)
             (this.musicCollection as MutableList<Music>).remove(element = music)
         }
-    }
-
-    /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
-     * If it is already stored, do nothing
-     */
-    override fun download() {
-        if (this.isStoredLocally()) return
-        this.downloadStatus = DownloadStatus.DOWNLOADING
-        TODO("Saving in cache is not yet implemented.")
     }
 
     override fun removeFromStorage() {

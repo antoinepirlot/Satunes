@@ -6,5 +6,6 @@ package io.github.antoinepirlot.satunes.database.models
 enum class DownloadStatus {
     NOT_DOWNLOADED,
     DOWNLOADED,
-    DOWNLOADING
+    DOWNLOADING,
+    ERROR,
 }

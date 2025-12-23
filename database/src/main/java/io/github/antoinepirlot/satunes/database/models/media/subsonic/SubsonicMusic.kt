@@ -24,12 +24,20 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
+import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.lastIndex
+import io.github.antoinepirlot.android.utils.utils.runIOThread
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -68,6 +76,7 @@ class SubsonicMusic(
     genre = genre,
     uri = uri,
 ) {
+    private val _logger: Logger? = Logger.getLogger()
 
     /**
      * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical
@@ -105,6 +114,80 @@ class SubsonicMusic(
             context = context,
             onDataRetrieved = onDataRetrieved
         )
+    }
+
+    override fun download(context: Context) {
+        if (this.isStoredLocally()) return
+        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
+        runIOThread {
+            apiRequester.download(
+                musicId = this.subsonicId,
+                onError = {
+                    //Do not directly change downloadStatus here as it will throw an error.
+                    //Using this function doesn't crash
+                    this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
+                },
+                onDataRetrieved = {
+                    if (this.store(context = context, data = it))
+                        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
+                    else
+                        this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
+                }
+            )
+        }
+    }
+
+    private fun updateDownloadStatus(downloadStatus: DownloadStatus) {
+        this.downloadStatus = downloadStatus
+    }
+
+    private fun store(context: Context, data: InputStream): Boolean {
+        val relativePath: String = "/downloads/" + this.relativePath
+        val absolutePath: String = context.filesDir.path + relativePath
+        try {
+            val file: File = this.createFile(path = absolutePath)
+            val output = FileOutputStream(file)
+            try {
+                val buffer = ByteArray(size = 2024)
+                var bytesRead: Int = data.read(buffer)
+                while (bytesRead != -1) {
+                    output.write(buffer, 0, bytesRead)
+                    bytesRead = data.read(buffer)
+                }
+                this.absolutePath = absolutePath
+                return true
+            } catch (e: Exception) {
+                _logger?.warning(e.message)
+            } finally {
+                output.close()
+            }
+        } catch (e: Exception) {
+            _logger?.warning(e.message)
+        } finally {
+            data.close()
+        }
+        return false
+    }
+
+    /**
+     * Creates all folder then the final file if not exists.
+     *
+     * @param path the [String] path from where to start creation
+     *
+     * @throws IOException if an [IOException] is thrown.
+     * @throws SecurityException if an [SecurityException] is thrown.
+     *
+     * @return the created [File]
+     */
+    private fun createFile(path: String): File {
+        val fileList: MutableList<String> = path.split("/").toMutableList()
+        val fileName: String = fileList.removeAt(index = fileList.lastIndex)
+        val path: String = path.removeSuffix(suffix = "/$fileName")
+        File(path).mkdirs()
+        val newFile: File = File("$path/$fileName")
+        if (newFile.exists()) newFile.delete()
+        newFile.createNewFile()
+        return newFile
     }
 
     override fun equals(other: Any?): Boolean {

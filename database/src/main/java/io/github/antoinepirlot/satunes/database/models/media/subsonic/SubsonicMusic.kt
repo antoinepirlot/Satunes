@@ -77,6 +77,10 @@ class SubsonicMusic(
 ) {
     private val _logger: Logger? = Logger.getLogger()
 
+    override fun switchLike() {
+        TODO("Switch like is not yet implemented")
+    }
+
     /**
      * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical
      * If [id] != [subsonicId] it means it is the local music. No update made and no error thrown.

@@ -107,7 +107,7 @@ open class Music(
         folder.addMusic(music = this)
     }
 
-    fun switchLike() {
+    open fun switchLike() {
         this.liked.value = !this.liked.value
         val db = DatabaseManager.getInstance()
         if (this.liked.value) {

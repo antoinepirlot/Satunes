@@ -24,7 +24,10 @@ fun DownloadMediaOption(
     DialogOption(
         modifier = modifier,
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
-        onClick = { media.download(context = context) },
+        onClick = {
+            if (downloadStatus == DownloadStatus.NOT_DOWNLOADED) media.download(context = context)
+            else media.removeDownload()
+        },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),
         text = stringResource(id = downloadStatus.stringId),
     )

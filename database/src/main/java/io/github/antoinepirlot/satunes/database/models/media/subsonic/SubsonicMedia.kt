@@ -35,7 +35,7 @@ interface SubsonicMedia : Media {
     }
 
     /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
+     * Stores [SubsonicMusic]s into Satunes' storage for offline usage.
      * If it is already stored, do nothing
      *
      * @param context the [Context] to get the parent folder.
@@ -43,6 +43,11 @@ interface SubsonicMedia : Media {
      * @throws IllegalStateException if this media is not [SubsonicMedia]
      */
     fun download(context: Context)
+
+    /**
+     * Removes the downloaded file matching the musics.
+     */
+    fun removeDownload()
 
     override fun isSubsonic(): Boolean = true
 }

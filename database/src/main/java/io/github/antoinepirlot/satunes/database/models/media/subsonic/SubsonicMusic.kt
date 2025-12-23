@@ -136,6 +136,17 @@ class SubsonicMusic(
         }
     }
 
+    override fun removeDownload() {
+        if (!this.isStoredLocally()) return
+        val file = File(this.absolutePath)
+        try {
+            file.delete()
+            downloadStatus = DownloadStatus.NOT_DOWNLOADED
+        } catch (e: Exception) {
+            _logger?.warning(e.message)
+        }
+    }
+
     private fun updateDownloadStatus(downloadStatus: DownloadStatus) {
         this.downloadStatus = downloadStatus
     }

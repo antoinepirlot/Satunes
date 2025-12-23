@@ -47,4 +47,8 @@ class SubsonicFolder(
     override fun download(context: Context) {
         TODO("Not yet implemented")
     }
+
+    override fun removeDownload() {
+        TODO("Not yet implemented")
+    }
 }

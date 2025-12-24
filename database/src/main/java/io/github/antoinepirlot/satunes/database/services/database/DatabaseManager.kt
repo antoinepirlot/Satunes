@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.database.models.database.relations.Playli
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
@@ -86,7 +87,7 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    internal fun loadAllPlaylistsWithMusic() {
+    internal fun loadAllPlaylistsWithMusic(apiRequester: ApiRequester) {
         try {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
@@ -97,12 +98,13 @@ class DatabaseManager private constructor(context: Context) {
                 )
                 playlist = DataManager.addPlaylist(playlist = playlist)
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                    if (musicDB.music != null) {
+                    val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
+                    if (music != null) {
                         if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                            val music: Music = musicDB.music!!
+                            val music: Music = music
                             music.markAsLiked()
                         }
-                        playlist.addMusic(music = musicDB.music!!)
+                        playlist.addMusic(music = music)
                     }
                 }
             }
@@ -571,9 +573,9 @@ class DatabaseManager private constructor(context: Context) {
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
             playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                val music: Music? = musicDB.music
+                val music: Music? = musicDB.getMusic()
                 if (music != null) { //If null, music
-                    musicList.add(musicDB.music!!)
+                    musicList.add(music)
                 } else {
                     numberOfMusicMissing++
                 }
@@ -645,7 +647,7 @@ class DatabaseManager private constructor(context: Context) {
                 _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
-            } else if (musicDB.music == null) {
+            } else if (musicDB.getMusic() == null) {
                 _logger?.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
@@ -658,7 +660,7 @@ class DatabaseManager private constructor(context: Context) {
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
         val musicsPlaylistsRel: MusicsPlaylistsRel =
-            musicsPlaylistsRelList.first { musicDao.get(musicId = it.musicId)?.music == music }
+            musicsPlaylistsRelList.first { musicDao.get(musicId = it.musicId)?.getMusic() == music }
         return musicsPlaylistsRel.addedDateMs
     }
 }

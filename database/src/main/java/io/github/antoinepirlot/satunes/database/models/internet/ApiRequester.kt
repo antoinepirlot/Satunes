@@ -75,4 +75,21 @@ interface ApiRequester {
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
     )
+
+    /**
+     * Get song from API based on its id.
+     *
+     * @param musicId the song's id
+     * @param onDataRetrieved the function to invoke when [SubsonicMusic] has been retrieved.
+     * @param onError the function to invoke when an error occurred
+     * @param onFinished the function to invoke when the process is finished
+     * @param onSucceed the function to invoke when the process is a success
+     */
+    suspend fun getSong(
+        musicId: Long,
+        onDataRetrieved: (SubsonicMusic?) -> Unit,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+        onSucceed: (() -> Unit)? = null,
+    )
 }

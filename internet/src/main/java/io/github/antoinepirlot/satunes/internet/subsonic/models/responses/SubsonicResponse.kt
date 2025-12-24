@@ -27,6 +27,7 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 import io.github.antoinepirlot.satunes.database.models.internet.ApiResponse
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -46,6 +47,7 @@ internal data class SubsonicResponse(
     @SerialName(value = "searchResult3") val search3: Search3? = null,
     @SerialName(value = "artist") val artist: Artist? = null,
     @SerialName(value = "album") val album: Album? = null,
+    @SerialName(value = "song") val song: Song? = null,
 ) : ApiResponse {
 
     companion object {

@@ -31,3 +31,6 @@ GET {{baseUrl}}/search3?{{search_params}}
 ###
 
 GET {{baseUrl}}/getCoverArt?{{cover_art_params}}
+
+###
+GET {{baseUrl}}/getSong?{{get_song_params}}

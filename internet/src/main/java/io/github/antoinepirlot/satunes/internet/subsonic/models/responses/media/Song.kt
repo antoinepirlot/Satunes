@@ -86,7 +86,7 @@ internal data class Song constructor(
                 ), //Must be after artist, otherwise album is not added in artist
                 genre = getSubsonicGenre(),
                 uri = url.toUri(),
-                apiRequester = subsonicApiRequester
+                _apiRequester = subsonicApiRequester
             )
         )
     }

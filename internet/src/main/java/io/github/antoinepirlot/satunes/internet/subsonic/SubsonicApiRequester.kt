@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlb
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetSongCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
@@ -286,6 +287,30 @@ class SubsonicApiRequester() : ApiRequester {
                 onFinished = onFinished,
                 onError = { onError?.invoke() },
                 onDataRetrieved = onDataRetrieved,
+            )
+        )
+    }
+
+    override suspend fun getSong(
+        musicId: Long,
+        onDataRetrieved: (SubsonicMusic?) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?,
+    ) {
+        if (musicId < 1) throw IllegalArgumentException("musicId is $musicId but must be >= 1.")
+
+        get(
+            url = getCommandUrl(
+                command = "getSong",
+                parameters = arrayOf("id=$musicId")
+            ),
+            resCallback = GetSongCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onError = { onError?.invoke() },
+                onSucceed = onSucceed,
+                onFinished = onFinished
             )
         )
     }

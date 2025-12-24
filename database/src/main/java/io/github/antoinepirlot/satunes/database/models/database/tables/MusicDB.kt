@@ -27,10 +27,13 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -43,10 +46,10 @@ import kotlinx.serialization.Transient
     tableName = "musics",
     indices = [Index(value = ["local_id", "subsonic_id"], unique = true)]
 )
-internal data class MusicDB(
+internal class MusicDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long = 0,
-    @ColumnInfo(name = "local_id") val localId: Long? = null,
+    @ColumnInfo(name = "local_id") var localId: Long? = null,
     @ColumnInfo(name = "subsonic_id") var subsonicId: Long? = null,
     @ColumnInfo(name = "absolute_path") var absolutePath: String,
 ) : MediaData {
@@ -58,13 +61,22 @@ internal data class MusicDB(
     @Transient
     override lateinit var title: String
 
+    @ColumnInfo(name = "liked")
     var liked: Boolean = false
 
-    @Ignore
-    @Transient
-    var music: Music? =
-        if (this.subsonicId != null) {
-            DataManager.getSubsonicMusic(id = this.subsonicId!!)
+    fun getMusic(apiRequester: ApiRequester? = null): Music? {
+        return if (this.subsonicId != null) {
+            var music: Music? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
+            if (music == null)
+                runBlocking(context = Dispatchers.IO) {
+                    apiRequester!!.getSong(
+                        musicId = subsonicId!!,
+                        onDataRetrieved = {
+                            music = it
+                        }
+                    )
+                }
+            music
         } else {
             try {
                 try {
@@ -85,4 +97,5 @@ internal data class MusicDB(
                 throw e
             }
         }
+    }
 }

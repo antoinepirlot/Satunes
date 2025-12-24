@@ -28,6 +28,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
@@ -44,7 +45,12 @@ internal fun PreviousButton(
         modifier = modifier,
         imageProvider = JetpackLibsIcons.SKIP_PREVIOUS.imageProvider!!,
         contentDescription = "Skip previous",
-        onClick = { PlaybackManager.playPrevious(context = context) },
+        onClick = {
+            PlaybackManager.playPrevious(
+                context = context,
+                apiRequester = SubsonicApiRequester()
+            )
+        },
         backgroundColor = GlanceTheme.colors.primary,
         contentColor = GlanceTheme.colors.onPrimary,
     )

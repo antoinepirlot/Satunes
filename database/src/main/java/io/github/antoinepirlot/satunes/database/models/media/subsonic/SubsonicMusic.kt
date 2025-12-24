@@ -61,7 +61,7 @@ class SubsonicMusic(
     album: Album,
     genre: Genre,
     uri: Uri? = null,
-    private val apiRequester: ApiRequester
+    private val _apiRequester: ApiRequester
 ) : SubsonicMedia, Music(
     id = subsonicId,
     title = title,
@@ -125,7 +125,7 @@ class SubsonicMusic(
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
         runIOThread {
-            apiRequester.download(
+            _apiRequester.download(
                 musicId = this.subsonicId,
                 onError = {
                     //Do not directly change downloadStatus here as it will throw an error.

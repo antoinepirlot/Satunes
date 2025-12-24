@@ -29,6 +29,7 @@ import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.database.services.data.DataCleanerManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import io.github.antoinepirlot.satunes.playback.services.PlaybackService
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +47,11 @@ internal fun initSatunes(
 ) {
     Logger.getLogger()?.info("Init Satunes")
     loadSatunesData(context = context, satunesViewModel = satunesViewModel)
-    PlaybackManager.checkPlaybackController(context = context, loadAllMusics = false)
+    PlaybackManager.checkPlaybackController(
+        context = context,
+        apiRequester = SubsonicApiRequester(),
+        loadAllMusics = false
+    )
     setNotificationOnClick(context = context)
     removeSatunesDownloadedApkFiles(context = context)
 }
@@ -65,7 +70,7 @@ internal fun loadSatunesData(
             SettingsManager.loadSettings(context = context)
         }
         CoroutineScope(Dispatchers.IO).launch {
-            LocalDataLoader.loadAllData(context = context)
+            LocalDataLoader.loadAllData(context = context, apiRequester = SubsonicApiRequester())
         }
     } else {
         satunesViewModel.loadSettings()

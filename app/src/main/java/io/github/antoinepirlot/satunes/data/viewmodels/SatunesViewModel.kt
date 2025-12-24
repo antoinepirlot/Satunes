@@ -48,6 +48,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.updates.APKDownloadStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateAvailableStatus
 import io.github.antoinepirlot.satunes.internet.updates.UpdateCheckManager
@@ -209,7 +210,10 @@ class SatunesViewModel : ViewModel() {
 
     fun loadAllData() {
         CoroutineScope(Dispatchers.IO).launch {
-            LocalDataLoader.loadAllData(context = MainActivity.instance.applicationContext)
+            LocalDataLoader.loadAllData(
+                context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester()
+            )
         }
     }
 

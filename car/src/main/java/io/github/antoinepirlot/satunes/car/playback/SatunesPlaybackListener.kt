@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_LI
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_REPEAT
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SHUFFLE
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
@@ -93,7 +94,8 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     internal fun updatePlaybackState(state: Int, actions: Long) {
         val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
         val currentPosition: Long = PlaybackManager.getCurrentPosition(
-            context = SatunesCarMusicService.instance.applicationContext
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
         )
         val extras = Bundle()
         extras.putString(

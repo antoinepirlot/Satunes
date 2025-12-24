@@ -32,8 +32,6 @@ import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -64,18 +62,18 @@ internal class MusicDB(
     @ColumnInfo(name = "liked")
     var liked: Boolean = false
 
-    fun getMusic(apiRequester: ApiRequester? = null): Music? {
+    suspend fun getMusic(apiRequester: ApiRequester? = null): Music? {
         return if (this.subsonicId != null) {
             var music: Music? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
+            var mustWait: Boolean = true
             if (music == null)
-                runBlocking(context = Dispatchers.IO) {
-                    apiRequester!!.getSong(
-                        musicId = subsonicId!!,
-                        onDataRetrieved = {
-                            music = it
-                        }
-                    )
-                }
+                apiRequester!!.getSong(
+                    musicId = subsonicId!!,
+                    onDataRetrieved = { music = it },
+                    onFinished = { mustWait = false }
+                )
+            else mustWait = false
+            while (mustWait);
             music
         } else {
             try {

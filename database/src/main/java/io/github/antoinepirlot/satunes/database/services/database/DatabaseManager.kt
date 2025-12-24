@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.readTextFromUri
+import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.android.utils.utils.writeToUri
 import io.github.antoinepirlot.satunes.database.R
@@ -98,13 +99,15 @@ class DatabaseManager private constructor(context: Context) {
                 )
                 playlist = DataManager.addPlaylist(playlist = playlist)
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                    val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
-                    if (music != null) {
-                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                            val music: Music = music
-                            music.markAsLiked()
+                    runIOThread {
+                        val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
+                        if (music != null) {
+                            if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                                val music: Music = music
+                                music.markAsLiked()
+                            }
+                            playlist.addMusic(music = music)
                         }
-                        playlist.addMusic(music = music)
                     }
                 }
             }
@@ -573,11 +576,13 @@ class DatabaseManager private constructor(context: Context) {
         playlistWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
             val musicList: MutableList<Music> = mutableListOf()
             playlistWithMusics.musics.forEach { musicDB: MusicDB ->
-                val music: Music? = musicDB.getMusic()
-                if (music != null) { //If null, music
-                    musicList.add(music)
-                } else {
-                    numberOfMusicMissing++
+                runIOThread {
+                    val music: Music? = musicDB.getMusic()
+                    if (music != null) { //If null, music
+                        musicList.add(music)
+                    } else {
+                        numberOfMusicMissing++
+                    }
                 }
             }
             try {
@@ -647,10 +652,15 @@ class DatabaseManager private constructor(context: Context) {
                 _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
                 musicDao.delete(musicId = musicId)
-            } else if (musicDB.getMusic() == null) {
-                _logger?.info("Removing not loaded music")
-                musicsPlaylistsRelDAO.removeAll(musicId = musicId)
-                musicDao.delete(musicId = musicId)
+            } else {
+                runIOThread {
+                    val music: Music? = musicDB.getMusic()
+                    if (music == null) {
+                        _logger?.info("Removing not loaded music")
+                        musicsPlaylistsRelDAO.removeAll(musicId = musicId)
+                        musicDao.delete(musicId = musicId)
+                    }
+                }
             }
         }
     }

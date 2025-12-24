@@ -23,6 +23,7 @@ package io.github.antoinepirlot.satunes.database.models.database.tables
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
@@ -38,10 +39,14 @@ import kotlinx.serialization.Transient
  */
 
 @Serializable
-@Entity("musics")
+@Entity(
+    tableName = "musics",
+    indices = [Index(value = ["local_id", "subsonic_id"], unique = true)]
+)
 internal data class MusicDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long = 0,
+    @ColumnInfo(name = "local_id") val localId: Long = 0,
     @ColumnInfo(name = "subsonic_id") var subsonicId: Long? = null,
     @ColumnInfo(name = "absolute_path") var absolutePath: String,
 ) : MediaData {

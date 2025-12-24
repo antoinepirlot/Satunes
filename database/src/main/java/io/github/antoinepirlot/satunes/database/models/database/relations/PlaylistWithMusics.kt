@@ -41,7 +41,7 @@ internal data class PlaylistWithMusics(
     @Relation(
         parentColumn = "playlist_id",
         entityColumn = "music_id",
-        associateBy = Junction(MusicsPlaylistsRel::class)
+        associateBy = Junction(value = MusicsPlaylistsRel::class)
     )
     val musics: MutableList<MusicDB>
 ) : MediaData {

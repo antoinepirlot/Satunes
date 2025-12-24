@@ -33,6 +33,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.utils.createFile
 import java.io.File
 import java.io.FileOutputStream
@@ -131,9 +132,10 @@ class SubsonicMusic(
                     this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 },
                 onDataRetrieved = {
-                    if (this.store(context = context, data = it))
+                    if (this.store(context = context, data = it)) {
+                        this.saveInDatabase()
                         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
-                    else
+                    } else
                         this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 }
             )
@@ -182,6 +184,11 @@ class SubsonicMusic(
             data.close()
         }
         return false
+    }
+
+    private fun saveInDatabase() {
+        val db: DatabaseManager = DatabaseManager.getInstance()
+        db.updateMusic(this)
     }
 
     override fun equals(other: Any?): Boolean {

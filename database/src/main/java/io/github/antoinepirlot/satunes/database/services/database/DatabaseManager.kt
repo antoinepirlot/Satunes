@@ -38,7 +38,7 @@ import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundExceptio
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
-import io.github.antoinepirlot.satunes.database.models.SatunesDatabase
+import io.github.antoinepirlot.satunes.database.models.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
@@ -248,7 +248,7 @@ class DatabaseManager private constructor(context: Context) {
             // Do nothing
         }
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
-            musicDao.like(musicId = music.id)
+            musicDao.likeWithLocalId(localId = music.id)
             music.liked.value = true
         }
     }
@@ -281,7 +281,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
-            musicDao.unlike(musicId = music.id)
+            musicDao.unlikeWithLocalId(localId = music.id)
             music.liked.value = false
         }
         musicsPlaylistsRelDAO.delete(
@@ -320,11 +320,11 @@ class DatabaseManager private constructor(context: Context) {
         playlist.musicCollection.forEach { music: Music ->
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.id)
             if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                musicDao.unlike(musicId = music.id)
+                musicDao.unlikeWithLocalId(localId = music.id)
                 music.liked.value = false
             }
             if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
-                musicDao.delete(musicId = music.id)
+                musicDao.deleteWithLocalId(localId = music.id)
             }
         }
         DataManager.removePlaylist(playlist = playlist)
@@ -606,7 +606,7 @@ class DatabaseManager private constructor(context: Context) {
                 music = music,
                 playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
-            musicDao.unlike(musicId = music.id!!)
+            musicDao.unlikeWithLocalId(localId = music.id!!)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -623,15 +623,15 @@ class DatabaseManager private constructor(context: Context) {
         _logger?.info("Cleaning playlists")
         val musicsPlaylistsRelList: List<Long> = musicsPlaylistsRelDAO.getAllMusicIds()
         for (musicId: Long in musicsPlaylistsRelList) {
-            val musicDB: MusicDB? = musicDao.get(id = musicId)
+            val musicDB: MusicDB? = musicDao.getWithLocalId(localId = musicId)
             if (musicDB == null) {
                 _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
-                musicDao.delete(musicId = musicId)
+                musicDao.deleteWithLocalId(localId = musicId)
             } else if (musicDB.music == null) {
                 _logger?.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
-                musicDao.delete(musicId = musicId)
+                musicDao.deleteWithLocalId(localId = musicId)
             }
         }
     }

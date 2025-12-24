@@ -37,7 +37,10 @@ internal interface MusicDAO {
     @Query("SELECT count(music_id) FROM musics")
     fun count(): Long
 
-    @Query("SELECT * FROM musics WHERE local_id == :localId")
+    @Query(value = "SELECT * FROM musics WHERE music_id = :musicId")
+    fun get(musicId: Long): MusicDB?
+
+    @Query("SELECT * FROM musics WHERE local_id = :localId")
     fun getWithLocalId(localId: Long): MusicDB?
 
     @Query("SELECT * FROM musics")

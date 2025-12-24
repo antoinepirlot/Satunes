@@ -641,7 +641,7 @@ class DatabaseManager private constructor(context: Context) {
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
         val musicsPlaylistsRel: MusicsPlaylistsRel =
-            musicsPlaylistsRelList.first { it.musicId == music.id }
+            musicsPlaylistsRelList.first { musicDao.get(musicId = it.musicId)?.music == music }
         return musicsPlaylistsRel.addedDateMs
     }
 }

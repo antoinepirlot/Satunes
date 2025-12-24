@@ -46,7 +46,7 @@ import kotlinx.serialization.Transient
 internal data class MusicDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long = 0,
-    @ColumnInfo(name = "local_id") val localId: Long = 0,
+    @ColumnInfo(name = "local_id") val localId: Long? = null,
     @ColumnInfo(name = "subsonic_id") var subsonicId: Long? = null,
     @ColumnInfo(name = "absolute_path") var absolutePath: String,
 ) : MediaData {

@@ -15,7 +15,7 @@ internal object MigrationFrom4To5 : Migration(startVersion = 4, endVersion = 5) 
             this.renameOldTables(db = db)
             this.createNewTables(db = db)
             this.migrateData(db = db)
-            this.removeOldTables(db = db)
+            this.dropOldTables(db = db)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -32,7 +32,7 @@ internal object MigrationFrom4To5 : Migration(startVersion = 4, endVersion = 5) 
             sql =
                 "CREATE TABLE musics (" +
                         "music_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                        "local_id INTEGER NOT NULL UNIQUE," +
+                        "local_id INTEGER NULL UNIQUE DEFAULT NULL," +
                         "subsonic_id INTEGER NULL UNIQUE DEFAULT NULL," +
                         "absolute_path TEXT NOT NULL," +
                         "liked INTEGER NOT NULL" +
@@ -68,7 +68,7 @@ internal object MigrationFrom4To5 : Migration(startVersion = 4, endVersion = 5) 
         )
     }
 
-    private fun removeOldTables(db: SupportSQLiteDatabase) {
+    private fun dropOldTables(db: SupportSQLiteDatabase) {
         db.execSQL(sql = "DROP TABLE old_musics;")
         db.execSQL(sql = "DROP TABLE old_musics_playlists_rel;")
     }

@@ -47,6 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import kotlinx.coroutines.CoroutineScope
@@ -99,7 +100,7 @@ class DatabaseManager private constructor(context: Context) {
                     if (musicDB.music != null) {
                         if (playlist.title == LIKES_PLAYLIST_TITLE) {
                             val music: Music = musicDB.music!!
-                            music.liked.value = true
+                            music.markAsLiked()
                         }
                         playlist.addMusic(music = musicDB.music!!)
                     }
@@ -202,24 +203,24 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun updateMediaToPlaylists(mediaImpl: MediaImpl, playlists: Collection<Playlist>) {
-        val musics: Collection<Music> = if (mediaImpl.isFolder()) {
+        val musics: Set<Music> = if (mediaImpl.isFolder()) {
             (mediaImpl as Folder).getAllMusic()
         } else {
-            mediaImpl.musicCollection
+            mediaImpl.getSet()
         }
         val allPlaylists: Collection<Playlist> = DataManager.getPlaylistSet()
         for (playlist: Playlist in allPlaylists) {
             val newMusicCollection: MutableCollection<Music> =
-                playlist.musicCollection.toMutableSet()
+                playlist.getSet().toMutableSet()
             if (playlists.contains(element = playlist)) {
                 //Playlist has been checked
-                newMusicCollection.addAll(elements = playlist.musicCollection.toMutableSet())
+                newMusicCollection.addAll(elements = playlist.getSet())
                 newMusicCollection.addAll(elements = musics)
                 this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
             } else {
                 //Playlist has been unchecked (only remove if all of its music was inside)
                 if (playlist.musicCollection.containsAll(musics)) {
-                    newMusicCollection.addAll(elements = playlist.musicCollection.toMutableSet())
+                    newMusicCollection.addAll(elements = playlist.getSet())
                     newMusicCollection.removeAll(elements = musics)
                     this.updatePlaylistMusics(playlist = playlist, newMusicCollection)
                 }
@@ -228,30 +229,34 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
+        var musicDB: MusicDB? =
+            if (music.isSubsonic()) musicDao.getWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
+            else musicDao.getWithLocalId(localId = music.id)
+        if (musicDB == null)
+            musicDB = this.addMusicDB(music = music)
+
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
-                musicId = music.id,
+                musicId = musicDB.id,
                 playlistId = playlist.id,
                 addedDateMs = System.currentTimeMillis()
             )
         try {
             musicsPlaylistsRelDAO.insert(musicsPlaylistsRel)
-            try {
-                musicDao.insert(MusicDB(id = music.id, absolutePath = music.absolutePath))
-            } catch (e: SQLiteConstraintException) {
-                _logger?.warning(e.message)
-                // Do nothing
-            }
             playlist.addMusic(music = music)
         } catch (e: SQLiteConstraintException) {
             _logger?.warning(e.message)
             // Do nothing
         }
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
-            musicDao.likeWithLocalId(localId = music.id)
-            music.liked.value = true
+            if (music.isSubsonic()) musicDao.likeWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
+            else musicDao.likeWithLocalId(localId = music.id)
+            music.markAsLiked()
         }
     }
+
+    private fun addMusicDB(music: Music): MusicDB =
+        musicDao.get(musicId = musicDao.insert(music = music.toMusicDB()))!!
 
     fun insertMusicsToPlaylist(musics: Collection<Music>, playlist: Playlist) {
         musics.forEach { music: Music ->
@@ -280,17 +285,25 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
+        val musicDB: MusicDB =
+            if (music.isSubsonic()) musicDao.getWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)!!
+            else musicDao.getWithLocalId(localId = music.id)!!
+
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
-            musicDao.unlikeWithLocalId(localId = music.id)
-            music.liked.value = false
+            if (music.isSubsonic())
+                musicDao.unlikeWithSubsonicId(subsonicId = musicDB.subsonicId!!)
+            else
+                musicDao.unlikeWithLocalId(localId = musicDB.localId!!)
+            music.markAsUnliked()
         }
+
         musicsPlaylistsRelDAO.delete(
-            musicId = music.id,
+            musicId = musicDB.id,
             playlistId = playlist.id
         )
         playlist.removeMusic(music = music)
-        if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
-            musicDao.delete(MusicDB(id = music.id, absolutePath = music.absolutePath))
+        if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDB.id)) {
+            musicDao.delete(music = musicDB)
         }
     }
 
@@ -321,10 +334,13 @@ class DatabaseManager private constructor(context: Context) {
             musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.id)
             if (playlist.title == LIKES_PLAYLIST_TITLE) {
                 musicDao.unlikeWithLocalId(localId = music.id)
-                music.liked.value = false
+                music.markAsUnliked()
             }
             if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
-                musicDao.deleteWithLocalId(localId = music.id)
+                if (music.isSubsonic())
+                    musicDao.deleteWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
+                else
+                    musicDao.deleteWithLocalId(localId = music.id)
             }
         }
         DataManager.removePlaylist(playlist = playlist)
@@ -410,6 +426,7 @@ class DatabaseManager private constructor(context: Context) {
                     multipleFiles = multipleFiles
                 )
             }
+
             else -> throw UnsupportedOperationException("${fileExtension.value} is not supported.")
         }
         export(context = context, strings = strings, uris = uris)
@@ -606,7 +623,7 @@ class DatabaseManager private constructor(context: Context) {
                 music = music,
                 playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
-            musicDao.unlikeWithLocalId(localId = music.id!!)
+            musicDao.unlikeWithLocalId(localId = music.id)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -627,11 +644,11 @@ class DatabaseManager private constructor(context: Context) {
             if (musicDB == null) {
                 _logger?.warning("Not musicDB matching with id in relation (it's weird)")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
-                musicDao.deleteWithLocalId(localId = musicId)
+                musicDao.delete(musicId = musicId)
             } else if (musicDB.music == null) {
                 _logger?.info("Removing not loaded music")
                 musicsPlaylistsRelDAO.removeAll(musicId = musicId)
-                musicDao.deleteWithLocalId(localId = musicId)
+                musicDao.delete(musicId = musicId)
             }
         }
     }

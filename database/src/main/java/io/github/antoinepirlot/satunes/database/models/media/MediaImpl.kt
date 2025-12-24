@@ -71,6 +71,8 @@ abstract class MediaImpl(
     @get:Synchronized
     override val musicCollection: Collection<Music> = mutableStateListOf()
 
+    fun getSet(): Set<Music> = musicSortedSet
+
     override fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
     }

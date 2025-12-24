@@ -56,7 +56,7 @@ internal fun LikeUnlikeMusicOption(
                 music = music
             )
         },
-        jetpackLibsIcons = if (music.liked.value) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
-        text = stringResource(id = if (music.liked.value) R.string.remove_from_likes else R.string.add_to_likes)
+        jetpackLibsIcons = if (music.liked) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
+        text = stringResource(id = if (music.liked) R.string.remove_from_likes else R.string.add_to_likes)
     )
 }

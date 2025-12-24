@@ -138,7 +138,7 @@ internal fun MediaCard(
                         MediaCloudIcon(subsonicMedia = media as SubsonicMedia)
                     if (media.isMusic()) {
                         media as Music
-                        val liked: Boolean by media.liked
+                        val liked: Boolean = media.liked
                         if (liked)
                             Icon(jetpackLibsIcons = JetpackLibsIcons.LIKED)
                     }

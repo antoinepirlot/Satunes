@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -190,6 +191,9 @@ class SubsonicMusic(
         val db: DatabaseManager = DatabaseManager.getInstance()
         db.updateMusic(this)
     }
+
+    override fun toMusicDB(): MusicDB =
+        MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)
 
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicMusic).subsonicId

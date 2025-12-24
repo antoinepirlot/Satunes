@@ -26,12 +26,14 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
@@ -88,7 +90,7 @@ open class Music(
 
     public override var addedDate: Date? = null
 
-    var liked: MutableState<Boolean> = mutableStateOf(false)
+    var liked: Boolean by mutableStateOf(value = false)
         private set
 
     var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
@@ -108,13 +110,21 @@ open class Music(
     }
 
     open fun switchLike() {
-        this.liked.value = !this.liked.value
+        //Like will be changed by db when it as been added or removed from liked playlist.
         val db = DatabaseManager.getInstance()
-        if (this.liked.value) {
+        if (!this.liked) {
             db.like(music = this)
         } else {
             db.unlike(music = this)
         }
+    }
+
+    internal fun markAsLiked() {
+        this.liked = true
+    }
+
+    internal fun markAsUnliked() {
+        this.liked = false
     }
 
     fun getYear(): Int? {
@@ -211,6 +221,9 @@ open class Music(
     fun updateGenre(genre: Genre) {
         this.genre = genre
     }
+
+    internal open fun toMusicDB(): MusicDB =
+        MusicDB(localId = this.id, absolutePath = this.absolutePath)
 
     override fun isMusic(): Boolean = true
 

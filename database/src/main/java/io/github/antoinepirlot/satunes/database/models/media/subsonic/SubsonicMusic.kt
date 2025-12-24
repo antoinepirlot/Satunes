@@ -80,7 +80,7 @@ class SubsonicMusic(
     private val _logger: Logger? = Logger.getLogger()
 
     override fun switchLike() {
-        TODO("Switch like is not yet implemented")
+        /*if(this.isStoredLocally())*/ super.switchLike()
     }
 
     /**

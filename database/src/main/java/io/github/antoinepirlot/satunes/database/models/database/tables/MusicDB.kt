@@ -63,22 +63,26 @@ internal data class MusicDB(
     @Ignore
     @Transient
     var music: Music? =
-        try {
+        if (this.subsonicId != null) {
+            DataManager.getSubsonicMusic(id = this.subsonicId!!)
+        } else {
             try {
-                DataManager.getMusic(absolutePath = absolutePath)
-            } catch (_: NullPointerException) {
-                //The path has changed
                 try {
-                    val music: Music = DataManager.getMusic(id = id)
-                    DatabaseManager.getInstance().updateMusic(music)
-                    music
-                } catch (_: MusicNotFoundException) {
-                    null
+                    DataManager.getMusic(absolutePath = absolutePath)
+                } catch (_: NullPointerException) {
+                    //The path has changed
+                    try {
+                        val music: Music = DataManager.getMusic(id = id)
+                        DatabaseManager.getInstance().updateMusic(music)
+                        music
+                    } catch (_: MusicNotFoundException) {
+                        null
+                    }
                 }
+            } catch (e: Throwable) {
+                val message = "An error occurred while getting music in musicDB"
+                _logger?.severe(message)
+                throw e
             }
-        } catch (e: Throwable) {
-            val message = "An error occurred while getting music in musicDB"
-            _logger?.severe(message)
-            throw e
         }
 }

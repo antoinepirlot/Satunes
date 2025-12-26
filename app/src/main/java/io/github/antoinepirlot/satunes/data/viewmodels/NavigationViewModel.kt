@@ -207,8 +207,12 @@ class NavigationViewModel : ViewModel() {
         else if (media.isAlbum())
             if(media.isSubsonic()) Destination.SUBSONIC_ALBUM
             else Destination.ALBUM
-        else if (media.isGenre()) Destination.GENRE
-        else if (media.isPlaylist()) Destination.PLAYLIST
+        else if (media.isGenre())
+            if (media.isSubsonic()) Destination.SUBSONIC_GENRE
+            else Destination.GENRE
+        else if (media.isPlaylist())
+            if (media.isSubsonic()) Destination.SUBSONIC_PLAYLIST
+            else Destination.PLAYLIST
         else Destination.PLAYBACK // same as first
     }
 

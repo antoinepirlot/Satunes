@@ -7,6 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
@@ -15,7 +16,6 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.models.Destination
-import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.SubsonicView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
@@ -29,6 +29,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
     satunesViewModel: SatunesViewModel,
     subsonicViewModel: SubsonicViewModel,
     navigationViewModel: NavigationViewModel,
+    dataViewModel: DataViewModel,
     onStart: (NavBackStackEntry) -> Unit,
     onMediaOpen: (media: Media) -> Unit
 ) {
@@ -83,5 +84,17 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             else
                 NoDataFoundView()
         }
+    }
+
+    composable(route = Destination.SUBSONIC_PLAYLIST.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+        val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
+        val playlist: Playlist = dataViewModel.getSubsonicPlaylist(id = playlistId)!!
+        LaunchedEffect(key1 = Unit) {
+            onMediaOpen(playlist)
+        }
+        PlaylistView(playlist = playlist)
     }
 }

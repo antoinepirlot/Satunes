@@ -58,6 +58,7 @@ import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -158,6 +159,7 @@ class DataViewModel : ViewModel() {
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)
     fun getPlaylist(title: String): Playlist? = DataManager.getPlaylist(title = title)
+    fun getSubsonicPlaylist(id: Long): SubsonicPlaylist? = DataManager.getSubsonicPlaylist(id = id)
 
     fun addOnePlaylist(
         scope: CoroutineScope,

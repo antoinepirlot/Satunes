@@ -34,3 +34,6 @@ GET {{baseUrl}}/getCoverArt?{{cover_art_params}}
 
 ###
 GET {{baseUrl}}/getSong?{{get_song_params}}
+
+###
+GET {{baseUrl}}/createPlaylist?{{create_playlist_params}}

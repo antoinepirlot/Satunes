@@ -31,9 +31,11 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.CreatePlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
@@ -306,6 +308,30 @@ class SubsonicApiRequester() : ApiRequester {
                 parameters = arrayOf("id=$musicId")
             ),
             resCallback = GetSongCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onError = { onError?.invoke() },
+                onSucceed = onSucceed,
+                onFinished = onFinished
+            )
+        )
+    }
+
+    override fun createPlaylist(
+        title: String,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        if (title.isBlank()) throw IllegalArgumentException("Can't create playlist with blank name")
+
+        get(
+            url = getCommandUrl(
+                command = "createPlaylist",
+                parameters = arrayOf("name=$title")
+            ),
+            resCallback = CreatePlaylistCallback(
                 subsonicApiRequester = this,
                 onDataRetrieved = onDataRetrieved,
                 onError = { onError?.invoke() },

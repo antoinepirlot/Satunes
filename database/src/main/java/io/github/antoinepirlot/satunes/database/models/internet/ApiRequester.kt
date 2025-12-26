@@ -5,6 +5,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import java.io.InputStream
 
 /**
@@ -88,6 +89,23 @@ interface ApiRequester {
     suspend fun getSong(
         musicId: Long,
         onDataRetrieved: (SubsonicMusic?) -> Unit,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+        onSucceed: (() -> Unit)? = null,
+    )
+
+    /**
+     * Create a new playlist..
+     *
+     * @param title the playlist's name.
+     * @param onDataRetrieved the function to invoke when [SubsonicPlaylist] has been created.
+     * @param onError the function to invoke when an error occurred
+     * @param onFinished the function to invoke when the process is finished
+     * @param onSucceed the function to invoke when the process is a success
+     */
+    fun createPlaylist(
+        title: String,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null,

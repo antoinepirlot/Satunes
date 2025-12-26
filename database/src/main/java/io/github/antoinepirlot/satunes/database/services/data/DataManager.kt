@@ -35,6 +35,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAr
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager.subsonicMusicsMapById
 import java.util.SortedMap
 import java.util.SortedSet
@@ -118,6 +119,9 @@ object DataManager {
 
     @get:Synchronized
     private val playlistsMapById: MutableMap<Long, Playlist> = mutableMapOf()
+
+    @get:Synchronized
+    private val _subsonicPlaylistMapById: MutableMap<Long, SubsonicPlaylist> = mutableMapOf()
 
     @get:Synchronized
     private val playlistsMapByTitle: MutableMap<String, Playlist> = mutableMapOf()
@@ -394,6 +398,8 @@ object DataManager {
 
     fun getPlaylist(title: String): Playlist? = playlistsMapByTitle[title]
 
+    fun getSubsonicPlaylist(id: Long): SubsonicPlaylist? = _subsonicPlaylistMapById[id]
+
     fun getPlaylistSet(): Set<Playlist> {
         return this.playlistsSortedMap.keys
     }
@@ -406,6 +412,13 @@ object DataManager {
             playlistsMapByTitle[playlist.title] = playlist
         }
         return this.playlistsMapById[playlist.id]!!
+    }
+
+    @Synchronized
+    fun addPlaylist(playlist: SubsonicPlaylist): SubsonicPlaylist {
+        if (!_subsonicPlaylistMapById.contains(key = playlist.id))
+            _subsonicPlaylistMapById[playlist.id] = playlist
+        return _subsonicPlaylistMapById[playlist.id]!!
     }
 
     @Synchronized

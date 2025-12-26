@@ -25,12 +25,28 @@ import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
+
+/**
+ * Get the [SubsonicPlaylist] martching the [id] or create a new one if it doesn't exist.
+ */
+internal fun getOrCreateSubsonicPlaylist(id: Long, title: String): SubsonicPlaylist =
+    DataManager.getSubsonicPlaylist(id = id) ?: createSubsonicPlaylist(id = id, title = title)
+
+/**
+ * Create a new [SubsonicPlaylist].
+ *
+ * @param id the playlist's id
+ * @param title the playlist's title
+ */
+internal fun createSubsonicPlaylist(id: Long, title: String): SubsonicPlaylist =
+    DataManager.addPlaylist(playlist = SubsonicPlaylist(subsonicId = id, title = title))
 
 /**
  * Get the subsonic artist matching the [id] or create a new one if it doesn't exist.

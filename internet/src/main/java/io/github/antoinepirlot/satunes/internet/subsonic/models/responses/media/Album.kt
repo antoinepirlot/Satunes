@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicAlbum
 import kotlinx.serialization.SerialName
@@ -45,7 +44,7 @@ internal data class Album(
     @SerialName(value = "year") val year: Int? = null,
     @SerialName(value = "song") val songs: Collection<Song>? = null,
 ) : SubsonicData {
-    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicAlbum {
         val subsonicAlbum: SubsonicAlbum = getOrCreateSubsonicAlbum(
             id = id,
             title = title,

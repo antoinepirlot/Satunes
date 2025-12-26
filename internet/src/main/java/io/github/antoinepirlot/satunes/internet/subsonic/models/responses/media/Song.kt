@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import androidx.core.net.toUri
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -60,7 +59,7 @@ internal data class Song constructor(
     /**
      * Convert this object [Song] to [SubsonicMusic] object
      */
-    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMusic {
         val url: String = subsonicApiRequester.getCommandUrl(
             command = "stream",
             parameters = arrayOf("id=$id")

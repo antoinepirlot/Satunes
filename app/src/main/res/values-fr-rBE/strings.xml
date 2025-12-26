@@ -159,4 +159,5 @@
     <string name="no_data_found_view_text">Aucune donnée trouvée.</string>
     <string name="error_code_text">Code d\'erreur: %1$s</string>
     <string name="error_message_text">Message d\'erreur: %1$s</string>
+    <string name="upload_text">Téléverser</string>
 </resources>

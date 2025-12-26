@@ -103,7 +103,7 @@ interface ApiRequester {
      * @param onFinished the function to invoke when the process is finished
      * @param onSucceed the function to invoke when the process is a success
      */
-    fun createPlaylist(
+    suspend fun createPlaylist(
         title: String,
         onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,

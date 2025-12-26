@@ -317,7 +317,7 @@ class SubsonicApiRequester() : ApiRequester {
         )
     }
 
-    override fun createPlaylist(
+    override suspend fun createPlaylist(
         title: String,
         onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)?,

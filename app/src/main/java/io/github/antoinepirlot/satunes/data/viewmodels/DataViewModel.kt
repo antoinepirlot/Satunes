@@ -56,6 +56,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
@@ -1020,5 +1021,17 @@ class DataViewModel : ViewModel() {
         _mediaListOnScreen as MutableList<Media>
         _mediaListOnScreen.clear()
         _mediaListOnScreen.addAll(list)
+    }
+
+    /**
+     * Replace the old [Media] with the new [SubsonicMedia].
+     */
+    fun replace(old: Media, new: SubsonicMedia) {
+        _mediaListOnScreen as MutableList<Media>
+        for (i: Int in _mediaListOnScreen.indices)
+            if (_mediaListOnScreen[i] === old) {
+                _mediaListOnScreen[i] = new
+                return
+            }
     }
 }

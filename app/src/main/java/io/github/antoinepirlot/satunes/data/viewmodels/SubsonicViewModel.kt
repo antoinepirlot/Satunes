@@ -34,10 +34,12 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -378,5 +380,26 @@ class SubsonicViewModel : ViewModel() {
      */
     fun download(media: SubsonicMedia) {
         TODO()
+    }
+
+    /**
+     * Create playlist to the server.
+     *
+     * @param playlist to upload
+     */
+    fun createPlaylist(
+        playlist: Playlist,
+        onDataRetrieved: ((SubsonicPlaylist) -> Unit)?,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        runIOThread {
+            _apiRequester.createPlaylist(
+                title = playlist.title,
+                onDataRetrieved = { onDataRetrieved?.invoke(it) },
+                onFinished = onFinished,
+                onError = onError
+            )
+        }
     }
 }

@@ -21,9 +21,7 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
-import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,10 +68,6 @@ open class Playlist(
     override fun addMusics(musics: Collection<Music>) {
         for (music: Music in musics)
             this.addMusic(music = music)
-    }
-
-    fun upload(apiRequester: ApiRequester, onDataRetrieved: (SubsonicPlaylist) -> Unit) {
-        apiRequester.createPlaylist(title = this.title, onDataRetrieved = onDataRetrieved)
     }
 
     override fun removeMusic(music: Music) {

@@ -48,8 +48,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 internal object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
-        println("YEAH ÇA MARCHE")
-
         updateMediaPlaying() //Keep it prevent first media not showing when only opening via AA
         if (isPlaying) {
             updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
@@ -126,7 +124,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             .addCustomAction(repeatAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
-            .setActiveQueueItemId(musicPlaying.id!!)
+            .setActiveQueueItemId(musicPlaying.systemId)
             .setExtras(extras)
             .build()
         SatunesCarMusicService.session.setPlaybackState(playbackState)

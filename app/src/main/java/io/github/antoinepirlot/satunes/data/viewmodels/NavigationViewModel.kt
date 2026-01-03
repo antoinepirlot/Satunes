@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -217,7 +218,10 @@ class NavigationViewModel : ViewModel() {
     }
 
     private fun getRoute(destination: Destination, media: Media): String {
-        return "${destination.link.removeSuffix("/{id}")}/${media.id!!}"
+        val id: String =
+            if (media.isSubsonic()) (media as SubsonicMedia).subsonicId
+            else media.id!!.toString()
+        return "${destination.link.removeSuffix("/{id}")}/$id"
     }
 
     /**

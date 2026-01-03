@@ -24,15 +24,18 @@ internal class GetSongCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (this.processData())
-            this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        return if (super.processData()) {
-            this.onDataRetrieved(this.subsonicResponse!!.song!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicMusic)
-            true
-        } else false
+    override fun processData(block: () -> Unit) {
+        super.processData {
+            this.onDataRetrieved(
+                this.subsonicResponse!!.song!!.toSubsonicMedia(
+                    subsonicApiRequester = subsonicApiRequester
+                )
+            )
+            block()
+        }
     }
 }

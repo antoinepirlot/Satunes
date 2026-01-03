@@ -49,11 +49,14 @@ internal abstract class SubsonicCallback<T>(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onDataRetrieved: (T) -> Unit,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
-    protected val onError: ((Error?) -> Unit)?,
+    onError: ((Error?) -> Unit)?,
     protected val onFinished: (() -> Unit)?
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
+
+    protected var onError: ((Error?) -> Unit)? = onError
+        private set
     protected var subsonicResponse: SubsonicResponse? = null
 
     override fun onFailure(call: Call, e: IOException) {
@@ -74,12 +77,8 @@ internal abstract class SubsonicCallback<T>(
             val input: InputStream = response.body.byteStream()
             try {
                 val format = Json { ignoreUnknownKeys = true }
-                val response: SubsonicResponse =
+                this.subsonicResponse =
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
-
-                if (response.isError()) this.onError?.invoke(response.error!!)
-                this.subsonicResponse = response
-
             } catch (e: SerializationException) {
                 _logger?.severe(e.message)
             } catch (e: IllegalArgumentException) {
@@ -98,11 +97,10 @@ internal abstract class SubsonicCallback<T>(
         }
     }
 
-    open fun processData(): Boolean {
-        return if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
-            this.onError?.invoke(this.subsonicResponse!!.error)
-            false
-        } else true
+    open fun processData(block: () -> Unit) {
+        if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
+            this.onError?.invoke(this.subsonicResponse?.error)
+        } else block()
     }
 
     protected open fun isReceivingJsonData(): Boolean = true

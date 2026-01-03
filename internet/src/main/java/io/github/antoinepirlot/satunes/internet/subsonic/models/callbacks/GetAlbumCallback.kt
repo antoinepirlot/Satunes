@@ -44,17 +44,17 @@ internal class GetAlbumCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (this.processData())
-            this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        if (!super.processData()) return false
-        this.onDataRetrieved(
-            this.subsonicResponse!!.album!!
-                .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicAlbum
-        )
-        return true
+    override fun processData(block: () -> Unit) {
+        super.processData {
+            this.onDataRetrieved(
+                this.subsonicResponse!!.album!!
+                    .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester)
+            )
+            block()
+        }
     }
 }

@@ -24,19 +24,18 @@ internal class CreatePlaylistCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (this.processData())
-            this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        return if (super.processData()) {
+    override fun processData(block: () -> Unit) {
+        super.processData {
             this.onDataRetrieved(
                 this.subsonicResponse!!.playlist!!.toSubsonicMedia(
                     subsonicApiRequester = subsonicApiRequester
                 )
             )
-            true
-        } else false
+            block()
+        }
     }
 }

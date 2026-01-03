@@ -188,4 +188,5 @@
     <string name="error_message_text">Error message: %1$s</string>
     <string name="upload_">Upload</string>
     <string name="upload_text">Upload</string>
+    <string name="create_playlist_on_cloud">Synchronize with the cloud</string>
 </resources>

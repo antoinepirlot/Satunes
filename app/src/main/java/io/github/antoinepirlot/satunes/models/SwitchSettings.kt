@@ -51,6 +51,7 @@ internal enum class SwitchSettings(
     ARTWORK_ANIMATION(stringId = R.string.artwork_animation_switch_button),
     ARTWORK_CIRCLE_SHAPE(stringId = R.string.artwork_circle_shape_switch_button),
     AUDIO_OFFLOAD(stringId = audio_offload, needRestart = true),
+    SYNCHRONIZE_WITH_CLOUD(stringId = R.string.create_playlist_on_cloud),
     FOLDERS_NAVBAR(stringId = folders, navBarSection = NavBarSection.FOLDERS),
     FOLDERS_FILTER(stringId = folders),
     GENRES_NAVBAR(stringId = genres, navBarSection = NavBarSection.GENRES),

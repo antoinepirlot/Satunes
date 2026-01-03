@@ -26,16 +26,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaylistCreationFormViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.models.SatunesModes
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -44,10 +49,14 @@ import io.github.antoinepirlot.satunes.R
 @Composable
 internal fun PlaylistCreationForm(
     modifier: Modifier = Modifier,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    playlistCreationFormViewModel: PlaylistCreationFormViewModel = viewModel(),
     onConfirm: (playlistTitle: String) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    var playlistTitle: String by rememberSaveable { mutableStateOf("") }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+
+    val playlistTitle: String = playlistCreationFormViewModel.title
 
     AlertDialog(
         icon = {
@@ -66,9 +75,19 @@ internal fun PlaylistCreationForm(
             ) {
                 OutlinedTextField(
                     value = playlistTitle,
-                    onValueChange = { playlistTitle = it },
+                    onValueChange = { playlistCreationFormViewModel.updateTitle(value = it) },
                     label = { NormalText(text = stringResource(id = R.string.playlist_form)) }
                 )
+
+                if (satunesUiState.mode == SatunesModes.ONLINE)
+                    SwitchSetting(
+                        setting = SwitchSettings.SYNCHRONIZE_WITH_CLOUD,
+                        jetpackLibsIcons = if (playlistCreationFormViewModel.isStoringOnCloud)
+                            JetpackLibsIcons.CLOUD_ON_ICON
+                        else JetpackLibsIcons.CLOUD_OFF_ICON,
+                        checked = playlistCreationFormViewModel.isStoringOnCloud,
+                        onCheckedChange = { playlistCreationFormViewModel.switchIsStoringOnCloud() }
+                    )
             }
         },
         onDismissRequest = { onDismissRequest() },

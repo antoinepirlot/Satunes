@@ -33,7 +33,7 @@ internal object MigrationFrom4To5 : Migration(startVersion = 4, endVersion = 5) 
                 "CREATE TABLE musics (" +
                         "music_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                         "local_id INTEGER NULL UNIQUE DEFAULT NULL," +
-                        "subsonic_id INTEGER NULL UNIQUE DEFAULT NULL," +
+                        "subsonic_id TEXT NULL UNIQUE DEFAULT NULL," +
                         "absolute_path TEXT NOT NULL," +
                         "liked INTEGER NOT NULL" +
                         ");"

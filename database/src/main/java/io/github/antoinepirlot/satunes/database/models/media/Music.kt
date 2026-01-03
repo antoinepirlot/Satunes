@@ -61,6 +61,12 @@ open class Music(
     id = id,
     title = if (title.isBlank() || SettingsManager.isMusicTitleDisplayName) displayName else title
 ) {
+    companion object {
+        private var _nextSystemId: Long = 0
+            get() = field++
+    }
+
+    val systemId: Long = _nextSystemId
 
     /**
      * Remember in which order music has been added to playlists

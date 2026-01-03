@@ -97,6 +97,13 @@ internal abstract class SubsonicCallback<T>(
         }
     }
 
+    /**
+     * Process the [subsonicResponse]:
+     * * if it is null or is [Error] execute the [onError] function
+     * * else execute the [block].
+     *
+     * @param block to execute when [subsonicResponse] can be processed.
+     */
     open fun processData(block: () -> Unit) {
         if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
             this.onError?.invoke(this.subsonicResponse?.error)

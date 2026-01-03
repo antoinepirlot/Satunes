@@ -37,23 +37,23 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class Song constructor(
     @SerialName(value = "id") val id: String,
-    @SerialName(value = "isDir") val idDir: Boolean = false,
+    @SerialName(value = "isDir") val idDir: Boolean? = null,
     @SerialName(value = "title") val title: String,
     @SerialName(value = "album") val albumTitle: String,
     @SerialName(value = "artist") val artistTitle: String,
     @SerialName(value = "track") val track: Int? = null,
     @SerialName(value = "discNumber") val discNumber: Int? = null,
-    @SerialName(value = "contentType") val contentTypeMime: String,
+    @SerialName(value = "contentType") val contentTypeMime: String? = null,
     @SerialName(value = "suffix") val fileExtension: String? = null,
     @SerialName(value = "path") val path: String,
     @SerialName(value = "duration") val durationSeconds: Long,
     @SerialName(value = "created") val addedDate: String, //TODO 2025-11-27T12:43:55.000Z like that
     @SerialName(value = "albumId") val albumId: String,
     @SerialName(value = "artistId") val artistId: String,
-    @SerialName(value = "type") val type: String,
+    @SerialName(value = "type") val type: String? = null,
     @SerialName(value = "coverArt") val coverArtId: String? = null,
-    @SerialName(value = "bitrate") val bitrate: Int,
-    @SerialName(value = "size") val size: Int,
+    @SerialName(value = "bitrate") val bitrate: Int? = null,
+    @SerialName(value = "size") val size: Int = 0,
     @SerialName(value = "year") val year: Int? = null,
 ) : SubsonicData {
     /**

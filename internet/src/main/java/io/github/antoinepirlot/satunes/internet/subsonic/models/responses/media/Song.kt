@@ -36,7 +36,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Song constructor(
-    @SerialName(value = "id") val id: Long,
+    @SerialName(value = "id") val id: String,
     @SerialName(value = "isDir") val idDir: Boolean = false,
     @SerialName(value = "title") val title: String,
     @SerialName(value = "album") val albumTitle: String,
@@ -48,8 +48,8 @@ internal data class Song constructor(
     @SerialName(value = "path") val path: String,
     @SerialName(value = "duration") val durationSeconds: Long,
     @SerialName(value = "created") val addedDate: String, //TODO 2025-11-27T12:43:55.000Z like that
-    @SerialName(value = "albumId") val albumId: Long,
-    @SerialName(value = "artistId") val artistId: Long,
+    @SerialName(value = "albumId") val albumId: String,
+    @SerialName(value = "artistId") val artistId: String,
     @SerialName(value = "type") val type: String,
     @SerialName(value = "coverArt") val coverArtId: String? = null,
     @SerialName(value = "bitrate") val bitrate: Int,

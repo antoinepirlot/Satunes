@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Playlist(
-    @SerialName(value = "id") val id: Long,
+    @SerialName(value = "id") val id: String,
     @SerialName(value = "name") val title: String,
     @SerialName(value = "owner") val owner: String,
     @SerialName(value = "public") val public: Boolean,

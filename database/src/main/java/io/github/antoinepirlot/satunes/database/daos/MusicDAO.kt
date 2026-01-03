@@ -44,7 +44,7 @@ internal interface MusicDAO {
     fun getWithLocalId(localId: Long): MusicDB?
 
     @Query("SELECT * FROM musics WHERE subsonic_id = :subsonicId")
-    fun getWithSubsonicId(subsonicId: Long): MusicDB?
+    fun getWithSubsonicId(subsonicId: String): MusicDB?
 
     @Query("SELECT * FROM musics")
     fun getAll(): List<MusicDB>
@@ -62,13 +62,13 @@ internal interface MusicDAO {
     fun likeWithLocalId(localId: Long)
 
     @Query("UPDATE musics SET liked = 1 WHERE subsonic_id = :subsonicId")
-    fun likeWithSubsonicId(subsonicId: Long)
+    fun likeWithSubsonicId(subsonicId: String)
 
     @Query("UPDATE musics SET liked = 0 WHERE local_id = :localId")
     fun unlikeWithLocalId(localId: Long)
 
     @Query("UPDATE musics SET liked = 0 WHERE subsonic_id = :subsonicId")
-    fun unlikeWithSubsonicId(subsonicId: Long)
+    fun unlikeWithSubsonicId(subsonicId: String)
 
     @Delete
     fun delete(music: MusicDB)
@@ -80,5 +80,5 @@ internal interface MusicDAO {
     fun deleteWithLocalId(localId: Long)
 
     @Query("DELETE from musics WHERE subsonic_id = :subsonicId")
-    fun deleteWithSubsonicId(subsonicId: Long)
+    fun deleteWithSubsonicId(subsonicId: String)
 }

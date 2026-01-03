@@ -37,7 +37,7 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 29/03/2024
  */
 abstract class MediaImpl(
-    override val id: Long,
+    override val id: Long?,
     title: String
 ) : Media {
     protected val logger: Logger? = Logger.getLogger()

@@ -202,7 +202,7 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getAlbum(
-        albumId: Long,
+        albumId: String,
         onDataRetrieved: (media: SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
@@ -264,7 +264,7 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getArtist(
-        artistId: Long,
+        artistId: String,
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
@@ -295,7 +295,7 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getArtistWithMusics(
-        artistId: Long,
+        artistId: String,
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {

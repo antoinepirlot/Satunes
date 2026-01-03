@@ -44,7 +44,7 @@ import java.util.Date
  */
 
 open class Music(
-    id: Long,
+    id: Long?,
     title: String,
     displayName: String,
     absolutePath: String,

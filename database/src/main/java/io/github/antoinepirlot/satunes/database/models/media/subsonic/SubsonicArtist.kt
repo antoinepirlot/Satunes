@@ -29,11 +29,11 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicArtist(
-    override var subsonicId: Long,
-    id: Long = subsonicId,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
 ) : SubsonicMedia, Artist(
-    id = subsonicId,
+    id = id,
     title = title,
 ) {
 

@@ -32,8 +32,8 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicAlbum(
-    override var subsonicId: Long,
-    id: Long = subsonicId,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
     coverArtId: String?,
     artist: Artist,

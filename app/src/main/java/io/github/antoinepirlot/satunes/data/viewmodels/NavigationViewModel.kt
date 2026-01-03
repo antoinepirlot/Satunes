@@ -217,7 +217,7 @@ class NavigationViewModel : ViewModel() {
     }
 
     private fun getRoute(destination: Destination, media: Media): String {
-        return "${destination.link.removeSuffix("/{id}")}/${media.id}"
+        return "${destination.link.removeSuffix("/{id}")}/${media.id!!}"
     }
 
     /**

@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
@@ -26,7 +25,6 @@ import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
  * @author Antoine Pirlot 17/12/2025
  */
 internal fun NavGraphBuilder.subsonicMediaRoutes(
-    satunesViewModel: SatunesViewModel,
     subsonicViewModel: SubsonicViewModel,
     navigationViewModel: NavigationViewModel,
     dataViewModel: DataViewModel,
@@ -38,7 +36,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             onStart(it)
         }
         val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-        val albumId: Long = it.arguments!!.getString("id")!!.toLong()
+        val albumId: String = it.arguments!!.getString("id")!!
         val album: Media? = navigationUiState.currentMediaImpl
         if (album != null && !album.isAlbum()) return@composable
         album as SubsonicAlbum?
@@ -64,7 +62,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
             onStart(it)
         }
         val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-        val artistId: Long = it.arguments!!.getString("id")!!.toLong()
+        val artistId: String = it.arguments!!.getString("id")!!
         val artist: Media? = navigationUiState.currentMediaImpl
         if (artist != null && !artist.isArtist()) return@composable
         artist as SubsonicArtist?
@@ -90,7 +88,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
         LaunchedEffect(key1 = Unit) {
             onStart(it)
         }
-        val playlistId: Long = it.arguments!!.getString("id")!!.toLong()
+        val playlistId: String = it.arguments!!.getString("id")!!
         val playlist: Playlist = dataViewModel.getSubsonicPlaylist(id = playlistId)!!
         LaunchedEffect(key1 = Unit) {
             onMediaOpen(playlist)

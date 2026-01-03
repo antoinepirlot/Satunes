@@ -37,7 +37,7 @@ interface SubsonicMedia : Media {
             context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString()
     }
 
-    val subsonicId: Long
+    val subsonicId: String
 
     fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()

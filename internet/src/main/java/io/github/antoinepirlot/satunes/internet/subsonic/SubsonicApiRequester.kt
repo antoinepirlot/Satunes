@@ -210,12 +210,11 @@ class SubsonicApiRequester() : ApiRequester {
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
     override suspend fun getArtist(
-        artistId: Long,
+        artistId: String,
         onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)?
     ) {
-        if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(
             url = getCommandUrl(
                 command = "getArtist",
@@ -231,12 +230,11 @@ class SubsonicApiRequester() : ApiRequester {
     }
 
     override suspend fun getAlbum(
-        albumId: Long,
+        albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)?,
         onError: ((ApiError?) -> Unit)?
     ) {
-        if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
         get(
             url = getCommandUrl(
                 command = "getAlbum",
@@ -272,13 +270,11 @@ class SubsonicApiRequester() : ApiRequester {
     }
 
     override suspend fun download(
-        musicId: Long,
+        musicId: String,
         onDataRetrieved: (InputStream) -> Unit,
         onError: (() -> Unit)?,
         onFinished: (() -> Unit)?,
     ) {
-        if (musicId < 1) throw IllegalArgumentException("musicId is $musicId but must be >= 1.")
-
         get(
             url = getCommandUrl(
                 command = "stream",
@@ -294,14 +290,12 @@ class SubsonicApiRequester() : ApiRequester {
     }
 
     override suspend fun getSong(
-        musicId: Long,
+        musicId: String,
         onDataRetrieved: (SubsonicMusic?) -> Unit,
         onError: (() -> Unit)?,
         onFinished: (() -> Unit)?,
         onSucceed: (() -> Unit)?,
     ) {
-        if (musicId < 1) throw IllegalArgumentException("musicId is $musicId but must be >= 1.")
-
         get(
             url = getCommandUrl(
                 command = "getSong",

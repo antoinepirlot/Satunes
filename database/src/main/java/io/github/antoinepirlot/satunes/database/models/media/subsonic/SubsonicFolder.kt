@@ -27,9 +27,9 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicFolder(
-    override var subsonicId: Long,
+    override var subsonicId: String,
     title: String
-) : SubsonicMedia, Folder(id = subsonicId, title = title) {
+) : SubsonicMedia, Folder(title = title) {
 
     companion object {
         const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language

@@ -48,7 +48,8 @@ class SubsonicMusic(
      * [id] can be different from [subsonicId] because [id] is considered as local id if the music is both online or on device.
      * Device will be used instead of subsonic.
      */
-    override var subsonicId: Long,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
     displayName: String,
     absolutePath: String,
@@ -63,7 +64,7 @@ class SubsonicMusic(
     uri: Uri? = null,
     private val _apiRequester: ApiRequester
 ) : SubsonicMedia, Music(
-    id = subsonicId,
+    id = id,
     title = title,
     displayName = displayName,
     absolutePath = absolutePath,
@@ -90,7 +91,7 @@ class SubsonicMusic(
      * @param new the most updated [SubsonicMusic] matching this one.
      */
     fun update(new: SubsonicMusic) {
-        if (this.id != this.subsonicId) return //It is the local music matching the server one. No update
+        this.id ?: return //It is the local music matching the server one. No update
         if (new.id != this.id)
             throw IllegalArgumentException("These musics doesn't have the same id. Old id is: ${this.id} and the new id is: $id")
         this.title = new.title

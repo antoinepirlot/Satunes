@@ -26,7 +26,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
+import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
@@ -48,7 +48,7 @@ internal class MusicDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "music_id") override val id: Long = 0,
     @ColumnInfo(name = "local_id") var localId: Long? = null,
-    @ColumnInfo(name = "subsonic_id") var subsonicId: Long? = null,
+    @ColumnInfo(name = "subsonic_id") var subsonicId: String? = null,
     @ColumnInfo(name = "absolute_path") var absolutePath: String,
 ) : MediaData {
     @Transient
@@ -78,14 +78,14 @@ internal class MusicDB(
         } else {
             try {
                 try {
-                    DataManager.getMusic(absolutePath = absolutePath)
+                    DataManager.getMusicByPath(absolutePath = absolutePath)
                 } catch (_: NullPointerException) {
                     //The path has changed
                     try {
                         val music: Music = DataManager.getMusic(id = id)
                         DatabaseManager.getInstance().updateMusic(music)
                         music
-                    } catch (_: MusicNotFoundException) {
+                    } catch (_: LocalMusicNotFoundException) {
                         null
                     }
                 }

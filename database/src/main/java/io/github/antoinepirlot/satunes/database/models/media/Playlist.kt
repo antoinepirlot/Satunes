@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
  * @author Antoine Pirlot on 11/07/2024
  */
 open class Playlist(
-    id: Long, // Managed by Database
+    id: Long?,
     title: String
 ) : MediaImpl(id = id, title = title) {
 

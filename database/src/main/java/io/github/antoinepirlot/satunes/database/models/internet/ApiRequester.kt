@@ -52,14 +52,14 @@ interface ApiRequester {
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
     suspend fun getArtist(
-        artistId: Long,
+        artistId: String,
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)? = null
     )
 
     suspend fun getAlbum(
-        albumId: Long,
+        albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)? = null,
         onError: ((ApiError?) -> Unit)? = null
@@ -71,7 +71,7 @@ interface ApiRequester {
     suspend fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
 
     suspend fun download(
-        musicId: Long,
+        musicId: String,
         onDataRetrieved: (InputStream) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
@@ -87,7 +87,7 @@ interface ApiRequester {
      * @param onSucceed the function to invoke when the process is a success
      */
     suspend fun getSong(
-        musicId: Long,
+        musicId: String,
         onDataRetrieved: (SubsonicMusic?) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,

@@ -276,7 +276,7 @@ internal class MainActivity : ComponentActivity() {
         if (uri.path!!.endsWith(".m3u")) return
         try {
             val musicPath: String = DEFAULT_ROOT_FILE_PATH + '/' + uri.path!!.split(":").last()
-            this.handledMusic = DataManager.getMusic(absolutePath = musicPath)
+            this.handledMusic = DataManager.getMusicByPath(absolutePath = musicPath)
         } catch (_: NullPointerException) {
             //Music has not been loaded by Satunes
             this.handledMusic = LocalDataLoader.load(context = getContext(), uri = uri)

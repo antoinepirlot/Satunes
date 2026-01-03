@@ -35,9 +35,9 @@ import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
-import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
-import io.github.antoinepirlot.satunes.database.exceptions.PlaylistNotFoundException
+import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
+import io.github.antoinepirlot.satunes.database.exceptions.media.LocalPlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
 import io.github.antoinepirlot.satunes.database.models.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
@@ -120,7 +120,11 @@ class DatabaseManager private constructor(context: Context) {
     internal fun updateMusic(vararg musics: Music) {
         var musicDBs: Array<MusicDB> = arrayOf()
         musics.forEach { music: Music ->
-            musicDBs += MusicDB(id = music.id, absolutePath = music.absolutePath)
+            musicDBs += MusicDB(
+                localId = music.id,
+                subsonicId = if (music.isSubsonic()) (music as SubsonicMusic).subsonicId else null,
+                absolutePath = music.absolutePath
+            )
         }
         this.musicDao.update(musicDBs = musicDBs)
     }
@@ -168,9 +172,9 @@ class DatabaseManager private constructor(context: Context) {
     fun updatePlaylistTitle(playlist: Playlist) {
         checkString(playlist.title)
         playlist.title = playlist.title.trim()
-        val playlistDB = PlaylistDB(id = playlist.id, title = playlist.title)
+        val playlistDB = PlaylistDB(id = playlist.id!!, title = playlist.title)
         if (playlistDao.exists(title = playlist.title)) {
-            playlist.title = this.playlistDao.getOriginalPlaylistTitle(playlistId = playlist.id)
+            playlist.title = this.playlistDao.getOriginalPlaylistTitle(playlistId = playlist.id!!)
             throw PlaylistAlreadyExistsException()
         }
         try {
@@ -189,7 +193,9 @@ class DatabaseManager private constructor(context: Context) {
      *
      */
     fun updatePlaylistMusics(playlist: Playlist, newMusicCollection: Collection<Music>) {
-        if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
+        if (!playlistDao.exists(title = playlist.title)) throw LocalPlaylistNotFoundException(
+            playlist.id!!
+        )
         try {
             val oldMusicCollection: Collection<Music> = playlist.musicCollection
             val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
@@ -236,14 +242,14 @@ class DatabaseManager private constructor(context: Context) {
     fun insertMusicToPlaylist(music: Music, playlist: Playlist) {
         var musicDB: MusicDB? =
             if (music.isSubsonic()) musicDao.getWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
-            else musicDao.getWithLocalId(localId = music.id)
+            else musicDao.getWithLocalId(localId = music.id!!)
         if (musicDB == null)
             musicDB = this.addMusicDB(music = music)
 
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
                 musicId = musicDB.id,
-                playlistId = playlist.id,
+                playlistId = playlist.id!!,
                 addedDateMs = System.currentTimeMillis()
             )
         try {
@@ -255,7 +261,7 @@ class DatabaseManager private constructor(context: Context) {
         }
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
             if (music.isSubsonic()) musicDao.likeWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
-            else musicDao.likeWithLocalId(localId = music.id)
+            else musicDao.likeWithLocalId(localId = music.id!!)
             music.markAsLiked()
         }
     }
@@ -271,7 +277,7 @@ class DatabaseManager private constructor(context: Context) {
 
     fun updateMusicToPlaylists(music: Music, newPlaylistsCollection: Collection<Playlist>) {
         val oldPlaylistCollection: Collection<Long> =
-            musicsPlaylistsRelDAO.getAllPlaylistsIdsOf(musicId = music.id)
+            musicsPlaylistsRelDAO.getAllPlaylistsIdsOf(musicId = music.id!!)
         val newPlaylists: MutableCollection<Playlist> = newPlaylistsCollection.toMutableSet()
         val removedPlaylist: MutableCollection<Playlist> = mutableSetOf()
         for (oldPlaylistId: Long in oldPlaylistCollection) {
@@ -292,7 +298,7 @@ class DatabaseManager private constructor(context: Context) {
     fun removeMusicFromPlaylist(music: Music, playlist: Playlist) {
         val musicDB: MusicDB =
             if (music.isSubsonic()) musicDao.getWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)!!
-            else musicDao.getWithLocalId(localId = music.id)!!
+            else musicDao.getWithLocalId(localId = music.id!!)!!
 
         if (playlist.title == LIKES_PLAYLIST_TITLE) {
             if (music.isSubsonic())
@@ -304,7 +310,7 @@ class DatabaseManager private constructor(context: Context) {
 
         musicsPlaylistsRelDAO.delete(
             musicId = musicDB.id,
-            playlistId = playlist.id
+            playlistId = playlist.id!!
         )
         playlist.removeMusic(music = music)
         if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = musicDB.id)) {
@@ -334,18 +340,18 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun removePlaylist(playlist: Playlist) {
-        playlistDao.remove(id = playlist.id)
+        playlistDao.remove(id = playlist.id!!)
         playlist.musicCollection.forEach { music: Music ->
-            musicsPlaylistsRelDAO.delete(musicId = music.id, playlistId = playlist.id)
+            musicsPlaylistsRelDAO.delete(musicId = music.id!!, playlistId = playlist.id!!)
             if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                musicDao.unlikeWithLocalId(localId = music.id)
+                musicDao.unlikeWithLocalId(localId = music.id!!)
                 music.markAsUnliked()
             }
-            if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id)) {
+            if (!musicsPlaylistsRelDAO.isMusicInPlaylist(musicId = music.id!!)) {
                 if (music.isSubsonic())
                     musicDao.deleteWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
                 else
-                    musicDao.deleteWithLocalId(localId = music.id)
+                    musicDao.deleteWithLocalId(localId = music.id!!)
             }
         }
         DataManager.removePlaylist(playlist = playlist)
@@ -364,7 +370,7 @@ class DatabaseManager private constructor(context: Context) {
         multipleFiles: Boolean
     ) {
         val playlistWithMusics: List<PlaylistWithMusics> = listOf(
-            this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id)!!
+            this.playlistDao.getPlaylistWithMusics(playlistId = playlist.id!!)!!
         )
         this.exportPlaylists(
             context = context,
@@ -530,11 +536,11 @@ class DatabaseManager private constructor(context: Context) {
                 } catch (_: Throwable) {
                     /*TODO use snackbar instead of this buggy thing */
                 }
-            } catch (e: MusicNotFoundException) {
+            } catch (e: LocalMusicNotFoundException) {
                 //id is used to store the number of musics missing
                 showToastOnUiThread(
                     context = context,
-                    message = context.getString(R.string.importing_missed_musics, e.id)
+                    message = context.getString(R.string.importing_missed_musics, e.getLocalId())
                 )
             } catch (e: Throwable) {
                 logger?.severe(e.message)
@@ -599,7 +605,7 @@ class DatabaseManager private constructor(context: Context) {
         }
         if (numberOfMusicMissing > 0) {
             //id is used to store the number of musics missing
-            throw MusicNotFoundException(id = numberOfMusicMissing)
+            throw LocalMusicNotFoundException(id = numberOfMusicMissing)
         }
     }
 
@@ -630,7 +636,7 @@ class DatabaseManager private constructor(context: Context) {
                 music = music,
                 playlist = DataManager.getPlaylist(id = likesPlaylist.id)!!
             )
-            musicDao.unlikeWithLocalId(localId = music.id)
+            musicDao.unlikeWithLocalId(localId = music.id!!)
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
@@ -668,7 +674,7 @@ class DatabaseManager private constructor(context: Context) {
     suspend fun getOrder(playlist: Playlist, music: Music): Long {
         if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
-            musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id)
+            musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id!!)
         val musicsPlaylistsRel: MusicsPlaylistsRel =
             musicsPlaylistsRelList.first { musicDao.get(musicId = it.musicId)?.getMusic() == music }
         return musicsPlaylistsRel.addedDateMs

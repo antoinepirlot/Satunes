@@ -151,15 +151,16 @@ class DataViewModel : ViewModel() {
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
     fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
 
-    fun getSubsonicArtist(id: Long) = DataManager.getSubsonicArtist(id = id)!!
+    fun getSubsonicArtist(id: String) = DataManager.getSubsonicArtist(id = id)!!
 
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
-    fun getSubsonicAlbum(id: Long): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
+    fun getSubsonicAlbum(id: String): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
 
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)
     fun getPlaylist(title: String): Playlist? = DataManager.getPlaylist(title = title)
-    fun getSubsonicPlaylist(id: Long): SubsonicPlaylist? = DataManager.getSubsonicPlaylist(id = id)
+    fun getSubsonicPlaylist(id: String): SubsonicPlaylist? =
+        DataManager.getSubsonicPlaylist(id = id)
 
     fun addOnePlaylist(
         scope: CoroutineScope,

@@ -32,7 +32,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Artist(
-    @SerialName(value = "id") val id: Long,
+    @SerialName(value = "id") val id: String,
     @SerialName(value = "name") val title: String,
     @SerialName(value = "coverArt") val coverArt: String? = null,
     @SerialName(value = "albumCount") val albumCount: Int? = null,

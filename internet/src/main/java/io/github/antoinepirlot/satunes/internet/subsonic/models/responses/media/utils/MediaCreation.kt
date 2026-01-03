@@ -36,7 +36,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 /**
  * Get the [SubsonicPlaylist] martching the [id] or create a new one if it doesn't exist.
  */
-internal fun getOrCreateSubsonicPlaylist(id: Long, title: String): SubsonicPlaylist =
+internal fun getOrCreateSubsonicPlaylist(id: String, title: String): SubsonicPlaylist =
     DataManager.getSubsonicPlaylist(id = id) ?: createSubsonicPlaylist(id = id, title = title)
 
 /**
@@ -45,20 +45,20 @@ internal fun getOrCreateSubsonicPlaylist(id: Long, title: String): SubsonicPlayl
  * @param id the playlist's id
  * @param title the playlist's title
  */
-internal fun createSubsonicPlaylist(id: Long, title: String): SubsonicPlaylist =
-    DataManager.addPlaylist(playlist = SubsonicPlaylist(subsonicId = id, title = title))
+internal fun createSubsonicPlaylist(id: String, title: String): SubsonicPlaylist =
+    DataManager.addPlaylist(playlist = SubsonicPlaylist(subsonicId = id, id = null, title = title))
 
 /**
  * Get the subsonic artist matching the [id] or create a new one if it doesn't exist.
  */
-internal fun getOrCreateSubsonicArtist(id: Long, title: String): SubsonicArtist {
+internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtist {
     return DataManager.getSubsonicArtist(id = id) ?: createSubsonicArtist(id = id, title = title)
 }
 
 /**
  * Create a new artist matching data
  */
-private fun createSubsonicArtist(id: Long, title: String): SubsonicArtist =
+private fun createSubsonicArtist(id: String, title: String): SubsonicArtist =
     DataManager.addArtist(artist = SubsonicArtist(subsonicId = id, title = title))
 
 internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() //TODO
@@ -67,10 +67,10 @@ internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() /
  * Get the subsonic album matching the album or creates a new one and returns it if it is not known
  */
 internal fun getOrCreateSubsonicAlbum(
-    id: Long,
+    id: String,
     title: String,
     coverArtId: String?,
-    artistId: Long,
+    artistId: String,
     artistTitle: String
 ): SubsonicAlbum {
     return DataManager.getSubsonicAlbum(id = id) ?: createSubsonicAlbum(
@@ -87,10 +87,10 @@ internal fun getOrCreateSubsonicAlbum(
  * Create a new [SubsonicAlbum] and returns it.
  */
 private fun createSubsonicAlbum(
-    id: Long,
+    id: String,
     title: String,
     coverArtId: String?,
-    artistId: Long,
+    artistId: String,
     artistTitle: String,
     year: Int?,
 ): SubsonicAlbum =
@@ -107,4 +107,4 @@ private fun createSubsonicAlbum(
     )
 
 internal fun getSubsonicGenre(): Genre =
-    SubsonicGenre(subsonicId = 1, title = "UNKNOWN CLOUD GENRE") //TODO
+    SubsonicGenre(subsonicId = "1", title = "UNKNOWN CLOUD GENRE") //TODO

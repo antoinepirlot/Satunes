@@ -7,10 +7,11 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
  * @author Antoine Pirlot 24/12/2025
  */
 class SubsonicPlaylist(
-    override val subsonicId: Long,
+    override val subsonicId: String,
+    id: Long?,
     title: String,
 ) : SubsonicMedia, Playlist(
-    id = subsonicId,
+    id = id,
     title = title
 ) {
     override fun download(context: Context) {

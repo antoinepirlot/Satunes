@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,15 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -52,11 +47,8 @@ import kotlinx.coroutines.CoroutineScope
 internal fun PlaylistListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var openAlertDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
@@ -87,20 +79,7 @@ internal fun PlaylistListView(
 
         if (openAlertDialog) {
             PlaylistCreationForm(
-                onConfirm = { playlistTitle: String, storeOnCloud: Boolean ->
-                    if (storeOnCloud)
-                        subsonicViewModel.createPlaylist(
-                            name = playlistTitle,
-                            onDataRetrieved = { dataViewModel.addPlaylist(subsonicPlaylist = it) }
-                        )
-                    else
-                        dataViewModel.createPlaylist(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            playlistTitle = playlistTitle
-                        )
-                    openAlertDialog = false
-                },
+                onConfirm = { openAlertDialog = false },
                 onDismissRequest = { openAlertDialog = false }
             )
         }

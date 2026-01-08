@@ -102,23 +102,8 @@ private fun CreateNewPlaylistForm(
 
     PlaylistCreationForm(
         modifier = modifier,
-        onConfirm = { playlistTitle: String, storeOnCloud: Boolean ->
-            if (storeOnCloud)
-                subsonicViewModel.createPlaylist(
-                    name = playlistTitle,
-                    onDataRetrieved = { dataViewModel.addPlaylist(subsonicPlaylist = it) }
-                )
-            else //TODO check if necessary
-                dataViewModel.createPlaylist(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    playlistTitle = playlistTitle,
-                    onPlaylistAdded = {
-                        mediaSelectionViewModel.addPlaylist(
-                            playlist = dataViewModel.getPlaylist(title = playlistTitle)!!
-                        )
-                    }
-                )
+        onConfirm = {
+            mediaSelectionViewModel.addPlaylist(playlist = it)
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)
         },
         onDismissRequest = onDismissRequest

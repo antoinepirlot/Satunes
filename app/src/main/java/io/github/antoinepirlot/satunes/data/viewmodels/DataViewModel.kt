@@ -162,11 +162,11 @@ class DataViewModel : ViewModel() {
     fun getSubsonicPlaylist(id: String): SubsonicPlaylist? =
         DataManager.getSubsonicPlaylist(id = id)
 
-    fun addOnePlaylist(
+    fun createPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         playlistTitle: String,
-        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null,
+        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
@@ -207,7 +207,7 @@ class DataViewModel : ViewModel() {
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         action = {
-                            addOnePlaylist(
+                            createPlaylist(
                                 scope = scope,
                                 snackBarHostState = snackBarHostState,
                                 playlistTitle = playlistTitle
@@ -218,6 +218,9 @@ class DataViewModel : ViewModel() {
             }
         }
     }
+
+    fun addPlaylist(subsonicPlaylist: SubsonicPlaylist): SubsonicPlaylist =
+        DataManager.addPlaylist(playlist = subsonicPlaylist)
 
     fun updatePlaylistTitle(
         scope: CoroutineScope,

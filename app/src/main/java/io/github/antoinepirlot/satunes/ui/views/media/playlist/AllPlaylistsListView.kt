@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
@@ -51,6 +52,7 @@ import kotlinx.coroutines.CoroutineScope
 internal fun PlaylistListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
     val scope: CoroutineScope = LocalMainScope.current
@@ -85,12 +87,18 @@ internal fun PlaylistListView(
 
         if (openAlertDialog) {
             PlaylistCreationForm(
-                onConfirm = { playlistTitle: String ->
-                    dataViewModel.addOnePlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        playlistTitle = playlistTitle
-                    )
+                onConfirm = { playlistTitle: String, storeOnCloud: Boolean ->
+                    if (storeOnCloud)
+                        subsonicViewModel.createPlaylist(
+                            name = playlistTitle,
+                            onDataRetrieved = { dataViewModel.addPlaylist(subsonicPlaylist = it) }
+                        )
+                    else
+                        dataViewModel.createPlaylist(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            playlistTitle = playlistTitle
+                        )
                     openAlertDialog = false
                 },
                 onDismissRequest = { openAlertDialog = false }

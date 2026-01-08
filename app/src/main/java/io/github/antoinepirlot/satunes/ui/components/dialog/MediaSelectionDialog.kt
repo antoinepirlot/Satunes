@@ -41,6 +41,7 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
@@ -92,6 +93,7 @@ internal fun MediaSelectionDialog(
 private fun CreateNewPlaylistForm(
     modifier: Modifier,
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     onDismissRequest: () -> Unit
 ) {
@@ -100,15 +102,23 @@ private fun CreateNewPlaylistForm(
 
     PlaylistCreationForm(
         modifier = modifier,
-        onConfirm = { playlistTitle: String ->
-            dataViewModel.addOnePlaylist(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                playlistTitle = playlistTitle,
-                onPlaylistAdded = {
-                    mediaSelectionViewModel.addPlaylist(dataViewModel.getPlaylist(title = playlistTitle)!!)
-                }
-            )
+        onConfirm = { playlistTitle: String, storeOnCloud: Boolean ->
+            if (storeOnCloud)
+                subsonicViewModel.createPlaylist(
+                    name = playlistTitle,
+                    onDataRetrieved = { dataViewModel.addPlaylist(subsonicPlaylist = it) }
+                )
+            else //TODO check if necessary
+                dataViewModel.createPlaylist(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    playlistTitle = playlistTitle,
+                    onPlaylistAdded = {
+                        mediaSelectionViewModel.addPlaylist(
+                            playlist = dataViewModel.getPlaylist(title = playlistTitle)!!
+                        )
+                    }
+                )
             mediaSelectionViewModel.setShowPlaylistCreation(value = false)
         },
         onDismissRequest = onDismissRequest

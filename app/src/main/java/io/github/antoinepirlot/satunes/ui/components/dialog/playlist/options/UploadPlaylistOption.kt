@@ -40,7 +40,7 @@ fun UploadPlaylistOption(
         onClick = {
             isLoading = true
             subsonicViewModel.createPlaylist(
-                playlist = playlist,
+                name = playlist.title,
                 onDataRetrieved = {
                     dataViewModel.removePlaylist(
                         scope = scope,

@@ -51,12 +51,13 @@ internal fun PlaylistCreationForm(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     playlistCreationFormViewModel: PlaylistCreationFormViewModel = viewModel(),
-    onConfirm: (playlistTitle: String) -> Unit,
+    onConfirm: (playlistTitle: String, isStoringOnCloud: Boolean) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
 
     val playlistTitle: String = playlistCreationFormViewModel.title
+    val isStoringOnCloud: Boolean = playlistCreationFormViewModel.isStoringOnCloud
 
     AlertDialog(
         icon = {
@@ -82,17 +83,20 @@ internal fun PlaylistCreationForm(
                 if (satunesUiState.mode == SatunesModes.ONLINE)
                     SwitchSetting(
                         setting = SwitchSettings.SYNCHRONIZE_WITH_CLOUD,
-                        jetpackLibsIcons = if (playlistCreationFormViewModel.isStoringOnCloud)
-                            JetpackLibsIcons.CLOUD_ON_ICON
+                        jetpackLibsIcons = if (isStoringOnCloud) JetpackLibsIcons.CLOUD_ON_ICON
                         else JetpackLibsIcons.CLOUD_OFF_ICON,
-                        checked = playlistCreationFormViewModel.isStoringOnCloud,
+                        checked = isStoringOnCloud,
                         onCheckedChange = { playlistCreationFormViewModel.switchIsStoringOnCloud() }
                     )
             }
         },
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
-            TextButton(onClick = { onConfirm(playlistTitle) }) {
+            TextButton(
+                onClick = {
+                    onConfirm(playlistTitle, isStoringOnCloud)
+                }
+            ) {
                 NormalText(text = stringResource(id = R.string.create))
             }
         },
@@ -108,5 +112,5 @@ internal fun PlaylistCreationForm(
 @Preview
 @Composable
 private fun PlaylistCreationFormPreview() {
-    PlaylistCreationForm(onConfirm = {}, onDismissRequest = {})
+    PlaylistCreationForm(onConfirm = { _, _ -> }, onDismissRequest = {})
 }

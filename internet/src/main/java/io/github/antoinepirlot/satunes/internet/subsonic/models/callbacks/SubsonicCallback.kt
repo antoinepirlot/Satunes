@@ -80,18 +80,18 @@ internal abstract class SubsonicCallback<T>(
                 this.subsonicResponse =
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
             } catch (e: SerializationException) {
-                _logger?.severe(e.message)
+                _logger?.warning(e.message)
             } catch (e: IllegalArgumentException) {
-                _logger?.severe(e.message)
+                _logger?.warning(e.message)
             } catch (e: IOException) {
-                _logger?.severe(e.message)
-            } catch (_: NullPointerException) {
-                //Do nothing it's when lines has all been read
+                _logger?.warning(e.message)
             } finally {
                 input.close()
             }
         } catch (_: NullPointerException) {
             _logger?.warning("No body from request.")
+        } catch (e: Throwable) {
+            _logger?.warning(e.message)
         } finally {
             SubsonicCall.executionFinished(subsonicCallback = this)
         }

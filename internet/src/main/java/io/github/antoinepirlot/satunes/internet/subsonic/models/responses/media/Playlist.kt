@@ -13,12 +13,14 @@ import kotlinx.serialization.Serializable
 internal data class Playlist(
     @SerialName(value = "id") val id: String,
     @SerialName(value = "name") val title: String,
-    @SerialName(value = "owner") val owner: String,
-    @SerialName(value = "public") val public: Boolean,
-    @SerialName(value = "songCount") val songCount: Long,
-    @SerialName(value = "duration") val duration: Long,
-    @SerialName(value = "created") val creationDate: String,
-    @SerialName(value = "entry") val entries: Collection<Song>
+    @SerialName(value = "owner") val owner: String? = null,
+    @SerialName(value = "public") val public: Boolean? = null,
+    @SerialName(value = "songCount") val songCount: Long? = null,
+    @SerialName(value = "duration") val duration: Long? = null,
+    @SerialName(value = "created") val creationDate: String? = null,
+    @SerialName(value = "entry") val entries: Collection<Song> = listOf(),
+    @SerialName(value = "coverArt") val artwork: String? = null,
+    @SerialName(value = "changed") val lastChanged: String? = null,
 ) : SubsonicData {
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicPlaylist {
         val playlist: SubsonicPlaylist =

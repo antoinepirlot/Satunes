@@ -24,7 +24,6 @@
 package io.github.antoinepirlot.satunes.database.models.internet
 
 import android.graphics.Bitmap
-import io.github.antoinepirlot.satunes.database.models.Format
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -93,15 +92,6 @@ interface ApiRequester {
      * Get cover art from API
      */
     suspend fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
-
-    suspend fun stream(
-        musicId: String,
-        maxBitRate: Long = 0,
-        format: Format? = null,
-        onDataRetrieved: (InputStream) -> Unit,
-        onError: (() -> Unit)? = null,
-        onFinished: (() -> Unit)? = null,
-    )
 
     suspend fun download(
         musicId: String,

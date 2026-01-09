@@ -44,7 +44,7 @@ internal fun AllGenresListView(
 ) {
 
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = dataViewModel.getGenreSet())
+        dataViewModel.loadMediaImplList(collection = dataViewModel.getGenreSet())
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {

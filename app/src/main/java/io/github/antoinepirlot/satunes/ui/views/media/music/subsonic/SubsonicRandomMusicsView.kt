@@ -43,11 +43,11 @@ fun SubsonicRandomMusicsView(
     LaunchedEffect(key1 = Unit) {
         val musicList: Collection<SubsonicMusic> = dataViewModel.getSubsonicRandomMusicsCollection()
         if (musicList.isNotEmpty())
-            dataViewModel.loadMediaImplList(list = musicList)
+            dataViewModel.loadMediaImplList(collection = musicList)
         else
             subsonicViewModel.loadRandomSongs(onDataRetrieved = {
                 dataViewModel.addRandomMusics(musics = it)
-                dataViewModel.loadMediaImplList(list = dataViewModel.getSubsonicRandomMusicsCollection())
+                dataViewModel.loadMediaImplList(collection = dataViewModel.getSubsonicRandomMusicsCollection())
             })
     }
     MediaListView(

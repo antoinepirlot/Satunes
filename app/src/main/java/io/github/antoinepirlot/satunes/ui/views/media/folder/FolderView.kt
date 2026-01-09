@@ -52,7 +52,7 @@ internal fun FolderView(
         val subFolders: MutableList<MediaImpl> = mutableListOf()
         if (!folder.isRootFolder()) subFolders.add(dataViewModel.getBackFolder())
         subFolders.addAll(elements = folder.getSubFolderListWithMusics())
-        dataViewModel.loadMediaImplList(list = subFolders)
+        dataViewModel.loadMediaImplList(collection = subFolders)
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {

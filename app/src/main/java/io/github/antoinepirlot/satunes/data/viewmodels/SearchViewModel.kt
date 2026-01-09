@@ -153,7 +153,7 @@ class SearchViewModel : ViewModel() {
         selectedSearchChips: Collection<SearchChips>,
     ) {
         if (this.query.isBlank()) {
-            dataViewModel.loadMediaImplList(list = sortedSetOf())
+            dataViewModel.loadMediaImplList(collection = sortedSetOf())
             this@SearchViewModel.finishSearch()
             return
         }
@@ -262,7 +262,7 @@ class SearchViewModel : ViewModel() {
                 }
             }
         }
-        dataViewModel.loadMediaImplList(list = mediaImplSet)
+        dataViewModel.loadMediaImplList(collection = mediaImplSet)
         this.finishSearch()
     }
 
@@ -283,7 +283,7 @@ class SearchViewModel : ViewModel() {
             query = this.query,
             onFinished = { this.finishSearch() },
             onDataRetrieved = { medias: Collection<SubsonicMedia> ->
-                dataViewModel.loadMediaImplList(list = medias)
+                dataViewModel.loadMediaImplList(collection = medias)
             }
         )
     }

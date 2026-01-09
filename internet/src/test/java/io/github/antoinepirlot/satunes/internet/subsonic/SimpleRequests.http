@@ -37,3 +37,6 @@ GET {{baseUrl}}/getSong?{{get_song_params}}
 
 ###
 GET {{baseUrl}}/createPlaylist?{{create_playlist_params}}
+
+###
+GET {{baseUrl}}/getPlaylists?{{get_playlists_params}}

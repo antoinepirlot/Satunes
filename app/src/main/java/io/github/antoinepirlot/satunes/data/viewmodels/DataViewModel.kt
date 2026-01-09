@@ -1025,10 +1025,10 @@ class DataViewModel : ViewModel() {
         DataManager.addRandomMusic(musics = musics)
     }
 
-    fun loadMediaImplList(list: Collection<Media>) {
+    fun loadMediaImplList(collection: Collection<Media>) {
         _mediaListOnScreen as MutableList<Media>
         _mediaListOnScreen.clear()
-        _mediaListOnScreen.addAll(list)
+        _mediaListOnScreen.addAll(elements = collection)
     }
 
     /**

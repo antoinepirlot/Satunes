@@ -392,12 +392,38 @@ class SubsonicViewModel : ViewModel() {
         onFinished: (() -> Unit)? = null,
         onError: (() -> Unit)? = null
     ) {
+        this.initRequest()
         runIOThread {
             _apiRequester.createPlaylist(
                 title = name,
                 onDataRetrieved = { onDataRetrieved?.invoke(it) },
-                onFinished = onFinished,
+                onFinished = { this.finishRequest() },
                 onError = onError
+            )
+        }
+    }
+
+    /**
+     * Get all playlists from the server.
+     * @param onDataRetrieved the function to invoke when data is received.
+     * @param onFinished the function to invoke when the process is finished.
+     * @param onError the function to invoke when an error has occurred.
+     */
+    fun getPlaylists(
+        onDataRetrieved: ((Collection<SubsonicPlaylist>) -> Unit)?,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getPlaylists(
+                onDataRetrieved = { onDataRetrieved?.invoke(it) },
+                onFinished = {
+                    this.finishRequest()
+                    onFinished?.invoke()
+                },
+                onError = onError,
+                onSucceed = null
             )
         }
     }

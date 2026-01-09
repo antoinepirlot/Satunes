@@ -50,7 +50,7 @@ internal fun PlaylistView(
 ) {
 
     LaunchedEffect(key1 = playlist.musicCollection.size) {
-        dataViewModel.loadMediaImplList(list = playlist.musicCollection)
+        dataViewModel.loadMediaImplList(collection = playlist.musicCollection)
     }
 
     LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {

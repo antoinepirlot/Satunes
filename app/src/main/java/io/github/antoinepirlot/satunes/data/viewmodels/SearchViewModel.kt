@@ -41,7 +41,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.search.SearchSection
+import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,9 +87,9 @@ class SearchViewModel : ViewModel() {
         selectedSearchChips.addAll(_filtersList.filter { it.value }.keys)
     }
 
-    fun updateQuery(value: String) {
+    fun updateQuery(value: String, isLocal: Boolean) {
         query = value
-        if (_uiState.value.selectedSection.isLocal())
+        if (isLocal)
             this.requestSearch()
     }
 
@@ -140,14 +140,14 @@ class SearchViewModel : ViewModel() {
      *
      * If the query is blank, no results.
      *
-     * @param selectedSection the [SearchSection] where the search algorithm must search.
+     * @param selectedSection the [ModeTabSelectorSection] where the search algorithm must search.
      * @param dataViewModel the [DataViewModel] where to get the local list of all [MediaImpl] stored locally.
      * @param subsonicViewModel the [SubsonicViewModel] used to ask the API.
      * @param selectedSearchChips the [Collection] of [SearchChips] to know which kind of [MediaImpl] to include in search.
      */
     fun search(
         searchCoroutine: CoroutineScope,
-        selectedSection: SearchSection,
+        selectedSection: ModeTabSelectorSection,
         dataViewModel: DataViewModel,
         subsonicViewModel: SubsonicViewModel,
         selectedSearchChips: Collection<SearchChips>,
@@ -163,12 +163,12 @@ class SearchViewModel : ViewModel() {
                 currentState.copy(isSearching = true)
             }
             when (selectedSection) {
-                SearchSection.LOCAL -> localSearch(
+                ModeTabSelectorSection.LOCAL -> localSearch(
                     dataViewModel = dataViewModel,
                     selectedSearchChips = selectedSearchChips
                 )
 
-                SearchSection.SUBSONIC -> subsonicSearch(
+                ModeTabSelectorSection.SUBSONIC -> subsonicSearch(
                     subsonicViewModel = subsonicViewModel,
                     dataViewModel = dataViewModel
                 )
@@ -286,11 +286,5 @@ class SearchViewModel : ViewModel() {
                 dataViewModel.loadMediaImplList(list = medias)
             }
         )
-    }
-
-    fun selectSection(section: SearchSection) {
-        _uiState.update { currentState: SearchUiState ->
-            currentState.copy(selectedSection = section)
-        }
     }
 }

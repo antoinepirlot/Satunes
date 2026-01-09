@@ -401,6 +401,8 @@ object DataManager {
         return this._playlistsSortedMap.keys
     }
 
+    fun getSubsonicPlaylists(): Collection<SubsonicPlaylist> = _subsonicPlaylistMapById.values
+
     @Synchronized
     fun addPlaylist(playlist: Playlist): Playlist {
         if (!_playlistsSortedMap.contains(playlist)) {

@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,7 +46,6 @@ import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
 import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
-import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
 /**
@@ -109,25 +107,19 @@ internal fun PlaylistListView(
     }
 
     Box(modifier = modifier) {
-        if (subsonicUiState.isFetching)
-            LoadingView()
-        else {
-            Column {
-                if (satunesUiState.mode.isOnline())
-                    ModeTabSelector(
-                        localView = view,
-                        cloudView = view
-                    )
-                else
-                    view()
+        if (satunesUiState.mode.isOnline())
+            ModeTabSelector(
+                localView = view,
+                cloudView = view
+            )
+        else
+            view()
 
-                if (openAlertDialog) {
-                    PlaylistCreationForm(
-                        onConfirm = { openAlertDialog = false },
-                        onDismissRequest = { openAlertDialog = false }
-                    )
-                }
-            }
+        if (openAlertDialog) {
+            PlaylistCreationForm(
+                onConfirm = { openAlertDialog = false },
+                onDismissRequest = { openAlertDialog = false }
+            )
         }
     }
 }

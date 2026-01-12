@@ -49,28 +49,30 @@ fun ModeTabSelector(
     val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
     val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
 
-    PrimaryTabRow(
-        modifier = modifier,
-        selectedTabIndex = selectedSection.ordinal
-    ) {
-        ModeTabSelectorSection.entries.forEachIndexed { index: Int, section: ModeTabSelectorSection ->
-            Tab(
-                selected = selectedSection.ordinal == index,
-                onClick = {
-                    modeTabSelectorViewModel.selectSection(section = section)
-                },
-                text = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(jetpackLibsIcons = section.icon)
-                        NormalText(text = stringResource(section.stringId))
+    Column {
+        PrimaryTabRow(
+            modifier = modifier,
+            selectedTabIndex = selectedSection.ordinal
+        ) {
+            ModeTabSelectorSection.entries.forEachIndexed { index: Int, section: ModeTabSelectorSection ->
+                Tab(
+                    selected = selectedSection.ordinal == index,
+                    onClick = {
+                        modeTabSelectorViewModel.selectSection(section = section)
+                    },
+                    text = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(jetpackLibsIcons = section.icon)
+                            NormalText(text = stringResource(section.stringId))
+                        }
                     }
-                }
-            )
+                )
+            }
         }
-    }
 
-    when(selectedSection) {
-        ModeTabSelectorSection.LOCAL -> localView()
-        ModeTabSelectorSection.SUBSONIC -> cloudView()
+        when (selectedSection) {
+            ModeTabSelectorSection.LOCAL -> localView()
+            ModeTabSelectorSection.SUBSONIC -> cloudView()
+        }
     }
 }

@@ -39,7 +39,6 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
-import io.github.antoinepirlot.satunes.ui.views.LoadingView
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -85,22 +84,19 @@ internal fun PlaylistView(
             )
     }
 
-    if (subsonicUiState.isFetching) {
-        LoadingView()
-    } else {
-        MediaListView(
-            modifier = modifier,
-            header = {
-                val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                    stringResource(id = RDb.string.likes_playlist_title)
-                } else {
-                    playlist.title
-                }
-                Title(text = title)
-            },
-            emptyViewText = stringResource(R.string.no_music_in_playlist)
-        )
-    }
+    MediaListView(
+        modifier = modifier,
+        header = {
+            val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                stringResource(id = RDb.string.likes_playlist_title)
+            } else {
+                playlist.title
+            }
+            Title(text = title)
+        },
+        isLoading = isLoading,
+        emptyViewText = stringResource(R.string.no_music_in_playlist)
+    )
 }
 
 @Preview

@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -52,6 +53,7 @@ internal fun MediaListView(
     dataViewModel: DataViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
     header: (@Composable () -> Unit)? = null,
+    isLoading: Boolean = false,
     emptyViewText: String,
     canBeSorted: Boolean = true,
     showGroupIndication: Boolean = true,
@@ -81,10 +83,9 @@ internal fun MediaListView(
             dataViewModel.orderChanged()
     }
 
-    if (satunesUiState.showSortDialog)
-        SortListDialog()
-
-    if (listToShow.isNotEmpty()) {
+    if (isLoading) {
+        LoadingView()
+    } else if (listToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
             mediaImplList = listToShow,
@@ -100,6 +101,9 @@ internal fun MediaListView(
             text = emptyViewText
         )
     }
+
+    if (satunesUiState.showSortDialog)
+        SortListDialog()
 }
 
 @SuppressLint("UnrememberedMutableState")

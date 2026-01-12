@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -111,19 +112,21 @@ internal fun PlaylistListView(
         if (subsonicUiState.isFetching)
             LoadingView()
         else {
-            if (satunesUiState.mode.isOnline())
-                ModeTabSelector(
-                    localView = view,
-                    cloudView = view
-                )
-            else
-                view()
+            Column {
+                if (satunesUiState.mode.isOnline())
+                    ModeTabSelector(
+                        localView = view,
+                        cloudView = view
+                    )
+                else
+                    view()
 
-            if (openAlertDialog) {
-                PlaylistCreationForm(
-                    onConfirm = { openAlertDialog = false },
-                    onDismissRequest = { openAlertDialog = false }
-                )
+                if (openAlertDialog) {
+                    PlaylistCreationForm(
+                        onConfirm = { openAlertDialog = false },
+                        onDismissRequest = { openAlertDialog = false }
+                    )
+                }
             }
         }
     }

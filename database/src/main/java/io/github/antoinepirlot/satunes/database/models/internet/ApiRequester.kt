@@ -148,4 +148,21 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null
     )
+
+    /**
+     * Get single playlist
+     *
+     * @param id the playlist's id
+     * @param onDataRetrieved the function to invoke when data received.
+     * @param onError the function to invoke when an error occurred
+     * @param onFinished the function to invoke when the process is finished
+     * @param onSucceed the function to invoke when the process is a success
+     */
+    fun getPlaylist(
+        id: String,
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+        onSucceed: (() -> Unit)? = null
+    )
 }

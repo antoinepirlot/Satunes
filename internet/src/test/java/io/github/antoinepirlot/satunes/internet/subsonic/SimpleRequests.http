@@ -40,3 +40,6 @@ GET {{baseUrl}}/createPlaylist?{{create_playlist_params}}
 
 ###
 GET {{baseUrl}}/getPlaylists?{{get_playlists_params}}
+
+###
+GET {{baseUrl}}/getPlaylist?{{get_playlist_params}}

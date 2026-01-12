@@ -427,4 +427,26 @@ class SubsonicViewModel : ViewModel() {
             )
         }
     }
+
+    fun loadPlaylistMusics(
+        id: String,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getPlaylist(
+                id = id,
+                onDataRetrieved = {
+                    val playlist: SubsonicPlaylist = DataManager.getSubsonicPlaylist(id = id)!!
+                    playlist.addMusics(musics = it)
+                },
+                onError = onError,
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
+            )
+        }
+    }
 }

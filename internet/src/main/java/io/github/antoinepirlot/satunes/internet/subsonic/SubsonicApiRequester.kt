@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Downlo
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetSongCallback
@@ -353,6 +354,28 @@ class SubsonicApiRequester() : ApiRequester {
                 onSucceed = onSucceed,
                 onFinished = onFinished,
                 onError = { onError?.invoke() }
+            )
+        )
+    }
+
+    override fun getPlaylist(
+        id: String,
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getPlaylist",
+                parameters = arrayOf("id=$id")
+            ),
+            resCallback = GetPlaylistCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onSucceed = onSucceed,
+                onFinished = onFinished,
+                onError = { onError?.invoke() },
             )
         )
     }

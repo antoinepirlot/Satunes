@@ -42,8 +42,8 @@ open class Playlist(
      * @param music a [Music] to add into [musicSortedSet] and [musicCollection]
      */
     override fun addMusic(music: Music) {
-        if (music.isSubsonic()) return
         super.addMusic(music)
+        if (this.isSubsonic()) return // in that case it only depends on server's data
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val order: Long =

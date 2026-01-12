@@ -104,8 +104,8 @@ internal fun PlaylistListView(
                 )
             else
                 dataViewModel.loadMediaImplList(collection = collection)
-        }
-        dataViewModel.loadMediaImplList(collection = dataViewModel.getPlaylistSet())
+        } else
+            dataViewModel.loadMediaImplList(collection = dataViewModel.getPlaylistSet())
     }
 
     Box(modifier = modifier) {

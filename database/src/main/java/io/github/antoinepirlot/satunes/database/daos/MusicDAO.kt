@@ -40,6 +40,12 @@ internal interface MusicDAO {
     @Query(value = "SELECT * FROM musics WHERE music_id = :musicId")
     fun get(musicId: Long): MusicDB?
 
+    @Query(value = "SELECT music_id FROM musics WHERE local_id = :localId")
+    fun getMusicId(localId: Long): Long
+
+    @Query(value = "SELECT music_id FROM musics WHERE subsonic_id = :subsonicId")
+    fun getMusicId(subsonicId: String): Long
+
     @Query("SELECT * FROM musics WHERE local_id = :localId")
     fun getWithLocalId(localId: Long): MusicDB?
 

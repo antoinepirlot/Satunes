@@ -276,8 +276,11 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun updateMusicToPlaylists(music: Music, newPlaylistsCollection: Collection<Playlist>) {
+        val musicId: Long =
+            if (music.isSubsonic()) musicDao.getMusicId(subsonicId = (music as SubsonicMusic).subsonicId)
+            else musicDao.getMusicId(localId = music.id!!)
         val oldPlaylistCollection: Collection<Long> =
-            musicsPlaylistsRelDAO.getAllPlaylistsIdsOf(musicId = music.id!!)
+            musicsPlaylistsRelDAO.getAllPlaylistsIdsOf(musicId = musicId)
         val newPlaylists: MutableCollection<Playlist> = newPlaylistsCollection.toMutableSet()
         val removedPlaylist: MutableCollection<Playlist> = mutableSetOf()
         for (oldPlaylistId: Long in oldPlaylistCollection) {

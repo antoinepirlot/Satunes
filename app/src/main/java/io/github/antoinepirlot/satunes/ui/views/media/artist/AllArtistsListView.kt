@@ -43,11 +43,11 @@ internal fun AllArtistsListView(
     dataViewModel: DataViewModel = viewModel(),
 ) {
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = dataViewModel.getArtistSet())
+        dataViewModel.loadMediaImplList(collection = dataViewModel.getArtistSet())
     }
 
-    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
-        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
+        if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })

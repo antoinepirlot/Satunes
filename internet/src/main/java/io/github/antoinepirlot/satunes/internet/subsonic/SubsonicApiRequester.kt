@@ -31,19 +31,28 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAl
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.CreatePlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DeletePlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetSongCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.UpdatePlaylistCallback
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.InputStream
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -205,12 +214,11 @@ class SubsonicApiRequester() : ApiRequester {
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
     override suspend fun getArtist(
-        artistId: Long,
+        artistId: String,
         onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)?
     ) {
-        if (artistId < 1) throw IllegalArgumentException("Artist with id doesn't exist.")
         get(
             url = getCommandUrl(
                 command = "getArtist",
@@ -226,12 +234,11 @@ class SubsonicApiRequester() : ApiRequester {
     }
 
     override suspend fun getAlbum(
-        albumId: Long,
+        albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)?,
         onError: ((ApiError?) -> Unit)?
     ) {
-        if (albumId < 1) throw IllegalArgumentException("Album with id doesn't exist.")
         get(
             url = getCommandUrl(
                 command = "getAlbum",
@@ -262,6 +269,166 @@ class SubsonicApiRequester() : ApiRequester {
                 onFinished = null,
                 onError = null,
                 onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    override suspend fun download(
+        musicId: String,
+        onDataRetrieved: (InputStream) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "stream",
+                parameters = arrayOf("id=$musicId")
+            ),
+            resCallback = DownloadCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onError = { onError?.invoke() },
+                onDataRetrieved = onDataRetrieved,
+            )
+        )
+    }
+
+    override suspend fun getSong(
+        musicId: String,
+        onDataRetrieved: (SubsonicMusic?) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?,
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getSong",
+                parameters = arrayOf("id=$musicId")
+            ),
+            resCallback = GetSongCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onError = { onError?.invoke() },
+                onSucceed = onSucceed,
+                onFinished = onFinished
+            )
+        )
+    }
+
+    override suspend fun createPlaylist(
+        title: String,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        if (title.isBlank()) throw IllegalArgumentException("Can't create playlist with blank name")
+
+        get(
+            url = getCommandUrl(
+                command = "createPlaylist",
+                parameters = arrayOf("name=$title")
+            ),
+            resCallback = CreatePlaylistCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onError = { onError?.invoke() },
+                onSucceed = onSucceed,
+                onFinished = onFinished
+            )
+        )
+    }
+
+    override fun getPlaylists(
+        onDataRetrieved: (Collection<SubsonicPlaylist>) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getPlaylists",
+                parameters = arrayOf()
+            ),
+            resCallback = GetPlaylistsCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onSucceed = onSucceed,
+                onFinished = onFinished,
+                onError = { onError?.invoke() }
+            )
+        )
+    }
+
+    override fun getPlaylist(
+        id: String,
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getPlaylist",
+                parameters = arrayOf("id=$id")
+            ),
+            resCallback = GetPlaylistCallback(
+                subsonicApiRequester = this,
+                onDataRetrieved = onDataRetrieved,
+                onSucceed = onSucceed,
+                onFinished = onFinished,
+                onError = { onError?.invoke() },
+            )
+        )
+    }
+
+    override fun updatePlaylist(
+        playlistId: String,
+        name: String?,
+        musicsToAdd: Collection<SubsonicMusic>?,
+        musicsIndexToRemove: Collection<Int>?,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        var parameters: Array<String> = arrayOf("playlistId=$playlistId")
+        name?.let { parameters += "name=$it" }
+        musicsToAdd?.forEach { music: SubsonicMusic ->
+            parameters += "songIdToAdd=${music.subsonicId}"
+        }
+        musicsIndexToRemove?.forEach { index: Int ->
+            parameters += "songIndexToRemove=$index"
+        }
+        get(
+            url = getCommandUrl(
+                command = "updatePlaylist",
+                parameters = parameters
+            ),
+            resCallback = UpdatePlaylistCallback(
+                subsonicApiRequester = this,
+                onSucceed = onSucceed,
+                onError = { onError?.invoke() },
+                onFinished = onFinished
+            )
+        )
+    }
+
+    override fun deletePlaylist(
+        playlistId: String,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "deletePlaylist",
+                parameters = arrayOf("id=$playlistId")
+            ),
+            resCallback = DeletePlaylistCallback(
+                subsonicApiRequester = this,
+                onError = { onError?.invoke() },
+                onFinished = onFinished,
+                onSucceed = onSucceed
             )
         )
     }

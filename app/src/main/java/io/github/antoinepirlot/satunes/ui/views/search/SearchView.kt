@@ -32,11 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.ui.components.search.SearchBar
-import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelector
+import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
+import io.github.antoinepirlot.satunes.ui.components.search.LocalSearchSection
+import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSection
 
 /**
  * @author Antoine Pirlot on 27/06/2024
@@ -47,10 +47,9 @@ import io.github.antoinepirlot.satunes.ui.components.search.SearchModeTabSelecto
 internal fun SearchView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
-    searchViewModel: SearchViewModel = viewModel()
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val localView: @Composable () -> Unit = { LocalSearchSection() }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -59,8 +58,12 @@ internal fun SearchView(
     ) {
         SearchBar()
         if(satunesUiState.mode.isOnline())
-            SearchModeTabSelector()
-        searchUiState.selectedSection.composable()
+            ModeTabSelector(
+                localView = localView,
+                cloudView = { SubsonicSearchSection() }
+            )
+        else
+            localView()
     }
 }
 

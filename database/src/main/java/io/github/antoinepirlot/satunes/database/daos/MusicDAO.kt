@@ -37,8 +37,20 @@ internal interface MusicDAO {
     @Query("SELECT count(music_id) FROM musics")
     fun count(): Long
 
-    @Query("SELECT * FROM musics WHERE music_id == :id")
-    fun get(id: Long): MusicDB?
+    @Query(value = "SELECT * FROM musics WHERE music_id = :musicId")
+    fun get(musicId: Long): MusicDB?
+
+    @Query(value = "SELECT music_id FROM musics WHERE local_id = :localId")
+    fun getMusicId(localId: Long): Long
+
+    @Query(value = "SELECT music_id FROM musics WHERE subsonic_id = :subsonicId")
+    fun getMusicId(subsonicId: String): Long
+
+    @Query("SELECT * FROM musics WHERE local_id = :localId")
+    fun getWithLocalId(localId: Long): MusicDB?
+
+    @Query("SELECT * FROM musics WHERE subsonic_id = :subsonicId")
+    fun getWithSubsonicId(subsonicId: String): MusicDB?
 
     @Query("SELECT * FROM musics")
     fun getAll(): List<MusicDB>
@@ -46,18 +58,33 @@ internal interface MusicDAO {
     @Insert
     fun insert(vararg musics: MusicDB)
 
+    @Insert
+    fun insert(music: MusicDB): Long
+
     @Update
     fun update(vararg musicDBs: MusicDB)
 
-    @Query("UPDATE musics SET liked = 1 WHERE music_id = :musicId")
-    fun like(musicId: Long)
+    @Query("UPDATE musics SET liked = 1 WHERE local_id = :localId")
+    fun likeWithLocalId(localId: Long)
 
-    @Query("UPDATE musics SET liked = 0 WHERE music_id = :musicId")
-    fun unlike(musicId: Long)
+    @Query("UPDATE musics SET liked = 1 WHERE subsonic_id = :subsonicId")
+    fun likeWithSubsonicId(subsonicId: String)
+
+    @Query("UPDATE musics SET liked = 0 WHERE local_id = :localId")
+    fun unlikeWithLocalId(localId: Long)
+
+    @Query("UPDATE musics SET liked = 0 WHERE subsonic_id = :subsonicId")
+    fun unlikeWithSubsonicId(subsonicId: String)
 
     @Delete
     fun delete(music: MusicDB)
 
     @Query("DELETE from musics WHERE music_id = :musicId")
     fun delete(musicId: Long)
+
+    @Query("DELETE from musics WHERE local_id = :localId")
+    fun deleteWithLocalId(localId: Long)
+
+    @Query("DELETE from musics WHERE subsonic_id = :subsonicId")
+    fun deleteWithSubsonicId(subsonicId: String)
 }

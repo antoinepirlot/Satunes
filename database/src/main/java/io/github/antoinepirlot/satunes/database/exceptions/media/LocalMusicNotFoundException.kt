@@ -18,11 +18,14 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.exceptions
+package io.github.antoinepirlot.satunes.database.exceptions.media
 
 /**
- * @author Antoine Pirlot on 11/07/2024
+ * @author Antoine Pirlot on 13/04/2024
  */
-internal open class MediaNotFoundException(
-    val id: Long,
-) : NullPointerException()
+internal class LocalMusicNotFoundException(
+    id: Long
+) : MediaNotFoundException(_id = id, _cloudId = null) {
+    override fun isLocal(): Boolean = true
+    override fun isCloud(): Boolean = false
+}

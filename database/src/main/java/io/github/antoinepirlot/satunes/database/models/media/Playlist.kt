@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,13 +30,20 @@ import kotlinx.coroutines.launch
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
-class Playlist(
-    id: Long, // Managed by Database
+open class Playlist(
+    id: Long?,
     title: String
 ) : MediaImpl(id = id, title = title) {
 
+    /**
+     * Add music into [musicSortedSet] and [musicCollection]
+     * but if the music is [SubsonicMusic] it is ignored.
+     *
+     * @param music a [Music] to add into [musicSortedSet] and [musicCollection]
+     */
     override fun addMusic(music: Music) {
         super.addMusic(music)
+        if (this.isSubsonic()) return // in that case it only depends on server's data
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val order: Long =
@@ -51,6 +59,12 @@ class Playlist(
         }
     }
 
+    /**
+     * Add musics into [musicSortedSet] and [musicCollection]
+     * but if a music is [SubsonicMusic] it is ignored.
+     *
+     * @param musics a [Collection] of [Music] to add into [musicSortedSet] and [musicCollection].
+     */
     override fun addMusics(musics: Collection<Music>) {
         for (music: Music in musics)
             this.addMusic(music = music)

@@ -31,19 +31,22 @@ import io.github.antoinepirlot.satunes.ui.components.search.SubsonicSearchSectio
  * The order in enum is reflected on screen
  * @author Antoine Pirlot 13/12/2025
  */
-enum class SearchSection(
+enum class ModeTabSelectorSection(
     val stringId: Int,
-    val icon: JetpackLibsIcons,
-    val composable: @Composable () -> Unit
+    val icon: JetpackLibsIcons
 ) {
     LOCAL(
         stringId = R.string.local_section_text,
-        icon = JetpackLibsIcons.LOCAL_ICON,
-        composable = { LocalSearchSection() }),
+        icon = JetpackLibsIcons.LOCAL_ICON
+    ),
     SUBSONIC(
         stringId = R.string.subsonic_section_text,
-        icon = JetpackLibsIcons.CLOUD_ON_ICON,
-        composable = { SubsonicSearchSection() });
+        icon = JetpackLibsIcons.CLOUD_ON_ICON
+    );
+
+    companion object {
+        val DEFAULT: ModeTabSelectorSection = LOCAL
+    }
 
     fun isCloud(): Boolean = this == SUBSONIC
     fun isLocal(): Boolean = this == LOCAL

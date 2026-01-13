@@ -33,5 +33,5 @@ internal class GetCoverArtCallback(
         this.onFinished?.invoke()
     }
 
-    override fun isGetCoverArtCallback(): Boolean = true
+    override fun isReceivingJsonData(): Boolean = false
 }

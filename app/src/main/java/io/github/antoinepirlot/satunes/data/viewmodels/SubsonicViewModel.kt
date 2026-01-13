@@ -34,10 +34,12 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -158,14 +160,6 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    private fun loadArtists() {
-//        apiRequester.loadArtists()
-    }
-
-    fun removeOnlineMusic() {
-        TODO("Not yet implemented")
-    }
-
     /**
      * Get random song from API
      */
@@ -200,17 +194,20 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getAlbum(
-        albumId: Long,
+        albumId: String,
         onDataRetrieved: (media: SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
         val album: SubsonicAlbum? = DataManager.getSubsonicAlbum(id = albumId)
         if (album != null)
-            this.loadAlbum(
-                album = album,
-                onDataRetrieved = { onDataRetrieved.invoke(it) },
-                onFinished = onFinished
-            )
+            if (album.isEmpty())
+                this.loadAlbum(
+                    album = album,
+                    onDataRetrieved = { onDataRetrieved.invoke(it) },
+                    onFinished = onFinished
+                )
+            else
+                onDataRetrieved(album)
         else {
             this.initRequest()
             runIOThread {
@@ -241,7 +238,12 @@ class SubsonicViewModel : ViewModel() {
                 albumId = album.subsonicId,
                 onDataRetrieved = {
                     if (!album.isSubsonic())
-                        onDataRetrieved(album.toSubsonicAlbum(album = it))
+                        onDataRetrieved(
+                            album.toSubsonicAlbum(
+                                apiRequester = _apiRequester,
+                                album = it
+                            )
+                        )
                     else onDataRetrieved(it)
                 },
                 onFinished = {
@@ -254,18 +256,21 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getArtist(
-        artistId: Long,
+        artistId: String,
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-//        if (artist != null)
-//            this.loadArtist(
-//                artist = artist,
-//                onDataRetrieved = onDataRetrieved,
-//                onFinished = onFinished
-//            )
-//        else {
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            if (artist.isEmpty())
+                this.loadArtist(
+                    artist = artist,
+                    onDataRetrieved = onDataRetrieved,
+                    onFinished = onFinished
+                )
+            else
+                onDataRetrieved(artist)
+        else {
             this.initRequest()
             runIOThread {
                 _apiRequester.getArtist(
@@ -278,24 +283,29 @@ class SubsonicViewModel : ViewModel() {
                     onError = { this@SubsonicViewModel.error = it }
                 )
             }
-//        }
+        }
     }
 
     fun getArtistWithMusics(
-        artistId: Long,
+        artistId: String,
         onDataRetrieved: (media: SubsonicArtist) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-//        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
-//        if (artist != null)
-//            this.loadArtist(
-//                artist = artist,
-//                onDataRetrieved = { artist: SubsonicArtist ->
-//                    this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-//                },
-//                onFinished = onFinished
-//            )
-//        else
+        val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
+        if (artist != null)
+            if (artist.isEmpty())
+                this.loadArtist(
+                    artist = artist,
+                    onDataRetrieved = { artist: SubsonicArtist ->
+                        this.loadArtistWithMusics(
+                            artist = artist,
+                            onDataRetrieved = onDataRetrieved
+                        )
+                    },
+                    onFinished = onFinished
+                )
+            else onDataRetrieved(artist)
+        else
             this.getArtist(
                 artistId = artistId,
                 onDataRetrieved = { artist: SubsonicArtist ->
@@ -309,7 +319,7 @@ class SubsonicViewModel : ViewModel() {
         artist: SubsonicArtist,
         onDataRetrieved: (media: SubsonicArtist) -> Unit
     ) {
-        var queriesInProgress: Int = 0
+        var queriesInProgress = 0
         artist.albumCollection.forEach { album: Album ->
             if (album.isSubsonic()) {
                 queriesInProgress++
@@ -351,6 +361,176 @@ class SubsonicViewModel : ViewModel() {
                     this.finishRequest()
                 },
                 onError = { this@SubsonicViewModel.error = it }
+            )
+        }
+    }
+
+    /**
+     * Download music(s) associated to the [media].
+     *
+     * @param media the [SubsonicMedia] to download.
+     */
+    fun download(media: SubsonicMedia) {
+        TODO()
+    }
+
+    /**
+     * Create playlist to the server.
+     *
+     * @param name the playlist's title
+     */
+    fun createPlaylist(
+        name: String,
+        onDataRetrieved: ((SubsonicPlaylist) -> Unit)?,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.createPlaylist(
+                title = name,
+                onDataRetrieved = { onDataRetrieved?.invoke(it) },
+                onFinished = { this.finishRequest() },
+                onError = onError
+            )
+        }
+    }
+
+    /**
+     * Get all playlists from the server.
+     * @param onDataRetrieved the function to invoke when data is received.
+     * @param onFinished the function to invoke when the process is finished.
+     * @param onError the function to invoke when an error has occurred.
+     */
+    fun getPlaylists(
+        onDataRetrieved: ((Collection<SubsonicPlaylist>) -> Unit)?,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getPlaylists(
+                onDataRetrieved = { onDataRetrieved?.invoke(it) },
+                onFinished = {
+                    this.finishRequest()
+                    onFinished?.invoke()
+                },
+                onError = onError,
+                onSucceed = null
+            )
+        }
+    }
+
+    fun loadPlaylistMusics(
+        id: String,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getPlaylist(
+                id = id,
+                onDataRetrieved = {
+                    val playlist: SubsonicPlaylist = DataManager.getSubsonicPlaylist(id = id)!!
+                    playlist.addMusics(musics = it)
+                },
+                onError = onError,
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
+            )
+        }
+    }
+
+    fun updatePlaylistMusics(
+        musics: Collection<SubsonicMusic>,
+        playlist: SubsonicPlaylist,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.updatePlaylist(
+                playlistId = playlist.subsonicId,
+                musicsToAdd = this.getMusicsToAdd(playlist = playlist, collection = musics),
+                musicsIndexToRemove = this.getMusicsIndexToRemove(
+                    playlist = playlist,
+                    collection = musics
+                ),
+                onError = onError,
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
+            )
+        }
+    }
+
+    private fun getMusicsToAdd(
+        playlist: SubsonicPlaylist,
+        collection: Collection<SubsonicMusic>
+    ): Collection<SubsonicMusic> {
+        val musicsToAdd: MutableCollection<SubsonicMusic> = mutableListOf()
+        for (music: SubsonicMusic in collection)
+            if (!playlist.contains(media = music)) musicsToAdd.add(element = music)
+        return musicsToAdd
+    }
+
+    private fun getMusicsIndexToRemove(
+        playlist: SubsonicPlaylist,
+        collection: Collection<SubsonicMusic>
+    ): Collection<Int> {
+        val musicsIndexToRemove: MutableCollection<Int> = mutableListOf()
+        playlist.musicCollection.forEachIndexed { index: Int, music: Music ->
+            if (!collection.contains(element = music))
+                musicsIndexToRemove.add(element = index)
+        }
+        return musicsIndexToRemove
+    }
+
+    fun addMusicToPlaylists(
+        mediaImpl: SubsonicMedia,
+        playlists: MutableList<SubsonicPlaylist>
+    ) {
+        playlists.forEach { playlist: SubsonicPlaylist ->
+            if (mediaImpl.isMusic())
+                this.updatePlaylistMusics(
+                    musics = listOf(mediaImpl as SubsonicMusic),
+                    playlist = playlist
+                )
+            else
+                this.updatePlaylistMusics(
+                    musics = mediaImpl.musicCollection as Collection<SubsonicMusic>,
+                    playlist = playlist
+                )
+        }
+    }
+
+    fun removeMusicFromPlaylist(music: SubsonicMusic, playlist: SubsonicPlaylist) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.updatePlaylist(
+                playlistId = playlist.subsonicId,
+                musicsIndexToRemove = listOf(playlist.indexOf(media = music)),
+                onSucceed = { playlist.removeMusic(music = music) },
+                onFinished = { this.finishRequest() }
+            )
+        }
+    }
+
+    fun deletePlaylist(
+        playlist: SubsonicPlaylist,
+        onRemoved: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.deletePlaylist(
+                playlistId = playlist.subsonicId,
+                onSucceed = {
+                    DataManager.removePlaylist(playlist = playlist)
+                    onRemoved?.invoke()
+                }
             )
         }
     }

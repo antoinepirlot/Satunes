@@ -21,9 +21,9 @@
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,14 +34,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.ModeTabSelectorUiState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.ModeTabSelectorViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
+import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
+import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -51,15 +56,25 @@ import kotlinx.coroutines.CoroutineScope
 internal fun PlaylistListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
+    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
+    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
+
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = dataViewModel.getPlaylistSet())
+    val view: @Composable () -> Unit = {
+        MediaListView(
+            emptyViewText = stringResource(id = R.string.no_playlists),
+            canBeSorted = false,
+        )
+    }
 
+    LaunchedEffect(key1 = Unit) {
         satunesViewModel.replaceExtraButtons {
             ExtraButton(
                 jetpackLibsIcons = JetpackLibsIcons.EXPORT,
@@ -77,22 +92,32 @@ internal fun PlaylistListView(
         }
     }
 
+    LaunchedEffect(key1 = selectedSection) {
+        if (selectedSection.isCloud()) {
+            val collection: Collection<SubsonicPlaylist> =
+                dataViewModel.getSubsonicPlaylists()
+            if (collection.isEmpty())
+                subsonicViewModel.getPlaylists(
+                    onDataRetrieved = { dataViewModel.loadMediaImplList(collection = it) }
+                )
+            else
+                dataViewModel.loadMediaImplList(collection = collection)
+        } else
+            dataViewModel.loadMediaImplList(collection = dataViewModel.getPlaylistSet())
+    }
+
     Box(modifier = modifier) {
-        MediaListView(
-            emptyViewText = stringResource(id = R.string.no_playlists),
-            canBeSorted = false,
-        )
+        if (satunesUiState.mode.isOnline())
+            ModeTabSelector(
+                localView = view,
+                cloudView = view
+            )
+        else
+            view()
 
         if (openAlertDialog) {
             PlaylistCreationForm(
-                onConfirm = { playlistTitle: String ->
-                    dataViewModel.addOnePlaylist(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        playlistTitle = playlistTitle
-                    )
-                    openAlertDialog = false
-                },
+                onConfirm = { openAlertDialog = false },
                 onDismissRequest = { openAlertDialog = false }
             )
         }

@@ -23,9 +23,11 @@ package io.github.antoinepirlot.satunes.database.models.database.tables
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.satunes.database.exceptions.MusicNotFoundException
+import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -38,11 +40,16 @@ import kotlinx.serialization.Transient
  */
 
 @Serializable
-@Entity("musics")
-internal data class MusicDB(
+@Entity(
+    tableName = "musics",
+    indices = [Index(value = ["local_id", "subsonic_id"], unique = true)]
+)
+internal class MusicDB(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("music_id") override val id: Long = 0,
-    @ColumnInfo("absolute_path") var absolutePath: String,
+    @ColumnInfo(name = "music_id") override val id: Long = 0,
+    @ColumnInfo(name = "local_id") var localId: Long? = null,
+    @ColumnInfo(name = "subsonic_id") var subsonicId: String? = null,
+    @ColumnInfo(name = "absolute_path") var absolutePath: String,
 ) : MediaData {
     @Transient
     @Ignore
@@ -52,27 +59,41 @@ internal data class MusicDB(
     @Transient
     override lateinit var title: String
 
+    @ColumnInfo(name = "liked")
     var liked: Boolean = false
 
-    @Ignore
-    @Transient
-    var music: Music? =
-        try {
+    suspend fun getMusic(apiRequester: ApiRequester? = null): Music? {
+        return if (this.subsonicId != null) {
+            var music: Music? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
+            var mustWait: Boolean = true
+            if (music == null && apiRequester != null)
+                apiRequester.getSong(
+                    musicId = this.subsonicId!!,
+                    onDataRetrieved = { music = it },
+                    onFinished = { mustWait = false }
+                )
+            else mustWait = false
+            while (mustWait);
+            music
+        } else {
             try {
-                DataManager.getMusic(absolutePath = absolutePath)
-            } catch (_: NullPointerException) {
-                //The path has changed
                 try {
-                    val music: Music = DataManager.getMusic(id = id)
-                    DatabaseManager.getInstance().updateMusic(music)
-                    music
-                } catch (_: MusicNotFoundException) {
-                    null
+                    DataManager.getMusicByPath(absolutePath = absolutePath)
+                } catch (_: NullPointerException) {
+                    //The path has changed
+                    try {
+                        val music: Music = DataManager.getMusic(id = id)
+                        DatabaseManager.getInstance().updateMusic(music)
+                        music
+                    } catch (_: LocalMusicNotFoundException) {
+                        null
+                    }
                 }
+            } catch (e: Throwable) {
+                val message = "An error occurred while getting music in musicDB"
+                _logger?.severe(message)
+                throw e
             }
-        } catch (e: Throwable) {
-            val message = "An error occurred while getting music in musicDB"
-            _logger?.severe(message)
-            throw e
         }
+    }
 }

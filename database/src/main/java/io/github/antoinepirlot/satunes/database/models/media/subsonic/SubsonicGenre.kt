@@ -20,16 +20,18 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicGenre(
-    override var subsonicId: Long,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
 ) : SubsonicMedia, Genre(
-    id = subsonicId,
+    id = id,
     title = title,
 ) {
 
@@ -40,5 +42,13 @@ class SubsonicGenre(
 
     override fun hashCode(): Int {
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeDownload() {
+        TODO("Not yet implemented")
     }
 }

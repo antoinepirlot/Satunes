@@ -27,7 +27,7 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 /**
  * @author Antoine Pirlot on 28/06/2024
  */
-internal object MigrationFrom1To2 : Migration(1, 2) {
+internal object MigrationFrom1To2 : Migration(startVersion = 1, endVersion = 2) {
     private val _logger: Logger? = Logger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {

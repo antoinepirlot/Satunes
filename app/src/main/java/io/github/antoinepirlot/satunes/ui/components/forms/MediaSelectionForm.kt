@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.models.Destination
 
 /**
@@ -74,7 +75,7 @@ internal fun MediaSelectionForm(
         LazyColumn(state = lazyState) {
             items(
                 items = mediaList,
-                key = { it.javaClass.name + '-' + it.id }
+                key = { it.javaClass.name + '-' + if (it.isSubsonic()) (it as SubsonicMedia).subsonicId else it.id }
             ) { mediaImpl: MediaImpl ->
                 MediaSelectionCheckbox(mediaImpl = mediaImpl)
             }

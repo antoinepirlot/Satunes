@@ -38,7 +38,7 @@ fun LocalAllMusicsListView(
     dataViewModel: DataViewModel = viewModel(),
 ) {
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = dataViewModel.getMusicSet())
+        dataViewModel.loadMediaImplList(collection = dataViewModel.getMusicSet())
     }
 
     MediaListView(

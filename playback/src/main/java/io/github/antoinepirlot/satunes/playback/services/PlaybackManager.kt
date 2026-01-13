@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -116,13 +117,14 @@ object PlaybackManager {
 
     fun initPlaybackWithAllMusics(
         context: Context,
+        apiRequester: ApiRequester,
         listener: PlaybackListener? = this.listener
     ) {
         _logger?.info("Init playback with all musics")
         if (!LocalDataLoader.isLoaded.value && !LocalDataLoader.isLoading.value) {
             LocalDataLoader.resetAllData()
             runBlocking(Dispatchers.IO) {
-                LocalDataLoader.loadAllData(context = context)
+                LocalDataLoader.loadAllData(context = context, apiRequester = apiRequester)
             }
             this.initPlayback(context = context, listener = listener, loadAllMusics = true)
         } else {
@@ -149,6 +151,7 @@ object PlaybackManager {
      */
     fun checkPlaybackController(
         context: Context,
+        apiRequester: ApiRequester,
         listener: PlaybackListener? = this.listener,
         loadAllMusics: Boolean = false,
         log: Boolean = true
@@ -158,6 +161,7 @@ object PlaybackManager {
         if (loadAllMusics) {
             this.initPlaybackWithAllMusics(
                 context = context,
+                apiRequester = apiRequester,
                 listener = listener
             )
         } else {
@@ -178,9 +182,18 @@ object PlaybackManager {
         currentPositionProgression.floatValue = _playbackController!!.currentPositionProgression
     }
 
-    fun start(context: Context, musicToPlay: Music? = null, reset: Boolean = false) {
+    fun start(
+        context: Context,
+        apiRequester: ApiRequester,
+        musicToPlay: Music? = null,
+        reset: Boolean = false
+    ) {
         _logger?.info("Start")
-        checkPlaybackController(context = context, loadAllMusics = true)
+        checkPlaybackController(
+            context = context,
+            apiRequester = apiRequester,
+            loadAllMusics = true
+        )
         if (reset) {
             this._playbackController!!.loadMusics(
                 musics = DataManager.getMusicSet(),
@@ -190,15 +203,19 @@ object PlaybackManager {
         this._playbackController!!.start(musicToPlay = musicToPlay)
     }
 
-    fun playPause(context: Context) {
+    fun playPause(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Play pause")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.playPause()
     }
 
-    fun play(context: Context) {
+    fun play(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Play")
-        checkPlaybackController(context = context, loadAllMusics = true)
+        checkPlaybackController(
+            context = context,
+            apiRequester = apiRequester,
+            loadAllMusics = true
+        )
         if (musicPlaying.value == null) {
             this._playbackController!!.start()
         } else {
@@ -206,78 +223,84 @@ object PlaybackManager {
         }
     }
 
-    fun pause(context: Context) {
+    fun pause(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Pause")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.pause()
     }
 
-    fun getCurrentPosition(context: Context): Long {
+    fun getCurrentPosition(context: Context, apiRequester: ApiRequester): Long {
         _logger?.info("Get current position")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.getCurrentPosition()
     }
 
-    fun getMusicPlayingIndexPosition(context: Context): Int {
+    fun getMusicPlayingIndexPosition(context: Context, apiRequester: ApiRequester): Int {
         _logger?.info("Get music playing index position")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.getMusicPlayingIndexPosition()
     }
 
-    fun playNext(context: Context) {
+    fun playNext(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Play next")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.playNext()
     }
 
-    fun playPrevious(context: Context) {
+    fun playPrevious(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Play previous")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         if (this.playlist == null) {
             return
         }
         this._playbackController!!.playPrevious()
     }
 
-    fun forward(context: Context) {
+    fun forward(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Forward")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.forward()
     }
 
-    fun rewind(context: Context) {
+    fun rewind(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Rewind")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.rewind()
     }
 
-    fun seekTo(context: Context, positionMs: Long) {
+    fun seekTo(context: Context, apiRequester: ApiRequester, positionMs: Long) {
         _logger?.info("Seek to with position ms")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.seekTo(positionMs = positionMs)
     }
 
-    fun seekTo(context: Context, positionPercentage: Float) {
+    fun seekTo(context: Context, apiRequester: ApiRequester, positionPercentage: Float) {
         _logger?.info("Seek to with position percentage")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.seekTo(positionPercentage = positionPercentage)
     }
 
-    fun seekTo(context: Context, music: Music, positionMs: Long = 0) {
+    fun seekTo(context: Context, apiRequester: ApiRequester, music: Music, positionMs: Long = 0) {
         _logger?.info("Seek to with music and position ms")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.seekTo(music = music, positionMs = positionMs)
     }
 
-    fun seekTo(context: Context, musicId: Long, positionMs: Long = 0) {
+    fun seekTo(context: Context, apiRequester: ApiRequester, musicId: Long, positionMs: Long = 0) {
         _logger?.info("Seek to with music id and position ms = $positionMs")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         val music: Music = DataManager.getMusic(musicId)
-        this.seekTo(context = context, music = music, positionMs = positionMs)
+        this.seekTo(
+            context = context,
+            apiRequester = apiRequester,
+            music = music,
+            positionMs = positionMs
+        )
     }
 
     fun loadMusics(
         context: Context,
+        apiRequester: ApiRequester,
         musics: Collection<Music>,
         shuffleMode: Boolean = SettingsManager.shuffleMode,
         musicToPlay: Music? = null,
@@ -288,7 +311,7 @@ object PlaybackManager {
             return
         }
         if (this.isLoading.value) return
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.loadMusics(
             musics = musics,
             shuffleMode = shuffleMode,
@@ -296,33 +319,33 @@ object PlaybackManager {
         )
     }
 
-    fun addToQueue(context: Context, mediaImpl: MediaImpl) {
+    fun addToQueue(context: Context, apiRequester: ApiRequester, mediaImpl: MediaImpl) {
         _logger?.info("Add to queue with media impl")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.addToQueue(mediaImpl = mediaImpl)
     }
 
-    fun removeFromQueue(context: Context, mediaImpl: MediaImpl) {
+    fun removeFromQueue(context: Context, apiRequester: ApiRequester, mediaImpl: MediaImpl) {
         _logger?.info("Remove from queue with media impl")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.removeFromQueue(mediaImpl = mediaImpl)
     }
 
-    fun addNext(context: Context, mediaImpl: MediaImpl) {
+    fun addNext(context: Context, apiRequester: ApiRequester, mediaImpl: MediaImpl) {
         _logger?.info("Add next with media impl")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.addNext(mediaImpl = mediaImpl)
     }
 
-    fun switchShuffleMode(context: Context) {
+    fun switchShuffleMode(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Switch Shuffle Mode")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.switchShuffleMode()
     }
 
-    fun switchRepeatMode(context: Context) {
+    fun switchRepeatMode(context: Context, apiRequester: ApiRequester) {
         _logger?.info("Switch repeat mode")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         this._playbackController!!.switchRepeatMode()
     }
 
@@ -337,27 +360,27 @@ object PlaybackManager {
         this._playbackController = null
     }
 
-    fun getPlaylist(context: Context): SnapshotStateList<Music> {
+    fun getPlaylist(context: Context, apiRequester: ApiRequester): SnapshotStateList<Music> {
         _logger?.info("Get playlist")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.getPlaylist()
     }
 
-    fun isMusicInQueue(context: Context, music: Music): Boolean {
+    fun isMusicInQueue(context: Context, apiRequester: ApiRequester, music: Music): Boolean {
         _logger?.info("Is music in queue")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.isMusicInQueue(music = music)
     }
 
-    fun updateCurrentPosition(context: Context, log: Boolean = true) {
+    fun updateCurrentPosition(context: Context, apiRequester: ApiRequester, log: Boolean = true) {
         if (log) _logger?.info("Update current position")
-        checkPlaybackController(context = context, log = log)
+        checkPlaybackController(context = context, apiRequester = apiRequester, log = log)
         this._playbackController!!.updateCurrentPosition()
     }
 
-    fun getNextMusic(context: Context): Music? {
+    fun getNextMusic(context: Context, apiRequester: ApiRequester): Music? {
         _logger?.info("Get next music")
-        checkPlaybackController(context = context)
+        checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.getNextMusic()
     }
 }

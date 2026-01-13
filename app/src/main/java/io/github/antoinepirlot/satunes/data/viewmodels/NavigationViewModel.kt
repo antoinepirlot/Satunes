@@ -31,6 +31,7 @@ import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.models.Destination
@@ -207,13 +208,20 @@ class NavigationViewModel : ViewModel() {
         else if (media.isAlbum())
             if(media.isSubsonic()) Destination.SUBSONIC_ALBUM
             else Destination.ALBUM
-        else if (media.isGenre()) Destination.GENRE
-        else if (media.isPlaylist()) Destination.PLAYLIST
+        else if (media.isGenre())
+            if (media.isSubsonic()) Destination.SUBSONIC_GENRE
+            else Destination.GENRE
+        else if (media.isPlaylist())
+            if (media.isSubsonic()) Destination.SUBSONIC_PLAYLIST
+            else Destination.PLAYLIST
         else Destination.PLAYBACK // same as first
     }
 
     private fun getRoute(destination: Destination, media: Media): String {
-        return "${destination.link.removeSuffix("/{id}")}/${media.id}"
+        val id: String =
+            if (media.isSubsonic()) (media as SubsonicMedia).subsonicId
+            else media.id!!.toString()
+        return "${destination.link.removeSuffix("/{id}")}/$id"
     }
 
     /**

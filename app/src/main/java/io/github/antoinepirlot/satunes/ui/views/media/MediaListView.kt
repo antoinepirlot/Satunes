@@ -40,6 +40,7 @@ import io.github.antoinepirlot.satunes.models.radio_buttons.SortOptions
 import io.github.antoinepirlot.satunes.ui.components.EmptyView
 import io.github.antoinepirlot.satunes.ui.components.cards.media.MediaCardList
 import io.github.antoinepirlot.satunes.ui.components.dialog.SortListDialog
+import io.github.antoinepirlot.satunes.ui.views.LoadingView
 
 /**
  * @author Antoine Pirlot on 01/02/24
@@ -52,6 +53,7 @@ internal fun MediaListView(
     dataViewModel: DataViewModel = viewModel(),
     navigationViewModel: NavigationViewModel = viewModel(),
     header: (@Composable () -> Unit)? = null,
+    isLoading: Boolean = false,
     emptyViewText: String,
     canBeSorted: Boolean = true,
     showGroupIndication: Boolean = true,
@@ -64,36 +66,26 @@ internal fun MediaListView(
     val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
-    val listToShow: List<Media> = dataViewModel.mediaImplListOnScreen
+    val listToShow: List<Media> = dataViewModel.mediaListOnScreen
     val sortOption: SortOptions = dataViewModel.sortOption
     val reverseOrder: Boolean = dataViewModel.reverseSortedOrder
     val previousReverseOrder: Boolean = dataViewModel.previousReverseOrder
 
-//    LaunchedEffect(key1 = collectionChanged) { //TODO REMOVE
-//        // Prevent doing twice the same thing at launching and showing empty text temporarily
-//        if (dataUiState.appliedSortOption == null) return@LaunchedEffect
-//    }
-
     LaunchedEffect(key1 = sortOption, key2 = reverseOrder) {
         if (canBeSorted && (sortOption != dataUiState.appliedSortOption || reverseOrder != previousReverseOrder)) {
             dataViewModel.sort(navigationUiState = navigationUiState)
-//            if (!collectionChanged)
-//                lazyListState.requestScrollToItem(0)
-//            else {
                 lazyListState.requestScrollToItem(
                     index = lazyListState.firstVisibleItemIndex,
                     scrollOffset = lazyListState.firstVisibleItemScrollOffset
                 ) //Prevent scroll to anywhere else when back gesture
-//            }
         }
         if (reverseOrder != previousReverseOrder)
             dataViewModel.orderChanged()
     }
 
-    if (satunesUiState.showSortDialog)
-        SortListDialog()
-
-    if (listToShow.isNotEmpty()) {
+    if (isLoading) {
+        LoadingView()
+    } else if (listToShow.isNotEmpty()) {
         MediaCardList(
             modifier = modifier,
             mediaImplList = listToShow,
@@ -109,14 +101,14 @@ internal fun MediaListView(
             text = emptyViewText
         )
     }
+
+    if (satunesUiState.showSortDialog)
+        SortListDialog()
 }
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 @Preview
 private fun MediaListViewPreview() {
-    MediaListView(
-//        collectionChanged = false,
-        emptyViewText = "No data"
-    )
+    MediaListView(emptyViewText = "No data")
 }

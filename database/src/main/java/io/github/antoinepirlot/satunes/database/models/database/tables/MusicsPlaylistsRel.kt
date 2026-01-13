@@ -22,6 +22,8 @@ package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.NO_ACTION
 
 /**
  * @author Antoine Pirlot on 27/03/2024
@@ -29,10 +31,27 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "musics_playlists_rel",
-    primaryKeys = ["playlist_id", "music_id"]
+    primaryKeys = ["playlist_id", "music_id"],
+//    indices = [Index(value = ["music_id"], unique = true)],
+    foreignKeys = [
+        ForeignKey(
+            entity = MusicDB::class,
+            parentColumns = arrayOf("music_id"),
+            childColumns = arrayOf("music_id"),
+            onDelete = NO_ACTION,
+            onUpdate = NO_ACTION
+        ),
+        ForeignKey(
+            entity = PlaylistDB::class,
+            parentColumns = arrayOf("playlist_id"),
+            childColumns = arrayOf("playlist_id"),
+            onDelete = NO_ACTION,
+            onUpdate = NO_ACTION
+        )
+    ]
 )
 internal data class MusicsPlaylistsRel(
     @ColumnInfo(name = "playlist_id") val playlistId: Long,
-    @ColumnInfo(name = "music_id", index = true) val musicId: Long,
+    @ColumnInfo(name = "music_id") val musicId: Long,
     @ColumnInfo(name = "added_date_ms") val addedDateMs: Long
 )

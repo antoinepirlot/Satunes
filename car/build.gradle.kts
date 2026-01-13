@@ -74,6 +74,11 @@ dependencies {
     implementation(project(":database"))
 
     /**
+     * Internet
+     */
+    implementation(project(":internet"))
+
+    /**
      * Libs
      */
     implementation(project(":libs:components"))

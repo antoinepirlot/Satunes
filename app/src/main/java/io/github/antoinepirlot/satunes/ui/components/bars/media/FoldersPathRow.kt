@@ -61,7 +61,7 @@ fun FoldersPathRow(
     ) {
         items(
             items = folders,
-            key = { it.javaClass.name + '-' + it.id }
+            key = { it.javaClass.name + '-' + it.id!! }
         ) { targetFolder: Folder ->
             var onClick: (() -> Unit)? = null
             if (targetFolder != endFolder) onClick = {

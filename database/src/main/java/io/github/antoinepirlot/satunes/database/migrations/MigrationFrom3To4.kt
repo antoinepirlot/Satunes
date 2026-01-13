@@ -29,7 +29,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 /**
  * @author Antoine Pirlot 31/01/2025
  */
-object MigrationFrom3To4 : Migration(3, 4) {
+object MigrationFrom3To4 : Migration(startVersion = 3, endVersion = 4) {
     private val _logger: Logger? = Logger.getLogger()
 
     override fun migrate(db: SupportSQLiteDatabase) {

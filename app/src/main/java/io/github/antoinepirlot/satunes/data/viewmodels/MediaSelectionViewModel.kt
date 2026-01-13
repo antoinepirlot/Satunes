@@ -41,8 +41,8 @@ class MediaSelectionViewModel : ViewModel() {
     /**
      * List of checked playlists to know where to add music from form
      */
-    private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
-    private val _checkedMusics: MutableList<Music> = mutableListOf()
+    private var _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
+    private var _checkedMusics: MutableList<Music> = mutableListOf()
 
     /**
      * Use to know from where the selection is running.
@@ -60,7 +60,7 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     fun getCheckedPlaylistWithMusics(): List<Playlist> {
-        val list: List<Playlist> = _checkedPlaylistWithMusics.toList()
+        val list: List<Playlist> = _checkedPlaylistWithMusics
         clearCheckedPlaylistWithMusics()
         return list
     }
@@ -74,11 +74,11 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     private fun clearCheckedPlaylistWithMusics() {
-        _checkedPlaylistWithMusics.clear()
+        _checkedPlaylistWithMusics = mutableListOf()
     }
 
     fun getCheckedMusics(): List<Music> {
-        val list: List<Music> = _checkedMusics.toList()
+        val list: List<Music> = _checkedMusics
         clearCheckedMusics()
         return list
     }
@@ -92,7 +92,7 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     private fun clearCheckedMusics() {
-        _checkedMusics.clear()
+        _checkedMusics = mutableListOf()
     }
 
     fun setShowPlaylistCreation(value: Boolean) {

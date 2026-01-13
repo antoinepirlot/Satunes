@@ -28,6 +28,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
@@ -44,7 +45,12 @@ internal fun NextButton(
         modifier = modifier,
         imageProvider = JetpackLibsIcons.SKIP_NEXT.imageProvider!!,
         contentDescription = "Skip next",
-        onClick = { PlaybackManager.playNext(context = context) },
+        onClick = {
+            PlaybackManager.playNext(
+                context = context,
+                apiRequester = SubsonicApiRequester()
+            )
+        },
         backgroundColor = GlanceTheme.colors.primary,
         contentColor = GlanceTheme.colors.onPrimary,
     )

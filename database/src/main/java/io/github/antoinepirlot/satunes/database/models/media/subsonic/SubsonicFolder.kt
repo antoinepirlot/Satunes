@@ -20,15 +20,16 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 
 /**
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicFolder(
-    override var subsonicId: Long,
+    override var subsonicId: String,
     title: String
-) : SubsonicMedia, Folder(id = subsonicId, title = title) {
+) : SubsonicMedia, Folder(title = title) {
 
     companion object {
         const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
@@ -41,5 +42,13 @@ class SubsonicFolder(
 
     override fun hashCode(): Int {
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeDownload() {
+        TODO("Not yet implemented")
     }
 }

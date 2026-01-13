@@ -26,16 +26,14 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.net.Uri.encode
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.graphics.drawable.toBitmap
+import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
-import io.github.antoinepirlot.jetpack_libs.components.R
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
@@ -46,7 +44,7 @@ import java.util.Date
  */
 
 open class Music(
-    id: Long,
+    id: Long?,
     title: String,
     displayName: String,
     absolutePath: String,
@@ -63,6 +61,12 @@ open class Music(
     id = id,
     title = if (title.isBlank() || SettingsManager.isMusicTitleDisplayName) displayName else title
 ) {
+    companion object {
+        private var _nextSystemId: Long = 0
+            get() = field++
+    }
+
+    val systemId: Long = _nextSystemId
 
     /**
      * Remember in which order music has been added to playlists
@@ -92,7 +96,7 @@ open class Music(
 
     public override var addedDate: Date? = null
 
-    var liked: MutableState<Boolean> = mutableStateOf(false)
+    var liked: Boolean by mutableStateOf(value = false)
         private set
 
     var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
@@ -111,14 +115,22 @@ open class Music(
         folder.addMusic(music = this)
     }
 
-    fun switchLike() {
-        this.liked.value = !this.liked.value
+    open fun switchLike() {
+        //Like will be changed by db when it as been added or removed from liked playlist.
         val db = DatabaseManager.getInstance()
-        if (this.liked.value) {
+        if (!this.liked) {
             db.like(music = this)
         } else {
             db.unlike(music = this)
         }
+    }
+
+    internal fun markAsLiked() {
+        this.liked = true
+    }
+
+    internal fun markAsUnliked() {
+        this.liked = false
     }
 
     fun getYear(): Int? {
@@ -153,23 +165,9 @@ open class Music(
             null
         }
         if (bitmap == null)
-            bitmap = getEmptyAlbumArtwork(context = context)
+            bitmap = this.album.getEmptyAlbumArtwork(context = context)
         return bitmap.applyShape()
     }
-
-    /**
-     * Apply circle shape if user enabled it.
-     *
-     * @return the shaped [Bitmap]
-     */
-    protected fun Bitmap.applyShape(): Bitmap {
-        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
-    }
-
-    protected fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
-        context,
-        R.mipmap.empty_album_artwork_foreground
-    )!!.toBitmap()
 
     /**
      * Link this [Music] to [Playlist] with its order in the [Playlist].
@@ -229,6 +227,9 @@ open class Music(
     fun updateGenre(genre: Genre) {
         this.genre = genre
     }
+
+    internal open fun toMusicDB(): MusicDB =
+        MusicDB(localId = this.id, absolutePath = this.absolutePath)
 
     override fun isMusic(): Boolean = true
 

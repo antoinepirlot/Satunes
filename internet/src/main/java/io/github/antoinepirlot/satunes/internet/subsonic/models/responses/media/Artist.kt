@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
 import kotlinx.serialization.SerialName
@@ -33,13 +32,13 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Artist(
-    @SerialName(value = "id") val id: Long,
+    @SerialName(value = "id") val id: String,
     @SerialName(value = "name") val title: String,
     @SerialName(value = "coverArt") val coverArt: String? = null,
     @SerialName(value = "albumCount") val albumCount: Int? = null,
     @SerialName(value = "album") val albumCollection: Collection<Album>? = null
 ) : SubsonicData {
-    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicArtist {
         val artist: SubsonicArtist = getOrCreateSubsonicArtist(id = id, title = title)
         albumCollection?.forEach { album: Album ->
             artist.addAlbum(

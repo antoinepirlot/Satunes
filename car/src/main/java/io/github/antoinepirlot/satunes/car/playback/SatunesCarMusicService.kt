@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -79,11 +80,15 @@ internal class SatunesCarMusicService : MediaBrowserServiceCompat() {
 
     private fun loadAllPlaybackData() {
         runBlocking(Dispatchers.IO) {
-            LocalDataLoader.loadAllData(context = baseContext)
+            LocalDataLoader.loadAllData(
+                context = baseContext,
+                apiRequester = SubsonicApiRequester()
+            )
         }
         PlaybackManager.initPlaybackWithAllMusics(
             context = applicationContext,
-            listener = SatunesPlaybackListener
+            listener = SatunesPlaybackListener,
+            apiRequester = SubsonicApiRequester()
         )
 
         if (!LocalDataLoader.isLoaded.value) {

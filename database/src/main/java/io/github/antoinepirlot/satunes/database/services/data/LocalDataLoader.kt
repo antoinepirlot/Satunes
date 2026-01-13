@@ -30,6 +30,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.R
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
@@ -163,7 +164,7 @@ object LocalDataLoader {
     /**
      * Load all Media data from device's storage.
      */
-    fun loadAllData(context: Context) {
+    fun loadAllData(context: Context, apiRequester: ApiRequester) {
         if (isLoading.value || (isLoaded.value && DataManager.getMusicSet().isNotEmpty())) return
 
         isLoading.value = true
@@ -190,7 +191,8 @@ object LocalDataLoader {
                 while (it.moveToNext()) loadData(cursor = it, context = context)
             }
         }
-        DatabaseManager.initInstance(context = context).loadAllPlaylistsWithMusic()
+        DatabaseManager.initInstance(context = context)
+            .loadAllPlaylistsWithMusic(apiRequester = apiRequester)
 
         WidgetDatabaseManager.refreshWidgets()
         isLoaded.value = true

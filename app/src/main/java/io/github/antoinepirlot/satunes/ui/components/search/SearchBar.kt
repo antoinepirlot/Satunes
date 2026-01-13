@@ -40,14 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.ModeTabSelectorUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.ModeTabSelectorViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.models.SearchChips
-import io.github.antoinepirlot.satunes.models.search.SearchSection
+import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -58,9 +59,10 @@ import kotlinx.coroutines.CoroutineScope
 fun SearchBar(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = viewModel(),
+    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
 ) {
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
-    val selectedSection: SearchSection = searchUiState.selectedSection
+    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
+    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
     val query: String = searchViewModel.query
     val keyboard: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
     val focusRequester: FocusRequester = remember { FocusRequester() }
@@ -81,7 +83,7 @@ fun SearchBar(
             SearchBarDefaults.InputField(
                 modifier = Modifier.focusRequester(focusRequester),
                 query = query,
-                onQueryChange = { searchViewModel.updateQuery(value = it) },
+                onQueryChange = { searchViewModel.updateQuery(value = it, isLocal = selectedSection.isLocal()) },
                 onSearch = {
                     keyboard?.hide()
                     if (selectedSection.isCloud())
@@ -104,12 +106,14 @@ fun HandleQueryChange(
     searchViewModel: SearchViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
+    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
     searchCoroutine: CoroutineScope,
 ) {
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
+
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
     val isSearchRequested: Boolean = searchViewModel.isSearchRequested
-    val selectedSection: SearchSection = searchUiState.selectedSection
+    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
     val query: String = searchViewModel.query
 
     LaunchedEffect(key1 = query, key2 = selectedSearchChips.size, key3 = isSearchRequested) {
@@ -130,20 +134,22 @@ private fun HandleUiChange(
     searchViewModel: SearchViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
+    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
     searchCoroutine: CoroutineScope,
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
+
     val selectedSearchChips: List<SearchChips> = searchViewModel.selectedSearchChips
-    val selectedSection: SearchSection = searchUiState.selectedSection
+    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
 
     LaunchedEffect(key1 = satunesUiState.mode) {
         if (satunesUiState.mode.isOffline())
-            searchViewModel.selectSection(section = SearchSection.LOCAL)
+            modeTabSelectorViewModel.selectSection(section = ModeTabSelectorSection.LOCAL)
     }
 
 
-    LaunchedEffect(key1 = searchUiState.selectedSection) {
+    LaunchedEffect(key1 = modeTabSelectorUiState.selectedSection) {
         searchViewModel.search(
             searchCoroutine = searchCoroutine,
             selectedSection = selectedSection,

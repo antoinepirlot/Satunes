@@ -47,7 +47,7 @@ internal fun FavoriteCustomAction(
 
     CustomActionButton(
         modifier = modifier,
-        jetpackLibsIcons = if (music.liked.value) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
+        jetpackLibsIcons = if (music.liked) JetpackLibsIcons.LIKED else JetpackLibsIcons.UNLIKED,
         onClick = {
             dataViewModel.switchLike(
                 scope = scope,

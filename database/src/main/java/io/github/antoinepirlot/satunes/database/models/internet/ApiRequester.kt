@@ -175,4 +175,11 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null
     )
+
+    fun deletePlaylist(
+        playlistId: String,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+        onSucceed: (() -> Unit)? = null
+    )
 }

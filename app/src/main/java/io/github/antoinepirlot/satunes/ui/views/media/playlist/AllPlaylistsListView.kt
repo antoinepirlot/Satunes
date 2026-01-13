@@ -95,7 +95,7 @@ internal fun PlaylistListView(
     LaunchedEffect(key1 = selectedSection) {
         if (selectedSection.isCloud()) {
             val collection: Collection<SubsonicPlaylist> =
-                dataViewModel.getSubsonicPlaylistCollection()
+                dataViewModel.getSubsonicPlaylists()
             if (collection.isEmpty())
                 subsonicViewModel.getPlaylists(
                     onDataRetrieved = { dataViewModel.loadMediaImplList(collection = it) }

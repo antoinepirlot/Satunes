@@ -22,6 +22,7 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,12 +30,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalNavController
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
@@ -47,9 +54,13 @@ import kotlinx.coroutines.CoroutineScope
 internal fun RemovePlaylistOption(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
+    navigationViewModel: NavigationViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     playlistToRemove: Playlist,
     onDismissRequest: () -> Unit,
 ) {
+    val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+    val navController: NavHostController = LocalNavController.current
     val scope: CoroutineScope = LocalMainScope.current
     val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
     var showRemoveConfirmation: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -65,11 +76,22 @@ internal fun RemovePlaylistOption(
         RemoveConfirmationDialog(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
-                dataViewModel.removePlaylist(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    playlist = playlistToRemove
-                )
+                if (playlistToRemove.isSubsonic())
+                    subsonicViewModel.deletePlaylist(
+                        playlist = playlistToRemove as SubsonicPlaylist,
+                        onRemoved = {
+                            if (navigationUiState.currentMediaImpl == playlistToRemove)
+                                navigationViewModel.popBackStack(navController = navController)
+                            else //Here the view is all playlists. It needs to be refreshed
+                                dataViewModel.loadMediaImplList(collection = dataViewModel.getSubsonicPlaylists())
+                        }
+                    )
+                else
+                    dataViewModel.removePlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        playlist = playlistToRemove
+                    )
                 onDismissRequest()
             }
         )

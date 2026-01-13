@@ -147,8 +147,7 @@ class DataViewModel : ViewModel() {
         DataManager.getSubsonicRandomMusicsCollection()
 
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
-    fun getSubsonicPlaylistCollection(): Collection<SubsonicPlaylist> =
-        DataManager.getSubsonicPlaylists()
+    fun getSubsonicPlaylists(): Collection<SubsonicPlaylist> = DataManager.getSubsonicPlaylists()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
     fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!

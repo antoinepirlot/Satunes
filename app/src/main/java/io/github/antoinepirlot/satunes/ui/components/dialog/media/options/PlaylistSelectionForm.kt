@@ -53,7 +53,7 @@ fun PlaylistSelectionForm(
         playlists.addAll(elements = dataViewModel.getPlaylistSet())
         if (mediaImpl.isSubsonic()) {
             val cloudPlaylists: Collection<SubsonicPlaylist> =
-                dataViewModel.getSubsonicPlaylistCollection()
+                dataViewModel.getSubsonicPlaylists()
             if (cloudPlaylists.isEmpty())
                 subsonicViewModel.getPlaylists(onDataRetrieved = { playlists.addAll(elements = it) })
             else

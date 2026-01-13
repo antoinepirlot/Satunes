@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.CreatePlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DeletePlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
@@ -408,6 +409,26 @@ class SubsonicApiRequester() : ApiRequester {
                 onSucceed = onSucceed,
                 onError = { onError?.invoke() },
                 onFinished = onFinished
+            )
+        )
+    }
+
+    override fun deletePlaylist(
+        playlistId: String,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "deletePlaylist",
+                parameters = arrayOf("id=$playlistId")
+            ),
+            resCallback = DeletePlaylistCallback(
+                subsonicApiRequester = this,
+                onError = { onError?.invoke() },
+                onFinished = onFinished,
+                onSucceed = onSucceed
             )
         )
     }

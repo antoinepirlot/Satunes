@@ -518,4 +518,20 @@ class SubsonicViewModel : ViewModel() {
             )
         }
     }
+
+    fun deletePlaylist(
+        playlist: SubsonicPlaylist,
+        onRemoved: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.deletePlaylist(
+                playlistId = playlist.subsonicId,
+                onSucceed = {
+                    DataManager.removePlaylist(playlist = playlist)
+                    onRemoved?.invoke()
+                }
+            )
+        }
+    }
 }

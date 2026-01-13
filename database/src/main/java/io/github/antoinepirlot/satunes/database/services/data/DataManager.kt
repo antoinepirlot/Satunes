@@ -430,6 +430,11 @@ object DataManager {
     }
 
     @Synchronized
+    fun removePlaylist(playlist: SubsonicPlaylist) {
+        _subsonicPlaylistMapById.remove(key = playlist.subsonicId)
+    }
+
+    @Synchronized
     internal fun resetAllData() {
         _musicSortedSet.clear()
         _musicsMapById.clear()

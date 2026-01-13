@@ -4,6 +4,17 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 4.0 (Android 6.0 Marshmallow et ultérieur)
 
+### 4.0.0-alpha-2
+
+Nouvelles fonctionnalités :
+
+* Compatibilité avec les playlists
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction du chargement des informations lorsque les ids ne sont pas numériques
+* Préparation de la fonctionnalité de téléchargement des musiques
+
 ### 4.0.0-alpha-1
 
 Nouvelles fonctionnalités :

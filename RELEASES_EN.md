@@ -4,6 +4,17 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 4.0 (Android 6.0 Marshmallow and later)
 
+### 4.0.0-alpha-2
+
+New features:
+
+* Compatibility with playlists
+
+Improvements, optimisations and bug fixes:
+
+* Fix loading when loading subsonic with id when ids are not numeric
+* Preparing downloading musics
+
 ### 4.0.0-alpha-1
 
 New features:

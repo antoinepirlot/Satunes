@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.ui.components.search
+package io.github.antoinepirlot.satunes.ui.components.bars
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.PrimaryTabRow
@@ -32,37 +32,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.images.Icon
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
-import io.github.antoinepirlot.satunes.data.states.SearchUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.SearchViewModel
-import io.github.antoinepirlot.satunes.models.search.SearchSection
+import io.github.antoinepirlot.satunes.data.states.ModeTabSelectorUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.ModeTabSelectorViewModel
+import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
 
 /**
  * @author Antoine Pirlot 13/12/2025
  */
 @Composable
-fun SearchModeTabSelector(
+fun ModeTabSelector(
     modifier: Modifier = Modifier,
-    searchViewModel: SearchViewModel = viewModel(),
+    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
+    localView: @Composable () -> Unit,
+    cloudView: @Composable () -> Unit,
 ) {
-    val searchUiState: SearchUiState by searchViewModel.uiState.collectAsState()
+    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
+    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
 
-    PrimaryTabRow(
-        modifier = modifier,
-        selectedTabIndex = searchUiState.selectedSection.ordinal
-    ) {
-        SearchSection.entries.forEachIndexed { index: Int, section: SearchSection ->
-            Tab(
-                selected = searchUiState.selectedSection.ordinal == index,
-                onClick = {
-                    searchViewModel.selectSection(section = section)
-                },
-                text = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(jetpackLibsIcons = section.icon)
-                        NormalText(text = stringResource(section.stringId))
+    Column {
+        PrimaryTabRow(
+            modifier = modifier,
+            selectedTabIndex = selectedSection.ordinal
+        ) {
+            ModeTabSelectorSection.entries.forEachIndexed { index: Int, section: ModeTabSelectorSection ->
+                Tab(
+                    selected = selectedSection.ordinal == index,
+                    onClick = {
+                        modeTabSelectorViewModel.selectSection(section = section)
+                    },
+                    text = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(jetpackLibsIcons = section.icon)
+                            NormalText(text = stringResource(section.stringId))
+                        }
                     }
-                }
-            )
+                )
+            }
+        }
+
+        when (selectedSection) {
+            ModeTabSelectorSection.LOCAL -> localView()
+            ModeTabSelectorSection.SUBSONIC -> cloudView()
         }
     }
 }

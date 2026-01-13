@@ -88,7 +88,7 @@ internal fun MediaCardList(
             key = {
                 it.javaClass.name + '-' +
                         if (it.isSubsonic()) (it as SubsonicMedia).subsonicId
-                        else it.id
+                        else it.id!!
             }
         ) { mediaImpl: Media ->
             val isFirst: Boolean = mediaImpl == mediaImplList.first()

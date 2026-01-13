@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.models.ProgressBarLifecycleCallbacks
 import io.github.antoinepirlot.satunes.models.Timer
@@ -157,6 +158,7 @@ class PlaybackViewModel : ViewModel() {
     ) {
         PlaybackManager.loadMusics(
             context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             musics = musics,
             shuffleMode = shuffleMode,
             musicToPlay = musicToPlay
@@ -164,43 +166,68 @@ class PlaybackViewModel : ViewModel() {
     }
 
     fun getPlaylist(): List<Music> {
-        return PlaybackManager.getPlaylist(context = MainActivity.instance.applicationContext)
+        return PlaybackManager.getPlaylist(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun seekTo(positionPercentage: Float) {
         PlaybackManager.seekTo(
             context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             positionPercentage = positionPercentage
         )
     }
 
     fun playNext() {
-        PlaybackManager.playNext(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playNext(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun playPause() {
-        PlaybackManager.playPause(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playPause(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun playPrevious() {
-        PlaybackManager.playPrevious(context = MainActivity.instance.applicationContext)
+        PlaybackManager.playPrevious(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun switchRepeatMode() {
-        PlaybackManager.switchRepeatMode(context = MainActivity.instance.applicationContext)
+        PlaybackManager.switchRepeatMode(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun switchShuffleMode() {
-        PlaybackManager.switchShuffleMode(context = MainActivity.instance.applicationContext)
+        PlaybackManager.switchShuffleMode(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun getMusicPlayingIndexPosition(): Int {
-        return PlaybackManager.getMusicPlayingIndexPosition(context = MainActivity.instance.applicationContext)
+        return PlaybackManager.getMusicPlayingIndexPosition(
+            context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     fun getNextMusic(): Music? {
         return try {
-            PlaybackManager.getNextMusic(context = MainActivity.instance.applicationContext)
+            PlaybackManager.getNextMusic(
+                context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
+            )
         } catch (_: Throwable) {
             _logger?.severe("Can't get the next music in queue")
             null
@@ -216,6 +243,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             PlaybackManager.addToQueue(
                 context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
                 mediaImpl = mediaImpl
             )
             showSnackBar(
@@ -248,6 +276,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             PlaybackManager.removeFromQueue(
                 context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
                 mediaImpl = mediaImpl
             )
             showSnackBar(
@@ -283,6 +312,7 @@ class PlaybackViewModel : ViewModel() {
         try {
             PlaybackManager.addNext(
                 context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
                 mediaImpl = mediaImpl
             )
             showSnackBar(
@@ -309,6 +339,7 @@ class PlaybackViewModel : ViewModel() {
     fun isMusicInQueue(music: Music): Boolean {
         return PlaybackManager.isMusicInQueue(
             context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             music = music
         )
     }
@@ -316,6 +347,7 @@ class PlaybackViewModel : ViewModel() {
     fun start(mediaToPlay: Music? = null, reset: Boolean = false) {
         PlaybackManager.start(
             context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             musicToPlay = mediaToPlay,
             reset = reset
         )
@@ -324,6 +356,7 @@ class PlaybackViewModel : ViewModel() {
     fun updateCurrentPosition(log: Boolean = true) {
         PlaybackManager.updateCurrentPosition(
             context = MainActivity.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             log = log
         )
     }
@@ -357,7 +390,7 @@ class PlaybackViewModel : ViewModel() {
         val context: Context = MainActivity.instance.applicationContext
         val timer = Timer(
             function = {
-                PlaybackManager.pause(context = context)
+                PlaybackManager.pause(context = context, apiRequester = SubsonicApiRequester())
                 _uiState.update { currentState: PlaybackUiState ->
                     currentState.copy(timer = null, timerRemainingTime = 0L)
                 }
@@ -424,7 +457,10 @@ class PlaybackViewModel : ViewModel() {
 
     fun forward(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
-            PlaybackManager.forward(context = MainActivity.instance.applicationContext)
+            PlaybackManager.forward(
+                context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester()
+            )
         } catch (e: Exception) {
             _logger?.severe(e.message)
             showErrorSnackBar(
@@ -442,7 +478,10 @@ class PlaybackViewModel : ViewModel() {
 
     fun rewind(scope: CoroutineScope, snackBarHostState: SnackbarHostState) {
         try {
-            PlaybackManager.rewind(context = MainActivity.instance.applicationContext)
+            PlaybackManager.rewind(
+                context = MainActivity.instance.applicationContext,
+                apiRequester = SubsonicApiRequester()
+            )
         } catch (e: Exception) {
             _logger?.severe(e.message)
             showErrorSnackBar(

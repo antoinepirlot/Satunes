@@ -44,18 +44,21 @@ internal class GetArtistCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (this.processData())
-            this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        if (!super.processData()) return false
-        if (this.subsonicResponse!!.artist == null) return false
-        onDataRetrieved(
-            this.subsonicResponse!!.artist!!
-                .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicArtist
-        )
-        return true
+    override fun processData(block: () -> Unit) {
+        super.processData {
+            if (this.subsonicResponse!!.artist == null)
+                this.onError?.invoke(null)
+            else {
+                this.onDataRetrieved(
+                    this.subsonicResponse!!.artist!!
+                        .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester)
+                )
+                block()
+            }
+        }
     }
 }

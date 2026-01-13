@@ -24,18 +24,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.local.LocalMainScope
+import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.PlaylistCreationFormViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.models.SatunesModes
+import io.github.antoinepirlot.satunes.models.SwitchSettings
+import io.github.antoinepirlot.satunes.ui.components.settings.SwitchSetting
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -44,10 +56,19 @@ import io.github.antoinepirlot.satunes.R
 @Composable
 internal fun PlaylistCreationForm(
     modifier: Modifier = Modifier,
-    onConfirm: (playlistTitle: String) -> Unit,
+    satunesViewModel: SatunesViewModel = viewModel(),
+    dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
+    playlistCreationFormViewModel: PlaylistCreationFormViewModel = viewModel(),
+    onConfirm: (playlist: Playlist) -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    var playlistTitle: String by rememberSaveable { mutableStateOf("") }
+    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
+    val scope: CoroutineScope = LocalMainScope.current
+    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
+
+    val playlistTitle: String = playlistCreationFormViewModel.title
+    val isStoringOnCloud: Boolean = playlistCreationFormViewModel.isStoringOnCloud
 
     AlertDialog(
         icon = {
@@ -66,14 +87,41 @@ internal fun PlaylistCreationForm(
             ) {
                 OutlinedTextField(
                     value = playlistTitle,
-                    onValueChange = { playlistTitle = it },
+                    onValueChange = { playlistCreationFormViewModel.updateTitle(value = it) },
                     label = { NormalText(text = stringResource(id = R.string.playlist_form)) }
                 )
+
+                if (satunesUiState.mode == SatunesModes.ONLINE)
+                    SwitchSetting(
+                        setting = SwitchSettings.SYNCHRONIZE_WITH_CLOUD,
+                        jetpackLibsIcons = if (isStoringOnCloud) JetpackLibsIcons.CLOUD_ON_ICON
+                        else JetpackLibsIcons.CLOUD_OFF_ICON,
+                        checked = isStoringOnCloud,
+                        onCheckedChange = { playlistCreationFormViewModel.switchIsStoringOnCloud() }
+                    )
             }
         },
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
-            TextButton(onClick = { onConfirm(playlistTitle) }) {
+            TextButton(
+                onClick = {
+                    if (isStoringOnCloud)
+                        subsonicViewModel.createPlaylist(
+                            name = playlistTitle,
+                            onDataRetrieved = {
+                                dataViewModel.addPlaylist(subsonicPlaylist = it)
+                                onConfirm(it)
+                            }
+                        )
+                    else
+                        dataViewModel.createPlaylist(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            playlistTitle = playlistTitle,
+                            onPlaylistAdded = { onConfirm(it) }
+                        )
+                }
+            ) {
                 NormalText(text = stringResource(id = R.string.create))
             }
         },

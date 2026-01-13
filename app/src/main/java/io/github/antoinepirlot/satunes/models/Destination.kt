@@ -105,6 +105,11 @@ enum class Destination(
         category = DestinationCategory.MEDIA,
         navBarSection = NavBarSection.PLAYLISTS
     ),
+    SUBSONIC_PLAYLIST(
+        link = PLAYLISTS.link + "/subsonic/{id}",
+        category = DestinationCategory.MEDIA,
+        navBarSection = NavBarSection.PLAYLISTS
+    ),
     SEARCH(link = "/search", category = DestinationCategory.MEDIA),
 
     ////////////////////////////////////////
@@ -156,6 +161,7 @@ enum class Destination(
             Pair(first = PLAYBACK_SETTINGS.link, second = PLAYBACK_SETTINGS),
             Pair(first = PLAYLISTS.link, second = PLAYLISTS),
             Pair(first = PLAYLIST.link, second = PLAYLIST),
+            Pair(first = SUBSONIC_PLAYLIST.link, second = SUBSONIC_PLAYLIST),
             Pair(first = RESET_SETTINGS.link, second = RESET_SETTINGS),
             Pair(first = SEARCH.link, second = SEARCH),
             Pair(first = SEARCH_SETTINGS.link, second = SEARCH_SETTINGS),

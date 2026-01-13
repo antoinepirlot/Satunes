@@ -27,10 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.data.local.LocalNavController
-import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -59,9 +59,7 @@ internal fun ExtraButtonList(
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
     val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
-    val dataUiState: DataUiState by dataViewModel.uiState.collectAsState()
     val navController: NavHostController = LocalNavController.current
-    val mediaImplCollection: Collection<Media> = dataViewModel.mediaImplListOnScreen
 
     Column(
         modifier = modifier,
@@ -70,13 +68,13 @@ internal fun ExtraButtonList(
         ExtraButton(
             jetpackLibsIcons = JetpackLibsIcons.PLAY,
             onClick = {
-                playbackViewModel.loadMusicFromMedias(
-                    medias = mediaImplCollection,
-                    currentDestination = navigationUiState.currentDestination
-                )
-                navigationViewModel.openMedia(
+                onClick(
                     playbackViewModel = playbackViewModel,
-                    navController = navController
+                    navigationViewModel = navigationViewModel,
+                    navigationUiState = navigationUiState,
+                    navController = navController,
+                    mediaCollection = dataViewModel.mediaListOnScreen,
+                    shuffle = false
                 )
             }
         )
@@ -86,17 +84,36 @@ internal fun ExtraButtonList(
             ExtraButton(
                 jetpackLibsIcons = JetpackLibsIcons.SHUFFLE,
                 onClick = {
-                    playbackViewModel.loadMusicFromMedias(
-                        medias = mediaImplCollection,
-                        currentDestination = navigationUiState.currentDestination,
-                        shuffleMode = true
-                    )
-                    navigationViewModel.openMedia(
+                    onClick(
                         playbackViewModel = playbackViewModel,
-                        navController = navController
+                        navigationViewModel = navigationViewModel,
+                        navigationUiState = navigationUiState,
+                        navController = navController,
+                        mediaCollection = dataViewModel.mediaListOnScreen,
+                        shuffle = true
                     )
                 }
             )
         }
     }
+}
+
+private fun onClick(
+    playbackViewModel: PlaybackViewModel,
+    navigationViewModel: NavigationViewModel,
+    navigationUiState: NavigationUiState,
+    navController: NavController,
+    mediaCollection: Collection<Media>,
+    shuffle: Boolean
+) {
+    if (mediaCollection.isEmpty()) return
+    playbackViewModel.loadMusicFromMedias(
+        medias = mediaCollection,
+        currentDestination = navigationUiState.currentDestination,
+        shuffleMode = shuffle
+    )
+    navigationViewModel.openMedia(
+        playbackViewModel = playbackViewModel,
+        navController = navController
+    )
 }

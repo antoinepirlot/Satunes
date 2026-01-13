@@ -49,11 +49,11 @@ internal fun GenreView(
     val albumSet: Set<Album> = genre.getAlbumSet()
 
     LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(list = genre.musicCollection)
+        dataViewModel.loadMediaImplList(collection = genre.musicCollection)
     }
 
-    LaunchedEffect(key1 = dataViewModel.mediaImplListOnScreen.size) {
-        if (dataViewModel.mediaImplListOnScreen.isNotEmpty())
+    LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
+        if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
                 ExtraButtonList()
             })

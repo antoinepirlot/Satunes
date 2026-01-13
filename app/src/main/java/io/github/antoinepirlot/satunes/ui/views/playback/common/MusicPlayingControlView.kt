@@ -24,6 +24,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,9 +42,11 @@ import io.github.antoinepirlot.jetpack_libs.components.models.ScreenSizes
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.ui.components.bars.media.ArtistBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.MusicControlBar
 import io.github.antoinepirlot.satunes.ui.components.bars.playback.PlaybackCustomActionsBar
+import io.github.antoinepirlot.satunes.ui.components.icons.MediaCloudIcon
 import io.github.antoinepirlot.satunes.ui.components.images.MusicPlayingAlbumArtwork
 
 /**
@@ -86,11 +89,15 @@ internal fun MusicPlayingControlView(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            NormalText(
-                modifier = Modifier.padding(horizontal = padding),
-                text = musicPlaying.title,
-                fontSize = 20.sp
-            )
+            Row {
+                NormalText(
+                    modifier = Modifier.padding(horizontal = padding),
+                    text = musicPlaying.title,
+                    fontSize = 20.sp
+                )
+                if (musicPlaying.isSubsonic())
+                    MediaCloudIcon(subsonicMedia = musicPlaying as SubsonicMusic)
+            }
             ArtistBar(artist = musicPlaying.artist)
             PlaybackCustomActionsBar()
             MusicControlBar(modifier = Modifier.padding(horizontal = padding))

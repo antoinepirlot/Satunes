@@ -22,7 +22,6 @@ package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicAlbum
 import kotlinx.serialization.SerialName
@@ -33,22 +32,23 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Album(
-    @SerialName(value = "id") val id: Long,
-    @SerialName(value = "artistId") val artistId: Long,
+    @SerialName(value = "id") val id: String,
+    @SerialName(value = "artistId") val artistId: String,
     @SerialName(value = "name") val title: String,
     @SerialName(value = "artist") val artistTitle: String,
     @SerialName(value = "created") val createdDate: String? = null,
     @SerialName(value = "duration") val durationSeconds: Int? = null,
     @SerialName(value = "playCount") val playCount: Long? = null,
-    @SerialName(value = "coverArt") val coverArt: String? = null,
+    @SerialName(value = "coverArt") val coverArtId: String? = null,
     @SerialName(value = "genre") val genreTitle: String? = null,
     @SerialName(value = "year") val year: Int? = null,
     @SerialName(value = "song") val songs: Collection<Song>? = null,
 ) : SubsonicData {
-    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicAlbum {
         val subsonicAlbum: SubsonicAlbum = getOrCreateSubsonicAlbum(
             id = id,
             title = title,
+            coverArtId = this.coverArtId,
             artistId = artistId,
             artistTitle = artistTitle,
         )

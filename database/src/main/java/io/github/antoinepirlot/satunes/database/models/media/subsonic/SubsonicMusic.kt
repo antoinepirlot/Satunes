@@ -24,14 +24,21 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.runIOThread
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
+import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
+import io.github.antoinepirlot.satunes.database.utils.createFile
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -41,9 +48,9 @@ class SubsonicMusic(
      * [id] can be different from [subsonicId] because [id] is considered as local id if the music is both online or on device.
      * Device will be used instead of subsonic.
      */
-    override var subsonicId: Long,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
-    private var coverArtId: String? = null,
     displayName: String,
     absolutePath: String,
     override var durationMs: Long = 0,
@@ -55,9 +62,9 @@ class SubsonicMusic(
     album: Album,
     genre: Genre,
     uri: Uri? = null,
-    private val apiRequester: ApiRequester
+    private val _apiRequester: ApiRequester
 ) : SubsonicMedia, Music(
-    id = subsonicId,
+    id = id,
     title = title,
     displayName = displayName,
     absolutePath = absolutePath,
@@ -71,6 +78,11 @@ class SubsonicMusic(
     genre = genre,
     uri = uri,
 ) {
+    private val _logger: Logger? = Logger.getLogger()
+
+    override fun switchLike() {
+        /*if(this.isStoredLocally())*/ super.switchLike()
+    }
 
     /**
      * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical
@@ -79,7 +91,7 @@ class SubsonicMusic(
      * @param new the most updated [SubsonicMusic] matching this one.
      */
     fun update(new: SubsonicMusic) {
-        if (this.id != this.subsonicId) return //It is the local music matching the server one. No update
+        this.id ?: return //It is the local music matching the server one. No update
         if (new.id != this.id)
             throw IllegalArgumentException("These musics doesn't have the same id. Old id is: ${this.id} and the new id is: $id")
         this.title = new.title
@@ -96,25 +108,94 @@ class SubsonicMusic(
     }
 
     override fun getAlbumArtwork(context: Context): Bitmap {
-        return this.artwork?.applyShape() ?: this.getEmptyAlbumArtwork(context = context)
+        return this.artwork?.applyShape() ?: this.album.getEmptyAlbumArtwork(context = context)
             .applyShape()
     }
 
     /**
      * Fetch artwork from network and stores it into [artwork]
      */
-    fun loadAlbumArtwork(onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
-        if (this.artwork != null) onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
+    override fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        (this.album as SubsonicAlbum).loadArtwork(
+            context = context,
+            onDataRetrieved = onDataRetrieved
+        )
+    }
+
+    override fun download(context: Context) {
+        if (this.isStoredLocally()) return
+        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
         runIOThread {
-            apiRequester.getCoverArt(
-                coverArtId = this.coverArtId!!,
+            _apiRequester.download(
+                musicId = this.subsonicId,
+                onError = {
+                    //Do not directly change downloadStatus here as it will throw an error.
+                    //Using this function doesn't crash
+                    this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
+                },
                 onDataRetrieved = {
-                    this.artwork = it
-                    onDataRetrieved(it?.applyShape()?.asImageBitmap())
+                    if (this.store(context = context, data = it)) {
+                        this.saveInDatabase()
+                        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
+                    } else
+                        this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 }
             )
         }
     }
+
+    override fun removeDownload() {
+        if (!this.isStoredLocally()) return
+        val file = File(this.absolutePath)
+        try {
+            file.delete()
+            downloadStatus = DownloadStatus.NOT_DOWNLOADED
+        } catch (e: Exception) {
+            _logger?.warning(e.message)
+        }
+    }
+
+    private fun updateDownloadStatus(downloadStatus: DownloadStatus) {
+        this.downloadStatus = downloadStatus
+    }
+
+    private fun store(context: Context, data: InputStream): Boolean {
+        val absolutePath: String =
+            SubsonicMedia.getDownloadStorage(context = context) + "/${this.relativePath}"
+
+        try {
+            val file: File = createFile(path = absolutePath)
+            val output = FileOutputStream(file)
+            try {
+                val buffer = ByteArray(size = 2024)
+                var bytesRead: Int = data.read(buffer)
+                while (bytesRead != -1) {
+                    output.write(buffer, 0, bytesRead)
+                    bytesRead = data.read(buffer)
+                }
+                this.absolutePath = absolutePath
+                return true
+            } catch (e: Exception) {
+                _logger?.warning(e.message)
+            } finally {
+                output.close()
+            }
+        } catch (e: Exception) {
+            _logger?.warning(e.message)
+        } finally {
+            data.close()
+        }
+        return false
+    }
+
+    private fun saveInDatabase() {
+        //TODO
+        val db: DatabaseManager = DatabaseManager.getInstance()
+        db.updateMusic(this)
+    }
+
+    override fun toMusicDB(): MusicDB =
+        MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)
 
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicMusic).subsonicId

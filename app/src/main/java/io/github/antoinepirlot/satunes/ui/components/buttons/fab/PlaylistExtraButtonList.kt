@@ -55,14 +55,17 @@ internal fun PlaylistExtraButtonList(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ExtraButton(
-            jetpackLibsIcons = JetpackLibsIcons.EXPORT,
-            onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
-        )
-        ExtraButton(
-            jetpackLibsIcons = JetpackLibsIcons.ADD,
-            onClick = { satunesViewModel.showMediaSelectionDialog() },
-        )
+        if (!playlist.isSubsonic()) {
+            ExtraButton(
+                jetpackLibsIcons = JetpackLibsIcons.EXPORT,
+                onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
+            )
+            ExtraButton(
+                jetpackLibsIcons = JetpackLibsIcons.ADD,
+                onClick = { satunesViewModel.showMediaSelectionDialog() },
+            )
+        }
+        //TODO add sharing button
     }
 
     if (satunesUiState.showMediaSelectionDialog) {

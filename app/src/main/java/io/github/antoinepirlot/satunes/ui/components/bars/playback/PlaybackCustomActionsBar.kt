@@ -60,17 +60,6 @@ internal fun PlaybackCustomActionsBar(
             customActionsMap[customAction]!!.invoke(musicPlaying)
             Spacer(modifier = Modifier.size(size = spacerSize))
         }
-//        FavoriteCustomAction(music = musicPlaying)
-//        Spacer(modifier = Modifier.size(spacerSize))
-//
-//        AddToPlaylistCustomAction(music = musicPlaying)
-//        Spacer(modifier = Modifier.size(spacerSize))
-//
-//        ShareCustomAction(music = musicPlaying)
-//        Spacer(modifier = Modifier.size(spacerSize))
-//
-//        TimerCustomAction()
-//        Spacer(modifier = Modifier.size(spacerSize))
     }
 }
 

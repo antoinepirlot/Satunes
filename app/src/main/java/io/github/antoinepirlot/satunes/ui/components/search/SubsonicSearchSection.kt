@@ -60,7 +60,7 @@ fun SubsonicSearchSection(
         canBeSorted = false,
         emptyViewText = stringResource(id = R.string.no_result),
         onMediaClick = { mediaImpl: Media ->
-            if (mediaImpl.isMusic())
+            if (mediaImpl.isMusic()) //TODO start radio
                 playbackViewModel.loadMusics(musics = dataViewModel.getMusicSet())
             navigationViewModel.openMedia(
                 playbackViewModel = playbackViewModel,

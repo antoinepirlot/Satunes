@@ -47,26 +47,26 @@ internal class Search3Callback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
-        if (this.processData())
-            this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        if (!super.processData()) return false
-        val mediaSet: MutableSet<SubsonicMedia> = mutableSetOf()
-        this.subsonicResponse!!.search3?.apply {
-            this.artists?.forEach { artist: Artist ->
-                mediaSet.add(element = artist.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+    override fun processData(block: () -> Unit) {
+        super.processData {
+            val mediaSet: MutableSet<SubsonicMedia> = mutableSetOf()
+            this.subsonicResponse!!.search3?.apply {
+                this.artists?.forEach { artist: Artist ->
+                    mediaSet.add(element = artist.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+                }
+                this.albums?.forEach { album: Album ->
+                    mediaSet.add(element = album.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+                }
+                this.songs?.forEach { song: Song ->
+                    mediaSet.add(element = song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+                }
             }
-            this.albums?.forEach { album: Album ->
-                mediaSet.add(element = album.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
-            }
-            this.songs?.forEach { song: Song ->
-                mediaSet.add(element = song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
-            }
+            this.onDataRetrieved(mediaSet.sorted())
+            block()
         }
-        this.onDataRetrieved(mediaSet.sorted())
-        return true
     }
 }

@@ -49,11 +49,14 @@ internal abstract class SubsonicCallback<T>(
     protected val subsonicApiRequester: SubsonicApiRequester,
     protected val onDataRetrieved: (T) -> Unit,
     protected val onSucceed: (() -> Unit)?, //Used in children classes
-    protected val onError: ((Error?) -> Unit)?,
+    onError: ((Error?) -> Unit)?,
     protected val onFinished: (() -> Unit)?
 ) : Callback {
 
     private val _logger: Logger? = Logger.getLogger()
+
+    protected var onError: ((Error?) -> Unit)? = onError
+        private set
     protected var subsonicResponse: SubsonicResponse? = null
 
     override fun onFailure(call: Call, e: IOException) {
@@ -65,45 +68,47 @@ internal abstract class SubsonicCallback<T>(
     @OptIn(ExperimentalSerializationApi::class)
     override fun onResponse(call: Call, response: Response) {
         try {
-            if (response.code >= 400) {
-                //TODO
+            if (!response.isSuccessful) {
+                onError?.invoke(null)
                 return
             }
-            if (this.isGetCoverArtCallback()) return
+            if (!this.isReceivingJsonData()) return
 
             val input: InputStream = response.body.byteStream()
             try {
                 val format = Json { ignoreUnknownKeys = true }
-                val response: SubsonicResponse =
+                this.subsonicResponse =
                     format.decodeFromStream<SubsonicResponseBody>(input).subsonicResponse
-
-                if (response.isError()) this.onError?.invoke(response.error!!)
-                this.subsonicResponse = response
-
             } catch (e: SerializationException) {
-                _logger?.severe(e.message)
+                _logger?.warning(e.message)
             } catch (e: IllegalArgumentException) {
-                _logger?.severe(e.message)
+                _logger?.warning(e.message)
             } catch (e: IOException) {
-                _logger?.severe(e.message)
-            } catch (_: NullPointerException) {
-                //Do nothing it's when lines has all been read
+                _logger?.warning(e.message)
             } finally {
                 input.close()
             }
         } catch (_: NullPointerException) {
             _logger?.warning("No body from request.")
+        } catch (e: Throwable) {
+            _logger?.warning(e.message)
         } finally {
             SubsonicCall.executionFinished(subsonicCallback = this)
         }
     }
 
-    open fun processData(): Boolean {
-        return if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
-            this.onError?.invoke(this.subsonicResponse!!.error)
-            false
-        } else true
+    /**
+     * Process the [subsonicResponse]:
+     * * if it is null or is [Error] execute the [onError] function
+     * * else execute the [block].
+     *
+     * @param block to execute when [subsonicResponse] can be processed.
+     */
+    open fun processData(block: () -> Unit) {
+        if (this.subsonicResponse == null || this.subsonicResponse!!.isError()) {
+            this.onError?.invoke(this.subsonicResponse?.error)
+        } else block()
     }
 
-    protected open fun isGetCoverArtCallback(): Boolean = false
+    protected open fun isReceivingJsonData(): Boolean = true
 }

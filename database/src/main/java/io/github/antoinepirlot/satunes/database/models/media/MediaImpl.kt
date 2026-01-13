@@ -26,8 +26,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
 import java.util.SortedSet
@@ -36,16 +37,12 @@ import java.util.SortedSet
  * @author Antoine Pirlot on 29/03/2024
  */
 abstract class MediaImpl(
-    override val id: Long,
+    override val id: Long?,
     title: String
 ) : Media {
     protected val logger: Logger? = Logger.getLogger()
-    protected var isDownloaded: Boolean = !this.isSubsonic()
-        set(value) {
-            if (!this.isSubsonic())
-                throw IllegalStateException("Can't change value of isDownloaded for a local media.")
-            field = value
-        }
+    override var downloadStatus: DownloadStatus by mutableStateOf(value = DownloadStatus.NOT_DOWNLOADED)
+        protected set
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is
@@ -74,6 +71,8 @@ abstract class MediaImpl(
     @get:Synchronized
     override val musicCollection: Collection<Music> = mutableStateListOf()
 
+    fun getSet(): Set<Music> = musicSortedSet
+
     override fun isEmpty(): Boolean {
         return this.musicSortedSet.isEmpty()
     }
@@ -82,7 +81,7 @@ abstract class MediaImpl(
         return this.musicSortedSet.isNotEmpty()
     }
 
-    override fun isStoredLocally(): Boolean = isDownloaded
+    override fun isStoredLocally(): Boolean = downloadStatus == DownloadStatus.DOWNLOADED
 
     @Synchronized
     override fun clearMusicList() {
@@ -115,6 +114,9 @@ abstract class MediaImpl(
     }
 
     @Synchronized
+    override fun indexOf(media: Media): Int = this.musicCollection.indexOf(element = media)
+
+    @Synchronized
     override fun removeMusic(music: Music) {
         if (this.contains(media = music)) {
             this.musicSortedSet.remove(music)
@@ -122,18 +124,18 @@ abstract class MediaImpl(
         }
     }
 
-    /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
-     * If it is already stored, do nothing
-     */
-    override fun download() {
-        if (this.isStoredLocally()) return
-        TODO("Saving in cache is not yet implemented.")
-    }
-
     override fun removeFromStorage() {
         if (!this.isStoredLocally()) return
         TODO("Remove from storage is not yet implemented")
+    }
+
+    /**
+     * Apply circle shape if user enabled it.
+     *
+     * @return the shaped [Bitmap]
+     */
+    protected fun Bitmap.applyShape(): Bitmap {
+        return if (SettingsManager.artworkCircleShape.value) this.toCircularBitmap() else this
     }
 
     override fun compareTo(other: Media): Int {

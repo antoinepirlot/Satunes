@@ -20,6 +20,11 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import io.github.antoinepirlot.android.utils.utils.runIOThread
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 
@@ -27,19 +32,50 @@ import io.github.antoinepirlot.satunes.database.models.media.Artist
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicAlbum(
-    override var subsonicId: Long,
-    id: Long = subsonicId,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
+    coverArtId: String?,
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
+    private val apiRequester: ApiRequester
 ) : SubsonicMedia, Album(
     id = id,
     title = title,
+    coverArtId = coverArtId,
     artist = artist,
     isCompilation = isCompilation,
     year = year
 ) {
+    /**
+     * Fetch artwork from network and stores it into [artwork]
+     */
+    override fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        if (this.artwork != null)
+            onDataRetrieved(this.artwork!!.applyShape().asImageBitmap())
+        else if (this.coverArtId == null)
+            onDataRetrieved(this.getEmptyAlbumArtwork(context = context).asImageBitmap())
+        else
+            runIOThread {
+                apiRequester.getCoverArt(
+                    coverArtId = this.coverArtId!!,
+                    onDataRetrieved = {
+                        this@SubsonicAlbum.artwork = it
+                        onDataRetrieved(it?.applyShape()?.asImageBitmap())
+                    }
+                )
+            }
+    }
+
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeDownload() {
+        TODO("Not yet implemented")
+    }
+
     override fun equals(other: Any?): Boolean {
         return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
         else super.equals(other)

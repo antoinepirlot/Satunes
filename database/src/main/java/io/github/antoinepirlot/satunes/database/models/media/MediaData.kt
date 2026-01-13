@@ -24,6 +24,6 @@ package io.github.antoinepirlot.satunes.database.models.media
  * @author Antoine Pirlot 13/12/2025
  */
 interface MediaData { //Can't be set internal as the Media interface is public and could not be an abstract class
-    val id: Long
+    val id: Long?
     var title: String
 }

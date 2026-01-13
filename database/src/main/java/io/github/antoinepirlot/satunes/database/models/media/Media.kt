@@ -20,13 +20,15 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
 interface Media : MediaData, Comparable<Media> {
     val musicCollection: Collection<Music>
+
+    val downloadStatus: DownloadStatus
 
     fun isSubsonic(): Boolean = false
     fun isEmpty(): Boolean
@@ -46,13 +48,9 @@ interface Media : MediaData, Comparable<Media> {
 
     fun addMusics(musics: Collection<Music>)
 
-    fun removeMusic(music: Music)
+    fun indexOf(media: Media): Int
 
-    /**
-     * Stores this [SubsonicMusic] into Satunes's storage for offline usage.
-     * If it is already stored, do nothing
-     */
-    fun download()
+    fun removeMusic(music: Music)
 
     /**
      * Remove this media impl from storage.

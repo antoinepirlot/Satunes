@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import androidx.core.net.toUri
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -37,30 +36,30 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class Song constructor(
-    @SerialName(value = "id") val id: Long,
-    @SerialName(value = "isDir") val idDir: Boolean = false,
+    @SerialName(value = "id") val id: String,
+    @SerialName(value = "isDir") val idDir: Boolean? = null,
     @SerialName(value = "title") val title: String,
     @SerialName(value = "album") val albumTitle: String,
     @SerialName(value = "artist") val artistTitle: String,
     @SerialName(value = "track") val track: Int? = null,
     @SerialName(value = "discNumber") val discNumber: Int? = null,
-    @SerialName(value = "contentType") val contentTypeMime: String,
+    @SerialName(value = "contentType") val contentTypeMime: String? = null,
     @SerialName(value = "suffix") val fileExtension: String? = null,
     @SerialName(value = "path") val path: String,
     @SerialName(value = "duration") val durationSeconds: Long,
     @SerialName(value = "created") val addedDate: String, //TODO 2025-11-27T12:43:55.000Z like that
-    @SerialName(value = "albumId") val albumId: Long,
-    @SerialName(value = "artistId") val artistId: Long,
-    @SerialName(value = "type") val type: String,
-    @SerialName(value = "coverArt") val coverArt: String? = null,
-    @SerialName(value = "bitrate") val bitrate: Int,
-    @SerialName(value = "size") val size: Int,
+    @SerialName(value = "albumId") val albumId: String,
+    @SerialName(value = "artistId") val artistId: String,
+    @SerialName(value = "type") val type: String? = null,
+    @SerialName(value = "coverArt") val coverArtId: String? = null,
+    @SerialName(value = "bitrate") val bitrate: Int? = null,
+    @SerialName(value = "size") val size: Int = 0,
     @SerialName(value = "year") val year: Int? = null,
 ) : SubsonicData {
     /**
      * Convert this object [Song] to [SubsonicMusic] object
      */
-    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMusic {
         val url: String = subsonicApiRequester.getCommandUrl(
             command = "stream",
             parameters = arrayOf("id=$id")
@@ -69,7 +68,6 @@ internal data class Song constructor(
             music = SubsonicMusic(
                 subsonicId = this.id,
                 title = this.title,
-                coverArtId = this.coverArt,
                 displayName = this.path.split("/").last(),
                 absolutePath = this.path,
                 durationMs = this.durationSeconds * 1000,
@@ -81,12 +79,13 @@ internal data class Song constructor(
                 album = getOrCreateSubsonicAlbum(
                     id = this.albumId,
                     title = this.albumTitle,
+                    coverArtId = coverArtId,
                     artistId = this.artistId,
                     artistTitle = this.artistTitle
                 ), //Must be after artist, otherwise album is not added in artist
                 genre = getSubsonicGenre(),
                 uri = url.toUri(),
-                apiRequester = subsonicApiRequester
+                _apiRequester = subsonicApiRequester
             )
         )
     }

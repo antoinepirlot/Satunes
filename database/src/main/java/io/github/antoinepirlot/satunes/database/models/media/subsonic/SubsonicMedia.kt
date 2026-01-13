@@ -20,13 +20,48 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
+import android.os.Environment
+import androidx.compose.ui.graphics.ImageBitmap
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.media.Media
 
 /**
  * @author Antoine Pirlot 13/12/2025
  */
 interface SubsonicMedia : Media {
-    var subsonicId: Long
+
+    companion object {
+
+        fun getDownloadStorage(context: Context): String =
+            context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString()
+    }
+
+    val subsonicId: String
+
+    fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
+        throw UnsupportedOperationException()
+    }
+
+    fun canBeDownloaded(): Boolean =
+        this.downloadStatus == DownloadStatus.NOT_DOWNLOADED || this.downloadStatus == DownloadStatus.ERROR
+
+    fun canDownloadBeRemoved(): Boolean = this.downloadStatus == DownloadStatus.DOWNLOADED
+
+    /**
+     * Stores [SubsonicMusic]s into Satunes' storage for offline usage.
+     * If it is already stored, do nothing
+     *
+     * @param context the [Context] to get the parent folder.
+     *
+     * @throws IllegalStateException if this media is not [SubsonicMedia]
+     */
+    fun download(context: Context)
+
+    /**
+     * Removes the downloaded file matching the musics.
+     */
+    fun removeDownload()
 
     override fun isSubsonic(): Boolean = true
 }

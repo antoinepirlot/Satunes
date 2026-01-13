@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import android.content.Context
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -28,11 +29,11 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
  * @author Antoine Pirlot 11/12/2025
  */
 class SubsonicArtist(
-    override var subsonicId: Long,
-    id: Long = subsonicId,
+    override var subsonicId: String,
+    id: Long? = null,
     title: String,
 ) : SubsonicMedia, Artist(
-    id = subsonicId,
+    id = id,
     title = title,
 ) {
 
@@ -61,5 +62,13 @@ class SubsonicArtist(
 
     override fun hashCode(): Int {
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
+    }
+
+    override fun download(context: Context) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeDownload() {
+        TODO("Not yet implemented")
     }
 }

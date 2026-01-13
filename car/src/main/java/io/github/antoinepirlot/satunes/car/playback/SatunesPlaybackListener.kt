@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_LI
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_REPEAT
 import io.github.antoinepirlot.satunes.car.playback.SatunesCarCallBack.ACTION_SHUFFLE
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.models.PlaybackListener
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
@@ -47,8 +48,6 @@ import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 internal object SatunesPlaybackListener : PlaybackListener() {
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
-        println("YEAH ÇA MARCHE")
-
         updateMediaPlaying() //Keep it prevent first media not showing when only opening via AA
         if (isPlaying) {
             updatePlaybackState(state = STATE_PLAYING, actions = ACTIONS_ON_PLAY)
@@ -93,7 +92,8 @@ internal object SatunesPlaybackListener : PlaybackListener() {
     internal fun updatePlaybackState(state: Int, actions: Long) {
         val musicPlaying: Music = PlaybackManager.musicPlaying.value ?: return
         val currentPosition: Long = PlaybackManager.getCurrentPosition(
-            context = SatunesCarMusicService.instance.applicationContext
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
         )
         val extras = Bundle()
         extras.putString(
@@ -116,7 +116,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
         ).build()
         val likeAction = CustomAction.Builder(
             ACTION_LIKE, "Like",
-            if (musicPlaying.liked.value) R.drawable.favorite else R.drawable.unfavorite
+            if (musicPlaying.liked) R.drawable.favorite else R.drawable.unfavorite
         ).build()
         val playbackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
             .addCustomAction(likeAction)
@@ -124,7 +124,7 @@ internal object SatunesPlaybackListener : PlaybackListener() {
             .addCustomAction(repeatAction)
             .setState(state, currentPosition, 1F)
             .setActions(actions)
-            .setActiveQueueItemId(musicPlaying.id!!)
+            .setActiveQueueItemId(musicPlaying.systemId)
             .setExtras(extras)
             .build()
         SatunesCarMusicService.session.setPlaybackState(playbackState)

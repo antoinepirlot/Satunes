@@ -1,24 +1,4 @@
-/*
- * This file is part of Satunes.
- *
- * Satunes is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Satunes.
- * If not, see <https://www.gnu.org/licenses/>.
- *
- * *** INFORMATION ABOUT THE AUTHOR *****
- * The author of this file is Antoine Pirlot, the owner of this project.
- * You find this original project on Codeberg.
- *
- * My Codeberg link is: https://codeberg.org/antoinepirlot
- * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
- */
-
-package io.github.antoinepirlot.satunes.database.models
+package io.github.antoinepirlot.satunes.database.models.database
 
 import android.content.Context
 import androidx.room.Database
@@ -30,6 +10,7 @@ import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom1To2
 import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom2To3
 import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom3To4
+import io.github.antoinepirlot.satunes.database.migrations.MigrationFrom4To5
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
@@ -44,7 +25,7 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistD
         MusicsPlaylistsRel::class,
         PlaylistDB::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
 )
 internal abstract class SatunesDatabase : RoomDatabase() {
@@ -58,7 +39,12 @@ internal abstract class SatunesDatabase : RoomDatabase() {
                     SatunesDatabase::class.java,
                     "Satunes-database"
                 )
-                    .addMigrations(MigrationFrom1To2, MigrationFrom2To3, MigrationFrom3To4)
+                    .addMigrations(
+                        MigrationFrom1To2,
+                        MigrationFrom2To3,
+                        MigrationFrom3To4,
+                        MigrationFrom4To5
+                    )
                     .build()
             }
             return database!!

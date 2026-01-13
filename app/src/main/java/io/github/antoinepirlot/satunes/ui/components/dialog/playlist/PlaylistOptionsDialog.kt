@@ -51,6 +51,7 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.Remove
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.ExportPlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.UploadPlaylistOption
 import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
@@ -120,6 +121,12 @@ internal fun PlaylistOptionsDialog(
                  * Share
                  */
                 ShareMediaOption(media = playlist)
+
+                /**
+                 * Upload
+                 */
+                if (!playlist.isSubsonic())
+                    UploadPlaylistOption(playlist = playlist)
             }
         },
         onDismissRequest = onDismissRequest,

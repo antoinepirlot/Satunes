@@ -48,19 +48,19 @@ internal class PingCallback(
 ) {
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call = call, response = response)
-
-        this.onSucceed?.invoke()
+        this.processData { this.onSucceed?.invoke() }
         this.onFinished?.invoke()
     }
 
-    override fun processData(): Boolean {
-        if (!super.processData()) return false
-        val response: SubsonicResponse = this.subsonicResponse!!
-        SubsonicApiRequester.status = response.status
-        subsonicApiRequester.updateVersion(version = response.version)
-        SubsonicApiRequester.type = response.type
-        SubsonicApiRequester.serverVersion = response.serverVersion
-        SubsonicApiRequester.openSubsonic = response.openSubsonic
-        return true
+    override fun processData(block: () -> Unit) {
+        super.processData {
+            val response: SubsonicResponse = this.subsonicResponse!!
+            SubsonicApiRequester.status = response.status
+            subsonicApiRequester.updateVersion(version = response.version)
+            SubsonicApiRequester.type = response.type
+            SubsonicApiRequester.serverVersion = response.serverVersion
+            SubsonicApiRequester.openSubsonic = response.openSubsonic
+            block()
+        }
     }
 }

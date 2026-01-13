@@ -56,7 +56,9 @@ import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.RootFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
@@ -84,6 +86,8 @@ class DataViewModel : ViewModel() {
     companion object {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
         private var _playlistToExport: Playlist? = null
+
+        private val _mediaListOnScreen: List<Media> = mutableStateListOf()
     }
 
     private val _logger: Logger? = Logger.getLogger()
@@ -97,7 +101,7 @@ class DataViewModel : ViewModel() {
 
     val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
 
-    val mediaImplListOnScreen: List<Media> = mutableStateListOf()
+    val mediaListOnScreen: List<Media> = _mediaListOnScreen
 
     var isSharingLoading: Boolean by mutableStateOf(false)
         private set
@@ -143,32 +147,35 @@ class DataViewModel : ViewModel() {
         DataManager.getSubsonicRandomMusicsCollection()
 
     fun getPlaylistSet(): Set<Playlist> = DataManager.getPlaylistSet()
+    fun getSubsonicPlaylists(): Collection<SubsonicPlaylist> = DataManager.getSubsonicPlaylists()
 
     fun getFolder(id: Long): Folder = DataManager.getFolder(id = id)!!
     fun getArtist(id: Long): Artist = DataManager.getArtist(id = id)!!
 
-    fun getSubsonicArtist(id: Long) = DataManager.getSubsonicArtist(id = id)!!
+    fun getSubsonicArtist(id: String) = DataManager.getSubsonicArtist(id = id)!!
 
     fun getAlbum(id: Long): Album = DataManager.getAlbum(id = id)!!
-    fun getSubsonicAlbum(id: Long): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
+    fun getSubsonicAlbum(id: String): SubsonicAlbum? = DataManager.getSubsonicAlbum(id = id)
 
     fun getGenre(id: Long): Genre = DataManager.getGenre(id = id)!!
     fun getPlaylist(id: Long): Playlist? = DataManager.getPlaylist(id = id)
     fun getPlaylist(title: String): Playlist? = DataManager.getPlaylist(title = title)
+    fun getSubsonicPlaylist(id: String): SubsonicPlaylist? =
+        DataManager.getSubsonicPlaylist(id = id)
 
-    fun addOnePlaylist(
+    fun createPlaylist(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
         playlistTitle: String,
-        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null,
+        onPlaylistAdded: ((playlist: Playlist) -> Unit)? = null
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 val playlist: Playlist = _db.addOnePlaylist(playlistTitle = playlistTitle)
-                this@DataViewModel.mediaImplListOnScreen as MutableList<Media>
-                (this@DataViewModel.mediaImplListOnScreen).add(element = playlist)
-                this@DataViewModel.mediaImplListOnScreen.sort()
+                _mediaListOnScreen as MutableList<Media>
+                (_mediaListOnScreen).add(element = playlist)
+                _mediaListOnScreen.sort()
 
                 onPlaylistAdded?.invoke(playlist)
                 showSnackBar(
@@ -201,7 +208,7 @@ class DataViewModel : ViewModel() {
                         scope = scope,
                         snackBarHostState = snackBarHostState,
                         action = {
-                            addOnePlaylist(
+                            createPlaylist(
                                 scope = scope,
                                 snackBarHostState = snackBarHostState,
                                 playlistTitle = playlistTitle
@@ -212,6 +219,9 @@ class DataViewModel : ViewModel() {
             }
         }
     }
+
+    fun addPlaylist(subsonicPlaylist: SubsonicPlaylist): SubsonicPlaylist =
+        DataManager.addPlaylist(playlist = subsonicPlaylist)
 
     fun updatePlaylistTitle(
         scope: CoroutineScope,
@@ -940,16 +950,16 @@ class DataViewModel : ViewModel() {
         _uiState.update { currentState: DataUiState ->
             currentState.copy(appliedSortOption = this.sortOption)
         }
-        mediaImplListOnScreen as MutableList<Media>
+        _mediaListOnScreen as MutableList<Media>
         if (sortOption == SortOptions.PLAYLIST_ADDED_DATE) {
             val playlist: Playlist = navigationUiState.currentMediaImpl as Playlist
-            mediaImplListOnScreen.sortBy { mediaImpl: Media ->
+            _mediaListOnScreen.sortBy { mediaImpl: Media ->
                 if (reverseSortedOrder) (mediaImpl as Music).getOrder(playlist = playlist)
                 else -(mediaImpl as Music).getOrder(playlist = playlist)
             }
         } else if (this.sortOption.comparator != null) {
             sortOption.comparator!!.updateReverseOrder(reverseOrder = this.reverseSortedOrder)
-            mediaImplListOnScreen.sortWith(comparator = sortOption.comparator!!)
+            _mediaListOnScreen.sortWith(comparator = sortOption.comparator!!)
         }
     }
 
@@ -1014,9 +1024,21 @@ class DataViewModel : ViewModel() {
         DataManager.addRandomMusic(musics = musics)
     }
 
-    fun loadMediaImplList(list: Collection<Media>) {
-        this.mediaImplListOnScreen as MutableList<Media>
-        this.mediaImplListOnScreen.clear()
-        this.mediaImplListOnScreen.addAll(list)
+    fun loadMediaImplList(collection: Collection<Media>) {
+        _mediaListOnScreen as MutableList<Media>
+        _mediaListOnScreen.clear()
+        _mediaListOnScreen.addAll(elements = collection)
+    }
+
+    /**
+     * Replace the old [Media] with the new [SubsonicMedia].
+     */
+    fun replace(old: Media, new: SubsonicMedia) {
+        _mediaListOnScreen as MutableList<Media>
+        for (i: Int in _mediaListOnScreen.indices)
+            if (_mediaListOnScreen[i] === old) {
+                _mediaListOnScreen[i] = new
+                return
+            }
     }
 }

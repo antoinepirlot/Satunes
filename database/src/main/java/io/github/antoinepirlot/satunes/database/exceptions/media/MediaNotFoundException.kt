@@ -18,9 +18,35 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.database.exceptions
+package io.github.antoinepirlot.satunes.database.exceptions.media
+
+import com.mpatric.mp3agic.NotSupportedException
 
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
-internal class PlaylistNotFoundException(id: Long) : MediaNotFoundException(id = id)
+internal abstract class MediaNotFoundException(
+    private val _id: Long?,
+    private val _cloudId: String?
+) : NullPointerException() {
+    abstract fun isLocal(): Boolean
+    abstract fun isCloud(): Boolean
+
+    fun getLocalId(): Long {
+        if (!this.isLocal())
+            throw IllegalStateException("This is not a local media not found exception.")
+        return this._id!!
+    }
+
+    fun getCloudId(): String {
+        if (!this.isCloud())
+            throw IllegalStateException("This is not a cloud media not found exception.")
+        return this._cloudId!!
+    }
+
+    fun getIdAsString(): String {
+        return if (this.isLocal()) this._id!!.toString()
+        else if (this.isCloud()) this._cloudId!!
+        else throw NotSupportedException("Not supported not cloud or local.")
+    }
+}

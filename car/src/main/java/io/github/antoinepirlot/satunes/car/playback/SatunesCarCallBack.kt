@@ -38,6 +38,7 @@ import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,16 +62,23 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         if (!PlaybackManager.isLoaded.value) {
             return
         }
-        PlaybackManager.play(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.play(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     override fun onPause() {
-        PlaybackManager.pause(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.pause(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     override fun onSkipToQueueItem(queueId: Long) {
         PlaybackManager.seekTo(
             context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             musicId = queueId
         )
     }
@@ -78,6 +86,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     override fun onSeekTo(position: Long) {
         PlaybackManager.seekTo(
             context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             positionMs = position
         )
     }
@@ -91,16 +100,23 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         loadMusic(musicToPlay = musicToPlay)
         PlaybackManager.start(
             context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester(),
             musicToPlay = musicToPlay
         )
     }
 
     override fun onSkipToNext() {
-        PlaybackManager.playNext(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.playNext(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     override fun onSkipToPrevious() {
-        PlaybackManager.playPrevious(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.playPrevious(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     override fun onCustomAction(action: String?, extras: Bundle?) {
@@ -125,11 +141,17 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
     }
 
     private fun switchShuffleMode() {
-        PlaybackManager.switchShuffleMode(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.switchShuffleMode(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     private fun switchRepeatMode() {
-        PlaybackManager.switchRepeatMode(context = SatunesCarMusicService.instance.applicationContext)
+        PlaybackManager.switchRepeatMode(
+            context = SatunesCarMusicService.instance.applicationContext,
+            apiRequester = SubsonicApiRequester()
+        )
     }
 
     /**
@@ -181,6 +203,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         if (RouteManager.isShuffleButtonSelected())
             PlaybackManager.loadMusics(
                 context = SatunesCarMusicService.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
                 musics = musicCollection,
                 shuffleMode = RouteManager.isShuffleButtonSelected(),
                 musicToPlay = musicToPlay
@@ -188,6 +211,7 @@ internal object SatunesCarCallBack : MediaSessionCompat.Callback() {
         else
             PlaybackManager.loadMusics(
                 context = SatunesCarMusicService.instance.applicationContext,
+                apiRequester = SubsonicApiRequester(),
                 musics = musicCollection,
                 musicToPlay = musicToPlay
             )

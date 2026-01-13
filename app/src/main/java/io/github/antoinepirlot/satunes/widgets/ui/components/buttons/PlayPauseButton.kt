@@ -30,6 +30,7 @@ import androidx.glance.LocalContext
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.SquareIconButton
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.playback.services.PlaybackManager
 
 /**
@@ -48,7 +49,12 @@ internal fun PlayPauseButton(
             modifier = modifier,
             imageProvider = JetpackLibsIcons.PAUSE.imageProvider!!,
             contentDescription = "Pause",
-            onClick = { PlaybackManager.pause(context = context) },
+            onClick = {
+                PlaybackManager.pause(
+                    context = context,
+                    apiRequester = SubsonicApiRequester()
+                )
+            },
             backgroundColor = GlanceTheme.colors.primary,
             contentColor = GlanceTheme.colors.onPrimary,
         )
@@ -57,7 +63,12 @@ internal fun PlayPauseButton(
             modifier = modifier,
             imageProvider = JetpackLibsIcons.PLAY.imageProvider!!,
             contentDescription = "Play",
-            onClick = { PlaybackManager.play(context = context) },
+            onClick = {
+                PlaybackManager.play(
+                    context = context,
+                    apiRequester = SubsonicApiRequester()
+                )
+            },
             backgroundColor = GlanceTheme.colors.primary,
             contentColor = GlanceTheme.colors.onPrimary,
         )

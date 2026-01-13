@@ -14,7 +14,7 @@
 
 You can find this file in [english 🇬🇧](README_EN.md).
 
-<h2>Хай живе Україна 🇺🇦.</h2>
+<h2>Soutiens à l'Ukraine 🇺🇦.</h2>
 
 Satunes est un lecteur de musique pour Android et developpé par une intelligence organique. 
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android Lollipop 5.1.1 et plus récent).

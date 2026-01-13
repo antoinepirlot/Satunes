@@ -35,7 +35,6 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +44,6 @@ internal fun PlaylistExtraButtonList(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     playlist: Playlist,
 ) {
@@ -57,15 +55,16 @@ internal fun PlaylistExtraButtonList(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ExtraButton(
-            jetpackLibsIcons = JetpackLibsIcons.EXPORT,
-            onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
-        )
-        if (!playlist.isSubsonic())
+        if (!playlist.isSubsonic()) {
+            ExtraButton(
+                jetpackLibsIcons = JetpackLibsIcons.EXPORT,
+                onClick = { dataViewModel.openExportPlaylistDialog(playlist = playlist) }
+            )
             ExtraButton(
                 jetpackLibsIcons = JetpackLibsIcons.ADD,
                 onClick = { satunesViewModel.showMediaSelectionDialog() },
             )
+        }
     }
 
     if (satunesUiState.showMediaSelectionDialog) {

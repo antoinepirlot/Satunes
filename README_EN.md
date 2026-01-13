@@ -14,10 +14,7 @@
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-<h1>Given the current circumstances, the United States has shown that it is a threat to Ukraine 🇺🇦, the European Union 🇪🇺 and our democracies.<br/><br/>
-We are too dependent on the Americans, I encourage every European citizen to use European products whenever possible and to create new ones when there are no alternatives.<br/><br/>
-Europe is united in diversity, let's not let them divide us!<br/><br/>
-Long live the European Union 🇪🇺, Хай живе Україна 🇺🇦 and democracy.</h1>
+<h2>Хай живе Україна 🇺🇦.</h2>
 
 Satunes is an mp3 player on Android and developed by an organic intelligence. 
 Use it to listen your music from your audio files stored in your Android phone (Android Lollipop 5.1.1 and later).

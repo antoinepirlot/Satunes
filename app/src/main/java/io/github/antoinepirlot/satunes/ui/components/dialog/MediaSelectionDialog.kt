@@ -23,7 +23,6 @@ package io.github.antoinepirlot.satunes.ui.components.dialog
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,18 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.components.texts.NormalText
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.local.LocalMainScope
-import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
-import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
-import kotlinx.coroutines.CoroutineScope
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -93,13 +87,8 @@ internal fun MediaSelectionDialog(
 private fun CreateNewPlaylistForm(
     modifier: Modifier,
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
-    subsonicViewModel: SubsonicViewModel = viewModel(),
-    dataViewModel: DataViewModel = viewModel(),
     onDismissRequest: () -> Unit
 ) {
-    val scope: CoroutineScope = LocalMainScope.current
-    val snackBarHostState: SnackbarHostState = LocalSnackBarHostState.current
-
     PlaylistCreationForm(
         modifier = modifier,
         onConfirm = {

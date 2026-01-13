@@ -35,11 +35,10 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
-import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
+import io.github.antoinepirlot.satunes.ui.utils.addMediaToPlaylist
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -51,6 +50,7 @@ internal fun AddToPlaylistMediaOption(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     mediaImpl: MediaImpl,
     onFinished: (() -> Unit)?
@@ -66,48 +66,19 @@ internal fun AddToPlaylistMediaOption(
         text = stringResource(id = R.string.add_to_playlist)
     )
     if (satunesUiState.showMediaSelectionDialog) {
-        val playlistSet: Set<Playlist> = dataViewModel.getPlaylistSet()
-
-        MediaSelectionDialog(
-            onDismissRequest = {
-                satunesViewModel.hideMediaSelectionDialog()
-            },
+        PlaylistSelectionForm(
+            mediaImpl = mediaImpl,
             onConfirm = {
-                updateMediaPlaylists(
+                addMediaToPlaylist(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
                     dataViewModel = dataViewModel,
+                    subsonicViewModel = subsonicViewModel,
                     mediaSelectionViewModel = mediaSelectionViewModel,
                     mediaImpl = mediaImpl
                 )
-                satunesViewModel.hideMediaSelectionDialog()
                 onFinished?.invoke()
-            },
-            mediaImplCollection = playlistSet,
-            mediaDestination = mediaImpl,
-            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
+            }
         )
     }
-}
-
-private fun updateMediaPlaylists(
-    dataViewModel: DataViewModel,
-    scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
-    mediaSelectionViewModel: MediaSelectionViewModel,
-    mediaImpl: MediaImpl
-) {
-    if (mediaImpl.isMusic()) {
-        dataViewModel.updateMusicPlaylist(
-            scope = scope,
-            snackBarHostState = snackBarHostState,
-            music = mediaImpl as Music,
-            playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
-        )
-    } else dataViewModel.updateMediaImplToPlaylists(
-        scope = scope,
-        snackBarHostState = snackBarHostState,
-        mediaImpl = mediaImpl,
-        playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
-    )
 }

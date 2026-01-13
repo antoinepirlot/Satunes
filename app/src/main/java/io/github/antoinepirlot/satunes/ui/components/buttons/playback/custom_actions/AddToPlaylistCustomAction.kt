@@ -22,10 +22,8 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_ac
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,10 +37,8 @@ import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
-import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
-import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlaylistSelectionForm
+import io.github.antoinepirlot.satunes.ui.utils.addMediaToPlaylist
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -69,70 +65,18 @@ internal fun AddToPlaylistCustomAction(
         onClick = { satunesViewModel.showMediaSelectionDialog() }
     )
 
-    if (satunesUiState.showMediaSelectionDialog) {
-        val playlists: MutableCollection<Playlist> = mutableStateListOf()
-
-        LaunchedEffect(key1 = Unit) {
-            playlists.addAll(elements = dataViewModel.getPlaylistSet())
-            if (music.isSubsonic()) {
-                val cloudPlaylists: Collection<SubsonicPlaylist> =
-                    dataViewModel.getSubsonicPlaylistCollection()
-                if (cloudPlaylists.isEmpty())
-                    subsonicViewModel.getPlaylists(onDataRetrieved = { playlists.addAll(elements = it) })
-                else
-                    playlists.addAll(elements = cloudPlaylists)
-            }
-        }
-
-        MediaSelectionDialog(
-            onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
+    if (satunesUiState.showMediaSelectionDialog)
+        PlaylistSelectionForm(
             onConfirm = {
-                addMusicToPlaylist(
+                addMediaToPlaylist(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
                     dataViewModel = dataViewModel,
                     subsonicViewModel = subsonicViewModel,
-                    checkedPlaylists = mediaSelectionViewModel.getCheckedPlaylistWithMusics(),
-                    music = music
+                    mediaSelectionViewModel = mediaSelectionViewModel,
+                    mediaImpl = music
                 )
-                satunesViewModel.hideMediaSelectionDialog()
             },
-            mediaImplCollection = playlists,
-            mediaDestination = music,
-            jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD
-        )
-    }
-}
-
-private fun addMusicToPlaylist(
-    scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
-    dataViewModel: DataViewModel,
-    subsonicViewModel: SubsonicViewModel,
-    checkedPlaylists: List<Playlist>,
-    music: Music,
-) {
-    val localPlaylists: MutableSet<Playlist> = mutableSetOf()
-    val cloudPlaylists: MutableList<SubsonicPlaylist> = mutableListOf()
-
-    checkedPlaylists.forEach { playlist: Playlist ->
-        if (playlist.isSubsonic())
-            cloudPlaylists.add(element = playlist as SubsonicPlaylist)
-        else
-            localPlaylists.add(element = playlist)
-    }
-
-    if (cloudPlaylists.isNotEmpty() && music.isSubsonic())
-        subsonicViewModel.addMusicToPlaylists(
-            music = music as SubsonicMusic,
-            playlists = cloudPlaylists
-        )
-
-    if (localPlaylists.isNotEmpty())
-        dataViewModel.updateMusicPlaylist(
-            scope = scope,
-            snackBarHostState = snackBarHostState,
-            music = music,
-            playlists = checkedPlaylists
+            mediaImpl = music
         )
 }

@@ -160,14 +160,6 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
-    private fun loadArtists() {
-//        apiRequester.loadArtists()
-    }
-
-    fun removeOnlineMusic() {
-        TODO("Not yet implemented")
-    }
-
     /**
      * Get random song from API
      */
@@ -327,7 +319,7 @@ class SubsonicViewModel : ViewModel() {
         artist: SubsonicArtist,
         onDataRetrieved: (media: SubsonicArtist) -> Unit
     ) {
-        var queriesInProgress: Int = 0
+        var queriesInProgress = 0
         artist.albumCollection.forEach { album: Album ->
             if (album.isSubsonic()) {
                 queriesInProgress++
@@ -498,11 +490,20 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun addMusicToPlaylists(
-        music: SubsonicMusic,
+        mediaImpl: SubsonicMedia,
         playlists: MutableList<SubsonicPlaylist>
     ) {
         playlists.forEach { playlist: SubsonicPlaylist ->
-            this.updatePlaylistMusics(musics = listOf(music), playlist = playlist)
+            if (mediaImpl.isMusic())
+                this.updatePlaylistMusics(
+                    musics = listOf(mediaImpl as SubsonicMusic),
+                    playlist = playlist
+                )
+            else
+                this.updatePlaylistMusics(
+                    musics = mediaImpl.musicCollection as Collection<SubsonicMusic>,
+                    playlist = playlist
+                )
         }
     }
 }

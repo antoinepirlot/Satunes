@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.ui.utils
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.ALBUM
@@ -28,10 +29,18 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.FOLDER
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.GENRES
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.MUSIC
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons.PLAYLIST
+import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author Antoine Pirlot on 27/01/2024
@@ -86,4 +95,37 @@ fun getRightIconAndDescription(media: Media): JetpackLibsIcons {
     else if (media.isPlaylist())
         PLAYLIST
     else MUSIC // In that case, mediaImpl is Music
+}
+
+fun addMediaToPlaylist(
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    dataViewModel: DataViewModel,
+    subsonicViewModel: SubsonicViewModel,
+    mediaSelectionViewModel: MediaSelectionViewModel,
+    mediaImpl: MediaImpl,
+) {
+    val localPlaylists: MutableSet<Playlist> = mutableSetOf()
+    val cloudPlaylists: MutableList<SubsonicPlaylist> = mutableListOf()
+
+    mediaSelectionViewModel.getCheckedPlaylistWithMusics().forEach { playlist: Playlist ->
+        if (playlist.isSubsonic())
+            cloudPlaylists.add(element = playlist as SubsonicPlaylist)
+        else
+            localPlaylists.add(element = playlist)
+    }
+
+    if (cloudPlaylists.isNotEmpty() && mediaImpl.isSubsonic())
+        subsonicViewModel.addMusicToPlaylists(
+            mediaImpl = mediaImpl as SubsonicMedia,
+            playlists = cloudPlaylists
+        )
+
+    if (localPlaylists.isNotEmpty())
+        dataViewModel.updateMediaImplToPlaylists(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            mediaImpl = mediaImpl,
+            playlists = localPlaylists
+        )
 }

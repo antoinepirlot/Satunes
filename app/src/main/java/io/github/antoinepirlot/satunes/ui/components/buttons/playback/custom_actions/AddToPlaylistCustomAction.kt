@@ -22,8 +22,10 @@ package io.github.antoinepirlot.satunes.ui.components.buttons.playback.custom_ac
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -68,10 +70,19 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (satunesUiState.showMediaSelectionDialog) {
-        val playlists: Collection<Playlist> =
-            if (music.isSubsonic())
-                dataViewModel.getSubsonicPlaylistCollection()
-            else dataViewModel.getPlaylistSet()
+        val playlists: MutableCollection<Playlist> = mutableStateListOf()
+
+        LaunchedEffect(key1 = Unit) {
+            playlists.addAll(elements = dataViewModel.getPlaylistSet())
+            if (music.isSubsonic()) {
+                val cloudPlaylists: Collection<SubsonicPlaylist> =
+                    dataViewModel.getSubsonicPlaylistCollection()
+                if (cloudPlaylists.isEmpty())
+                    subsonicViewModel.getPlaylists(onDataRetrieved = { playlists.addAll(elements = it) })
+                else
+                    playlists.addAll(elements = cloudPlaylists)
+            }
+        }
 
         MediaSelectionDialog(
             onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },

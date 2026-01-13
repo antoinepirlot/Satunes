@@ -98,11 +98,10 @@ private fun updateMediaPlaylists(
     mediaImpl: MediaImpl
 ) {
     if (mediaImpl.isMusic()) {
-        mediaImpl as Music
         dataViewModel.updateMusicPlaylist(
             scope = scope,
             snackBarHostState = snackBarHostState,
-            music = mediaImpl,
+            music = mediaImpl as Music,
             playlists = mediaSelectionViewModel.getCheckedPlaylistWithMusics()
         )
     } else dataViewModel.updateMediaImplToPlaylists(

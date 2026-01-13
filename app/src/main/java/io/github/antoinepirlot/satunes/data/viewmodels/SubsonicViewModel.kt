@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
@@ -448,5 +449,51 @@ class SubsonicViewModel : ViewModel() {
                 },
             )
         }
+    }
+
+    fun updatePlaylistMusics(
+        musics: Collection<SubsonicMusic>,
+        playlist: SubsonicPlaylist,
+        onFinished: (() -> Unit)? = null,
+        onError: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.updatePlaylist(
+                playlistId = playlist.subsonicId,
+                musicsToAdd = this.getMusicsToAdd(playlist = playlist, collection = musics),
+                musicsIndexToRemove = this.getMusicsIndexToRemove(
+                    playlist = playlist,
+                    collection = musics
+                ),
+                onError = onError,
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
+            )
+        }
+    }
+
+    private fun getMusicsToAdd(
+        playlist: SubsonicPlaylist,
+        collection: Collection<SubsonicMusic>
+    ): Collection<SubsonicMusic> {
+        val musicsToAdd: MutableCollection<SubsonicMusic> = mutableListOf()
+        for (music: SubsonicMusic in collection)
+            if (!playlist.contains(media = music)) musicsToAdd.add(element = music)
+        return musicsToAdd
+    }
+
+    private fun getMusicsIndexToRemove(
+        playlist: SubsonicPlaylist,
+        collection: Collection<SubsonicMusic>
+    ): Collection<Int> {
+        val musicsIndexToRemove: MutableCollection<Int> = mutableListOf()
+        playlist.musicCollection.forEachIndexed { index: Int, music: Music ->
+            if (!collection.contains(element = music))
+                musicsIndexToRemove.add(element = index)
+        }
+        return musicsIndexToRemove
     }
 }

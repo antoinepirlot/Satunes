@@ -47,6 +47,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetSon
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.UpdatePlaylistCallback
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -376,6 +377,37 @@ class SubsonicApiRequester() : ApiRequester {
                 onSucceed = onSucceed,
                 onFinished = onFinished,
                 onError = { onError?.invoke() },
+            )
+        )
+    }
+
+    override fun updatePlaylist(
+        playlistId: String,
+        name: String?,
+        musicsToAdd: Collection<SubsonicMusic>?,
+        musicsIndexToRemove: Collection<Int>?,
+        onError: (() -> Unit)?,
+        onFinished: (() -> Unit)?,
+        onSucceed: (() -> Unit)?
+    ) {
+        var parameters: Array<String> = arrayOf("playlistId=$playlistId")
+        name?.let { parameters += "name=$it" }
+        musicsToAdd?.forEach { music: SubsonicMusic ->
+            parameters += "songIdToAdd=${music.subsonicId}"
+        }
+        musicsIndexToRemove?.forEach { index: Int ->
+            parameters += "songIndexToRemove$index"
+        }
+        get(
+            url = getCommandUrl(
+                command = "updatePlaylist",
+                parameters = parameters
+            ),
+            resCallback = UpdatePlaylistCallback(
+                subsonicApiRequester = this,
+                onSucceed = onSucceed,
+                onError = { onError?.invoke() },
+                onFinished = onFinished
             )
         )
     }

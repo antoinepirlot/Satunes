@@ -165,4 +165,14 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null
     )
+
+    fun updatePlaylist(
+        playlistId: String,
+        name: String? = null,
+        musicsToAdd: Collection<SubsonicMusic>? = null,
+        musicsIndexToRemove: Collection<Int>? = null,
+        onError: (() -> Unit)? = null,
+        onFinished: (() -> Unit)? = null,
+        onSucceed: (() -> Unit)? = null
+    )
 }

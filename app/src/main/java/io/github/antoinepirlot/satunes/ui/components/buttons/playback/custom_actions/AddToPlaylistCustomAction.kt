@@ -35,8 +35,11 @@ import io.github.antoinepirlot.satunes.data.states.SatunesUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.dialog.MediaSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 
@@ -49,6 +52,7 @@ internal fun AddToPlaylistCustomAction(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     mediaSelectionViewModel: MediaSelectionViewModel = viewModel(),
     music: Music,
 ) {
@@ -64,38 +68,60 @@ internal fun AddToPlaylistCustomAction(
     )
 
     if (satunesUiState.showMediaSelectionDialog) {
-        val playlistMap: Set<Playlist> = dataViewModel.getPlaylistSet()
+        val playlists: Collection<Playlist> =
+            if (music.isSubsonic())
+                dataViewModel.getSubsonicPlaylistCollection()
+            else dataViewModel.getPlaylistSet()
 
         MediaSelectionDialog(
             onDismissRequest = { satunesViewModel.hideMediaSelectionDialog() },
             onConfirm = {
-                addMusicPlayingToPlaylist(
+                addMusicToPlaylist(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
                     dataViewModel = dataViewModel,
+                    subsonicViewModel = subsonicViewModel,
                     checkedPlaylists = mediaSelectionViewModel.getCheckedPlaylistWithMusics(),
                     music = music
                 )
                 satunesViewModel.hideMediaSelectionDialog()
             },
-            mediaImplCollection = playlistMap,
+            mediaImplCollection = playlists,
             mediaDestination = music,
             jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD
         )
     }
 }
 
-private fun addMusicPlayingToPlaylist(
+private fun addMusicToPlaylist(
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     dataViewModel: DataViewModel,
+    subsonicViewModel: SubsonicViewModel,
     checkedPlaylists: List<Playlist>,
     music: Music,
 ) {
-    dataViewModel.updateMusicPlaylist(
-        scope = scope,
-        snackBarHostState = snackBarHostState,
-        music = music,
-        playlists = checkedPlaylists
-    )
+    val localPlaylists: MutableSet<Playlist> = mutableSetOf()
+    val cloudPlaylists: MutableList<SubsonicPlaylist> = mutableListOf()
+
+    checkedPlaylists.forEach { playlist: Playlist ->
+        if (playlist.isSubsonic())
+            cloudPlaylists.add(element = playlist as SubsonicPlaylist)
+        else
+            localPlaylists.add(element = playlist)
+    }
+
+    if (cloudPlaylists.isNotEmpty() && music.isSubsonic())
+        subsonicViewModel.addMusicToPlaylists(
+            music = music as SubsonicMusic,
+            playlists = cloudPlaylists
+        )
+
+    if (localPlaylists.isNotEmpty())
+        dataViewModel.updateMusicPlaylist(
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            music = music,
+            playlists = checkedPlaylists
+        )
 }

@@ -496,4 +496,13 @@ class SubsonicViewModel : ViewModel() {
         }
         return musicsIndexToRemove
     }
+
+    fun addMusicToPlaylists(
+        music: SubsonicMusic,
+        playlists: MutableList<SubsonicPlaylist>
+    ) {
+        playlists.forEach { playlist: SubsonicPlaylist ->
+            this.updatePlaylistMusics(musics = listOf(music), playlist = playlist)
+        }
+    }
 }

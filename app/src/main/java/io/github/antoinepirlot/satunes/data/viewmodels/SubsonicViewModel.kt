@@ -506,4 +506,16 @@ class SubsonicViewModel : ViewModel() {
                 )
         }
     }
+
+    fun removeMusicFromPlaylist(music: SubsonicMusic, playlist: SubsonicPlaylist) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.updatePlaylist(
+                playlistId = playlist.subsonicId,
+                musicsIndexToRemove = listOf(playlist.indexOf(media = music)),
+                onSucceed = { playlist.removeMusic(music = music) },
+                onFinished = { this.finishRequest() }
+            )
+        }
+    }
 }

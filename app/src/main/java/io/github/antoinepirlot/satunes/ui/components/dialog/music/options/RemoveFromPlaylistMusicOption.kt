@@ -34,8 +34,11 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.dialog.RemoveConfirmationDialog
 import io.github.antoinepirlot.satunes.ui.components.dialog.options.DialogOption
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +51,7 @@ import kotlinx.coroutines.CoroutineScope
 internal fun RemoveFromPlaylistMusicOption(
     modifier: Modifier = Modifier,
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     music: Music,
     playlist: Playlist,
     onFinished: (() -> Unit)?,
@@ -67,12 +71,25 @@ internal fun RemoveFromPlaylistMusicOption(
         RemoveConfirmationDialog(
             onDismissRequest = { showRemoveConfirmation = false },
             onRemoveRequest = {
-                dataViewModel.removeMusicFromPlaylist(
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    music = music,
-                    playlist = playlist
-                )
+                if (playlist.isSubsonic()) {
+                    if (!music.isSubsonic()) {
+                        throw IllegalArgumentException(
+                            "Trying to remove non subsonic music from subsonic playlist. " +
+                                    "It's a non sense"
+                        )
+                    }
+                    subsonicViewModel.removeMusicFromPlaylist(
+                        music = music as SubsonicMusic,
+                        playlist = playlist as SubsonicPlaylist
+                    )
+                } else {
+                    dataViewModel.removeMusicFromPlaylist(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        music = music,
+                        playlist = playlist
+                    )
+                }
                 onFinished?.invoke()
             }
         )

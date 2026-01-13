@@ -674,12 +674,19 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    suspend fun getOrder(playlist: Playlist, music: Music): Long {
-        if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order") // It will reduce startup speed if executed
+    suspend fun getOrder(
+        playlist: Playlist,
+        music: Music,
+        apiRequester: ApiRequester? = null
+    ): Long {
+        //TODO do not use this function but sort directly with sql
+        if (!LocalDataLoader.isLoading.value) _logger?.info("Get Order")
         val musicsPlaylistsRelList: List<MusicsPlaylistsRel> =
             musicsPlaylistsRelDAO.getAllFromPlaylist(playlistId = playlist.id!!)
         val musicsPlaylistsRel: MusicsPlaylistsRel =
-            musicsPlaylistsRelList.first { musicDao.get(musicId = it.musicId)?.getMusic() == music }
+            musicsPlaylistsRelList.first {
+                musicDao.get(musicId = it.musicId)?.getMusic(apiRequester = apiRequester) == music
+            }
         return musicsPlaylistsRel.addedDateMs
     }
 }

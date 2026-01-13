@@ -396,7 +396,7 @@ class SubsonicApiRequester() : ApiRequester {
             parameters += "songIdToAdd=${music.subsonicId}"
         }
         musicsIndexToRemove?.forEach { index: Int ->
-            parameters += "songIndexToRemove$index"
+            parameters += "songIndexToRemove=$index"
         }
         get(
             url = getCommandUrl(

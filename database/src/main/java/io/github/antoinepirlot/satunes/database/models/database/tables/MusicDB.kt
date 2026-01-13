@@ -66,9 +66,9 @@ internal class MusicDB(
         return if (this.subsonicId != null) {
             var music: Music? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
             var mustWait: Boolean = true
-            if (music == null)
-                apiRequester!!.getSong(
-                    musicId = subsonicId!!,
+            if (music == null && apiRequester != null)
+                apiRequester.getSong(
+                    musicId = this.subsonicId!!,
                     onDataRetrieved = { music = it },
                     onFinished = { mustWait = false }
                 )

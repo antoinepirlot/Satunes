@@ -114,6 +114,9 @@ abstract class MediaImpl(
     }
 
     @Synchronized
+    override fun indexOf(media: Media): Int = this.musicCollection.indexOf(element = media)
+
+    @Synchronized
     override fun removeMusic(music: Music) {
         if (this.contains(media = music)) {
             this.musicSortedSet.remove(music)

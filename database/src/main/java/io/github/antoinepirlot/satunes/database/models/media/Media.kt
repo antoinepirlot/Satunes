@@ -48,6 +48,8 @@ interface Media : MediaData, Comparable<Media> {
 
     fun addMusics(musics: Collection<Music>)
 
+    fun indexOf(media: Media): Int
+
     fun removeMusic(music: Music)
 
     /**

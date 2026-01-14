@@ -99,10 +99,11 @@ open class Music(
     var liked: Boolean by mutableStateOf(value = false)
         private set
 
-    var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
+    open var uri: Uri = uri ?: encode(absolutePath).toUri() // Must be init before media item
         protected set
 
-    val mediaItem: MediaItem = getMediaMetadata()
+    val mediaItem: MediaItem
+        get() = getMediaMetadata()
 
     init {
         this.updateCdTrackNumber(cdTrackNumber = cdTrackNumber)

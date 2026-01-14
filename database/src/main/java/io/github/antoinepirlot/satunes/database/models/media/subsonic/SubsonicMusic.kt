@@ -24,6 +24,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.core.net.toUri
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
@@ -80,9 +81,11 @@ class SubsonicMusic(
 ) {
     private val _logger: Logger? = Logger.getLogger()
 
-    override fun switchLike() {
-        /*if(this.isStoredLocally())*/ super.switchLike()
-    }
+    override var uri: Uri
+        get() = if (this.isStoredLocally()) this.absolutePath.toUri() else super.uri
+        set(value) {
+            super.uri = value
+        }
 
     /**
      * Update this [SubsonicMusic] with the new [SubsonicMusic] if both [id] are identical
@@ -122,6 +125,9 @@ class SubsonicMusic(
         )
     }
 
+    /**
+     * Download file of this music and stores it in Satunes' storage when data has been retrieved.
+     */
     override fun download(context: Context) {
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
@@ -129,14 +135,11 @@ class SubsonicMusic(
             _apiRequester.download(
                 musicId = this.subsonicId,
                 onError = {
-                    //Do not directly change downloadStatus here as it will throw an error.
-                    //Using this function doesn't crash
                     this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 },
                 onDataRetrieved = {
                     if (this.store(context = context, data = it)) {
                         this.saveInDatabase()
-                        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
                     } else
                         this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 }
@@ -174,6 +177,7 @@ class SubsonicMusic(
                     bytesRead = data.read(buffer)
                 }
                 this.absolutePath = absolutePath
+                this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
                 return true
             } catch (e: Exception) {
                 _logger?.warning(e.message)
@@ -189,7 +193,6 @@ class SubsonicMusic(
     }
 
     private fun saveInDatabase() {
-        //TODO
         val db: DatabaseManager = DatabaseManager.getInstance()
         db.updateMusic(this)
     }

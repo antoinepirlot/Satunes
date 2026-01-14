@@ -121,7 +121,7 @@ class DatabaseManager private constructor(context: Context) {
         var musicDBs: Array<MusicDB> = arrayOf()
         musics.forEach { music: Music ->
             musicDBs += MusicDB(
-                localId = music.id,
+                localId = if (music.isSubsonic()) null else music.id!!,
                 subsonicId = if (music.isSubsonic()) (music as SubsonicMusic).subsonicId else null,
                 absolutePath = music.absolutePath
             )

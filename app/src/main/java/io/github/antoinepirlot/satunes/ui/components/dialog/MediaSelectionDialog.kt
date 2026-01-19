@@ -37,12 +37,11 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.MediaSelectionViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.forms.MediaSelectionForm
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -56,7 +55,7 @@ internal fun MediaSelectionDialog(
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
     mediaDestination: MediaImpl,
-    playlistTitle: String? = null,
+    playlist: Playlist? = null,
     jetpackLibsIcons: JetpackLibsIcons,
 ) {
     val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
@@ -77,7 +76,7 @@ internal fun MediaSelectionDialog(
             onDismissRequest = onDismissRequest,
             onConfirm = onConfirm,
             mediaImplCollection = mediaImplCollection,
-            playlistTitle = playlistTitle,
+            playlist = playlist,
             jetpackLibsIcons = jetpackLibsIcons
         )
     }
@@ -106,7 +105,7 @@ private fun MediaSelectionDialogList(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     mediaImplCollection: Collection<MediaImpl>,
-    playlistTitle: String? = null,
+    playlist: Playlist? = null,
     jetpackLibsIcons: JetpackLibsIcons,
 ) {
     AlertDialog(
@@ -121,15 +120,15 @@ private fun MediaSelectionDialogList(
             if (mediaImplCollection.isEmpty()) {
                 NormalText(text = stringResource(id = R.string.no_music))
             } else if (mediaImplCollection.first().isMusic()) {
-                if (playlistTitle == null) {
+                if (playlist == null) {
                     throw IllegalStateException("PlaylistDB title is required when adding music to playlistDB")
                 }
                 @Suppress("NAME_SHADOWING")
                 val playlistTitle: String =
-                    if (playlistTitle == LIKES_PLAYLIST_TITLE)
-                        stringResource(RDb.string.likes_playlist_title)
+                    if (playlist.isSystemPlaylist())
+                        stringResource(playlist.systemPlaylists!!.stringId)
                     else
-                        playlistTitle
+                        playlist.title
 
                 NormalText(text = stringResource(id = R.string.add_to) + playlistTitle)
             } else {

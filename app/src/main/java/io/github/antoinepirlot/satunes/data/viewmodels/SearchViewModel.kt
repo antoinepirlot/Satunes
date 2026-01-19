@@ -28,8 +28,6 @@ import androidx.lifecycle.ViewModel
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.data.states.SearchUiState
-import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.NavBarSection
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -252,12 +250,11 @@ class SearchViewModel : ViewModel() {
                 SearchChips.PLAYLISTS -> {
                     playlistSet.forEach { playlist: Playlist ->
                         val context = MainActivity.instance.applicationContext
-                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                            playlist.title = context.getString(R.string.likes_playlist_title)
-                        }
-                        if (playlist.title.lowercase().contains(query)) {
+                        if (playlist.isSystemPlaylist())
+                            playlist.title = context.getString(playlist.systemPlaylists!!.stringId)
+
+                        if (playlist.title.lowercase().contains(query))
                             mediaImplSet.add(element = playlist)
-                        }
                     }
                 }
             }

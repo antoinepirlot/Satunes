@@ -34,13 +34,11 @@ import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.PlaylistExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -87,8 +85,8 @@ internal fun PlaylistView(
     MediaListView(
         modifier = modifier,
         header = {
-            val title: String = if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                stringResource(id = RDb.string.likes_playlist_title)
+            val title: String = if (playlist.isSystemPlaylist()) {
+                stringResource(id = playlist.systemPlaylists!!.stringId)
             } else {
                 playlist.title
             }

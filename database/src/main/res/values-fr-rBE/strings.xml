@@ -38,4 +38,5 @@
     <string name="download_text">Télécharger</string>
     <string name="downloaded_text">Supprimer</string>
     <string name="downloading_text">Téléchargement en cours…</string>
+    <string name="downloads_playlist_title">Téléchargements</string>
 </resources>

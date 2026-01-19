@@ -21,12 +21,15 @@
 package io.github.antoinepirlot.satunes.database.models.media
 
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
 interface Media : MediaData, Comparable<Media> {
     val musicCollection: Collection<Music>
+
+    val subsonicMusicCollection: Collection<SubsonicMusic>
 
     val downloadStatus: DownloadStatus
 

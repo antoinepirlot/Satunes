@@ -23,9 +23,9 @@ package io.github.antoinepirlot.satunes.utils
 import android.content.Context
 import io.github.antoinepirlot.satunes.MainActivity
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Media
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
@@ -35,8 +35,8 @@ import io.github.antoinepirlot.satunes.database.R as RDb
 fun getMediaTitle(mediaImpl: Media): String {
     val context: Context = MainActivity.instance.applicationContext
     return if (mediaImpl.isPlaylist()) {
-        if (mediaImpl.title == LIKES_PLAYLIST_TITLE) {
-            MainActivity.instance.getString(RDb.string.likes_playlist_title)
+        if ((mediaImpl as Playlist).isSystemPlaylist()) {
+            MainActivity.instance.getString(mediaImpl.systemPlaylists!!.stringId)
         } else {
             mediaImpl.title
         }

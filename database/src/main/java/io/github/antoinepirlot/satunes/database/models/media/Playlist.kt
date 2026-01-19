@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
+import io.github.antoinepirlot.satunes.database.models.SystemPlaylists
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import kotlinx.coroutines.CoroutineScope
@@ -32,8 +32,20 @@ import kotlinx.coroutines.launch
  */
 open class Playlist(
     id: Long?,
-    title: String
+    title: String,
 ) : MediaImpl(id = id, title = title) {
+
+    val systemPlaylists: SystemPlaylists? = SystemPlaylists.get(title = title)
+
+    override var title: String = title
+        get() {
+            return if (this.isSystemPlaylist()) this.systemPlaylists!!.title
+            else field
+        }
+        set(value) {
+            if (!this.isSystemPlaylist())
+                field = value
+        }
 
     /**
      * Add music into [musicSortedSet] and [musicCollection]
@@ -77,6 +89,12 @@ open class Playlist(
 
     override fun isPlaylist(): Boolean = true
 
+    fun isSystemPlaylist(): Boolean = this.systemPlaylists != null
+
+    fun isLikesPlaylist(): Boolean = this.title == SystemPlaylists.LIKES.title
+
+    fun isDownloadsPlaylist(): Boolean = this.title == SystemPlaylists.DOWNLOADS.title
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -91,12 +109,12 @@ open class Playlist(
     }
 
     override fun compareTo(other: Media): Int {
-        if (this.title == LIKES_PLAYLIST_TITLE || other.title == LIKES_PLAYLIST_TITLE) {
+        if (this.isSystemPlaylist() || other.isPlaylist() && (other as Playlist).isSystemPlaylist()) {
             if (this.title == other.title) {
                 return 0
             }
-            if (this.title == LIKES_PLAYLIST_TITLE) {
-                return -1
+            if (this.isSystemPlaylist() && other.isPlaylist() && (other as Playlist).isSystemPlaylist()) {
+                return this.title.compareTo(other = other.title)
             }
             return 1
         }

@@ -42,7 +42,6 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
@@ -53,7 +52,6 @@ import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.Exp
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.RemovePlaylistOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options.UploadPlaylistOption
 import kotlinx.coroutines.CoroutineScope
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot on 01/04/2024
@@ -80,8 +78,8 @@ internal fun PlaylistOptionsDialog(
             )
         },
         title = {
-            if (playlistTitle == LIKES_PLAYLIST_TITLE) {
-                NormalText(text = stringResource(id = RDb.string.likes_playlist_title))
+            if (playlist.isSystemPlaylist()) {
+                NormalText(text = stringResource(id = playlist.systemPlaylists!!.stringId))
             } else {
                 OutlinedTextField(
                     value = playlistTitle,

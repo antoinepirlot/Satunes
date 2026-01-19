@@ -43,9 +43,7 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
-import io.github.antoinepirlot.satunes.database.R as RDb
 
 /**
  * @author Antoine Pirlot 05/02/2025
@@ -75,7 +73,8 @@ internal fun DefaultPlaylistSection(
                     )
                     val text: String =
                         if (selectedPlaylist == null) stringResource(id = R.string.no_playlist_selected)
-                        else if (selectedPlaylist.title == LIKES_PLAYLIST_TITLE) stringResource(id = RDb.string.likes_playlist_title)
+                        else if (selectedPlaylist.isSystemPlaylist())
+                            stringResource(id = selectedPlaylist.systemPlaylists!!.stringId)
                         else selectedPlaylist.title
                     NormalText(text = text)
                 }
@@ -107,8 +106,8 @@ private fun Menu(
         )
         for (playlist: Playlist in dataViewModel.getPlaylistSet()) {
             val text: String =
-                if (playlist.title == LIKES_PLAYLIST_TITLE)
-                    stringResource(id = RDb.string.likes_playlist_title)
+                if (playlist.isSystemPlaylist())
+                    stringResource(id = playlist.systemPlaylists!!.stringId)
                 else
                     playlist.title
             DropdownMenuItem(

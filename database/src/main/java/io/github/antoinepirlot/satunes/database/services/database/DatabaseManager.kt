@@ -29,16 +29,15 @@ import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.android.utils.utils.writeToUri
 import io.github.antoinepirlot.satunes.database.R
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
 import io.github.antoinepirlot.satunes.database.daos.MusicsPlaylistsRelDAO
 import io.github.antoinepirlot.satunes.database.daos.PlaylistDAO
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
-import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
 import io.github.antoinepirlot.satunes.database.exceptions.PlaylistAlreadyExistsException
 import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
 import io.github.antoinepirlot.satunes.database.exceptions.media.LocalPlaylistNotFoundException
 import io.github.antoinepirlot.satunes.database.models.FileExtensions
+import io.github.antoinepirlot.satunes.database.models.SystemPlaylists
 import io.github.antoinepirlot.satunes.database.models.database.SatunesDatabase
 import io.github.antoinepirlot.satunes.database.models.database.relations.PlaylistWithMusics
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
@@ -102,9 +101,12 @@ class DatabaseManager private constructor(context: Context) {
                     runIOThread {
                         val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
                         if (music != null) {
-                            if (playlist.title == LIKES_PLAYLIST_TITLE) {
+                            if (playlist.isSystemPlaylist()) {
                                 val music: Music = music
-                                music.markAsLiked()
+                                if (playlist.isLikesPlaylist())
+                                    music.markAsLiked()
+                                else if (playlist.isDownloadsPlaylist())
+                                    music.markAsDownloaded()
                             }
                             playlist.addMusic(music = music)
                         }
@@ -138,7 +140,7 @@ class DatabaseManager private constructor(context: Context) {
      * @throws IllegalArgumentException when playlistTitle is in incorrect format
      * @throws PlaylistAlreadyExistsException when there's already a playlist with the same playlistTitle
      */
-    fun addOnePlaylist(playlistTitle: String, musicList: MutableList<Music>? = null): Playlist {
+    fun addOnePlaylist(playlistTitle: String, musicList: Collection<Music>? = null): Playlist {
         checkString(string = playlistTitle)
         @Suppress("NAME_SHADOWING")
         val playlistTitle: String = playlistTitle.trim()
@@ -259,7 +261,7 @@ class DatabaseManager private constructor(context: Context) {
             _logger?.warning(e.message)
             // Do nothing
         }
-        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+        if (playlist.isLikesPlaylist()) {
             if (music.isSubsonic()) musicDao.likeWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)
             else musicDao.likeWithLocalId(localId = music.id!!)
             music.markAsLiked()
@@ -303,7 +305,7 @@ class DatabaseManager private constructor(context: Context) {
             if (music.isSubsonic()) musicDao.getWithSubsonicId(subsonicId = (music as SubsonicMusic).subsonicId)!!
             else musicDao.getWithLocalId(localId = music.id!!)!!
 
-        if (playlist.title == LIKES_PLAYLIST_TITLE) {
+        if (playlist.isLikesPlaylist()) {
             if (music.isSubsonic())
                 musicDao.unlikeWithSubsonicId(subsonicId = musicDB.subsonicId!!)
             else
@@ -346,7 +348,7 @@ class DatabaseManager private constructor(context: Context) {
         playlistDao.remove(id = playlist.id!!)
         playlist.musicCollection.forEach { music: Music ->
             musicsPlaylistsRelDAO.delete(musicId = music.id!!, playlistId = playlist.id!!)
-            if (playlist.title == LIKES_PLAYLIST_TITLE) {
+            if (playlist.isLikesPlaylist()) {
                 musicDao.unlikeWithLocalId(localId = music.id!!)
                 music.markAsUnliked()
             }
@@ -613,27 +615,13 @@ class DatabaseManager private constructor(context: Context) {
     }
 
     fun like(music: Music) {
-        try {
-            val likesPlaylist: PlaylistWithMusics? =
-                playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
-            if (likesPlaylist == null) {
-                addOnePlaylist(
-                    musicList = mutableListOf(music),
-                    playlistTitle = LIKES_PLAYLIST_TITLE
-                )
-                throw LikesPlaylistCreationException()
-            }
-            insertMusicToPlaylist(music = music, playlist = likesPlaylist.playlistDB.playlist!!)
-        } catch (e: Throwable) {
-            _logger?.severe(e.message)
-            throw e
-        }
+        this.addToSystemPlaylist(systemPlaylist = SystemPlaylists.LIKES, musics = listOf(music))
     }
 
     fun unlike(music: Music) {
         try {
             val likesPlaylist: PlaylistWithMusics =
-                playlistDao.getPlaylistWithMusics(title = LIKES_PLAYLIST_TITLE)
+                playlistDao.getPlaylistWithMusics(title = SystemPlaylists.LIKES.title)
                     ?: return
             removeMusicFromPlaylist(
                 music = music,
@@ -688,5 +676,29 @@ class DatabaseManager private constructor(context: Context) {
                 musicDao.get(musicId = it.musicId)?.getMusic(apiRequester = apiRequester) == music
             }
         return musicsPlaylistsRel.addedDateMs
+    }
+
+    fun addToDownloaded(musics: Collection<SubsonicMusic>) {
+        this.addToSystemPlaylist(systemPlaylist = SystemPlaylists.DOWNLOADS, musics = musics)
+    }
+
+    private fun addToSystemPlaylist(systemPlaylist: SystemPlaylists, musics: Collection<Music>) {
+        try {
+            val playlist: PlaylistWithMusics? =
+                playlistDao.getPlaylistWithMusics(title = systemPlaylist.title)
+            if (playlist == null) {
+                addOnePlaylist(
+                    musicList = musics,
+                    playlistTitle = systemPlaylist.title
+                )
+            } else {
+                musics.forEach {
+                    insertMusicToPlaylist(music = it, playlist = playlist.playlistDB.playlist!!)
+                }
+            }
+        } catch (e: Throwable) {
+            _logger?.severe(e.message)
+            throw e
+        }
     }
 }

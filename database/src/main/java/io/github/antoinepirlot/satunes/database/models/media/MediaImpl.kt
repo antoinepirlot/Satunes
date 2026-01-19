@@ -29,6 +29,7 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.android.utils.utils.toCircularBitmap
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.comparators.StringComparator
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import java.util.Date
 import java.util.SortedSet
@@ -71,6 +72,9 @@ abstract class MediaImpl(
     @get:Synchronized
     override val musicCollection: Collection<Music> = mutableStateListOf()
 
+    @get:Synchronized
+    override val subsonicMusicCollection: Collection<SubsonicMusic> = mutableListOf()
+
     fun getSet(): Set<Music> = musicSortedSet
 
     override fun isEmpty(): Boolean {
@@ -105,6 +109,10 @@ abstract class MediaImpl(
             this.musicSortedSet.add(element = music)
             (this.musicCollection as MutableList<Music>).add(element = music)
             (this.musicCollection as MutableList<Music>).sort()
+            if (music.isSubsonic()) {
+                (this.subsonicMusicCollection as MutableCollection<SubsonicMusic>)
+                    .add(element = music as SubsonicMusic)
+            }
         }
     }
 
@@ -121,6 +129,9 @@ abstract class MediaImpl(
         if (this.contains(media = music)) {
             this.musicSortedSet.remove(music)
             (this.musicCollection as MutableList<Music>).remove(element = music)
+            if (music.isSubsonic())
+                (this.subsonicMusicCollection as MutableCollection<SubsonicMusic>)
+                    .remove(element = music)
         }
     }
 

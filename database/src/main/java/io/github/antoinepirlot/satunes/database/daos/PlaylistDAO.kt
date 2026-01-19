@@ -33,8 +33,6 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistD
  * @author Antoine Pirlot on 27/03/2024
  */
 
-const val LIKES_PLAYLIST_TITLE: String = "_likes"
-
 @Dao
 internal interface PlaylistDAO {
 

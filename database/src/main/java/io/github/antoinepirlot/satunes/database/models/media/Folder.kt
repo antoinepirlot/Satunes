@@ -23,6 +23,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media
 
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import java.util.Date
 import java.util.SortedSet
@@ -156,21 +157,36 @@ open class Folder(
     }
 
     /**
-     * Create a mutable map that contains all folder's music and subfolders' musics in this order:
+     * Create a mutable set that contains all folder's music and subfolders' musics in this order:
      * #1 musics from this current folder sorted by name
      * #2 musics from each subfolder sorted by name and by folder
      */
     fun getAllMusic(): Set<Music> {
         val musicSet: MutableSet<Music> = mutableSetOf()
-
         musicSet.addAll(elements = this.musicSortedSet)
-
         if (this.subFolderSortedSet.isNotEmpty()) {
             this.subFolderSortedSet.forEach { folder: Folder ->
                 musicSet.addAll(elements = folder.getAllMusic())
             }
         }
+        return musicSet
+    }
 
+    /**
+     * Create a mutable set that contains all folder's subsonic musics and subfolders' subsonic musics in this order:
+     * #1 musics from this current folder sorted by name
+     * #2 musics from each subfolder sorted by name and by folder.
+     */
+    fun getAllSubsonicMusic(): Set<SubsonicMusic> {
+        if (!this.isSubsonic()) throw IllegalStateException("This folder is not a subsonic one")
+        val musicSet: MutableSet<SubsonicMusic> = mutableSetOf()
+        musicSet.addAll(elements = this.subsonicMusicCollection)
+        if (this.subFolderSortedSet.isNotEmpty()) {
+            this.subFolderSortedSet.forEach { folder: Folder ->
+                if (folder.isSubsonic())
+                    musicSet.addAll(elements = folder.getAllSubsonicMusic())
+            }
+        }
         return musicSet
     }
 

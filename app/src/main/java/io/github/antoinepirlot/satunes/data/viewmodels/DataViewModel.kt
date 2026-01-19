@@ -38,7 +38,6 @@ import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.defaultSortingOption
 import io.github.antoinepirlot.satunes.data.states.DataUiState
 import io.github.antoinepirlot.satunes.data.states.NavigationUiState
-import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
 import io.github.antoinepirlot.satunes.database.exceptions.BlankStringException
 import io.github.antoinepirlot.satunes.database.exceptions.LikesPlaylistCreationException
@@ -342,8 +341,8 @@ class DataViewModel : ViewModel() {
                 _db.removePlaylist(playlist = playlist)
                 val context: Context = MainActivity.instance.applicationContext
                 val message: String =
-                    if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                        context.getString(RDb.string.likes_playlist_title)
+                    if (playlist.isSystemPlaylist()) {
+                        context.getString(playlist.systemPlaylists!!.stringId)
                     } else {
                         playlist.title
                     } + ' ' + context.getString(R.string.remove_playlist_success)
@@ -385,8 +384,8 @@ class DataViewModel : ViewModel() {
                     message = context.getString(
                         R.string.add_music_to_playlist_success,
                         music.title,
-                        if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                            context.getString(RDb.string.likes_playlist_title)
+                        if (playlist.isSystemPlaylist()) {
+                            context.getString(playlist.systemPlaylists!!.stringId)
                         } else {
                             playlist.title
                         }
@@ -480,8 +479,8 @@ class DataViewModel : ViewModel() {
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + if (playlist.title == LIKES_PLAYLIST_TITLE) {
-                        context.getString(RDb.string.likes_playlist_title)
+                    message = music.title + ' ' + context.getString(R.string.remove_from_playlist_success) + ' ' + if (playlist.isSystemPlaylist()) {
+                        context.getString(playlist.systemPlaylists!!.stringId)
                     } else {
                         playlist.title
                     },
@@ -522,6 +521,7 @@ class DataViewModel : ViewModel() {
             val context: Context = MainActivity.instance.applicationContext
             try {
                 music.switchLike()
+                //TODO use returned int instead of throwing exception
             } catch (e: Throwable) {
                 if (e is LikesPlaylistCreationException) {
                     showSnackBar(
@@ -1040,5 +1040,27 @@ class DataViewModel : ViewModel() {
                 _mediaListOnScreen[i] = new
                 return
             }
+    }
+
+    fun addToDownloadPlaylist(
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState,
+        musics: Collection<SubsonicMusic>
+    ) {
+        try {
+            DatabaseManager.getInstance().addToDownloaded(musics = musics)
+        } catch (_: Throwable) {
+            showErrorSnackBar(
+                scope = scope,
+                snackBarHostState = snackbarHostState,
+                action = {
+                    addToDownloadPlaylist(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
+                        musics = musics
+                    )
+                },
+            )
+        }
     }
 }

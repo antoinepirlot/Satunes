@@ -33,6 +33,7 @@ import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -144,6 +145,10 @@ open class Music(
 
     internal fun markAsUnliked() {
         this.liked = false
+    }
+
+    internal fun markAsDownloaded() {
+        this.downloadStatus = DownloadStatus.DOWNLOADED
     }
 
     fun getYear(): Int? {

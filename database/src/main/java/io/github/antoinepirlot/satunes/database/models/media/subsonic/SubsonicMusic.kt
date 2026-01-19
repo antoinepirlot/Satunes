@@ -49,7 +49,7 @@ class SubsonicMusic(
      * [id] can be different from [subsonicId] because [id] is considered as local id if the music is both online or on device.
      * Device will be used instead of subsonic.
      */
-    override var subsonicId: String,
+    override val subsonicId: String,
     id: Long? = null,
     title: String,
     displayName: String,

@@ -83,7 +83,7 @@ internal fun PlaylistExtraButtonList(
             mediaImplCollection = dataViewModel.getMusicSet(),
             jetpackLibsIcons = JetpackLibsIcons.PLAYLIST_ADD,
             mediaDestination = playlist,
-            playlistTitle = playlist.title
+            playlist = playlist
         )
     }
 }

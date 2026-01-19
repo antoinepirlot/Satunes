@@ -36,6 +36,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.models.Destination
@@ -569,6 +570,18 @@ class PlaybackViewModel : ViewModel() {
                 context = MainActivity.instance.applicationContext,
                 customAction = customAction
             )
+        }
+    }
+
+    fun updateMediaItems(media: SubsonicMedia) {
+        if (media.isMusic()) {
+            CoroutineScope(context = Dispatchers.Main).launch { //if not main it crashes
+                PlaybackManager.updateMediaItems(
+                    media = media,
+                    context = MainActivity.getContext(),
+                    apiRequester = SubsonicApiRequester()
+                )
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.data.LocalDataLoader
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
@@ -382,5 +383,11 @@ object PlaybackManager {
         _logger?.info("Get next music")
         checkPlaybackController(context = context, apiRequester = apiRequester)
         return this._playbackController!!.getNextMusic()
+    }
+
+    fun updateMediaItems(media: SubsonicMedia, context: Context, apiRequester: ApiRequester) {
+        _logger?.info("update media items")
+        checkPlaybackController(context = context, apiRequester = apiRequester)
+        this._playbackController!!.updateMediaItems(media = media)
     }
 }

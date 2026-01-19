@@ -128,7 +128,7 @@ class SubsonicMusic(
     /**
      * Download file of this music and stores it in Satunes' storage when data has been retrieved.
      */
-    override fun download(context: Context) {
+    override fun download(context: Context, onDataRetrieved: () -> Unit) {
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
         runIOThread {
@@ -140,6 +140,7 @@ class SubsonicMusic(
                 onDataRetrieved = {
                     if (this.store(context = context, data = it)) {
                         this.saveInDatabase()
+                        onDataRetrieved()
                     } else
                         this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
                 }

@@ -22,9 +22,11 @@ package io.github.antoinepirlot.satunes.playback.services
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.annotation.OptIn
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
@@ -33,6 +35,9 @@ import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicFolder
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
 import io.github.antoinepirlot.satunes.playback.exceptions.AlreadyInPlaybackException
@@ -48,7 +53,6 @@ internal class PlaybackController private constructor(
     sessionToken: SessionToken,
     loadAllMusics: Boolean = false
 ) {
-
     internal var mediaController: MediaController? = null
 
     internal var playlist: Playlist? = null
@@ -80,12 +84,14 @@ internal class PlaybackController private constructor(
             WidgetPlaybackManager.refreshWidgets()
         }
     var repeatMode: Int = DEFAULT_REPEAT_MODE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
             PlaybackService.updateCustomCommands()
             PlaybackManager.repeatMode.intValue = value
         }
     var isShuffle: Boolean = DEFAULT_IS_SHUFFLE
+        @OptIn(UnstableApi::class)
         internal set(value) {
             field = value
             PlaybackService.updateCustomCommands()
@@ -157,6 +163,7 @@ internal class PlaybackController private constructor(
             return _instance!!
         }
 
+        @OptIn(UnstableApi::class)
         fun initInstance(
             context: Context,
             listener: Player.Listener? = null,
@@ -192,7 +199,7 @@ internal class PlaybackController private constructor(
                     _logger?.info("Waiting")
                     while (!isInitialized());
                     _logger?.info("PlaybackListener initialized")
-                        // Wait it is initializing
+                    // Wait it is initializing
                     _instance!!.mediaController!!.removeListener(_instance!!.listener)
                     _instance!!.mediaController!!.addListener(listener)
                 }
@@ -232,6 +239,32 @@ internal class PlaybackController private constructor(
         } catch (e: Throwable) {
             _logger?.severe(e.message)
             throw e
+        }
+    }
+
+    fun updateMediaItems(media: SubsonicMedia) {
+        if (this.mediaController == null) return
+        if (this.playlist == null) return
+
+        if (media.isMusic()) {
+            media as SubsonicMusic
+            this.playlist!!.updateMediaItem(media = media)
+            val index: Int = this.playlist!!.getMusicIndex(music = media)
+            if (index < 0) return
+            this.mediaController!!.replaceMediaItem(index, media.mediaItem)
+        } else {
+            val collection: Collection<Music> =
+                if (media.isFolder()) (media as SubsonicFolder).getAllMusic()
+                else media.musicCollection
+
+            collection.forEach { music: Music ->
+                music as SubsonicMusic
+                this.playlist!!.updateMediaItem(media = music)
+                this.mediaController!!.replaceMediaItem(
+                    this.playlist!!.getMusicIndex(music = music),
+                    this.playlist!!.getMediaItem(music = music)
+                )
+            }
         }
     }
 
@@ -380,6 +413,7 @@ internal class PlaybackController private constructor(
         this.loadMusics(playlist = playlist)
     }
 
+    @OptIn(UnstableApi::class)
     fun loadMusics(playlist: Playlist) {
         this.isLoading = true
         if (this.playlist === playlist) return
@@ -488,7 +522,7 @@ internal class PlaybackController private constructor(
                 hasNext = true
             }
         } else if (mediaImpl.isFolder())
-            // reversed because each music will be added next to it's added after the current music
+        // reversed because each music will be added next to it's added after the current music
             addNext(mediaImplList = (mediaImpl as Folder).getAllMusic().reversed())
         // reversed because each music will be added next to it's added after the current music
         else addNext(mediaImplList = mediaImpl.musicCollection.reversed())
@@ -671,16 +705,16 @@ internal class PlaybackController private constructor(
     fun stop() {
         this.mediaController?.stop()
         this.mediaController?.clearMediaItems()
-            this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
-            this.isPlaying = DEFAULT_IS_PLAYING_VALUE
-            this.isShuffle = DEFAULT_IS_SHUFFLE
-            this.hasNext = DEFAULT_HAS_NEXT
-            this.hasPrevious = DEFAULT_HAS_PREVIOUS
-            this.isLoaded = DEFAULT_IS_LOADED
-            this.currentPositionProgression = DEFAULT_CURRENT_POSITION_PROGRESSION
-            this.playlist = null
-            this.repeatMode = DEFAULT_REPEAT_MODE
-            this.musicPlaying = DEFAULT_MUSIC_PLAYING
+        this.musicPlayingIndex = DEFAULT_MUSIC_PLAYING_INDEX
+        this.isPlaying = DEFAULT_IS_PLAYING_VALUE
+        this.isShuffle = DEFAULT_IS_SHUFFLE
+        this.hasNext = DEFAULT_HAS_NEXT
+        this.hasPrevious = DEFAULT_HAS_PREVIOUS
+        this.isLoaded = DEFAULT_IS_LOADED
+        this.currentPositionProgression = DEFAULT_CURRENT_POSITION_PROGRESSION
+        this.playlist = null
+        this.repeatMode = DEFAULT_REPEAT_MODE
+        this.musicPlaying = DEFAULT_MUSIC_PLAYING
     }
 
     fun release() {

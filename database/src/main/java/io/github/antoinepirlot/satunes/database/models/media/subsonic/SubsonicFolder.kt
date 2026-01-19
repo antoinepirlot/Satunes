@@ -44,7 +44,7 @@ class SubsonicFolder(
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
     }
 
-    override fun download(context: Context) {
+    override fun download(context: Context, onDataRetrieved: () -> Unit) {
         TODO("Not yet implemented")
     }
 

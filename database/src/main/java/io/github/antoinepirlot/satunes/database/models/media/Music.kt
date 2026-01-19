@@ -103,7 +103,19 @@ open class Music(
         protected set
 
     val mediaItem: MediaItem
-        get() = getMediaMetadata()
+        get() {
+            val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
+                .setArtist(artist.title)
+                .setTitle(title)
+                .setGenre(genre.title)
+                .setAlbumTitle(album.title)
+                .build()
+            return MediaItem.Builder()
+                .setMediaId(id.toString())
+                .setUri(uri)
+                .setMediaMetadata(mediaMetaData)
+                .build()
+        }
 
     init {
         this.updateCdTrackNumber(cdTrackNumber = cdTrackNumber)
@@ -136,20 +148,6 @@ open class Music(
 
     fun getYear(): Int? {
         return this.album.year
-    }
-
-    private fun getMediaMetadata(): MediaItem {
-        val mediaMetaData: MediaMetadata = MediaMetadata.Builder()
-            .setArtist(artist.title)
-            .setTitle(title)
-            .setGenre(genre.title)
-            .setAlbumTitle(album.title)
-            .build()
-        return MediaItem.Builder()
-            .setMediaId(id.toString())
-            .setUri(uri)
-            .setMediaMetadata(mediaMetaData)
-            .build()
     }
 
     open fun getAlbumArtwork(context: Context): Bitmap {

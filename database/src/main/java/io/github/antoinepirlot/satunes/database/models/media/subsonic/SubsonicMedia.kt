@@ -53,10 +53,11 @@ interface SubsonicMedia : Media {
      * If it is already stored, do nothing
      *
      * @param context the [Context] to get the parent folder.
+     * @param onDataRetrieved the function to invoke when download has finished
      *
      * @throws IllegalStateException if this media is not [SubsonicMedia]
      */
-    fun download(context: Context)
+    fun download(context: Context, onDataRetrieved: () -> Unit)
 
     /**
      * Removes the downloaded file matching the musics.

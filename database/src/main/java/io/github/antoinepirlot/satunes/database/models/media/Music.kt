@@ -243,7 +243,6 @@ open class Music(
 
         other as Music
 
-        //TODO update as the music should not be the same as id.
         //Using id is usefull to detect duplications by the user but not for the online system.
         //The name, artist, albums and so on must be used to detect local and online music.
         return this.id == other.id

@@ -25,9 +25,14 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.mpatric.mp3agic.ID3v1
+import com.mpatric.mp3agic.Mp3File
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
+import io.github.antoinepirlot.satunes.database.models.media.Album
+import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
@@ -99,10 +104,48 @@ internal class MusicDB(
                     //Updating path prevent playing music from server instead of local storage
                     music!!.updateAbsolutePath(absolutePath = this.absolutePath)
                 },
+                onError = { music = this.buildSubsonicMusic(apiRequester = apiRequester) },
                 onFinished = { mustWait = false }
             )
         else mustWait = false
         while (mustWait);
         return music
+    }
+
+    /**
+     * Read absolutePath's file mp3 tags to create the SubsonicMusic object.
+     * Assume subsonicId is not null
+     */
+    private fun buildSubsonicMusic(apiRequester: ApiRequester): SubsonicMusic? {
+        return try {
+            val mp3File: Mp3File = Mp3File(this.absolutePath)
+            var title: String? = null
+            if (mp3File.hasId3v1Tag()) {
+                val id3v1Tag: ID3v1 = mp3File.id3v1Tag
+                try {
+                    title = id3v1Tag.title
+                } catch (_: java.lang.NullPointerException) {
+                }
+            }
+            if (title == null)
+                title = this.absolutePath.split("/").last().split(".").first()
+            val artist: Artist = Artist(title = "test artist")
+            val music: SubsonicMusic = SubsonicMusic(
+                this.subsonicId!!,
+                title = title,
+                displayName = title,
+                absolutePath = this.absolutePath,
+                addedDateMs = 0, //TODO
+                folder = DataManager.getSubsonicRootFolder(),
+                artist = Artist(title = "test artist"),
+                album = Album(title = "test album", artist = artist),
+                genre = Genre(title = "test genre"),
+                _apiRequester = apiRequester
+            )
+            DataManager.addMusic(music = music)
+            music
+        } catch (_: NullPointerException) {
+            null
+        }
     }
 }

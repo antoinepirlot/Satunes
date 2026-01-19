@@ -110,6 +110,12 @@ class SubsonicMusic(
         this.uri = new.uri
     }
 
+    fun updateAbsolutePath(absolutePath: String) {
+        if (absolutePath.isBlank())
+            throw IllegalArgumentException("Absolute path can't be blank.")
+        this.absolutePath = absolutePath
+    }
+
     override fun getAlbumArtwork(context: Context): Bitmap {
         return this.artwork?.applyShape() ?: this.album.getEmptyAlbumArtwork(context = context)
             .applyShape()

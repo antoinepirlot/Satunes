@@ -102,7 +102,6 @@ class DatabaseManager private constructor(context: Context) {
                         val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
                         if (music != null) {
                             if (playlist.isSystemPlaylist()) {
-                                val music: Music = music
                                 if (playlist.isLikesPlaylist())
                                     music.markAsLiked()
                                 else if (playlist.isDownloadsPlaylist())

@@ -30,6 +30,7 @@ import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFo
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
 import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import kotlinx.serialization.Serializable
@@ -64,17 +65,7 @@ internal class MusicDB(
 
     suspend fun getMusic(apiRequester: ApiRequester? = null): Music? {
         return if (this.subsonicId != null) {
-            var music: Music? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
-            var mustWait: Boolean = true
-            if (music == null && apiRequester != null)
-                apiRequester.getSong(
-                    musicId = this.subsonicId!!,
-                    onDataRetrieved = { music = it },
-                    onFinished = { mustWait = false }
-                )
-            else mustWait = false
-            while (mustWait);
-            music
+            this.toSubsonicMusic(apiRequester = apiRequester)
         } else {
             try {
                 try {
@@ -95,5 +86,23 @@ internal class MusicDB(
                 throw e
             }
         }
+    }
+
+    private suspend fun toSubsonicMusic(apiRequester: ApiRequester?): SubsonicMusic? {
+        var music: SubsonicMusic? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
+        var mustWait: Boolean = true
+        if (music == null && apiRequester != null)
+            apiRequester.getSong(
+                musicId = this.subsonicId!!,
+                onDataRetrieved = {
+                    music = it
+                    //Updating path prevent playing music from server instead of local storage
+                    music!!.updateAbsolutePath(absolutePath = this.absolutePath)
+                },
+                onFinished = { mustWait = false }
+            )
+        else mustWait = false
+        while (mustWait);
+        return music
     }
 }

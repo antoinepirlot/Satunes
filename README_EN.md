@@ -14,8 +14,6 @@
 
 Vous pouvez retrouver ce fichier en [français 🇫🇷](README.md)
 
-<h2>Support Ukraine 🇺🇦.</h2>
-
 Satunes is an mp3 player on Android and developed by an organic intelligence. 
 Use it to listen your music from your audio files stored in your Android phone (Android Lollipop 5.1.1 and later).
 
@@ -111,3 +109,5 @@ If you like the app and want to support me click on the button below.
 # Releases
 
 If you want to know about different releases and what they added, [click here.](RELEASES_EN.md)
+
+<h2 align="center">Support Ukraine 🇺🇦</h2>

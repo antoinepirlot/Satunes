@@ -14,8 +14,6 @@
 
 You can find this file in [english 🇬🇧](README_EN.md).
 
-<h2>Soutiens à l'Ukraine 🇺🇦.</h2>
-
 Satunes est un lecteur de musique pour Android et developpé par une intelligence organique. 
 Tu peux l'utiliser pour écouter ta musique présente sur ton appareil Android. (Android Lollipop 5.1.1 et plus récent).
 
@@ -104,6 +102,7 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 <a href="https://liberapay.com/antoinepirlot/"><img src="https://img.shields.io/liberapay/patrons/antoinepirlot.svg?logo=liberapay" width="200"></a>
 </p>
 
-
 # Versions
 Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](RELEASES_FR.md)
+
+<h2 align="center">Soutiens à l'Ukraine 🇺🇦.</h2>

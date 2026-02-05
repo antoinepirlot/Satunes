@@ -105,4 +105,4 @@ Si l'application te plait et que tu as envie de me soutenir, n'hésite pas à le
 # Versions
 Si tu souhaites voir les différentes versions de l'application et ce qu'elles contiennent, [clique ici.](RELEASES_FR.md)
 
-<h2 align="center">Soutiens à l'Ukraine 🇺🇦.</h2>
+<h2 align="center">Soutiens à l'Ukraine 🇺🇦</h2>

@@ -29,6 +29,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -63,6 +67,8 @@ internal fun WhatsNewDialog(
     val packageManager = context.packageManager
     val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
     val versionName = 'v' + packageInfo.versionName!!
+    var showAndroidAlert: Boolean by rememberSaveable { mutableStateOf(value = false) }
+    val isLowerThanV4: Boolean = packageInfo.versionName!!.first().digitToInt() < 4
 
     val onConfirm: () -> Unit = {
         // When app relaunch, it's not shown again
@@ -81,40 +87,59 @@ internal fun WhatsNewDialog(
         )
     }
 
-    AlertDialog(
-        modifier = modifier,
-        icon = {
-            val infoIcon: SatunesIcons = SatunesIcons.INFO
-            Icon(imageVector = infoIcon.imageVector, contentDescription = infoIcon.description)
-        },
-        title = {
-            Title(text = versionName, fontSize = 25.sp)
-        },
-        text = {
-            val scrollState = rememberScrollState()
-            NormalText(
-                modifier = Modifier.verticalScroll(scrollState),
-                text = stringResource(id = R.string.whats_new_text),
-                maxLines = Int.MAX_VALUE
-            )
-        },
-        onDismissRequest = onDismiss,
-        dismissButton = {
-            TextButton(onClick = onConfirm) {
-                NormalText(text = stringResource(id = R.string.ok))
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                openUrl(
-                    context = context,
-                    url = "$TAG_RELEASE_URL/$versionName"
+    if(!showAndroidAlert) {
+        AlertDialog(
+            modifier = modifier,
+            icon = {
+                val infoIcon: SatunesIcons = SatunesIcons.INFO
+                Icon(imageVector = infoIcon.imageVector, contentDescription = infoIcon.description)
+            },
+            title = {
+                Title(text = versionName, fontSize = 25.sp)
+            },
+            text = {
+                val scrollState = rememberScrollState()
+                NormalText(
+                    modifier = Modifier.verticalScroll(scrollState),
+                    text = stringResource(id = R.string.whats_new_text),
+                    maxLines = Int.MAX_VALUE
                 )
-            }) {
-                NormalText(text = stringResource(id = RInternet.string.see_on_codeberg))
-            }
-        },
-    )
+            },
+            onDismissRequest = {
+                if (isLowerThanV4)
+                    showAndroidAlert = true
+                else
+                    onDismiss()
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    if (isLowerThanV4)
+                        showAndroidAlert = true
+                    else
+                        onConfirm()
+                }) {
+                    NormalText(text = stringResource(id = R.string.ok))
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    openUrl(
+                        context = context,
+                        url = "$TAG_RELEASE_URL/$versionName"
+                    )
+                }) {
+                    NormalText(text = stringResource(id = RInternet.string.see_on_codeberg))
+                }
+            },
+        )
+    } else if(isLowerThanV4) {
+        InformationDialog(
+            title = stringResource(id = R.string.android_version_alert_title),
+            text = stringResource(id = R.string.android_version_alert_text),
+            onConfirm = onConfirm,
+            onDismissRequest = onDismiss
+        )
+    }
 }
 
 @Preview

@@ -4,6 +4,14 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.4
+
+Improvements, optimisations and bug fixes:
+
+* Fix issue with export/import playlists. Now, in a m3u file, paths look like: /storage/[storag_device]/path/to/music.extension. Don't worry, if you already have old file with paths starting with "file:///", Satunes still support them.
+* Add message after "What's new" dialog to inform that the v4.0.0 will require Android Marshmallow (6.0) to run.
+* Fix issue while updating playlist causing some musics removed from playlist if it was not unchecked from selection.
+
 ### 3.3.3
 
 Improvements, optimisations and bug fixes:

@@ -180,31 +180,31 @@ class DatabaseManager private constructor(context: Context) {
      * Update the list of music of playlist.
      *
      * @param playlist is the playlist with the old music list
-     * @param newMusicCollection the new collection of [Music]
+     * @param updatedMusicCollection the new collection of [Music]
      *
      */
     fun updatePlaylistMusics(
         playlist: Playlist,
-        newMusicCollection: Collection<Music>,
+        updatedMusicCollection: Collection<Music>,
         triggerUpdate: Boolean = true
     ) {
         if (!playlistDao.exists(title = playlist.title)) throw PlaylistNotFoundException(playlist.id)
         try {
             val oldMusicCollection: Collection<Music> = playlist.getMusicSet()
-            val newMusicSet: MutableCollection<Music> = newMusicCollection.toMutableSet()
-            val removedMusic: MutableCollection<Music> = mutableListOf()
+            val newMusicCollection: MutableCollection<Music> = updatedMusicCollection.toMutableSet()
+            val removedMusicCollection: MutableCollection<Music> = mutableListOf()
             for (music: Music in oldMusicCollection)
-                if (!newMusicCollection.contains(music))
-                    removedMusic.add(element = music)
-                else newMusicSet.remove(element = music)
+                if (!updatedMusicCollection.contains(music))
+                    removedMusicCollection.add(element = music)
+                else newMusicCollection.remove(element = music)
 
             removeMusicsFromPlaylist(
-                musics = removedMusic,
+                musics = removedMusicCollection,
                 playlist = playlist,
                 triggerUpdate = triggerUpdate
             )
             insertMusicsToPlaylist(
-                musics = newMusicSet,
+                musics = newMusicCollection,
                 playlist = playlist,
                 triggerUpdate = triggerUpdate
             )

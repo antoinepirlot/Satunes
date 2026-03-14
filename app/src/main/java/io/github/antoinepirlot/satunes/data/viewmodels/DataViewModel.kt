@@ -274,7 +274,7 @@ class DataViewModel : ViewModel() {
     fun updatePlaylistMusics(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        musics: Collection<Music>,
+        updatedMusicCollection: Collection<Music>,
         playlist: Playlist,
     ) {
         this._updatePlaylistsJob?.cancel()
@@ -284,11 +284,11 @@ class DataViewModel : ViewModel() {
             try {
                 _db.updatePlaylistMusics(
                     playlist = playlist,
-                    newMusicCollection = musics,
+                    updatedMusicCollection = updatedMusicCollection,
                     triggerUpdate = false
                 )
                 playlist.clearMusicSet(triggerUpdate = false)
-                playlist.addMusics(musics = musics)
+                playlist.addMusics(musics = updatedMusicCollection)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -298,7 +298,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = oldMusicsSet,
+                            updatedMusicCollection = oldMusicsSet,
                             playlist = playlist
                         )
                     }
@@ -311,7 +311,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = musics,
+                            updatedMusicCollection = updatedMusicCollection,
                             playlist = playlist
                         )
                     }

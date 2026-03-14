@@ -469,9 +469,10 @@ class DatabaseManager private constructor(context: Context) {
         for (music: Music in playlist.getMusicSet()) {
             val relativePath: String = music.relativePath
             toReturn += """#EXTINF:${music.duration / 1000},${music.title}
-                |${if (!relativePath.startsWith("/storage")) rootPlaylistsFilesPath else ""}${relativePath} 
+                |${if (!relativePath.startsWith("/storage")) rootPlaylistsFilesPath else ""}${relativePath}
                 |
             """.trimMargin() //No '/' after rootPlaylistsFilesPath as it is already present in music.relativePath
+            //Warning to invisible space, they can make the difference
         }
         return toReturn
     }

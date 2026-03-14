@@ -604,7 +604,7 @@ class DatabaseManager private constructor(context: Context) {
                         if(++i > text.lastIndex)
                             return i
                     var path: String = text[i]
-                    if(path.startsWith("file:///"))
+                    if(path.startsWith("file:///")) //To support old way using file:///
                         path = path.removePrefix(prefix = "file:///")
                     playlist.musics.add(element = MusicDB(absolutePath = path))
                 }

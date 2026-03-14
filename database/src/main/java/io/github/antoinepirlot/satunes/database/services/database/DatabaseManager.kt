@@ -23,6 +23,7 @@ package io.github.antoinepirlot.satunes.database.services.database
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import android.util.MutableInt
 import io.github.antoinepirlot.satunes.database.R
 import io.github.antoinepirlot.satunes.database.daos.LIKES_PLAYLIST_TITLE
 import io.github.antoinepirlot.satunes.database.daos.MusicDAO
@@ -46,6 +47,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.services.data.DataLoader
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.utils.logger.SatunesLogger
+import io.github.antoinepirlot.satunes.utils.utils.lastIndex
 import io.github.antoinepirlot.satunes.utils.utils.readTextFromUri
 import io.github.antoinepirlot.satunes.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.utils.utils.writeToUri
@@ -464,12 +466,13 @@ class DatabaseManager private constructor(context: Context) {
 
     private fun getPlaylistM3uFormat(playlist: Playlist, rootPlaylistsFilesPath: String): String {
         var toReturn: String = ""
-        for (music: Music in playlist.getMusicSet())
+        for (music: Music in playlist.getMusicSet()) {
+            val relativePath: String = music.relativePath
             toReturn += """#EXTINF:${music.duration / 1000},${music.title}
-                |$rootPlaylistsFilesPath${music.relativePath} 
+                |${if (!relativePath.startsWith("/storage")) rootPlaylistsFilesPath else ""}${relativePath} 
                 |
             """.trimMargin() //No '/' after rootPlaylistsFilesPath as it is already present in music.relativePath
-
+        }
         return toReturn
     }
 
@@ -511,12 +514,17 @@ class DatabaseManager private constructor(context: Context) {
                     return@launch
                 }
 
-                val text: String = readTextFromUri(context = context, uri = uri, showToast = true)
-                    ?: throw Exception()
-
                 val playlistsWithMusics: List<PlaylistWithMusics> = when (fileExtension) {
-                    FileExtensions.JSON -> getPlaylistsWithMusicsFromJson(json = text)
-                    FileExtensions.M3U -> getPlaylistsWithMusicsFromM3U(text = text)
+                    FileExtensions.JSON -> {
+                        val text: List<String> = readTextFromUri(context = context, uri = uri, asSingleText = true)
+                            ?: throw Exception()
+                        getPlaylistsWithMusicsFromJson(json = text.first())
+                    }
+                    FileExtensions.M3U -> {
+                        val text: List<String> = readTextFromUri(context = context, uri = uri, asSingleText = false)
+                            ?: throw Exception()
+                        getPlaylistsWithMusicsFromM3U(text = text)
+                    }
                     else -> throw UnsupportedOperationException("${fileExtension.value} not supported.")
                 }
 
@@ -553,20 +561,51 @@ class DatabaseManager private constructor(context: Context) {
         }
     }
 
-    private fun getPlaylistsWithMusicsFromM3U(text: String): List<PlaylistWithMusics> {
+    private fun getPlaylistsWithMusicsFromM3U(text: List<String>): List<PlaylistWithMusics> {
         val playlistsWithMusics: MutableList<PlaylistWithMusics> = mutableListOf()
-        val playlistsText: List<String> = text.split("#PLAYLIST:")
-        for (i: Int in 1..playlistsText.lastIndex) {
-            val playlistText: String = playlistsText[i]
-            val split: List<String> = playlistText.split("#EXTINF")
-            val playlist = PlaylistWithMusics(PlaylistDB(title = split[0]), mutableListOf())
-            playlistsWithMusics += playlist
-            for (i: Int in 1..split.lastIndex) {
-                val filePath: String = split[i].split("file:///").last() //Using last ensure if file:/// is not present it also works
-                playlist.musics += MusicDB(absolutePath = filePath)
-            }
-        }
+        var i: Int = 0
+        do {
+            while (text[i].isBlank())
+                if(++i > text.lastIndex)
+                    return playlistsWithMusics
+            val split: List<String> = text[i].split("#PLAYLIST:") //Separate the name of playlist
+            if(split.size > 1) {
+                val playlistWithMusics: PlaylistWithMusics =
+                    PlaylistWithMusics(PlaylistDB(title = split.last()), musics = mutableListOf())
+                playlistsWithMusics.add(element = playlistWithMusics)
+                i = this.loadPlaylistM3U(
+                    playlist = playlistWithMusics,
+                    startIndex = i + 1, //start at the next line
+                    text = text
+                ) //Update the current line after the last one read.
+            } else i++
+        } while (i <= text.lastIndex)
         return playlistsWithMusics
+    }
+
+    /**
+     * Get playlist from text as m3u and add it to [playlist].
+     *
+     * @param playlist the playlist to add musics.
+     * @param startIndex the index from where it should start to read.
+     * @param text the list of text's lines to read
+     *
+     * @return [Int] matching the next line to read
+     */
+    private fun loadPlaylistM3U(playlist: PlaylistWithMusics, startIndex: Int, text: List<String>): Int {
+        var i: Int = startIndex
+        do {
+            if(text[i].isNotBlank()) {
+                val split: List<String> = text[i].split("#EXTINF:") //Separate the name of playlist
+                if (split.size > 1) {
+                    while (text[i].isBlank())
+                        if(++i > text.lastIndex)
+                            return i
+                    playlist.musics.add(element = MusicDB(absolutePath = text[i]))
+                }
+            }
+        } while (++i <= text.lastIndex)
+        return i
     }
 
     @Throws(NullPointerException::class)

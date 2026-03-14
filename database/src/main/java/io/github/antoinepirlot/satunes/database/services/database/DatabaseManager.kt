@@ -466,9 +466,9 @@ class DatabaseManager private constructor(context: Context) {
         var toReturn: String = ""
         for (music: Music in playlist.getMusicSet())
             toReturn += """#EXTINF:${music.duration / 1000},${music.title}
-                |file:///$rootPlaylistsFilesPath/${music.relativePath}
+                |$rootPlaylistsFilesPath${music.relativePath} 
                 |
-            """.trimMargin()
+            """.trimMargin() //No '/' after rootPlaylistsFilesPath as it is already present in music.relativePath
 
         return toReturn
     }
@@ -562,7 +562,7 @@ class DatabaseManager private constructor(context: Context) {
             val playlist = PlaylistWithMusics(PlaylistDB(title = split[0]), mutableListOf())
             playlistsWithMusics += playlist
             for (i: Int in 1..split.lastIndex) {
-                val filePath: String = split[i].split("file:///")[1]
+                val filePath: String = split[i].split("file:///").last() //Using last ensure if file:/// is not present it also works
                 playlist.musics += MusicDB(absolutePath = filePath)
             }
         }

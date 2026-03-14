@@ -603,7 +603,10 @@ class DatabaseManager private constructor(context: Context) {
                     while (text[i].isBlank())
                         if(++i > text.lastIndex)
                             return i
-                    playlist.musics.add(element = MusicDB(absolutePath = text[i]))
+                    var path: String = text[i]
+                    if(path.startsWith("file:///"))
+                        path = path.removePrefix(prefix = "file:///")
+                    playlist.musics.add(element = MusicDB(absolutePath = path))
                 }
             }
         } while (++i <= text.lastIndex)

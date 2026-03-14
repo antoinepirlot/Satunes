@@ -598,6 +598,7 @@ class DatabaseManager private constructor(context: Context) {
             if(text[i].isNotBlank()) {
                 val split: List<String> = text[i].split("#EXTINF:") //Separate the name of playlist
                 if (split.size > 1) {
+                    i++
                     while (text[i].isBlank())
                         if(++i > text.lastIndex)
                             return i

@@ -1,0 +1,5 @@
+Improvements, optimisations and bug fixes:
+
+* Fix issue with export/import playlists. Now, in a m3u file, paths look like: /storage/[storag_device]/path/to/music.extension. Don't worry, if you already have old file with paths starting with "file:///", Satunes still support them.
+* Add message after "What's new" dialog to inform that the v4.0.0 will require Android 6.0 to run.
+* Fix issue while updating playlist causing some musics removed from playlist if it was not unchecked from selection.

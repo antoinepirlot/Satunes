@@ -36,10 +36,15 @@ import java.io.InputStreamReader
  */
 
 /**
- * Copied from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
+ * Updated from https://developer.android.com/training/data-storage/shared/documents-files?hl=fr#open
  */
 @Throws(IOException::class)
-fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): String? {
+fun readTextFromUri(
+    context: Context,
+    uri: Uri,
+    asSingleText: Boolean = false
+): List<String>? {
+    val lines: MutableList<String> = mutableListOf()
     val logger: SatunesLogger? = SatunesLogger.getLogger()
     return try {
         val stringBuilder = StringBuilder()
@@ -47,12 +52,17 @@ fun readTextFromUri(context: Context, uri: Uri, showToast: Boolean = false): Str
             BufferedReader(InputStreamReader(inputStream)).use { reader ->
                 var line: String? = reader.readLine()
                 while (line != null) {
-                    stringBuilder.append(line)
+                    if (asSingleText)
+                        stringBuilder.append(line)
+                    else
+                        lines.add(element = line)
                     line = reader.readLine()
                 }
             }
         }
-        stringBuilder.toString()
+        if(asSingleText)
+            lines.add(element = stringBuilder.toString())
+        lines
     } catch (e: FileNotFoundException) {
         logger?.warning(e.message)
         showToastOnUiThread(context = context, message = context.getString(R.string.file_not_found))

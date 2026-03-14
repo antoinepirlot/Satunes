@@ -1,0 +1,5 @@
+Améliorations, optimisations et corrections de bogues :
+
+* Correction d'un problème lié à l'exportation/importation des playlists. Désormais, dans un fichier m3u, les chemins d'accès se présentent comme suit : /storage/[storag_device]/path/to/music.extension. Satunes prend toujours en charge les anciens.
+* Ajout d'un message après la boîte de dialogue « Nouveautés » pour indiquer que la version 4.0.0 nécessitera Android 6.0.
+* Correction d'un problème lors de la mise à jour d'une playlist.

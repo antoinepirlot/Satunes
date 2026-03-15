@@ -46,7 +46,14 @@ internal fun getOrCreateSubsonicPlaylist(id: String, title: String): SubsonicPla
  * @param title the playlist's title
  */
 internal fun createSubsonicPlaylist(id: String, title: String): SubsonicPlaylist =
-    DataManager.addPlaylist(playlist = SubsonicPlaylist(subsonicId = id, id = null, title = title))
+    DataManager.addPlaylist(
+        playlist = SubsonicPlaylist(
+            subsonicId = id,
+            id = null,
+            title = title,
+            apiRequester = SubsonicApiRequester()
+        )
+    )
 
 /**
  * Get the subsonic artist matching the [id] or create a new one if it doesn't exist.
@@ -59,7 +66,13 @@ internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtis
  * Create a new artist matching data
  */
 private fun createSubsonicArtist(id: String, title: String): SubsonicArtist =
-    DataManager.addArtist(artist = SubsonicArtist(subsonicId = id, title = title))
+    DataManager.addArtist(
+        artist = SubsonicArtist(
+            subsonicId = id,
+            title = title,
+            apiRequester = SubsonicApiRequester()
+        )
+    )
 
 internal fun getOrCreateFolder(): Folder = DataManager.getSubsonicRootFolder() //TODO
 
@@ -107,4 +120,8 @@ private fun createSubsonicAlbum(
     )
 
 internal fun getSubsonicGenre(): Genre =
-    SubsonicGenre(subsonicId = "1", title = "UNKNOWN CLOUD GENRE") //TODO
+    SubsonicGenre(
+        subsonicId = "1",
+        title = "UNKNOWN CLOUD GENRE",
+        apiRequester = SubsonicApiRequester()
+    ) //TODO

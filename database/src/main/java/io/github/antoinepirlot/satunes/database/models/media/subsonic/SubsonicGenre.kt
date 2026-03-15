@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import android.content.Context
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Genre
 
 /**
@@ -30,10 +30,13 @@ class SubsonicGenre(
     override var subsonicId: String,
     id: Long? = null,
     title: String,
+    apiRequester: ApiRequester
 ) : SubsonicMedia, Genre(
     id = id,
     title = title,
 ) {
+
+    private val _apiRequester: ApiRequester = apiRequester
 
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicGenre).subsonicId
@@ -44,9 +47,7 @@ class SubsonicGenre(
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
         TODO("Not yet implemented")

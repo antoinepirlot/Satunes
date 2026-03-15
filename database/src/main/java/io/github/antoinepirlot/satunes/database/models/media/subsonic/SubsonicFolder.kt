@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import android.content.Context
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Folder
 
 /**
@@ -44,9 +44,8 @@ class SubsonicFolder(
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun getApiRequester(): ApiRequester =
+        throw UnsupportedOperationException("Folder can't be downloaded.")
 
     override fun removeDownload() {
         TODO("Not yet implemented")

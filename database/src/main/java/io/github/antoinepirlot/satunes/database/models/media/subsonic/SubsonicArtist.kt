@@ -20,7 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import android.content.Context
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
@@ -32,20 +32,24 @@ class SubsonicArtist(
     override var subsonicId: String,
     id: Long? = null,
     title: String,
+    apiRequester: ApiRequester
 ) : SubsonicMedia, Artist(
     id = id,
     title = title,
 ) {
 
+    private val _apiRequester: ApiRequester = apiRequester
+
     /**
      * Transform this [Artist] to [SubsonicArtist].
      * After that, this [Artist] can't no more be used
      */
-    open fun toSubsonicArtist(artist: SubsonicArtist): SubsonicArtist {
+    fun toSubsonicArtist(artist: SubsonicArtist): SubsonicArtist {
         val newArtist: SubsonicArtist = SubsonicArtist(
             id = this.id,
             subsonicId = artist.subsonicId,
-            title = this.title
+            title = this.title,
+            apiRequester = _apiRequester
         )
         for (music: Music in this.musicSortedSet) {
             music.updateArtist(artist = newArtist)
@@ -64,9 +68,7 @@ class SubsonicArtist(
         return 31 * super.hashCode() + (this.subsonicId.hashCode())
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
         TODO("Not yet implemented")

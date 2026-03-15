@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
@@ -39,19 +40,21 @@ fun DownloadMediaOption(
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
         onClick = {
             if (media.canBeDownloaded())
-                media.download(
-                    context = context,
-                    onDataRetrieved = {
-                        playbackViewModel.updateMediaItems(media = media)
-                        dataViewModel.addToDownloadPlaylist(
-                            scope = scope,
-                            snackbarHostState = snackbarHostState,
-                            musics = if (media.isMusic()) listOf(media as SubsonicMusic)
-                            else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
-                            else media.subsonicMusicCollection
-                        )
-                    }
-                )
+                runIOThread {
+                    media.download(
+                        context = context,
+                        onDataRetrieved = {
+                            playbackViewModel.updateMediaItems(media = media)
+                            dataViewModel.addToDownloadPlaylist(
+                                scope = scope,
+                                snackbarHostState = snackbarHostState,
+                                musics = if (media.isMusic()) listOf(media as SubsonicMusic)
+                                else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
+                                else media.subsonicMusicCollection
+                            )
+                        }
+                    )
+                }
             else if (media.canDownloadBeRemoved()) media.removeDownload()
         },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),

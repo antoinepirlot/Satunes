@@ -39,7 +39,7 @@ class SubsonicAlbum(
     artist: Artist,
     isCompilation: Boolean = false,
     year: Int? = null,
-    private val apiRequester: ApiRequester
+    apiRequester: ApiRequester
 ) : SubsonicMedia, Album(
     id = id,
     title = title,
@@ -48,6 +48,9 @@ class SubsonicAlbum(
     isCompilation = isCompilation,
     year = year
 ) {
+
+    private val _apiRequester: ApiRequester = apiRequester
+
     /**
      * Fetch artwork from network and stores it into [artwork]
      */
@@ -58,7 +61,7 @@ class SubsonicAlbum(
             onDataRetrieved(this.getEmptyAlbumArtwork(context = context).asImageBitmap())
         else
             runIOThread {
-                apiRequester.getCoverArt(
+                _apiRequester.getCoverArt(
                     coverArtId = this.coverArtId!!,
                     onDataRetrieved = {
                         this@SubsonicAlbum.artwork = it
@@ -68,9 +71,7 @@ class SubsonicAlbum(
             }
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
         TODO("Not yet implemented")

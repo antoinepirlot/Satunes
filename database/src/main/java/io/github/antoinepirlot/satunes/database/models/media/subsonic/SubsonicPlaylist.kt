@@ -1,6 +1,6 @@
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
-import android.content.Context
+import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 
@@ -11,10 +11,13 @@ class SubsonicPlaylist(
     override val subsonicId: String,
     id: Long?,
     title: String,
+    apiRequester: ApiRequester
 ) : SubsonicMedia, Playlist(
     id = id,
     title = title
 ) {
+
+    private val _apiRequester: ApiRequester = apiRequester
 
     override fun addMusic(music: Music) {
         if (!music.isSubsonic())
@@ -22,9 +25,7 @@ class SubsonicPlaylist(
         super.addMusic(music)
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        TODO("Not yet implemented")
-    }
+    override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
         TODO("Not yet implemented")

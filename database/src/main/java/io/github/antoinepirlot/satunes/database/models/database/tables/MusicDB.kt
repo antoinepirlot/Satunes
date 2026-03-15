@@ -140,7 +140,7 @@ internal class MusicDB(
                 artist = Artist(title = "test artist"),
                 album = Album(title = "test album", artist = artist),
                 genre = Genre(title = "test genre"),
-                _apiRequester = apiRequester
+                apiRequester = apiRequester
             )
             DataManager.addMusic(music = music)
             music

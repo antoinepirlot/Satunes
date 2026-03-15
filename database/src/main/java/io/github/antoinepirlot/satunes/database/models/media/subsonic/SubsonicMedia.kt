@@ -24,11 +24,10 @@ import android.content.Context
 import android.os.Environment
 import androidx.compose.ui.graphics.ImageBitmap
 import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Media
-import java.io.InputStream
+import io.github.antoinepirlot.satunes.database.models.media.Music
 
 /**
  * @author Antoine Pirlot 13/12/2025
@@ -58,9 +57,7 @@ interface SubsonicMedia : Media {
         this.downloadStatus = downloadStatus
     }
 
-    fun getApiRequester(): ApiRequester {
-        throw IllegalStateException("Can't get api requester as not valid outside subsonic media.")
-    }
+    fun getApiRequester(): ApiRequester
 
     /**
      * Stores [SubsonicMusic]s into Satunes' storage for offline usage.
@@ -71,27 +68,16 @@ interface SubsonicMedia : Media {
      *
      * @throws IllegalStateException if this media is not [SubsonicMedia]
      */
-    fun download(context: Context, onDataRetrieved: () -> Unit) {
+    suspend fun download(context: Context, onDataRetrieved: () -> Unit) {
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
-        runIOThread {
-            this.getApiRequester().download(
-                musicId = this.subsonicId,
-                onError = {
-                    this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
-                },
-                onDataRetrieved = {
-                    this.store(context = context, data = it, onStored = onDataRetrieved)
-                }
-            )
+
+        if (!this.isMusic()) {
+            for (music: Music in this.musicCollection)
+                (music as SubsonicMusic).download(context = context, onDataRetrieved = {})
+            onDataRetrieved()
         }
     }
-
-    /**
-     * Stores the downloaded music into the storage.
-     * /!\ DO NOT CALL IT OUTSIDE SUBSONIC MEDIA INTERFACE /!\
-     */
-    fun store(context: Context, data: InputStream, onStored: () -> Unit): Boolean
 
     /**
      * Removes the downloaded file matching the musics.

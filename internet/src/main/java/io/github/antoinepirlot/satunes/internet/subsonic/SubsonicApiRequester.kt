@@ -57,7 +57,7 @@ import java.io.InputStream
 /**
  * @author Antoine Pirlot 03/09/2025
  */
-class SubsonicApiRequester() : ApiRequester {
+class SubsonicApiRequester : ApiRequester {
     companion object {
         const val SONG_MEDIA_TYPE = "song"
         private const val CLIENT_NAME = "Satunes"

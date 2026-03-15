@@ -62,7 +62,7 @@ class SubsonicMusic(
     album: Album,
     genre: Genre,
     uri: Uri? = null,
-    private val _apiRequester: ApiRequester
+    apiRequester: ApiRequester
 ) : SubsonicMedia, Music(
     id = id,
     title = title,
@@ -79,6 +79,9 @@ class SubsonicMusic(
     uri = uri,
 ) {
     private val _logger: Logger? = Logger.getLogger()
+
+    private val _apiRequester: ApiRequester = apiRequester
+
 
     override var uri: Uri
         get() = if (this.isStoredLocally()) this.absolutePath.toUri() else super.uri
@@ -130,6 +133,8 @@ class SubsonicMusic(
         )
     }
 
+    override fun getApiRequester(): ApiRequester = _apiRequester
+
     override fun removeDownload() {
         if (!this.isStoredLocally()) return
         val file = File(this.absolutePath)
@@ -145,7 +150,27 @@ class SubsonicMusic(
         this.downloadStatus = downloadStatus
     }
 
-    override fun store(context: Context, data: InputStream, onStored: () -> Unit): Boolean {
+    override suspend fun download(
+        context: Context,
+        onDataRetrieved: () -> Unit
+    ) {
+        super.download(context = context, onDataRetrieved = onDataRetrieved)
+        this.getApiRequester().download(
+            musicId = this.subsonicId,
+            onError = {
+                this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
+            },
+            onDataRetrieved = {
+                this.store(context = context, data = it)
+                onDataRetrieved()
+            }
+        )
+    }
+
+    /**
+     * Stores the downloaded music into the storage.
+     */
+    private fun store(context: Context, data: InputStream): Boolean {
         val absolutePath: String =
             SubsonicMedia.getDownloadStorage(context = context) + "/${this.relativePath}"
 

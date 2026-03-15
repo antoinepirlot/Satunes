@@ -50,6 +50,11 @@ class MediaSelectionViewModel : ViewModel() {
      * If the user add a single [Music] to multiple [Playlist] then it must be a [Music]
      */
     private var _currentMediaImpl: MediaImpl? = null
+        set(value) {
+            if(value != null)
+                _checkedMusics.addAll(elements = value.getSet())
+            field = value
+        }
 
     val uiState: StateFlow<MediaSelectionUiState> = _uiState.asStateFlow()
 
@@ -109,10 +114,10 @@ class MediaSelectionViewModel : ViewModel() {
         return if (mediaImpl.isMusic()) {
             mediaImpl as Music
             //Check in playlist
-            if ((_currentMediaImpl as Playlist).contains(media = mediaImpl)) {
+            if (this._checkedMusics.contains(element = mediaImpl)) {
                 this.addMusic(music = mediaImpl)
                 true
-            } else this._checkedMusics.contains(element = mediaImpl)
+            } else false
         } else if (mediaImpl.isPlaylist()) {
             mediaImpl as Playlist
             //Check for selected media

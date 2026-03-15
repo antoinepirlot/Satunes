@@ -290,7 +290,7 @@ class DataViewModel : ViewModel() {
     fun updatePlaylistMusics(
         scope: CoroutineScope,
         snackBarHostState: SnackbarHostState,
-        musics: Collection<Music>,
+        updatedMusicCollection: Collection<Music>,
         playlist: Playlist,
     ) {
         this._updatePlaylistsJob?.cancel()
@@ -298,9 +298,9 @@ class DataViewModel : ViewModel() {
         this._updatePlaylistsJob = CoroutineScope(Dispatchers.IO).launch {
             val context: Context = MainActivity.instance.applicationContext
             try {
-                _db.updatePlaylistMusics(playlist = playlist, newMusicCollection = musics)
+                _db.updatePlaylistMusics(playlist = playlist, updatedMusicCollection = updatedMusicCollection)
                 playlist.clearMusicList()
-                playlist.addMusics(musics = musics)
+                playlist.addMusics(musics = updatedMusicCollection)
                 showSnackBar(
                     scope = scope,
                     snackBarHostState = snackBarHostState,
@@ -310,7 +310,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = oldMusicsList,
+                            updatedMusicCollection = oldMusicsList,
                             playlist = playlist
                         )
                     }
@@ -323,7 +323,7 @@ class DataViewModel : ViewModel() {
                         updatePlaylistMusics(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
-                            musics = musics,
+                            updatedMusicCollection = updatedMusicCollection,
                             playlist = playlist
                         )
                     }

@@ -26,7 +26,6 @@ import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.net.toUri
 import io.github.antoinepirlot.android.utils.logger.Logger
-import io.github.antoinepirlot.android.utils.utils.runIOThread
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
@@ -131,29 +130,6 @@ class SubsonicMusic(
         )
     }
 
-    /**
-     * Download file of this music and stores it in Satunes' storage when data has been retrieved.
-     */
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        if (this.isStoredLocally()) return
-        this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
-        runIOThread {
-            _apiRequester.download(
-                musicId = this.subsonicId,
-                onError = {
-                    this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
-                },
-                onDataRetrieved = {
-                    if (this.store(context = context, data = it)) {
-                        this.saveInDatabase()
-                        onDataRetrieved()
-                    } else
-                        this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
-                }
-            )
-        }
-    }
-
     override fun removeDownload() {
         if (!this.isStoredLocally()) return
         val file = File(this.absolutePath)
@@ -169,7 +145,7 @@ class SubsonicMusic(
         this.downloadStatus = downloadStatus
     }
 
-    private fun store(context: Context, data: InputStream): Boolean {
+    override fun store(context: Context, data: InputStream, onStored: () -> Unit): Boolean {
         val absolutePath: String =
             SubsonicMedia.getDownloadStorage(context = context) + "/${this.relativePath}"
 
@@ -184,14 +160,16 @@ class SubsonicMusic(
                     bytesRead = data.read(buffer)
                 }
                 this.absolutePath = absolutePath
+                this.saveInDatabase()
                 this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
                 return true
             } catch (e: Exception) {
-                _logger?.warning(e.message)
+                throw e
             } finally {
                 output.close()
             }
         } catch (e: Exception) {
+            this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
             _logger?.warning(e.message)
         } finally {
             data.close()

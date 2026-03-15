@@ -75,7 +75,7 @@ internal fun PlaylistExtraButtonList(
                 dataViewModel.updatePlaylistMusics(
                     scope = scope,
                     snackBarHostState = snackbarHostState,
-                    musics = mediaSelectionViewModel.getCheckedMusics(),
+                    updatedMusicCollection = mediaSelectionViewModel.getCheckedMusics(),
                     playlist = playlist
                 )
                 satunesViewModel.hideMediaSelectionDialog()

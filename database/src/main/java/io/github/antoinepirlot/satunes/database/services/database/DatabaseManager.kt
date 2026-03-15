@@ -247,6 +247,7 @@ class DatabaseManager private constructor(context: Context) {
         if (musicDB == null)
             musicDB = this.addMusicDB(music = music)
 
+        //TODO check rel with subsonic id
         val musicsPlaylistsRel =
             MusicsPlaylistsRel(
                 musicId = musicDB.id,

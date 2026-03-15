@@ -20,6 +20,7 @@
 
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
+import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Music
@@ -39,6 +40,15 @@ class SubsonicArtist(
 ) {
 
     private val _apiRequester: ApiRequester = apiRequester
+
+    override var downloadedMusics: Int = 0
+        set(value) {
+            field = value
+            if (field == this.getSet().count())
+                this.downloadStatus = DownloadStatus.DOWNLOADED
+            else if (this.downloadStatus != DownloadStatus.ERROR)
+                this.downloadStatus = DownloadStatus.NOT_DOWNLOADED
+        }
 
     /**
      * Transform this [Artist] to [SubsonicArtist].

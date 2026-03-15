@@ -35,6 +35,8 @@ class SubsonicFolder(
         const val SUBSONIC_FOLDER_TITLE = "Cloud" //TODO make it dynamic by the app's language
     }
 
+    override val downloadedMusics: Int = 0
+
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicFolder).subsonicId
         else super.equals(other)

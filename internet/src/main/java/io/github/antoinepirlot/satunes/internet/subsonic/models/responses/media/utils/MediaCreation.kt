@@ -49,7 +49,6 @@ internal fun createSubsonicPlaylist(id: String, title: String): SubsonicPlaylist
     DataManager.addPlaylist(
         playlist = SubsonicPlaylist(
             subsonicId = id,
-            id = null,
             title = title,
             apiRequester = SubsonicApiRequester()
         )

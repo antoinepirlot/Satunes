@@ -42,6 +42,7 @@ internal data class PlaylistDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "playlist_id") override var id: Long = 0,
     @ColumnInfo(name = "title") override var title: String,
+    //TODO add subsonic id as string
 ) : MediaData {
     @Ignore
     @Transient

@@ -25,6 +25,7 @@ import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,8 +42,8 @@ class MediaSelectionViewModel : ViewModel() {
     /**
      * List of checked playlists to know where to add music from form
      */
-    private val _checkedPlaylistWithMusics: MutableList<Playlist> = mutableListOf()
-    private val _checkedMusics: MutableList<Music> = mutableListOf()
+    private val _checkedPlaylistWithMusics: MutableSet<Playlist> = mutableSetOf()
+    private val _checkedMusics: MutableSet<Music> = mutableSetOf()
 
     /**
      * Use to know from where the selection is running.
@@ -51,8 +52,20 @@ class MediaSelectionViewModel : ViewModel() {
      */
     private var _currentMediaImpl: MediaImpl? = null
         set(value) {
-            if(value != null)
-                _checkedMusics.addAll(elements = value.getMusicSet())
+            when (value) {
+                is Music -> {
+                    val playlists: Collection<Playlist> = DataManager.getPlaylistSet()
+                    for (playlist: Playlist in playlists)
+                        if (playlist.contains(mediaImpl = value))
+                            this.addPlaylist(playlist = playlist)
+                    this.addMusic(music = value)
+                }
+
+                is Playlist -> {
+                    this._checkedMusics.addAll(elements = value.getMusicSet())
+                    this._checkedPlaylistWithMusics.add(element = value)
+                }
+            }
             field = value
         }
 
@@ -64,14 +77,16 @@ class MediaSelectionViewModel : ViewModel() {
         this._currentMediaImpl = null
     }
 
-    fun getCheckedPlaylistWithMusics(): List<Playlist> {
-        val list: List<Playlist> = _checkedPlaylistWithMusics.toList()
+    fun getCheckedPlaylistWithMusics(): Set<Playlist> {
+        val list: Set<Playlist> =
+            _checkedPlaylistWithMusics.toSet() //Do not forget to copy the set to avoid erasing outside view model
         clearCheckedPlaylistWithMusics()
         return list
     }
 
     fun addPlaylist(playlist: Playlist) {
         _checkedPlaylistWithMusics.add(playlist)
+        this._checkedMusics.addAll(elements = playlist.getMusicSet())
     }
 
     fun removePlaylist(playlist: Playlist) {
@@ -82,8 +97,9 @@ class MediaSelectionViewModel : ViewModel() {
         _checkedPlaylistWithMusics.clear()
     }
 
-    fun getCheckedMusics(): List<Music> {
-        val list: List<Music> = _checkedMusics.toList()
+    fun getCheckedMusics(): Set<Music> {
+        val list: Set<Music> =
+            _checkedMusics.toSet() //Do not forget to copy the set to avoid erasing outside view model
         clearCheckedMusics()
         return list
     }
@@ -93,7 +109,7 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     fun removeMusic(music: Music) {
-        _checkedMusics.remove(music)
+        _checkedMusics.remove(element = music)
     }
 
     private fun clearCheckedMusics() {
@@ -112,22 +128,8 @@ class MediaSelectionViewModel : ViewModel() {
      */
     fun isChecked(mediaImpl: MediaImpl): Boolean {
         return when (mediaImpl) {
-            is Music -> {
-                //Check in playlist
-                if (this._checkedMusics.contains(element = mediaImpl)) {
-                    this.addMusic(music = mediaImpl)
-                    true
-                } else false
-            }
-
-            is Playlist -> {
-                //Check for selected media
-                if (mediaImpl.contains(mediaImpl = _currentMediaImpl!!)) {
-                    this.addPlaylist(playlist = mediaImpl)
-                    true
-                } else this._checkedPlaylistWithMusics.contains(element = mediaImpl)
-            }
-
+            is Music -> this._checkedMusics.contains(element = mediaImpl)
+            is Playlist -> this._checkedPlaylistWithMusics.contains(element = mediaImpl)
             else -> throw IllegalArgumentException("The media is not a music or playlist")
         }
     }

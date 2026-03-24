@@ -25,6 +25,7 @@ import io.github.antoinepirlot.satunes.data.states.MediaSelectionUiState
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,8 +53,18 @@ class MediaSelectionViewModel : ViewModel() {
     private var _currentMediaImpl: MediaImpl? = null
         set(value) {
             when (value) {
-                is Music -> this.addMusic(music = value)
-                is Playlist -> this.addPlaylist(playlist = value)
+                is Music -> {
+                    val playlists: Collection<Playlist> = DataManager.getPlaylistSet()
+                    for (playlist: Playlist in playlists)
+                        if (playlist.contains(mediaImpl = value))
+                            this.addPlaylist(playlist = playlist)
+                    this.addMusic(music = value)
+                }
+
+                is Playlist -> {
+                    this._checkedMusics.addAll(elements = value.getMusicSet())
+                    this._checkedPlaylistWithMusics.add(element = value)
+                }
             }
             field = value
         }

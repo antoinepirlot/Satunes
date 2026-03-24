@@ -97,7 +97,7 @@ private fun addMusicPlayingToPlaylist(
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     dataViewModel: DataViewModel,
-    checkedPlaylists: List<Playlist>,
+    checkedPlaylists: Collection<Playlist>,
     music: Music,
 ) {
     dataViewModel.updateMusicPlaylist(

@@ -1,0 +1,3 @@
+Improvements, optimisations and bug fixes:
+
+* Fix issue when updating playlists. If music was removed, no modification was made.

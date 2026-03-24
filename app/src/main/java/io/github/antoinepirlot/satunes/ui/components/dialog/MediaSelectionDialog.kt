@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -67,9 +68,10 @@ internal fun MediaSelectionDialog(
 ) {
     val mediaSelectionUiState: MediaSelectionUiState by mediaSelectionViewModel.uiState.collectAsState()
 
-    //No LaunchedEffect as it crash because it's run after composition and Satunes needs this modification
-    //on composition
-    mediaSelectionViewModel.setCurrentMediaImpl(mediaImpl = mediaDestination)
+    LaunchedEffect(key1 = Unit) {
+        mediaSelectionViewModel.setCurrentMediaImpl(mediaImpl = mediaDestination)
+    }
+
     val showPlaylistCreation: Boolean = mediaSelectionUiState.showPlaylistCreation
 
     if (showPlaylistCreation) {

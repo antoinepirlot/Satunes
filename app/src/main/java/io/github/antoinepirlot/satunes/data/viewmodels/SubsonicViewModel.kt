@@ -555,6 +555,9 @@ class SubsonicViewModel : ViewModel() {
                     _offset += it.size
                     onDataRetrieved(it)
                 },
+                onFinished = {
+                    this.finishRequest()
+                }
             )
         }
     }

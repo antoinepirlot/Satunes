@@ -22,11 +22,14 @@ package io.github.antoinepirlot.satunes.ui.views.media.album
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
@@ -54,7 +57,7 @@ internal fun AllAlbumsListView(
             satunesViewModel.clearExtraButtons()
     }
 
-    val view: @Composable () -> Unit = {
+    val view: @Composable (isLoading: Boolean) -> Unit = {
         MediaListView(
             modifier = modifier,
             emptyViewText = stringResource(id = R.string.no_album)
@@ -66,9 +69,10 @@ internal fun AllAlbumsListView(
             LaunchedEffect(key1 = Unit) {
                 dataViewModel.loadMediaImplList(collection = dataViewModel.getAlbumSet())
             }
-            view()
+            view(false)
         },
         cloudView = {
+            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
             LaunchedEffect(key1 = Unit) {
                 subsonicViewModel.getAlbums(
                     resetOffset = true,
@@ -77,7 +81,7 @@ internal fun AllAlbumsListView(
                     }
                 )
             }
-            view()
+            view(subsonicUiState.isFetching)
         }
     )
 }

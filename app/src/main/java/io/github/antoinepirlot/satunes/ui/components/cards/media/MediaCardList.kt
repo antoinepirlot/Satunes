@@ -83,6 +83,11 @@ internal fun MediaCardList(
         modifier = modifier,
         state = lazyListState
     ) {
+        if (header != null)
+            item {
+                header()
+                Spacer(Modifier.size(size = 16.dp))
+            }
         items(
             items = mediaImplList,
             key = {
@@ -91,12 +96,7 @@ internal fun MediaCardList(
                         else it.id!!
             }
         ) { mediaImpl: Media ->
-            val isFirst: Boolean = mediaImpl == mediaImplList.first()
-            if (isFirst) header?.invoke()
-
             if (showFirstLetter && showGroupIndication) {
-                if (isFirst)
-                    Spacer(Modifier.size(size = 16.dp))
                 Indicator(mediaImpl = mediaImpl, mediaImplList = mediaImplList)
             }
 

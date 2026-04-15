@@ -24,7 +24,6 @@ import android.content.Context
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.github.antoinepirlot.android.utils.utils.runIOThread
-import io.github.antoinepirlot.satunes.database.models.DownloadStatus
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
@@ -52,14 +51,7 @@ class SubsonicAlbum(
 
     private val _apiRequester: ApiRequester = apiRequester
 
-    override var downloadedMusics: Int = 0
-        set(value) {
-            field = value
-            if (field == this.musicCollection.count())
-                this.downloadStatus = DownloadStatus.DOWNLOADED
-            else if (this.downloadStatus != DownloadStatus.ERROR)
-                this.downloadStatus = DownloadStatus.NOT_DOWNLOADED
-        }
+    override var downloadedMusics: Set<SubsonicMusic> = mutableSetOf()
 
     /**
      * Fetch artwork from network and stores it into [artwork]
@@ -85,6 +77,11 @@ class SubsonicAlbum(
 
     override fun removeDownload() {
         TODO("Not yet implemented")
+    }
+
+    override fun addDownloadedMusic(music: SubsonicMusic) {
+        (this.downloadedMusics as MutableSet<SubsonicMusic>).add(element = music)
+        super.addDownloadedMusic(music)
     }
 
     override fun equals(other: Any?): Boolean {

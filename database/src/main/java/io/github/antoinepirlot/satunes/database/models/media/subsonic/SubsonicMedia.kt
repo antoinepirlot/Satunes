@@ -43,7 +43,7 @@ interface SubsonicMedia : Media {
 
     val subsonicId: String
     override var downloadStatus: DownloadStatus
-    val downloadedMusics: Int
+    val downloadedMusics: Set<SubsonicMusic>
 
     fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()
@@ -76,9 +76,13 @@ interface SubsonicMedia : Media {
         if (!this.isMusic()) {
             var downloadStatus: DownloadStatus = DownloadStatus.DOWNLOADED
             for (music: Music in this.musicCollection) {
-                (music as SubsonicMusic).download(context = context, onDataRetrieved = {})
-                if (music.downloadStatus != DownloadStatus.DOWNLOADED)
-                    downloadStatus = DownloadStatus.ERROR
+                (music as SubsonicMusic).download(
+                    context = context,
+                    onDataRetrieved = {
+                        if (music.downloadStatus != DownloadStatus.DOWNLOADED)
+                            downloadStatus = DownloadStatus.ERROR
+                    }
+                )
             }
             this.updateDownloadStatus(downloadStatus = downloadStatus)
             onDataRetrieved()
@@ -93,4 +97,12 @@ interface SubsonicMedia : Media {
     fun isDownloaded(): Boolean = this.downloadStatus == DownloadStatus.DOWNLOADED
 
     override fun isSubsonic(): Boolean = true
+    fun addDownloadedMusic(music: SubsonicMusic) {
+        if (this.isMusic())
+            throw UnsupportedOperationException()
+        if (this.downloadedMusics.size == this.musicCollection.size)
+            this.downloadStatus = DownloadStatus.DOWNLOADED
+        else if (this.downloadStatus != DownloadStatus.ERROR)
+            this.downloadStatus = DownloadStatus.NOT_DOWNLOADED
+    }
 }

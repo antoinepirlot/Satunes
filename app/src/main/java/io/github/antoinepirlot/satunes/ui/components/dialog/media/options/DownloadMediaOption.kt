@@ -38,20 +38,22 @@ fun DownloadMediaOption(
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val downloadStatus: DownloadStatus = media.downloadStatus
 
-    val download: suspend () -> Unit = {
-        media.download(
-            context = context,
-            onDataRetrieved = {
-                playbackViewModel.updateMediaItems(media = media)
-                dataViewModel.addToDownloadPlaylist(
-                    scope = scope,
-                    snackbarHostState = snackbarHostState,
-                    musics = if (media.isMusic()) listOf(media as SubsonicMusic)
-                    else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
-                    else media.subsonicMusicCollection
-                )
-            }
-        )
+    val download: () -> Unit = {
+        runIOThread {
+            media.download(
+                context = context,
+                onDataRetrieved = {
+                    playbackViewModel.updateMediaItems(media = media)
+                    dataViewModel.addToDownloadPlaylist(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
+                        musics = if (media.isMusic()) listOf(media as SubsonicMusic)
+                        else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
+                        else media.subsonicMusicCollection
+                    )
+                }
+            )
+        }
     }
 
     DialogOption(
@@ -62,16 +64,10 @@ fun DownloadMediaOption(
                 if (media.isAlbum())
                     subsonicViewModel.loadAlbum(
                         album = media as SubsonicAlbum,
-                        onDataRetrieved = {
-                            runIOThread {
-                                download()
-                            }
-                        },
+                        onDataRetrieved = { download() },
                     )
                 else // Music
-                    runIOThread {
-                        download()
-                    }
+                    download()
             else if (media.canDownloadBeRemoved()) media.removeDownload()
         },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),

@@ -1,5 +1,5 @@
 [versions]
-agp = "9.1.0"
+agp = "9.1.1"
 accompanistPermissions = "0.37.3"
 activityCompose = "1.12.1"
 android-compileSdk = "36" # do not remove even if marked as unused

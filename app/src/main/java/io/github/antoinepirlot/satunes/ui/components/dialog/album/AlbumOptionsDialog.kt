@@ -36,9 +36,11 @@ import io.github.antoinepirlot.satunes.data.viewmodels.NavigationViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Artist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.DownloadMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
@@ -96,6 +98,9 @@ internal fun AlbumOptionsDialog(
                  * Share
                  */
                 ShareMediaOption(media = album)
+
+                if (album.isSubsonic())
+                    DownloadMediaOption(media = album as SubsonicAlbum)
 
                 /**
                  * Redirections

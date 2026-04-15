@@ -53,6 +53,12 @@ import java.lang.Thread.sleep
  * @author Antoine Pirlot 03/09/2025
  */
 class SubsonicViewModel : ViewModel() {
+
+    companion object {
+        private const val DEFAULT_OFFSET: Long = 0
+        private var _offset: Long = DEFAULT_OFFSET
+    }
+
     private val _uiState: MutableStateFlow<SubsonicUiState> =
         MutableStateFlow(value = SubsonicUiState())
 
@@ -531,6 +537,24 @@ class SubsonicViewModel : ViewModel() {
                     DataManager.removePlaylist(playlist = playlist)
                     onRemoved?.invoke()
                 }
+            )
+        }
+    }
+
+    fun getAlbums(
+        onDataRetrieved: (Collection<SubsonicAlbum>) -> Unit,
+        resetOffset: Boolean = false
+    ) {
+        this.initRequest()
+        if (resetOffset)
+            _offset = DEFAULT_OFFSET
+        runIOThread {
+            _apiRequester.getAlbums(
+                offset = _offset,
+                onDataRetrieved = {
+                    _offset += it.size
+                    onDataRetrieved(it)
+                },
             )
         }
     }

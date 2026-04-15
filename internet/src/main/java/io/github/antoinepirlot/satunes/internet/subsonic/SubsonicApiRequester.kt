@@ -39,6 +39,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Create
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DeletePlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistCallback
@@ -229,6 +230,28 @@ class SubsonicApiRequester : ApiRequester {
                 onFinished = onFinished,
                 onDataRetrieved = onDataRetrieved,
                 onError = onError
+            )
+        )
+    }
+
+    override suspend fun getAlbums(
+        type: String,
+        offset: Long,
+        size: Int,
+        onDataRetrieved: (Collection<SubsonicAlbum>) -> Unit,
+        onFinished: (() -> Unit)?,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getAlbumList2",
+                parameters = arrayOf("type=$type", "offset=$offset", "size=$size")
+            ),
+            resCallback = GetAlbumsCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onError = onError,
+                onDataRetrieved = onDataRetrieved
             )
         )
     }

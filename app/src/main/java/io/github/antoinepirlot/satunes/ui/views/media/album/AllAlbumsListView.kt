@@ -29,6 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -41,12 +43,8 @@ internal fun AllAlbumsListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-
-    LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(collection = dataViewModel.getAlbumSet())
-    }
-
     LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
         if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
@@ -56,9 +54,31 @@ internal fun AllAlbumsListView(
             satunesViewModel.clearExtraButtons()
     }
 
-    MediaListView(
-        modifier = modifier,
-        emptyViewText = stringResource(id = R.string.no_album)
+    val view: @Composable () -> Unit = {
+        MediaListView(
+            modifier = modifier,
+            emptyViewText = stringResource(id = R.string.no_album)
+        )
+    }
+
+    ModeTabSelector(
+        localView = {
+            LaunchedEffect(key1 = Unit) {
+                dataViewModel.loadMediaImplList(collection = dataViewModel.getAlbumSet())
+            }
+            view()
+        },
+        cloudView = {
+            LaunchedEffect(key1 = Unit) {
+                subsonicViewModel.getAlbums(
+                    resetOffset = true,
+                    onDataRetrieved = {
+                        dataViewModel.loadMediaImplList(collection = it)
+                    }
+                )
+            }
+            view()
+        }
     )
 }
 

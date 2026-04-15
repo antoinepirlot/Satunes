@@ -46,3 +46,6 @@ GET {{baseUrl}}/getPlaylist?{{get_playlist_params}}
 
 ###
 GET {{baseUrl}}/updatePlaylist?{{update_playlist_params}}
+
+###
+GET {{baseUrl}}/getAlbumList2?{{get_album_v2_params}}

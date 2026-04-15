@@ -81,6 +81,15 @@ interface ApiRequester {
         onError: ((ApiError?) -> Unit)? = null
     )
 
+    suspend fun getAlbums(
+        type: String = "alphabeticalByName",
+        offset: Long = 0,
+        size: Int = 20,
+        onDataRetrieved: (Collection<SubsonicAlbum>) -> Unit,
+        onFinished: (() -> Unit)? = null,
+        onError: ((ApiError?) -> Unit)? = null
+    )
+
     suspend fun getAlbum(
         albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,

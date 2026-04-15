@@ -86,7 +86,7 @@ class DataViewModel : ViewModel() {
         private val _uiState: MutableStateFlow<DataUiState> = MutableStateFlow(DataUiState())
         private var _playlistToExport: Playlist? = null
 
-        private val _mediaListOnScreen: List<Media> = mutableStateListOf()
+        private val _mediaListOnScreen: MutableList<Media> = mutableStateListOf()
     }
 
     private val _logger: Logger? = Logger.getLogger()
@@ -1025,9 +1025,16 @@ class DataViewModel : ViewModel() {
     }
 
     fun loadMediaImplList(collection: Collection<Media>) {
-        _mediaListOnScreen as MutableList<Media>
         _mediaListOnScreen.clear()
         _mediaListOnScreen.addAll(elements = collection)
+    }
+
+    fun addMediaToScreenList(media: Media) {
+        _mediaListOnScreen.add(element = media)
+    }
+
+    fun addMediasToScreenList(medias: Collection<Media>) {
+        _mediaListOnScreen.addAll(elements = medias)
     }
 
     /**

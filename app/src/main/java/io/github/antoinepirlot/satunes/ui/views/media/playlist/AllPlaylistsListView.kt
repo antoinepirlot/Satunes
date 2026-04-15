@@ -36,7 +36,6 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.states.ModeTabSelectorUiState
 import io.github.antoinepirlot.satunes.data.states.SatunesUiState
-import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.ModeTabSelectorViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
@@ -61,7 +60,6 @@ internal fun PlaylistListView(
     dataViewModel: DataViewModel = viewModel(),
 ) {
     val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
     val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
     val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
 

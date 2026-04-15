@@ -12,7 +12,9 @@ import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.DownloadStatus
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicFolder
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
@@ -26,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun DownloadMediaOption(
     modifier: Modifier = Modifier,
+    subsonicViewModel: SubsonicViewModel = viewModel(),
     playbackViewModel: PlaybackViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
     media: SubsonicMedia
@@ -35,26 +38,40 @@ fun DownloadMediaOption(
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
     val downloadStatus: DownloadStatus = media.downloadStatus
 
+    val download: suspend () -> Unit = {
+        media.download(
+            context = context,
+            onDataRetrieved = {
+                playbackViewModel.updateMediaItems(media = media)
+                dataViewModel.addToDownloadPlaylist(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    musics = if (media.isMusic()) listOf(media as SubsonicMusic)
+                    else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
+                    else media.subsonicMusicCollection
+                )
+            }
+        )
+    }
+
     DialogOption(
         modifier = modifier,
         enabled = downloadStatus != DownloadStatus.DOWNLOADING,
         onClick = {
             if (media.canBeDownloaded())
-                runIOThread {
-                    media.download(
-                        context = context,
+                if (media.isAlbum())
+                    subsonicViewModel.loadAlbum(
+                        album = media as SubsonicAlbum,
                         onDataRetrieved = {
-                            playbackViewModel.updateMediaItems(media = media)
-                            dataViewModel.addToDownloadPlaylist(
-                                scope = scope,
-                                snackbarHostState = snackbarHostState,
-                                musics = if (media.isMusic()) listOf(media as SubsonicMusic)
-                                else if (media.isFolder()) (media as SubsonicFolder).getAllSubsonicMusic()
-                                else media.subsonicMusicCollection
-                            )
-                        }
+                            runIOThread {
+                                download()
+                            }
+                        },
                     )
-                }
+                else // Music
+                    runIOThread {
+                        download()
+                    }
             else if (media.canDownloadBeRemoved()) media.removeDownload()
         },
         jetpackLibsIcons = getDownloadIcon(status = downloadStatus),

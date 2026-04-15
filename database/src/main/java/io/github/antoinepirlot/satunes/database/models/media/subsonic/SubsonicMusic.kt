@@ -82,6 +82,17 @@ class SubsonicMusic(
 
     private val _apiRequester: ApiRequester = apiRequester
 
+    override var downloadStatus: DownloadStatus = DownloadStatus.NOT_DOWNLOADED
+        get() = super.downloadStatus
+        set(value) {
+            field = value
+            if (value == DownloadStatus.DOWNLOADED) {
+                (this.artist as SubsonicArtist).downloadedMusics++
+                (this.album as SubsonicAlbum).downloadedMusics++
+                (this.genre as SubsonicGenre).downloadedMusics++
+            }
+        }
+
     override val downloadedMusics: Int = -1
 
 
@@ -189,7 +200,6 @@ class SubsonicMusic(
                 this.absolutePath = absolutePath
                 this.saveInDatabase()
                 this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
-                this.addMusicDownloadedToParentMedias()
                 return true
             } catch (e: Exception) {
                 throw e
@@ -203,12 +213,6 @@ class SubsonicMusic(
             data.close()
         }
         return false
-    }
-
-    private fun addMusicDownloadedToParentMedias() {
-        (this.artist as SubsonicArtist).downloadedMusics++
-        (this.album as SubsonicAlbum).downloadedMusics++
-        (this.genre as SubsonicGenre).downloadedMusics++
     }
 
     private fun saveInDatabase() {

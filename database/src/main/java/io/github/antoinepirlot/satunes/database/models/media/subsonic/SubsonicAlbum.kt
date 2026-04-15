@@ -55,7 +55,7 @@ class SubsonicAlbum(
     override var downloadedMusics: Int = 0
         set(value) {
             field = value
-            if (field == this.getSet().count())
+            if (field == this.musicCollection.count())
                 this.downloadStatus = DownloadStatus.DOWNLOADED
             else if (this.downloadStatus != DownloadStatus.ERROR)
                 this.downloadStatus = DownloadStatus.NOT_DOWNLOADED

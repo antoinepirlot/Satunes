@@ -90,5 +90,7 @@ interface SubsonicMedia : Media {
      */
     fun removeDownload()
 
+    fun isDownloaded(): Boolean = this.downloadStatus == DownloadStatus.DOWNLOADED
+
     override fun isSubsonic(): Boolean = true
 }

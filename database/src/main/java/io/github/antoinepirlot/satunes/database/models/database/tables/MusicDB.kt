@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -145,7 +146,9 @@ internal class MusicDB(
                     subsonicId = "album",
                     title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)!!,
                     artist = artist,
-                    coverArtId = null,
+                    coverArtId = if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) mmr.extractMetadata(
+                        MediaMetadataRetriever.METADATA_KEY_IMAGE_PRIMARY
+                    ) else null, //TODO
                     apiRequester = apiRequester
                 ), //TODO
                 genre = SubsonicGenre(

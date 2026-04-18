@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import io.github.antoinepirlot.android.utils.logger.Logger
+import io.github.antoinepirlot.android.utils.utils.getContext
 import io.github.antoinepirlot.android.utils.utils.showToastOnUiThread
 import io.github.antoinepirlot.satunes.data.viewmodels.utils.isAudioAllowed
 import io.github.antoinepirlot.satunes.database.data.DEFAULT_ROOT_FILE_PATH
@@ -110,6 +111,7 @@ internal class MainActivity : ComponentActivity() {
         _logger = Logger.getLogger()
         _logger?.info("Satunes started on API: ${Build.VERSION.SDK_INT}")
         instance = this
+        getContext = { getContext() }
         if (intentToHandle != intent) intentToHandle = intent
         else _loadMusic = false
         setRefreshWidget(context = baseContext)

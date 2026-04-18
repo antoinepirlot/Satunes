@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.models.comparators
 
-import com.mpatric.mp3agic.NotSupportedException
 import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.MediaImpl
@@ -47,7 +46,7 @@ object SortByAlbumComparator : MediaComparator<Media>() {
                 } else 1 // mediaImpl2 is not a music, so the mediaImpl2 goes to the end
             } else {
                 if (mediaImpl2.isMusic()) -1 // mediaImpl1 is not a music, so the mediaImpl1 goes to the end
-                else throw NotSupportedException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by album.")
+                else throw UnsupportedOperationException("Can't sort ${mediaImpl1.javaClass.name} and ${mediaImpl2.javaClass.name} by album.")
             }
         return this.getFinalCmp(cmp = cmp)
     }

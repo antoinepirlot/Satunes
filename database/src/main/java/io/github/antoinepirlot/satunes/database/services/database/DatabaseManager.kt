@@ -92,7 +92,7 @@ class DatabaseManager private constructor(context: Context) {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                val playlist = DataManager.addPlaylist(playlist = playlistWithMusics.toPlaylist())
+                var playlist = DataManager.addPlaylist(playlist = playlistWithMusics.toPlaylist())
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                     runIOThread {
                         val music: Music? = musicDB.getMusic(apiRequester = apiRequester)

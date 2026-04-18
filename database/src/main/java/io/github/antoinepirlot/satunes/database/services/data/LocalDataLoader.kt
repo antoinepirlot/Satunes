@@ -72,9 +72,9 @@ object LocalDataLoader {
     //Genres variables
     private var genreNameColumnId: Int? = null
 
-    private const val UNKNOWN_ARTIST = "<unknown>"
-    private const val UNKNOWN_ALBUM = "<unknown>"
-    private const val UNKNOWN_GENRE = "<unknown>"
+    const val UNKNOWN_ARTIST = "<unknown>"
+    const val UNKNOWN_ALBUM = "<unknown>"
+    const val UNKNOWN_GENRE = "<unknown>"
 
     private var projection: Array<String> = arrayOf(
         // AUDIO

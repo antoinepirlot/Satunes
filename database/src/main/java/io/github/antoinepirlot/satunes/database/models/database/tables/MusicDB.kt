@@ -20,13 +20,12 @@
 
 package io.github.antoinepirlot.satunes.database.models.database.tables
 
+import android.media.MediaMetadataRetriever
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.mpatric.mp3agic.ID3v1
-import com.mpatric.mp3agic.Mp3File
 import io.github.antoinepirlot.android.utils.logger.Logger
 import io.github.antoinepirlot.satunes.database.exceptions.media.LocalMusicNotFoundException
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
@@ -40,7 +39,7 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.database.services.database.DatabaseManager
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import java.io.FileNotFoundException
+
 
 /**
  * @author Antoine Pirlot on 30/03/2024
@@ -119,20 +118,17 @@ internal class MusicDB(
      */
     private fun buildSubsonicMusic(apiRequester: ApiRequester): SubsonicMusic? {
         return try {
-            val mp3File: Mp3File = Mp3File(this.absolutePath)
-            var title: String? = null
-            if (mp3File.hasId3v1Tag()) {
-                val id3v1Tag: ID3v1 = mp3File.id3v1Tag
-                try {
-                    title = id3v1Tag.title
-                } catch (_: NullPointerException) {
-                }
-            }
-            if (title == null)
-                title = this.absolutePath.split("/").last().split(".").first()
+            val mmr = MediaMetadataRetriever()
+            mmr.setDataSource(this.absolutePath)
+
+            val title: String =
+                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) ?: this.absolutePath
+                    .split("/").last() //Keep the file name only
+                    .split(".").first() //Remove file extension
+
             val artist: SubsonicArtist = SubsonicArtist(
-                subsonicId = "artist",
-                title = "test artist",
+                subsonicId = "artist", //TODO
+                title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)!!,
                 apiRequester = apiRequester
             )
             val music: SubsonicMusic = SubsonicMusic(
@@ -141,18 +137,20 @@ internal class MusicDB(
                 displayName = title,
                 absolutePath = this.absolutePath,
                 addedDateMs = 0, //TODO
+                durationMs = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong(),
+                size = 0, //TODO
                 folder = DataManager.getSubsonicRootFolder(),
                 artist = artist,
                 album = SubsonicAlbum(
                     subsonicId = "album",
-                    title = "test album",
+                    title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)!!,
                     artist = artist,
                     coverArtId = null,
                     apiRequester = apiRequester
                 ), //TODO
                 genre = SubsonicGenre(
-                    subsonicId = "genre",
-                    title = "test genre",
+                    subsonicId = "genre", //TODO
+                    title = "genre", //TODO
                     apiRequester = apiRequester
                 ), //TODO
                 apiRequester = apiRequester
@@ -161,7 +159,7 @@ internal class MusicDB(
             music
         } catch (_: NullPointerException) {
             null
-        } catch (_: FileNotFoundException) {
+        } catch (_: IllegalArgumentException) {
             _logger?.severe("File not found while building Subsonic Music")
             null
         }

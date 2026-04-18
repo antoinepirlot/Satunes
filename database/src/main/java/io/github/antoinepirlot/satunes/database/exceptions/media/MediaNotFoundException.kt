@@ -20,8 +20,6 @@
 
 package io.github.antoinepirlot.satunes.database.exceptions.media
 
-import com.mpatric.mp3agic.NotSupportedException
-
 /**
  * @author Antoine Pirlot on 11/07/2024
  */
@@ -42,11 +40,5 @@ internal abstract class MediaNotFoundException(
         if (!this.isCloud())
             throw IllegalStateException("This is not a cloud media not found exception.")
         return this._cloudId!!
-    }
-
-    fun getIdAsString(): String {
-        return if (this.isLocal()) this._id!!.toString()
-        else if (this.isCloud()) this._cloudId!!
-        else throw NotSupportedException("Not supported not cloud or local.")
     }
 }

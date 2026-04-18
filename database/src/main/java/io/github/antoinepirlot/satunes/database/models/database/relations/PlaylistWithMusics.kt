@@ -28,6 +28,7 @@ import io.github.antoinepirlot.satunes.database.models.database.tables.MusicDB
 import io.github.antoinepirlot.satunes.database.models.database.tables.MusicsPlaylistsRel
 import io.github.antoinepirlot.satunes.database.models.database.tables.PlaylistDB
 import io.github.antoinepirlot.satunes.database.models.media.MediaData
+import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -52,4 +53,10 @@ internal data class PlaylistWithMusics(
     @Ignore
     @Transient
     override var id: Long = playlistDB.id
+
+    @Ignore
+    fun toPlaylist(): Playlist = Playlist(
+        id = this.playlistDB.id,
+        title = this.playlistDB.title
+    )
 }

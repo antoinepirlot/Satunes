@@ -83,6 +83,13 @@ interface SubsonicMedia : Media {
                     }
                 )
             }
+
+            if (this.downloadedMusics.isEmpty() || this.downloadedMusics.size != this.musicCollection.size)
+                downloadStatus = DownloadStatus.ERROR //TODO partial icon if at least one downloaded
+
+            if (this.downloadedMusics.isNotEmpty())
+                onDataRetrieved()
+
             this.updateDownloadStatus(downloadStatus = downloadStatus)
         }
     }

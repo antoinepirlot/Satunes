@@ -178,8 +178,7 @@ class SubsonicMusic(
      * Stores the downloaded music into the storage.
      */
     private fun store(context: Context, data: InputStream): Boolean {
-        val absolutePath: String =
-            SubsonicMedia.getDownloadStorage(context = context) + "/${this.relativePath}"
+        val absolutePath: String = SubsonicMedia.getDownloadStorage(context = context) + "/${this.relativePath}"
 
         try {
             val file: File = createFile(path = absolutePath)

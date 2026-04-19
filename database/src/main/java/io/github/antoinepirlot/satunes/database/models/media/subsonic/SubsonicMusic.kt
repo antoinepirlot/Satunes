@@ -191,7 +191,7 @@ class SubsonicMusic(
                     bytesRead = data.read(buffer)
                 }
                 this.absolutePath = absolutePath
-                this.saveInDatabase()
+                DatabaseManager.getInstance().insertMusics(this)
                 this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADED)
                 return true
             } catch (e: Exception) {
@@ -206,14 +206,6 @@ class SubsonicMusic(
             data.close()
         }
         return false
-    }
-
-    /**
-     * Store the downloaded music into database and downloaded playlist
-     */
-    private fun saveInDatabase() {
-        val db: DatabaseManager = DatabaseManager.getInstance()
-        db.insertMusics(this)
     }
 
     override fun toMusicDB(): MusicDB = MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)

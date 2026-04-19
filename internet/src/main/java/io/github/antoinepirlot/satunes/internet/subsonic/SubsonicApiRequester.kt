@@ -24,6 +24,7 @@
 package io.github.antoinepirlot.satunes.internet.subsonic
 
 import android.graphics.Bitmap
+import io.github.antoinepirlot.android.utils.utils.getContext
 import io.github.antoinepirlot.satunes.database.models.User
 import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
@@ -33,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMe
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.settings.SettingsManager
+import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.CreatePlaylistCallback
@@ -147,6 +149,8 @@ class SubsonicApiRequester : ApiRequester {
             .build()
             .enqueue()
     }
+
+    override fun isOnline(): Boolean = InternetManager(context = getContext()).isConnected()
 
     override fun ping(
         onSucceed: (() -> Unit)?,

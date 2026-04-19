@@ -98,16 +98,21 @@ internal class MusicDB(
         var music: SubsonicMusic? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
         var mustWait: Boolean = true
         if (music == null && apiRequester != null)
-            apiRequester.getSong(
-                musicId = this.subsonicId!!,
-                onDataRetrieved = {
-                    music = it
-                    //Updating path prevent playing music from server instead of local storage
-                    music!!.updateAbsolutePath(absolutePath = this.absolutePath)
-                },
-                onError = { music = this.buildSubsonicMusic(apiRequester = apiRequester) },
-                onFinished = { mustWait = false }
-            )
+            if (!apiRequester.isOnline()) {
+                music = this.buildSubsonicMusic(apiRequester = apiRequester)
+                mustWait = false
+            } else {
+                apiRequester.getSong(
+                    musicId = this.subsonicId!!,
+                    onDataRetrieved = {
+                        music = it
+                        //Updating path prevent playing music from server instead of local storage
+                        music!!.updateAbsolutePath(absolutePath = this.absolutePath)
+                    },
+                    onError = { music = this.buildSubsonicMusic(apiRequester = apiRequester) },
+                    onFinished = { mustWait = false }
+                )
+            }
         else mustWait = false
         while (mustWait);
         return music
@@ -118,8 +123,8 @@ internal class MusicDB(
      * Assume subsonicId is not null
      */
     private fun buildSubsonicMusic(apiRequester: ApiRequester): SubsonicMusic? {
+        val mmr = MediaMetadataRetriever()
         return try {
-            val mmr = MediaMetadataRetriever()
             mmr.setDataSource(this.absolutePath)
 
             val title: String =
@@ -165,6 +170,8 @@ internal class MusicDB(
         } catch (_: IllegalArgumentException) {
             _logger?.severe("File not found while building Subsonic Music")
             null
+        } finally {
+            mmr.release()
         }
     }
 }

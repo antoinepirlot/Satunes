@@ -88,6 +88,10 @@ open class Album(
         return newAlbum
     }
 
+//    internal fun getAlbumArtwork(): Bitmap {
+//        return this.coverArtId //TODO artwork
+//    }
+
     internal fun getEmptyAlbumArtwork(context: Context): Bitmap = AppCompatResources.getDrawable(
         context,
         R.mipmap.empty_album_artwork_foreground

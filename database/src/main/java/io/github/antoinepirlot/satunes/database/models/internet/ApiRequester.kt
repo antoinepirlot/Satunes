@@ -35,6 +35,8 @@ import java.io.InputStream
  * @author Antoine Pirlot 20/12/2025
  */
 interface ApiRequester {
+    fun isOnline(): Boolean
+
     /**
      * Ping API
      */

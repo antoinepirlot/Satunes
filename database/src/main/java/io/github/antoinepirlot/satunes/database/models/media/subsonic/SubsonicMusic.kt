@@ -162,8 +162,8 @@ class SubsonicMusic(
         this.downloadStatus = downloadStatus
     }
 
-    override fun download(context: Context, onDataRetrieved: () -> Unit) {
-        super.download(context = context, onDataRetrieved = onDataRetrieved)
+    override suspend fun download(context: Context, onDataRetrieved: () -> Unit, onFinished: (() -> Unit)?) {
+        super.download(context = context, onDataRetrieved = onDataRetrieved, onFinished = onFinished)
         this.getApiRequester().download(
             musicId = this.subsonicId,
             onError = { this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR) },
@@ -171,6 +171,7 @@ class SubsonicMusic(
                 this.store(context = context, data = it)
                 onDataRetrieved()
             },
+            onFinished = onFinished
         )
     }
 

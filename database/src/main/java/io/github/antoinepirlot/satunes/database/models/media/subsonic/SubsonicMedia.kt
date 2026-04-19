@@ -69,25 +69,26 @@ interface SubsonicMedia : Media {
      *
      * @throws IllegalStateException if this media is not [SubsonicMedia]
      */
-    fun download(context: Context, onDataRetrieved: () -> Unit) {
+    suspend fun download(context: Context, onDataRetrieved: () -> Unit, onFinished: (() -> Unit)? = null) {
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
         if (!this.isMusic()) {
             var downloadStatus: DownloadStatus = DownloadStatus.DOWNLOADED
+            var count: Int = 0
             for (music: Music in this.musicCollection) {
                 (music as SubsonicMusic).download(
                     context = context,
                     onDataRetrieved = {
                         if (music.downloadStatus != DownloadStatus.DOWNLOADED)
                             downloadStatus = DownloadStatus.ERROR
-
-                        if (music == this.musicCollection.last()) {
-                            onDataRetrieved()
-                            this.updateDownloadStatus(downloadStatus = downloadStatus)
-                        }
-                    }
+                    },
+                    onFinished = { count++ }
                 )
             }
+
+            while (count != this.musicCollection.size);
+            onDataRetrieved()
+            this.updateDownloadStatus(downloadStatus = downloadStatus)
         }
     }
 

@@ -162,7 +162,7 @@ class SubsonicMusic(
         this.downloadStatus = downloadStatus
     }
 
-    override suspend fun download(context: Context, onDataRetrieved: () -> Unit) {
+    override fun download(context: Context, onDataRetrieved: () -> Unit) {
         super.download(context = context, onDataRetrieved = onDataRetrieved)
         this.getApiRequester().download(
             musicId = this.subsonicId,
@@ -208,6 +208,9 @@ class SubsonicMusic(
         return false
     }
 
+    /**
+     * Store the downloaded music into database and downloaded playlist
+     */
     private fun saveInDatabase() {
         val db: DatabaseManager = DatabaseManager.getInstance()
         db.updateMusic(this)

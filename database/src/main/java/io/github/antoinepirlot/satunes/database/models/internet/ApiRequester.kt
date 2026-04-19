@@ -38,7 +38,7 @@ interface ApiRequester {
     /**
      * Ping API
      */
-    suspend fun ping(
+    fun ping(
         onSucceed: (() -> Unit)? = null,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null
@@ -50,7 +50,7 @@ interface ApiRequester {
      * @param size the number of music to get (default 10, max 500).
      * @param onDataRetrieved the [Collection] function to run when got data from API.
      */
-    suspend fun getRandomSongs(
+    fun getRandomSongs(
         size: Int = 10,
         onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
     )
@@ -62,7 +62,7 @@ interface ApiRequester {
      * @param query the [String] to send to api to find matching media.
      * @param onDataRetrieved the function to run when got data from API.
      */
-    suspend fun search(
+    fun search(
         query: String,
         onFinished: () -> Unit,
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
@@ -74,14 +74,14 @@ interface ApiRequester {
      * @param artistId the id of artist located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
-    suspend fun getArtist(
+    fun getArtist(
         artistId: String,
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)? = null
     )
 
-    suspend fun getAlbums(
+    fun getAlbums(
         type: String = "alphabeticalByName",
         offset: Long = 0,
         size: Int = 20,
@@ -90,7 +90,7 @@ interface ApiRequester {
         onError: ((ApiError?) -> Unit)? = null
     )
 
-    suspend fun getAlbum(
+    fun getAlbum(
         albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)? = null,
@@ -100,9 +100,9 @@ interface ApiRequester {
     /**
      * Get cover art from API
      */
-    suspend fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
+    fun getCoverArt(coverArtId: String, onDataRetrieved: (Bitmap?) -> Unit)
 
-    suspend fun download(
+    fun download(
         musicId: String,
         onDataRetrieved: (InputStream) -> Unit,
         onError: (() -> Unit)? = null,
@@ -118,7 +118,7 @@ interface ApiRequester {
      * @param onFinished the function to invoke when the process is finished
      * @param onSucceed the function to invoke when the process is a success
      */
-    suspend fun getSong(
+    fun getSong(
         musicId: String,
         onDataRetrieved: (SubsonicMusic?) -> Unit,
         onError: (() -> Unit)? = null,
@@ -135,7 +135,7 @@ interface ApiRequester {
      * @param onFinished the function to invoke when the process is finished
      * @param onSucceed the function to invoke when the process is a success
      */
-    suspend fun createPlaylist(
+    fun createPlaylist(
         title: String,
         onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,

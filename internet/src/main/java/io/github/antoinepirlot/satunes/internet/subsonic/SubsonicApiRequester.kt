@@ -148,7 +148,7 @@ class SubsonicApiRequester : ApiRequester {
             .enqueue()
     }
 
-    override suspend fun ping(
+    override fun ping(
         onSucceed: (() -> Unit)?,
         onError: (() -> Unit)?,
         onFinished: (() -> Unit)?
@@ -164,7 +164,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun getRandomSongs(
+    override fun getRandomSongs(
         size: Int,
         onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
     ) {
@@ -189,7 +189,7 @@ class SubsonicApiRequester : ApiRequester {
      * @param query the [String] to send to api to find matching media.
      * @param onDataRetrieved the function to run when got data from API.
      */
-    override suspend fun search(
+    override fun search(
         query: String,
         onFinished: () -> Unit,
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
@@ -214,7 +214,7 @@ class SubsonicApiRequester : ApiRequester {
      * @param artistId the id of artist located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
-    override suspend fun getArtist(
+    override fun getArtist(
         artistId: String,
         onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicArtist) -> Unit,
@@ -234,7 +234,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun getAlbums(
+    override fun getAlbums(
         type: String,
         offset: Long,
         size: Int,
@@ -256,7 +256,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun getAlbum(
+    override fun getAlbum(
         albumId: String,
         onDataRetrieved: (SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)?,
@@ -276,7 +276,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun getCoverArt(
+    override fun getCoverArt(
         coverArtId: String,
         onDataRetrieved: (Bitmap?) -> Unit
     ) {
@@ -296,7 +296,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun download(
+    override fun download(
         musicId: String,
         onDataRetrieved: (InputStream) -> Unit,
         onError: (() -> Unit)?,
@@ -316,7 +316,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun getSong(
+    override fun getSong(
         musicId: String,
         onDataRetrieved: (SubsonicMusic?) -> Unit,
         onError: (() -> Unit)?,
@@ -338,7 +338,7 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override suspend fun createPlaylist(
+    override fun createPlaylist(
         title: String,
         onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)?,

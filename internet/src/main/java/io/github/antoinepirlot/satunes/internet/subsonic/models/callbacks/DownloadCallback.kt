@@ -25,6 +25,7 @@ internal class DownloadCallback(
     override fun onResponse(call: Call, response: Response) {
         super.onResponse(call, response)
         onDataRetrieved(response.body.byteStream())
+        onFinished?.invoke()
     }
 
     override fun isReceivingJsonData(): Boolean = false

@@ -232,8 +232,7 @@ open class Music(
         this.genre = genre
     }
 
-    internal open fun toMusicDB(): MusicDB =
-        MusicDB(localId = this.id, absolutePath = this.absolutePath)
+    internal open fun toMusicDB(): MusicDB = MusicDB(localId = this.id!!, absolutePath = this.absolutePath)
 
     override fun isMusic(): Boolean = true
 

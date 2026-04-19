@@ -117,11 +117,7 @@ class DatabaseManager private constructor(context: Context) {
     internal fun updateMusic(vararg musics: Music) {
         var musicDBs: Array<MusicDB> = arrayOf()
         musics.forEach { music: Music ->
-            musicDBs += MusicDB(
-                localId = if (music.isSubsonic()) null else music.id!!,
-                subsonicId = if (music.isSubsonic()) (music as SubsonicMusic).subsonicId else null,
-                absolutePath = music.absolutePath
-            )
+            musicDBs += music.toMusicDB()
         }
         this.musicDao.update(musicDBs = musicDBs)
     }

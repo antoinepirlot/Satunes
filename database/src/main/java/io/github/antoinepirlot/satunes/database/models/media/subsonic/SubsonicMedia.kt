@@ -72,7 +72,6 @@ interface SubsonicMedia : Media {
     suspend fun download(context: Context, onDataRetrieved: () -> Unit) {
         if (this.isStoredLocally()) return
         this.updateDownloadStatus(downloadStatus = DownloadStatus.DOWNLOADING)
-
         if (!this.isMusic()) {
             var downloadStatus: DownloadStatus = DownloadStatus.DOWNLOADED
             for (music: Music in this.musicCollection) {
@@ -85,7 +84,6 @@ interface SubsonicMedia : Media {
                 )
             }
             this.updateDownloadStatus(downloadStatus = downloadStatus)
-            onDataRetrieved()
         }
     }
 

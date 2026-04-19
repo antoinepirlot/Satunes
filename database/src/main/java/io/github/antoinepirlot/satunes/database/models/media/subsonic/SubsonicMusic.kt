@@ -162,20 +162,15 @@ class SubsonicMusic(
         this.downloadStatus = downloadStatus
     }
 
-    override suspend fun download(
-        context: Context,
-        onDataRetrieved: () -> Unit
-    ) {
+    override suspend fun download(context: Context, onDataRetrieved: () -> Unit) {
         super.download(context = context, onDataRetrieved = onDataRetrieved)
         this.getApiRequester().download(
             musicId = this.subsonicId,
-            onError = {
-                this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR)
-            },
+            onError = { this.updateDownloadStatus(downloadStatus = DownloadStatus.ERROR) },
             onDataRetrieved = {
                 this.store(context = context, data = it)
                 onDataRetrieved()
-            }
+            },
         )
     }
 
@@ -219,8 +214,7 @@ class SubsonicMusic(
         db.updateMusic(this)
     }
 
-    override fun toMusicDB(): MusicDB =
-        MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)
+    override fun toMusicDB(): MusicDB = MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)
 
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicMusic).subsonicId

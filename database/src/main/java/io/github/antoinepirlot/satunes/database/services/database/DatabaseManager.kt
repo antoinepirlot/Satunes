@@ -122,6 +122,14 @@ class DatabaseManager private constructor(context: Context) {
         this.musicDao.update(musicDBs = musicDBs)
     }
 
+    internal fun insertMusics(vararg musics: SubsonicMusic) {
+        var musicDBs: Array<MusicDB> = arrayOf()
+        musics.forEach { music: Music ->
+            musicDBs += music.toMusicDB()
+        }
+        this.musicDao.insert(musics = musicDBs)
+    }
+
     /**
      * Create new Playlist if doesn't exist in DB otherwise advertise the user that it already exists.
      *

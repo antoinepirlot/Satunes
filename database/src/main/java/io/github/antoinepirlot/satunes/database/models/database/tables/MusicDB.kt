@@ -94,7 +94,7 @@ internal class MusicDB(
         }
     }
 
-    private suspend fun toSubsonicMusic(apiRequester: ApiRequester?): SubsonicMusic? {
+    private fun toSubsonicMusic(apiRequester: ApiRequester?): SubsonicMusic? {
         var music: SubsonicMusic? = DataManager.getSubsonicMusic(id = this.subsonicId!!)
         var mustWait: Boolean = true
         if (music == null && apiRequester != null)

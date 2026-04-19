@@ -213,7 +213,7 @@ class SubsonicMusic(
      */
     private fun saveInDatabase() {
         val db: DatabaseManager = DatabaseManager.getInstance()
-        db.updateMusic(this)
+        db.insertMusics(this)
     }
 
     override fun toMusicDB(): MusicDB = MusicDB(subsonicId = this.subsonicId, absolutePath = this.absolutePath)

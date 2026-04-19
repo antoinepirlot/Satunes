@@ -90,6 +90,10 @@ class SubsonicMusic(
                 (this.artist as SubsonicArtist).addDownloadedMusic(music = this)
                 (this.album as SubsonicAlbum).addDownloadedMusic(music = this)
                 (this.genre as SubsonicGenre).addDownloadedMusic(music = this)
+            } else if (value == DownloadStatus.NOT_DOWNLOADED) {
+                (this.artist as SubsonicArtist).removeDownloadedMusic(music = this)
+                (this.album as SubsonicAlbum).removeDownloadedMusic(music = this)
+                (this.genre as SubsonicGenre).removeDownloadedMusic(music = this)
             }
         }
 

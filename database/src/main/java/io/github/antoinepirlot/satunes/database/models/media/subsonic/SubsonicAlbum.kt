@@ -76,7 +76,8 @@ class SubsonicAlbum(
     override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
-        for (music: SubsonicMusic in this.downloadedMusics)
+        val oldList: Collection<SubsonicMusic> = this.downloadedMusics.toList()
+        for (music: SubsonicMusic in oldList)
             music.removeDownload()
     }
 

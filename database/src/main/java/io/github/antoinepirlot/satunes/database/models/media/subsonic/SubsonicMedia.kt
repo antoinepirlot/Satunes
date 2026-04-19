@@ -114,4 +114,15 @@ interface SubsonicMedia : Media {
         else if (this.downloadStatus != DownloadStatus.ERROR)
             this.downloadStatus = DownloadStatus.NOT_DOWNLOADED
     }
+
+    fun removeDownloadedMusic(music: SubsonicMusic) {
+        if (this.isMusic())
+            throw UnsupportedOperationException()
+        else
+            (this.downloadedMusics as MutableSet<SubsonicMusic>).remove(element = music)
+
+        if (this.downloadedMusics.isEmpty())
+            this.downloadStatus = DownloadStatus.NOT_DOWNLOADED
+        //TODO partial
+    }
 }

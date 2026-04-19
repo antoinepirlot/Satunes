@@ -76,7 +76,8 @@ class SubsonicAlbum(
     override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {
-        TODO("Not yet implemented")
+        for (music: SubsonicMusic in this.downloadedMusics)
+            music.removeDownload()
     }
 
     override fun addDownloadedMusic(music: SubsonicMusic) {

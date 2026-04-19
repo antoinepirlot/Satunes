@@ -43,8 +43,10 @@ import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.PlaybackViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToPlaylistMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.AddToQueueDialogOption
+import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.DownloadMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.PlayNextMediaOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.RemoveFromQueueOption
 import io.github.antoinepirlot.satunes.ui.components.dialog.media.options.ShareMediaOption
@@ -121,9 +123,11 @@ internal fun PlaylistOptionsDialog(
                 ShareMediaOption(media = playlist)
 
                 /**
-                 * Upload
+                 * Download/Upload
                  */
-                if (!playlist.isSubsonic())
+                if (playlist.isSubsonic())
+                    DownloadMediaOption(media = playlist as SubsonicPlaylist)
+                else
                     UploadPlaylistOption(playlist = playlist)
             }
         },

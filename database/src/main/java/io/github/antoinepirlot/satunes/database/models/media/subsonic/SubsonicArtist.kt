@@ -71,8 +71,4 @@ class SubsonicArtist(
     }
 
     override fun getApiRequester(): ApiRequester = _apiRequester
-
-    override fun removeDownload() {
-        TODO("Not yet implemented")
-    }
 }

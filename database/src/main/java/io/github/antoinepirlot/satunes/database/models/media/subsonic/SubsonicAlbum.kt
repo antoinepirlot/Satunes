@@ -75,12 +75,6 @@ class SubsonicAlbum(
 
     override fun getApiRequester(): ApiRequester = _apiRequester
 
-    override fun removeDownload() {
-        val oldList: Collection<SubsonicMusic> = this.downloadedMusics.toList()
-        for (music: SubsonicMusic in oldList)
-            music.removeDownload()
-    }
-
     override fun equals(other: Any?): Boolean {
         return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
         else super.equals(other)

@@ -98,7 +98,11 @@ interface SubsonicMedia : Media {
     /**
      * Removes the downloaded file matching the musics.
      */
-    fun removeDownload()
+    fun removeDownload() {
+        val oldList: Collection<SubsonicMusic> = this.downloadedMusics.toList()
+        for (music: SubsonicMusic in oldList)
+            music.removeDownload()
+    }
 
     fun isDownloaded(): Boolean = this.downloadStatus == DownloadStatus.DOWNLOADED
 

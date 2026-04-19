@@ -45,6 +45,9 @@ interface SubsonicMedia : Media {
     override var downloadStatus: DownloadStatus
     val downloadedMusics: Set<SubsonicMusic>
 
+    val downloadedMusicsCount: Int
+        get() = this.downloadedMusics.count()
+
     fun loadArtwork(context: Context, onDataRetrieved: (artwork: ImageBitmap?) -> Unit) {
         throw UnsupportedOperationException()
     }
@@ -103,6 +106,9 @@ interface SubsonicMedia : Media {
     fun addDownloadedMusic(music: SubsonicMusic) {
         if (this.isMusic())
             throw UnsupportedOperationException()
+        else
+            (this.downloadedMusics as MutableSet<SubsonicMusic>).add(element = music)
+
         if (this.downloadedMusics.size == this.musicCollection.size)
             this.downloadStatus = DownloadStatus.DOWNLOADED
         else if (this.downloadStatus != DownloadStatus.ERROR)

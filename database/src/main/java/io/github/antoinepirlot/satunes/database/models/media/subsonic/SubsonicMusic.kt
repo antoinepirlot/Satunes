@@ -145,6 +145,10 @@ class SubsonicMusic(
         )
     }
 
+    internal fun markAsDownloaded() {
+        this.downloadStatus = DownloadStatus.DOWNLOADED
+    }
+
     override fun getApiRequester(): ApiRequester = _apiRequester
 
     override fun removeDownload() {

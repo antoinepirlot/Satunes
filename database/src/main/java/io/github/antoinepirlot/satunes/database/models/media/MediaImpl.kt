@@ -42,7 +42,9 @@ abstract class MediaImpl(
     title: String
 ) : Media {
     protected val logger: Logger? = Logger.getLogger()
+
     override var downloadStatus: DownloadStatus by mutableStateOf(value = DownloadStatus.NOT_DOWNLOADED)
+        internal set
 
     /**
      * Title of the media. If this is a music and the [SettingsManager.isMusicTitleDisplayName] is

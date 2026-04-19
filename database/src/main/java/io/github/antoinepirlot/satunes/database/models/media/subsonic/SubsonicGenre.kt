@@ -54,9 +54,4 @@ class SubsonicGenre(
     override fun removeDownload() {
         TODO("Not yet implemented")
     }
-
-    override fun addDownloadedMusic(music: SubsonicMusic) {
-        (this.downloadedMusics as MutableSet<SubsonicMusic>).add(element = music)
-        super.addDownloadedMusic(music)
-    }
 }

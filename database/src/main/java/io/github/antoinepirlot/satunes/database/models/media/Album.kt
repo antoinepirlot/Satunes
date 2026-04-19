@@ -56,6 +56,7 @@ open class Album(
 
     override val musicSortedSet: SortedSet<Music> = sortedSetOf(MusicInAlbumComparator)
     val year: Int? = if (year != null && year < 1) null else year
+
     init {
         nextId++
         artist.addAlbum(album = this)

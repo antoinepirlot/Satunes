@@ -92,7 +92,7 @@ class DatabaseManager private constructor(context: Context) {
             val playlistsWithMusicsList: List<PlaylistWithMusics> =
                 playlistDao.getPlaylistsWithMusics()
             playlistsWithMusicsList.forEach { playlistWithMusics: PlaylistWithMusics ->
-                var playlist = DataManager.addPlaylist(playlist = playlistWithMusics.toPlaylist())
+                val playlist = DataManager.addPlaylist(playlist = playlistWithMusics.toPlaylist())
                 playlistWithMusics.musics.forEach { musicDB: MusicDB ->
                     runIOThread {
                         val music: Music? = musicDB.getMusic(apiRequester = apiRequester)
@@ -101,7 +101,7 @@ class DatabaseManager private constructor(context: Context) {
                                 if (playlist.isLikesPlaylist())
                                     music.markAsLiked()
                                 else if (playlist.isDownloadsPlaylist())
-                                    music.markAsDownloaded()
+                                    (music as SubsonicMusic).markAsDownloaded()
                             }
                             playlist.addMusic(music = music)
                         }

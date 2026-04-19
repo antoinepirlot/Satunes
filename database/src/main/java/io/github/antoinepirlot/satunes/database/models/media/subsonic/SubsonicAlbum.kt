@@ -80,11 +80,6 @@ class SubsonicAlbum(
             music.removeDownload()
     }
 
-    override fun addDownloadedMusic(music: SubsonicMusic) {
-        (this.downloadedMusics as MutableSet<SubsonicMusic>).add(element = music)
-        super.addDownloadedMusic(music)
-    }
-
     override fun equals(other: Any?): Boolean {
         return if(this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicAlbum).subsonicId
         else super.equals(other)

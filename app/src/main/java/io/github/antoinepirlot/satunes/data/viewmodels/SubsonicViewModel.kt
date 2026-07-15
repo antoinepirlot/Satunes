@@ -437,8 +437,7 @@ class SubsonicViewModel : ViewModel() {
             _apiRequester.getPlaylist(
                 id = id,
                 onDataRetrieved = {
-                    val playlist: SubsonicPlaylist = DataManager.getSubsonicPlaylist(id = id)!!
-                    playlist.addMusics(musics = it)
+                    DataManager.addPlaylist(playlist = it)
                 },
                 onError = onError,
                 onFinished = {

@@ -25,6 +25,12 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
 import io.github.antoinepirlot.satunes.database.models.internet.ApiResponse
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Playlist
@@ -58,5 +64,32 @@ internal data class SubsonicResponse(
         private const val OK_STATUS = "ok"
         private const val FAILED_STATUS = "failed"
     }
+
     fun isError(): Boolean = this.status == FAILED_STATUS
+
+    @Throws(IllegalStateException::class)
+    inline fun <reified T : SubsonicMedia> getSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): T {
+
+        return if (T::class == SubsonicPlaylist::class)
+            this.playlist!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as T
+        else if (T::class == SubsonicAlbum::class)
+            this.album!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as T
+        else if (T::class == SubsonicArtist::class)
+            this.artist!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as T
+        else if (T::class == SubsonicMusic::class)
+            this.song!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as T
+        else
+            throw IllegalStateException("No subsonic media retrieved.")
+    }
+
+    inline fun <E, reified T : Collection<SubsonicMedia>> getSubsonicMediaList(subsonicApiRequester: SubsonicApiRequester): T {
+        return if (T::class == SubsonicMusic::class)
+            this.randomSongs!!.toSubsonicMusicCollection(subsonicApiRequester = subsonicApiRequester) as T
+        else if (T::class == SubsonicPlaylist::class)
+            this.playlistsResponse!!.toSubsonicResponse(subsonicApiRequester = subsonicApiRequester) as T
+        else if (T::class == SubsonicAlbum::class)
+            this.albums!!.toSubsonicResponse(subsonicApiRequester = subsonicApiRequester) as T
+        else
+            throw IllegalStateException("No subsonic media retrieved.")
+    }
 }

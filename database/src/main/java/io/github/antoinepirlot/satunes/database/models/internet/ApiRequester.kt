@@ -171,7 +171,7 @@ interface ApiRequester {
      */
     fun getPlaylist(
         id: String,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null

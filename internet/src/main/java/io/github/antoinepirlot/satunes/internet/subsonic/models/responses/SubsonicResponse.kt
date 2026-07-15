@@ -58,6 +58,7 @@ internal data class SubsonicResponse(
     @SerialName(value = "song") val song: Song? = null,
     @SerialName(value = "playlist") val playlist: Playlist? = null,
     @SerialName(value = "playlists") val playlistsResponse: PlaylistsResponse? = null,
+    @SerialName(value = "genres") val genres: GenresResponse? = null
 ) : ApiResponse {
 
     companion object {

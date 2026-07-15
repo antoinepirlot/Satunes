@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.database.models.internet
 import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -56,6 +57,13 @@ interface ApiRequester {
         size: Int = 10,
         onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
     )
+
+    /**
+     * Get Genres from API
+     *
+     * @param onDataRetrieved the function to run to retrieve a [Collection] of [SubsonicGenre].
+     */
+    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit)
 
     /**
      * Query subsonic to get matching media to the [query].

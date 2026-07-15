@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -558,6 +559,16 @@ class SubsonicViewModel : ViewModel() {
                     this.finishRequest()
                 }
             )
+        }
+    }
+
+    /**
+     * Get Genres from Subsonic API
+     */
+    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getGenres(onDataRetrieved = onDataRetrieved)
         }
     }
 }

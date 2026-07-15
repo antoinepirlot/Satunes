@@ -43,6 +43,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Delete
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetGenresCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
@@ -177,6 +178,18 @@ class SubsonicApiRequester : ApiRequester {
                 parameters = arrayOf("size=$size")
             ),
             resCallback = GetRandomMusicCallback(
+                subsonicApiRequester = this@SubsonicApiRequester,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
+    override fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+        get(
+            url = getCommandUrl(
+                command = "getGenres"
+            ),
+            resCallback = GetGenresCallback(
                 subsonicApiRequester = this@SubsonicApiRequester,
                 onDataRetrieved = onDataRetrieved
             )

@@ -29,6 +29,8 @@ import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 
+internal const val UNKNOWN_GENRE_TITLE: String = "UNKNOWN CLOUD GENRE"
+
 /**
  * @author Antoine Pirlot 11/12/2025
  */
@@ -66,9 +68,11 @@ internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtis
  */
 internal fun getOrCreateSubsonicGenre(
     subsonicApiRequester: SubsonicApiRequester? = null,
-    title: String = "UNKNOWN CLOUD GENRE",
+    title: String? = null,
     songs: Collection<Song> = listOf()
 ): SubsonicGenre {
+    val title: String = title ?: UNKNOWN_GENRE_TITLE
+
     val genre: SubsonicGenre =
         DataManager.getSubsonicGenre(id = title) ?: createSubsonicGenre(id = title, title = title)
     if (subsonicApiRequester != null)

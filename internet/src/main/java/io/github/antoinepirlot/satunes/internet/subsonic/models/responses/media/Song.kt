@@ -21,6 +21,7 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import androidx.core.net.toUri
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
@@ -65,6 +66,9 @@ internal data class Song constructor(
             command = "stream",
             parameters = arrayOf("id=$id")
         )
+        //Do not add this in getOrCreateSubsonicGenre as songs param as it will create a indefinite loop
+        val genre: SubsonicGenre =
+            getOrCreateSubsonicGenre(title = if (genres.isEmpty()) null else genres.first().getRightTitle())
         return DataManager.getSubsonicMusic(id = id) ?: DataManager.addMusic(
             music = SubsonicMusic(
                 subsonicId = this.id,
@@ -84,7 +88,7 @@ internal data class Song constructor(
                     artistId = this.artistId,
                     artistTitle = this.artistTitle
                 ), //Must be after artist, otherwise album is not added in artist
-                genre = getOrCreateSubsonicGenre(),
+                genre = genre,
                 uri = url.toUri(),
                 apiRequester = subsonicApiRequester
             )

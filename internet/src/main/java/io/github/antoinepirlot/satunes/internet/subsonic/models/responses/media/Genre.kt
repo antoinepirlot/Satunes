@@ -49,7 +49,7 @@ internal data class Genre(
             songs = songs
         )
 
-    private fun getRightTitle(): String =
+    internal fun getRightTitle(): String =
         if (this.songs.isNotEmpty()) this.songs.first().genres.first().getRightTitle() else this.title ?: this.title2!!
 
 }

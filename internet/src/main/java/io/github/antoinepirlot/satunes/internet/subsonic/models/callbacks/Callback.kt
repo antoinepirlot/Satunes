@@ -41,6 +41,7 @@ internal class Callback(
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
+    private val clazz: String
 ) : SubsonicCallback<SubsonicMedia>(
     subsonicApiRequester = subsonicApiRequester,
     onDataRetrieved = onDataRetrieved,
@@ -57,7 +58,7 @@ internal class Callback(
     override fun processData(block: () -> Unit) {
         super.processData {
             this.onDataRetrieved(
-                this.subsonicResponse!!.getSubsonicMedia<SubsonicMedia>(subsonicApiRequester = subsonicApiRequester)
+                this.subsonicResponse!!.getSubsonicMedia(subsonicApiRequester = subsonicApiRequester, clazz = clazz)
             )
             block()
         }

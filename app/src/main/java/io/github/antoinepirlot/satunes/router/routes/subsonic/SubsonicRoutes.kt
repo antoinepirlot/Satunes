@@ -98,7 +98,7 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
 
         LaunchedEffect(key1 = Unit) {
             subsonicViewModel.getGenreWithMusics(
-                genreId = genreId,
+                title = genreId,
                 onDataRetrieved = { genre: SubsonicGenre ->
                     onMediaOpen(genre)
                 }

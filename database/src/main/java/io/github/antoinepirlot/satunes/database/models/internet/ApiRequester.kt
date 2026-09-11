@@ -92,7 +92,7 @@ interface ApiRequester {
     )
 
     fun getGenre(
-        genreId: String,
+        title: String,
         onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicGenre) -> Unit,
         onError: ((ApiError?) -> Unit)?

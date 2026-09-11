@@ -347,11 +347,11 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getGenre(
-        genreId: String,
+        title: String,
         onDataRetrieved: (media: SubsonicGenre) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = genreId)
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
         if (genre != null)
             if (genre.isEmpty())
                 this.loadGenre(
@@ -365,7 +365,7 @@ class SubsonicViewModel : ViewModel() {
             this.initRequest()
             runIOThread {
                 _apiRequester.getGenre(
-                    genreId = genreId,
+                    title = title,
                     onDataRetrieved = onDataRetrieved,
                     onFinished = {
                         onFinished?.invoke()
@@ -378,11 +378,11 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun getGenreWithMusics(
-        genreId: String,
+        title: String,
         onDataRetrieved: (media: SubsonicGenre) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = genreId)
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
         if (genre != null)
             if (genre.isEmpty())
                 this.loadGenre(
@@ -398,7 +398,7 @@ class SubsonicViewModel : ViewModel() {
             else onDataRetrieved(genre)
         else
             this.getGenre(
-                genreId = genreId,
+                title = title,
                 onDataRetrieved = { genre: SubsonicGenre ->
                     this.loadGenreWithMusics(genre = genre, onDataRetrieved = onDataRetrieved)
                 },
@@ -441,7 +441,7 @@ class SubsonicViewModel : ViewModel() {
         this.initRequest()
         runIOThread {
             _apiRequester.getGenre(
-                genreId = genre.subsonicId,
+                title = genre.title,
                 onDataRetrieved = {
                     if (!genre.isSubsonic())
                         onDataRetrieved.invoke(genre.toSubsonicGenre(genre = it))

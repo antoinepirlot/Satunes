@@ -243,7 +243,8 @@ class SubsonicApiRequester : ApiRequester {
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onDataRetrieved = { onDataRetrieved(it as SubsonicArtist) },
-                onError = onError
+                onError = onError,
+                clazz = SubsonicArtist::class.simpleName!!
             )
         )
     }
@@ -251,25 +252,26 @@ class SubsonicApiRequester : ApiRequester {
     /**
      * Get genre from Subsonic
      *
-     * @param genreId the id of genre located on the server
+     * @param title the id of genre located on the server
      * @param onDataRetrieved the function to invoke when data has been sent by the server
      */
     override fun getGenre(
-        genreId: String,
+        title: String,
         onFinished: (() -> Unit)?,
         onDataRetrieved: (SubsonicGenre) -> Unit,
         onError: ((ApiError?) -> Unit)?
     ) {
         get(
             url = getCommandUrl(
-                command = "getGenre",
-                parameters = arrayOf("id=$genreId")
+                command = "getSongsByGenre",
+                parameters = arrayOf("genre=$title")
             ),
             resCallback = Callback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onDataRetrieved = { onDataRetrieved(it as SubsonicGenre) },
-                onError = onError
+                onError = onError,
+                clazz = SubsonicGenre::class.simpleName!!
             )
         )
     }
@@ -311,7 +313,8 @@ class SubsonicApiRequester : ApiRequester {
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onError = onError,
-                onDataRetrieved = { onDataRetrieved(it as SubsonicAlbum) }
+                onDataRetrieved = { onDataRetrieved(it as SubsonicAlbum) },
+                clazz = SubsonicAlbum::class.simpleName!!
             )
         )
     }
@@ -373,7 +376,8 @@ class SubsonicApiRequester : ApiRequester {
                 onDataRetrieved = { onDataRetrieved(it as SubsonicMusic) },
                 onError = { onError?.invoke() },
                 onSucceed = onSucceed,
-                onFinished = onFinished
+                onFinished = onFinished,
+                clazz = SubsonicMusic::class.simpleName!!
             )
         )
     }
@@ -397,7 +401,8 @@ class SubsonicApiRequester : ApiRequester {
                 onDataRetrieved = { onDataRetrieved(it as SubsonicPlaylist) },
                 onError = { onError?.invoke() },
                 onSucceed = onSucceed,
-                onFinished = onFinished
+                onFinished = onFinished,
+                clazz = SubsonicPlaylist::class.simpleName!!
             )
         )
     }
@@ -441,6 +446,7 @@ class SubsonicApiRequester : ApiRequester {
                 onSucceed = onSucceed,
                 onFinished = onFinished,
                 onError = { onError?.invoke() },
+                clazz = SubsonicPlaylist::class.simpleName!!
             )
         )
     }

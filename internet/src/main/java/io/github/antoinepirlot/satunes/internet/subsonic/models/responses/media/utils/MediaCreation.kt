@@ -27,6 +27,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGe
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -63,8 +64,17 @@ internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtis
 /**
  * Get the subsonic genre matching the [title] or create a new one if it doesn't exist.
  */
-internal fun getOrCreateSubsonicGenre(title: String = "UNKNOWN CLOUD GENRE"): SubsonicGenre {
-    return DataManager.getSubsonicGenre(id = title) ?: createSubsonicGenre(id = title, title = title)
+internal fun getOrCreateSubsonicGenre(
+    subsonicApiRequester: SubsonicApiRequester? = null,
+    title: String = "UNKNOWN CLOUD GENRE",
+    songs: Collection<Song> = listOf()
+): SubsonicGenre {
+    val genre: SubsonicGenre =
+        DataManager.getSubsonicGenre(id = title) ?: createSubsonicGenre(id = title, title = title)
+    if (subsonicApiRequester != null)
+        for (song: Song in songs)
+            genre.addMusic(song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+    return genre
 }
 
 private fun createSubsonicGenre(

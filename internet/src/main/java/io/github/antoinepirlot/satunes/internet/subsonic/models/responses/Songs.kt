@@ -30,8 +30,8 @@ import kotlinx.serialization.Serializable
  * @author Antoine Pirlot 11/12/2025
  */
 @Serializable
-internal data class RandomSongs(
-    @SerialName(value = "song") private val songs: List<Song>
+internal data class Songs(
+    @SerialName(value = "song") private val songs: Collection<Song>
 ) {
     fun toSubsonicMusicCollection(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicMusic> {
         val collection: MutableCollection<SubsonicMusic> = mutableSetOf()

@@ -55,6 +55,7 @@ internal data class Song constructor(
     @SerialName(value = "bitrate") val bitrate: Int? = null,
     @SerialName(value = "size") val size: Int = 0,
     @SerialName(value = "year") val year: Int? = null,
+    @SerialName(value = "genres") val genres: Collection<Genre>
 ) : SubsonicData {
     /**
      * Convert this object [Song] to [SubsonicMusic] object

@@ -37,12 +37,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class Genre(
-    @SerialName(value = "value") val value: String,
-    @SerialName(value = "songCount") val songCount: Int,
-    @SerialName(value = "albumCount") val coverArt: Int? = null
+    @SerialName(value = "value") val title: String? = null,
+    @SerialName(value = "name") val title2: String? = null,
+    @SerialName(value = "song") val songs: Collection<Song> = listOf()
 ) : SubsonicData {
     //No id as it is identified by its name so id = title
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia =
-        getOrCreateSubsonicGenre(title = value)
+        getOrCreateSubsonicGenre(
+            subsonicApiRequester = subsonicApiRequester,
+            title = this.getRightTitle(),
+            songs = songs
+        )
+
+    private fun getRightTitle(): String =
+        if (this.songs.isNotEmpty()) this.songs.first().genres.first().getRightTitle() else this.title ?: this.title2!!
 
 }

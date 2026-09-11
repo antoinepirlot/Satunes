@@ -49,6 +49,11 @@ open class Genre(
 
     fun getAlbumSet(): Set<Album> = this.albumSortedSet
 
+    override fun addMusic(music: Music) {
+        super.addMusic(music)
+        music.updateGenre(genre = this) //TODO it is different from the one on screen so the genre button has disappeared
+    }
+
     fun addAlbum(album: Album) {
         if (!this.albumSortedSet.contains(element = album)) {
             this.albumSortedSet.add(element = album)

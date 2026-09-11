@@ -55,7 +55,7 @@ internal class GetRandomMusicCallback(
     override fun processData(block: () -> Unit) {
         super.processData {
             this.onDataRetrieved(
-                this.subsonicResponse!!.randomSongs!!.toSubsonicMusicCollection(
+                this.subsonicResponse!!.songs!!.toSubsonicMusicCollection(
                     subsonicApiRequester = subsonicApiRequester
                 )
             )

@@ -21,13 +21,15 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils
 
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
+
+internal const val UNKNOWN_GENRE_TITLE: String = "UNKNOWN CLOUD GENRE"
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -60,6 +62,34 @@ internal fun createSubsonicPlaylist(id: String, title: String): SubsonicPlaylist
 internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtist {
     return DataManager.getSubsonicArtist(id = id) ?: createSubsonicArtist(id = id, title = title)
 }
+
+/**
+ * Get the subsonic genre matching the [title] or create a new one if it doesn't exist.
+ */
+internal fun getOrCreateSubsonicGenre(
+    subsonicApiRequester: SubsonicApiRequester? = null,
+    title: String? = null,
+    songs: Collection<Song> = listOf()
+): SubsonicGenre {
+    val title: String = title ?: UNKNOWN_GENRE_TITLE
+
+    val genre: SubsonicGenre =
+        DataManager.getSubsonicGenre(id = title) ?: createSubsonicGenre(id = title, title = title)
+    if (subsonicApiRequester != null)
+        for (song: Song in songs)
+            genre.addMusic(song.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+    return genre
+}
+
+private fun createSubsonicGenre(
+    id: String,
+    title: String
+): SubsonicGenre =
+    SubsonicGenre(
+        subsonicId = id,
+        title = title,
+        apiRequester = SubsonicApiRequester()
+    )
 
 /**
  * Create a new artist matching data
@@ -117,10 +147,3 @@ private fun createSubsonicAlbum(
             apiRequester = SubsonicApiRequester()
         )
     )
-
-internal fun getSubsonicGenre(): Genre =
-    SubsonicGenre(
-        subsonicId = "1",
-        title = "UNKNOWN CLOUD GENRE",
-        apiRequester = SubsonicApiRequester()
-    ) //TODO

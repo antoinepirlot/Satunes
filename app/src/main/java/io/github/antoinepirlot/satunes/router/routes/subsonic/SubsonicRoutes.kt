@@ -14,11 +14,13 @@ import io.github.antoinepirlot.satunes.database.models.media.Media
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.models.Destination
 import io.github.antoinepirlot.satunes.ui.views.SubsonicView
 import io.github.antoinepirlot.satunes.ui.views.media.NoDataFoundView
 import io.github.antoinepirlot.satunes.ui.views.media.album.AlbumView
 import io.github.antoinepirlot.satunes.ui.views.media.artist.ArtistView
+import io.github.antoinepirlot.satunes.ui.views.media.genre.GenreView
 import io.github.antoinepirlot.satunes.ui.views.media.playlist.PlaylistView
 
 /**
@@ -79,6 +81,33 @@ internal fun NavGraphBuilder.subsonicMediaRoutes(
         SubsonicView(subsonicViewModel = subsonicViewModel) {
             if (artist != null)
                 ArtistView(artist = artist)
+            else
+                NoDataFoundView()
+        }
+    }
+
+    composable(route = Destination.SUBSONIC_GENRE.link) {
+        LaunchedEffect(key1 = Unit) {
+            onStart(it)
+        }
+        val navigationUiState: NavigationUiState by navigationViewModel.uiState.collectAsState()
+        val genreId: String = it.arguments!!.getString("id")!!
+        val genreMedia: Media? = navigationUiState.currentMediaImpl
+        if (genreMedia != null && !genreMedia.isGenre()) return@composable
+        genreMedia as SubsonicGenre?
+
+        LaunchedEffect(key1 = Unit) {
+            subsonicViewModel.getGenreWithMusics(
+                title = genreId,
+                onDataRetrieved = { genre: SubsonicGenre ->
+                    onMediaOpen(genre)
+                }
+            )
+        }
+
+        SubsonicView(subsonicViewModel = subsonicViewModel) {
+            if (genreMedia != null)
+                GenreView(genre = genreMedia)
             else
                 NoDataFoundView()
         }

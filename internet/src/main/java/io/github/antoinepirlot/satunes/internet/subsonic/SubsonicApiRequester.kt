@@ -30,6 +30,7 @@ import io.github.antoinepirlot.satunes.database.models.internet.ApiError
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -37,17 +38,14 @@ import io.github.antoinepirlot.satunes.database.services.settings.SettingsManage
 import io.github.antoinepirlot.satunes.internet.InternetManager
 import io.github.antoinepirlot.satunes.internet.SubsonicCall
 import io.github.antoinepirlot.satunes.internet.subsonic.models.ApiType
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.CreatePlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DeletePlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumsCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetGenresCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetRandomMusicCallback
-import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetSongCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.PingCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Search3Callback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.SubsonicCallback
@@ -186,6 +184,18 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
+    override fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+        get(
+            url = getCommandUrl(
+                command = "getGenres"
+            ),
+            resCallback = GetGenresCallback(
+                subsonicApiRequester = this@SubsonicApiRequester,
+                onDataRetrieved = onDataRetrieved
+            )
+        )
+    }
+
     /**
      * Query subsonic to get matching media to the [query].
      * If the [query] is blank, nothing is done.
@@ -229,11 +239,39 @@ class SubsonicApiRequester : ApiRequester {
                 command = "getArtist",
                 parameters = arrayOf("id=$artistId")
             ),
-            resCallback = GetArtistCallback(
+            resCallback = Callback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
-                onDataRetrieved = onDataRetrieved,
-                onError = onError
+                onDataRetrieved = { onDataRetrieved(it as SubsonicArtist) },
+                onError = onError,
+                clazz = SubsonicArtist::class.simpleName!!
+            )
+        )
+    }
+
+    /**
+     * Get genre from Subsonic
+     *
+     * @param title the id of genre located on the server
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     */
+    override fun getGenre(
+        title: String,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicGenre) -> Unit,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getSongsByGenre",
+                parameters = arrayOf("genre=$title")
+            ),
+            resCallback = Callback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = { onDataRetrieved(it as SubsonicGenre) },
+                onError = onError,
+                clazz = SubsonicGenre::class.simpleName!!
             )
         )
     }
@@ -271,11 +309,12 @@ class SubsonicApiRequester : ApiRequester {
                 command = "getAlbum",
                 parameters = arrayOf("id=$albumId")
             ),
-            resCallback = GetAlbumCallback(
+            resCallback = Callback(
                 subsonicApiRequester = this,
                 onFinished = onFinished,
                 onError = onError,
-                onDataRetrieved = onDataRetrieved
+                onDataRetrieved = { onDataRetrieved(it as SubsonicAlbum) },
+                clazz = SubsonicAlbum::class.simpleName!!
             )
         )
     }
@@ -332,12 +371,13 @@ class SubsonicApiRequester : ApiRequester {
                 command = "getSong",
                 parameters = arrayOf("id=$musicId")
             ),
-            resCallback = GetSongCallback(
+            resCallback = Callback(
                 subsonicApiRequester = this,
-                onDataRetrieved = onDataRetrieved,
+                onDataRetrieved = { onDataRetrieved(it as SubsonicMusic) },
                 onError = { onError?.invoke() },
                 onSucceed = onSucceed,
-                onFinished = onFinished
+                onFinished = onFinished,
+                clazz = SubsonicMusic::class.simpleName!!
             )
         )
     }
@@ -356,12 +396,13 @@ class SubsonicApiRequester : ApiRequester {
                 command = "createPlaylist",
                 parameters = arrayOf("name=$title")
             ),
-            resCallback = CreatePlaylistCallback(
+            resCallback = Callback(
                 subsonicApiRequester = this,
-                onDataRetrieved = onDataRetrieved,
+                onDataRetrieved = { onDataRetrieved(it as SubsonicPlaylist) },
                 onError = { onError?.invoke() },
                 onSucceed = onSucceed,
-                onFinished = onFinished
+                onFinished = onFinished,
+                clazz = SubsonicPlaylist::class.simpleName!!
             )
         )
     }
@@ -389,7 +430,7 @@ class SubsonicApiRequester : ApiRequester {
 
     override fun getPlaylist(
         id: String,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)?,
         onFinished: (() -> Unit)?,
         onSucceed: (() -> Unit)?
@@ -399,12 +440,13 @@ class SubsonicApiRequester : ApiRequester {
                 command = "getPlaylist",
                 parameters = arrayOf("id=$id")
             ),
-            resCallback = GetPlaylistCallback(
+            resCallback = Callback(
                 subsonicApiRequester = this,
-                onDataRetrieved = onDataRetrieved,
+                onDataRetrieved = { onDataRetrieved(it as SubsonicPlaylist) },
                 onSucceed = onSucceed,
                 onFinished = onFinished,
                 onError = { onError?.invoke() },
+                clazz = SubsonicPlaylist::class.simpleName!!
             )
         )
     }

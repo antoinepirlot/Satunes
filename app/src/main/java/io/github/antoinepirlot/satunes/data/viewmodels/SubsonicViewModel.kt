@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -345,6 +346,116 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
+    fun getGenre(
+        title: String,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
+        if (genre != null)
+            if (genre.isEmpty())
+                this.loadGenre(
+                    genre = genre,
+                    onDataRetrieved = onDataRetrieved,
+                    onFinished = onFinished
+                )
+            else
+                onDataRetrieved(genre)
+        else {
+            this.initRequest()
+            runIOThread {
+                _apiRequester.getGenre(
+                    title = title,
+                    onDataRetrieved = onDataRetrieved,
+                    onFinished = {
+                        onFinished?.invoke()
+                        this.finishRequest()
+                    },
+                    onError = { this@SubsonicViewModel.error = it }
+                )
+            }
+        }
+    }
+
+    fun getGenreWithMusics(
+        title: String,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
+        if (genre != null)
+            if (genre.isEmpty())
+                this.loadGenre(
+                    genre = genre,
+                    onDataRetrieved = { genre: SubsonicGenre ->
+                        this.loadGenreWithMusics(
+                            genre = genre,
+                            onDataRetrieved = onDataRetrieved
+                        )
+                    },
+                    onFinished = onFinished
+                )
+            else onDataRetrieved(genre)
+        else
+            this.getGenre(
+                title = title,
+                onDataRetrieved = { genre: SubsonicGenre ->
+                    this.loadGenreWithMusics(genre = genre, onDataRetrieved = onDataRetrieved)
+                },
+                onFinished = onFinished
+            )
+    }
+
+    private fun loadGenreWithMusics(
+        genre: SubsonicGenre,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit
+    ) {
+        var queriesInProgress = 0
+        genre.albumSortedSet.forEach { album: Album ->
+            if (album.isSubsonic()) {
+                queriesInProgress++
+                this.getAlbum(
+                    albumId = (album as SubsonicAlbum).subsonicId,
+                    onDataRetrieved = { album: SubsonicAlbum ->
+                        genre.addMusics(musics = album.musicCollection)
+                    },
+                    onFinished = { queriesInProgress-- },
+                )
+            }
+        }
+        runIOThread {
+            while (queriesInProgress > 0)
+                sleep(10) // Do not remove, without sleep, it can cause no data shown
+            onDataRetrieved.invoke(genre)
+        }
+    }
+
+    /**
+     * Load genre's information and update it with the information from server.
+     */
+    private fun loadGenre(
+        genre: SubsonicGenre,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit,
+        onFinished: (() -> Unit)? = null
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getGenre(
+                title = genre.title,
+                onDataRetrieved = {
+                    if (!genre.isSubsonic())
+                        onDataRetrieved.invoke(genre.toSubsonicGenre(genre = it))
+                    else onDataRetrieved(it)
+                },
+                onFinished = {
+                    onFinished?.invoke()
+                    this.finishRequest()
+                },
+                onError = { this@SubsonicViewModel.error = it }
+            )
+        }
+    }
+
     /**
      * Load artist's information and update it with the information from server.
      */
@@ -437,8 +548,7 @@ class SubsonicViewModel : ViewModel() {
             _apiRequester.getPlaylist(
                 id = id,
                 onDataRetrieved = {
-                    val playlist: SubsonicPlaylist = DataManager.getSubsonicPlaylist(id = id)!!
-                    playlist.addMusics(musics = it)
+                    DataManager.addPlaylist(playlist = it)
                 },
                 onError = onError,
                 onFinished = {
@@ -559,6 +669,16 @@ class SubsonicViewModel : ViewModel() {
                     this.finishRequest()
                 }
             )
+        }
+    }
+
+    /**
+     * Get Genres from Subsonic API
+     */
+    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getGenres(onDataRetrieved = onDataRetrieved)
         }
     }
 }

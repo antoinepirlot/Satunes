@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.database.models.internet
 import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -58,6 +59,13 @@ interface ApiRequester {
     )
 
     /**
+     * Get Genres from API
+     *
+     * @param onDataRetrieved the function to run to retrieve a [Collection] of [SubsonicGenre].
+     */
+    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit)
+
+    /**
      * Query subsonic to get matching media to the [query].
      * If the [query] is blank, nothing is done.
      *
@@ -81,6 +89,13 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)? = null
+    )
+
+    fun getGenre(
+        title: String,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicGenre) -> Unit,
+        onError: ((ApiError?) -> Unit)?
     )
 
     fun getAlbums(
@@ -171,7 +186,7 @@ interface ApiRequester {
      */
     fun getPlaylist(
         id: String,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null

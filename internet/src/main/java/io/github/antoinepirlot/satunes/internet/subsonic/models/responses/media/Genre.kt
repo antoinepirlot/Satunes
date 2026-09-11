@@ -29,6 +29,9 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
+import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicGenre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -37,18 +40,9 @@ internal data class Genre(
     @SerialName(value = "value") val value: String,
     @SerialName(value = "songCount") val songCount: Int,
     @SerialName(value = "albumCount") val coverArt: Int? = null
-)//: SubsonicData {
-//    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia {
-//        //TODO
-//        val genre: SubsonicGenre = getOrCreateSubsonicArtist(id = id, title = title)
-//        albumCollection?.forEach { album: Album ->
-//            genre.addAlbum(
-//                album = album.toSubsonicMedia(
-//                    subsonicApiRequester = subsonicApiRequester
-//                ) as SubsonicAlbum
-//            )
-//        }
-//        return genre
-//    }
+) : SubsonicData {
+    //No id as it is identified by its name so id = title
+    override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia =
+        getOrCreateSubsonicGenre(id = value, title = value)
 
-//}
+}

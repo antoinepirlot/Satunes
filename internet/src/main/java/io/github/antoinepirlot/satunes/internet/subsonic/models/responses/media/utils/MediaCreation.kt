@@ -21,7 +21,6 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils
 
 import io.github.antoinepirlot.satunes.database.models.media.Folder
-import io.github.antoinepirlot.satunes.database.models.media.Genre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
@@ -60,6 +59,23 @@ internal fun createSubsonicPlaylist(id: String, title: String): SubsonicPlaylist
 internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtist {
     return DataManager.getSubsonicArtist(id = id) ?: createSubsonicArtist(id = id, title = title)
 }
+
+/**
+ * Get the subsonic genre matching the [id] or create a new one if it doesn't exist.
+ */
+internal fun getOrCreateSubsonicGenre(id: String = "0", title: String = "UNKNOWN CLOUD GENRE"): SubsonicGenre {
+    return DataManager.getSubsonicGenre(id = id) ?: createSubsonicGenre(id = id, title = title)
+}
+
+private fun createSubsonicGenre(
+    id: String,
+    title: String
+): SubsonicGenre =
+    SubsonicGenre(
+        subsonicId = id,
+        title = title,
+        apiRequester = SubsonicApiRequester()
+    )
 
 /**
  * Create a new artist matching data
@@ -117,10 +133,3 @@ private fun createSubsonicAlbum(
             apiRequester = SubsonicApiRequester()
         )
     )
-
-internal fun getSubsonicGenre(): Genre =
-    SubsonicGenre(
-        subsonicId = "1",
-        title = "UNKNOWN CLOUD GENRE",
-        apiRequester = SubsonicApiRequester()
-    ) //TODO

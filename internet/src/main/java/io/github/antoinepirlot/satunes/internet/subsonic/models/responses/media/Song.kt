@@ -27,7 +27,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getSubsonicGenre
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicGenre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -83,7 +83,7 @@ internal data class Song constructor(
                     artistId = this.artistId,
                     artistTitle = this.artistTitle
                 ), //Must be after artist, otherwise album is not added in artist
-                genre = getSubsonicGenre(),
+                genre = getOrCreateSubsonicGenre(),
                 uri = url.toUri(),
                 apiRequester = subsonicApiRequester
             )

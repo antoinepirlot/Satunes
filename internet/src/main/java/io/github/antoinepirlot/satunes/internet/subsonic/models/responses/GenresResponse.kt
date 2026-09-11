@@ -42,7 +42,7 @@ internal data class GenresResponse(
     fun toSubsonicResponse(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicGenre> {
         val collection: MutableCollection<SubsonicGenre> = mutableListOf()
         this.genres.forEach { genre: Genre ->
-            //TODO collection.add(element = genre.toS/ubsonicMedia(subsonicApiRequester = subsonicApiRequester))
+            collection.add(element = genre.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicGenre)
         }
         return collection
     }

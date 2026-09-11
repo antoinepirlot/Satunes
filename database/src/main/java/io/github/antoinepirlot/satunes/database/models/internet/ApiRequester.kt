@@ -91,6 +91,13 @@ interface ApiRequester {
         onError: ((ApiError?) -> Unit)? = null
     )
 
+    fun getGenre(
+        genreId: String,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicGenre) -> Unit,
+        onError: ((ApiError?) -> Unit)?
+    )
+
     fun getAlbums(
         type: String = "alphabeticalByName",
         offset: Long = 0,

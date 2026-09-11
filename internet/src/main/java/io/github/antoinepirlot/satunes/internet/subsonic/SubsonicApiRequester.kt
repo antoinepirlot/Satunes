@@ -248,6 +248,32 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
+    /**
+     * Get genre from Subsonic
+     *
+     * @param genreId the id of genre located on the server
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     */
+    override fun getGenre(
+        genreId: String,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicGenre) -> Unit,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getGenre",
+                parameters = arrayOf("id=$genreId")
+            ),
+            resCallback = Callback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onDataRetrieved = { onDataRetrieved(it as SubsonicGenre) },
+                onError = onError
+            )
+        )
+    }
+
     override fun getAlbums(
         type: String,
         offset: Long,

@@ -43,6 +43,10 @@ class SubsonicGenre(
 
     override var downloadedMusics: Set<SubsonicMusic> = mutableSetOf()
 
+    init {
+        DataManager.addGenre(genre = this)
+    }
+
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicGenre).subsonicId
         else super.equals(other)

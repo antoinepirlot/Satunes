@@ -43,6 +43,6 @@ internal data class Genre(
 ) : SubsonicData {
     //No id as it is identified by its name so id = title
     override fun toSubsonicMedia(subsonicApiRequester: SubsonicApiRequester): SubsonicMedia =
-        getOrCreateSubsonicGenre(id = value, title = value)
+        getOrCreateSubsonicGenre(title = value)
 
 }

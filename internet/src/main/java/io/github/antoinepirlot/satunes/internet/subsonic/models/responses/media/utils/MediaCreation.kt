@@ -61,10 +61,10 @@ internal fun getOrCreateSubsonicArtist(id: String, title: String): SubsonicArtis
 }
 
 /**
- * Get the subsonic genre matching the [id] or create a new one if it doesn't exist.
+ * Get the subsonic genre matching the [title] or create a new one if it doesn't exist.
  */
-internal fun getOrCreateSubsonicGenre(id: String = "0", title: String = "UNKNOWN CLOUD GENRE"): SubsonicGenre {
-    return DataManager.getSubsonicGenre(id = id) ?: createSubsonicGenre(id = id, title = title)
+internal fun getOrCreateSubsonicGenre(title: String = "UNKNOWN CLOUD GENRE"): SubsonicGenre {
+    return DataManager.getSubsonicGenre(id = title) ?: createSubsonicGenre(id = title, title = title)
 }
 
 private fun createSubsonicGenre(

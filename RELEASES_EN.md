@@ -29,6 +29,12 @@ Improvements, optimisations and bug fixes:
 
 ## 3.3 (Android 5.1.1 Lollipop and later)
 
+### 3.3.5
+
+Improvements, optimisations and bug fixes:
+
+* Fix issue when updating playlists. If music was removed, no modification was made.
+
 ### 3.3.4
 
 Improvements, optimisations and bug fixes:

@@ -55,7 +55,7 @@ internal fun MediaSelectionCheckbox(
     mediaImpl: MediaImpl
 ) {
     val checked: MutableState<Boolean> =
-        rememberSaveable { mutableStateOf(mediaSelectionViewModel.isChecked(mediaImpl = mediaImpl)) }
+        rememberSaveable { mutableStateOf(value = mediaSelectionViewModel.isChecked(mediaImpl = mediaImpl)) }
 
     Box(
         modifier = modifier

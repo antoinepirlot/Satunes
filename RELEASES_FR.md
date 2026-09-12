@@ -29,6 +29,13 @@ Améliorations, optimisations et corrections de bugs :
 
 ## 3.3 (Android 5.1.1 Lollipop et ultérieur)
 
+### 3.3.5
+
+Améliorations, optimisations et corrections de bugs :
+
+* Correction du problème lors de la modification des playlists. Si une music était supprimée, aucune
+  modification n'était faite.
+
 ### 3.3.4
 
 Améliorations, optimisations et corrections de bogues :

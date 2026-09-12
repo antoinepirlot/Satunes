@@ -48,7 +48,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.lang.Thread.sleep
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -215,9 +214,12 @@ class SubsonicViewModel : ViewModel() {
                 this.loadAlbum(
                     album = album,
                     onDataRetrieved = { onDataRetrieved.invoke(it) },
+                    onFinished = onFinished,
                 )
-            else
+            else {
                 onDataRetrieved(album)
+                onFinished?.invoke()
+            }
         else {
             runApiRequest {
                 _apiRequester.getAlbum(
@@ -239,6 +241,7 @@ class SubsonicViewModel : ViewModel() {
     fun loadAlbum(
         album: SubsonicAlbum,
         onDataRetrieved: (media: SubsonicAlbum) -> Unit,
+        onFinished: (() -> Unit)? = null
     ) {
         runApiRequest {
             _apiRequester.getAlbum(
@@ -253,7 +256,10 @@ class SubsonicViewModel : ViewModel() {
                         )
                     else onDataRetrieved(it)
                 },
-                onFinished = it,
+                onFinished = {
+                    onFinished?.invoke()
+                    it()
+                },
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
@@ -327,11 +333,8 @@ class SubsonicViewModel : ViewModel() {
                 )
             }
         }
-        runIOThread {
-            while (queriesInProgress > 0)
-                sleep(10) // Do not remove, without sleep, it can cause no data shown
-            onDataRetrieved.invoke(artist)
-        }
+        while (queriesInProgress > 0); //Empty body is normal you can ignore warning as it is an active waiting
+        onDataRetrieved.invoke(artist)
     }
 
     fun getArtists(
@@ -413,11 +416,8 @@ class SubsonicViewModel : ViewModel() {
                 )
             }
         }
-        runIOThread {
-            while (queriesInProgress > 0)
-                sleep(10) // Do not remove, without sleep, it can cause no data shown
-            onDataRetrieved.invoke(genre)
-        }
+        while (queriesInProgress > 0); //Empty body is normal you can ignore warning as it is an active waiting
+        onDataRetrieved.invoke(genre)
     }
 
     /**

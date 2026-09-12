@@ -1,0 +1,9 @@
+Nouvelles fonctionnalités :
+
+* Affichage des genres
+* Affichage des artistes
+* Affichage des albums
+
+Améliorations, optimisations et corrections de bugs :
+
+* Quelques optimisations

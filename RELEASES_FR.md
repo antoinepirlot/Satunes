@@ -4,6 +4,18 @@ You can find this file in [english 🇬🇧](RELEASES_EN.md)
 
 ## 4.0 (Android 6.0 Marshmallow et ultérieur)
 
+### 4.0.0-alpha-3
+
+Nouvelles fonctionnalités :
+
+* Affichage des genres
+* Affichage des artistes
+* Affichage des albums
+
+Améliorations, optimisations et corrections de bugs :
+
+* Quelques optimisations
+
 ### 4.0.0-alpha-2
 
 Nouvelles fonctionnalités :

@@ -22,8 +22,23 @@ android {
         applicationId = nameSpace
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 103
-        versionName = "4.0.0-alpha-2"
+        /**
+         * Build is: 3 first digits for version then the type of release and finally the last two digits is for the release type version
+         * Releases numbers are:
+         *  - Stable: 3
+         *  - Preview: 2
+         *  - Beta: 1
+         *  - Alpha: 0
+         * For example:
+         * v4.0.0: 400300
+         * v4.0.1: 401300
+         * v4.1.2: 412300
+         * v4.0.0-preview-5: 400205
+         * v5.2.0-beta-2: 520102
+         * v6.0.0-alpha-12: 600012
+         */
+        versionCode = 400003
+        versionName = "4.0.0-alpha-3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

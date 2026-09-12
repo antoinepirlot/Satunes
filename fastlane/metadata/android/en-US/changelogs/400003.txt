@@ -1,0 +1,9 @@
+New features:
+
+* Getting genres
+* Getting all artists
+* Getting all albums
+
+Improvements, optimisations and bug fixes:
+
+* Some optimisation

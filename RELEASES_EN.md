@@ -4,6 +4,18 @@ Tu peux retrouver ce fichier en [français 🇫🇷](RELEASES_FR.md)
 
 ## 4.0 (Android 6.0 Marshmallow and later)
 
+### 4.0.0-alpha-3
+
+New features:
+
+* Getting genres
+* Getting all artists
+* Getting all albums
+
+Improvements, optimisations and bug fixes:
+
+* Some optimisation
+
 ### 4.0.0-alpha-2
 
 New features:

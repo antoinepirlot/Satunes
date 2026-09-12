@@ -2,10 +2,8 @@ package io.github.antoinepirlot.satunes.ui.components.dialog.playlist.options
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,6 +11,7 @@ import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
 import io.github.antoinepirlot.satunes.data.local.LocalMainScope
 import io.github.antoinepirlot.satunes.data.local.LocalSnackBarHostState
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
 import io.github.antoinepirlot.satunes.database.models.media.Playlist
@@ -33,12 +32,11 @@ fun UploadPlaylistOption(
     if (playlist.isSubsonic()) throw IllegalArgumentException("Can't show option for subsonic playlist.")
     val scope: CoroutineScope = LocalMainScope.current
     val snackbarHostState: SnackbarHostState = LocalSnackBarHostState.current
-    var isLoading: Boolean by rememberSaveable { mutableStateOf(value = false) }
+    val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
 
     DialogOption(
         modifier = modifier,
         onClick = {
-            isLoading = true
             subsonicViewModel.createPlaylist(
                 name = playlist.title,
                 onDataRetrieved = {
@@ -49,11 +47,10 @@ fun UploadPlaylistOption(
                     )
                     dataViewModel.replace(old = playlist, new = it)
                 },
-                onFinished = { isLoading = false }
             )
         },
         jetpackLibsIcons = JetpackLibsIcons.UPLOAD,
         text = stringResource(id = R.string.upload_text),
-        isLoading = isLoading,
+        isLoading = subsonicUiState.isFetching,
     )
 }

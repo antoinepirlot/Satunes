@@ -56,7 +56,7 @@ class MediaSelectionViewModel : ViewModel() {
                 is Music -> {
                     val playlists: Collection<Playlist> = DataManager.getPlaylistSet()
                     for (playlist: Playlist in playlists)
-                        if (playlist.contains(mediaImpl = value))
+                        if (playlist.contains(media = value))
                             this.addPlaylist(playlist = playlist)
                     this.addMusic(music = value)
                 }
@@ -86,7 +86,7 @@ class MediaSelectionViewModel : ViewModel() {
 
     fun addPlaylist(playlist: Playlist) {
         _checkedPlaylistWithMusics.add(playlist)
-        this._checkedMusics.addAll(elements = playlist.getMusicSet())
+        this._checkedMusics.addAll(elements = playlist.musicCollection)
     }
 
     fun removePlaylist(playlist: Playlist) {
@@ -94,7 +94,7 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     private fun clearCheckedPlaylistWithMusics() {
-        _checkedPlaylistWithMusics = mutableListOf()
+        _checkedPlaylistWithMusics = mutableSetOf()
     }
 
     fun getCheckedMusics(): Set<Music> {
@@ -112,7 +112,7 @@ class MediaSelectionViewModel : ViewModel() {
     }
 
     private fun clearCheckedMusics() {
-        _checkedMusics = mutableListOf()
+        _checkedMusics = mutableSetOf()
     }
 
     fun setShowPlaylistCreation(value: Boolean) {

@@ -57,9 +57,10 @@ internal fun AllArtistsListView(
             satunesViewModel.clearExtraButtons()
     }
 
-    val view: @Composable (isLoading: Boolean) -> Unit = {
+    val view: @Composable (isLoading: Boolean) -> Unit = { isLoading: Boolean ->
         MediaListView(
             modifier = modifier,
+            isLoading = isLoading,
             emptyViewText = stringResource(id = R.string.no_artist)
         )
     }

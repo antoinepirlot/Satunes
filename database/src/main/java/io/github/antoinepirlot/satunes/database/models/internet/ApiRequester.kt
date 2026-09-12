@@ -52,18 +52,24 @@ interface ApiRequester {
      *
      * @param size the number of music to get (default 10, max 500).
      * @param onDataRetrieved the [Collection] function to run when got data from API.
+     * @param onFinished the function to run when query is completely finished.
      */
     fun getRandomSongs(
         size: Int = 10,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onFinished: () -> Unit
     )
 
     /**
      * Get Genres from API
      *
      * @param onDataRetrieved the function to run to retrieve a [Collection] of [SubsonicGenre].
+     * @param onFinished the function to run when query is completely finished.
      */
-    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit)
+    fun getGenres(
+        onDataRetrieved: (Collection<SubsonicGenre>) -> Unit,
+        onFinished: (() -> Unit)
+    )
 
     /**
      * Query subsonic to get matching media to the [query].

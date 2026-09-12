@@ -169,7 +169,8 @@ class SubsonicApiRequester : ApiRequester {
 
     override fun getRandomSongs(
         size: Int,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onFinished: () -> Unit
     ) {
         if (size !in 1..500)
             throw IllegalArgumentException("Can't get $size musics")
@@ -185,14 +186,18 @@ class SubsonicApiRequester : ApiRequester {
         )
     }
 
-    override fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+    override fun getGenres(
+        onDataRetrieved: (Collection<SubsonicGenre>) -> Unit,
+        onFinished: () -> Unit
+    ) {
         get(
             url = getCommandUrl(
                 command = "getGenres"
             ),
             resCallback = GetGenresCallback(
                 subsonicApiRequester = this@SubsonicApiRequester,
-                onDataRetrieved = onDataRetrieved
+                onDataRetrieved = onDataRetrieved,
+                onFinished = onFinished
             )
         )
     }
@@ -202,6 +207,7 @@ class SubsonicApiRequester : ApiRequester {
      * If the [query] is blank, nothing is done.
      *
      * @param query the [String] to send to api to find matching media.
+     *
      * @param onDataRetrieved the function to run when got data from API.
      */
     override fun search(

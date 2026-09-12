@@ -91,6 +91,19 @@ interface ApiRequester {
         onError: ((ApiError?) -> Unit)? = null
     )
 
+    /**
+     * Get artists from Subsonic
+     *
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     * @param onFinished the function to invoke when the process is finished with or without errors.
+     * @param onError the function to invoke when an error occurred.
+     */
+    fun getArtists(
+        onDataRetrieved: (Collection<SubsonicArtist>) -> Unit,
+        onFinished: (() -> Unit)? = null,
+        onError: ((ApiError?) -> Unit)? = null
+    )
+
     fun getGenre(
         title: String,
         onFinished: (() -> Unit)?,

@@ -70,18 +70,19 @@ internal fun AllGenresListView(
                 dataViewModel.loadMediaImplList(collection = dataViewModel.getGenreSet())
             }
             view(false)
+        },
+        cloudView = {
+            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+            LaunchedEffect(key1 = Unit) {
+                subsonicViewModel.getGenres(
+                    onDataRetrieved = {
+                        dataViewModel.loadMediaImplList(collection = it)
+                    }
+                )
+            }
+            view(subsonicUiState.isFetching)
         }
-    ) {
-        val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
-        LaunchedEffect(key1 = Unit) {
-            subsonicViewModel.getGenres(
-                onDataRetrieved = {
-                    dataViewModel.loadMediaImplList(collection = it)
-                }
-            )
-        }
-        view(subsonicUiState.isFetching)
-    }
+    )
 }
 
 @Preview

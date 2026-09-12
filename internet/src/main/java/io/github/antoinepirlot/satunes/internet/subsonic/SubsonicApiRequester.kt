@@ -42,6 +42,7 @@ import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.Callba
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DeletePlaylistCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.DownloadCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetAlbumsCallback
+import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetArtistsCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetCoverArtCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetGenresCallback
 import io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks.GetPlaylistsCallback
@@ -245,6 +246,25 @@ class SubsonicApiRequester : ApiRequester {
                 onDataRetrieved = { onDataRetrieved(it as SubsonicArtist) },
                 onError = onError,
                 clazz = SubsonicArtist::class.simpleName!!
+            )
+        )
+    }
+
+    override fun getArtists(
+        onDataRetrieved: (Collection<SubsonicArtist>) -> Unit,
+        onFinished: (() -> Unit)?,
+        onError: ((ApiError?) -> Unit)?
+    ) {
+        get(
+            url = getCommandUrl(
+                command = "getArtists",
+                parameters = arrayOf()
+            ),
+            resCallback = GetArtistsCallback(
+                subsonicApiRequester = this,
+                onFinished = onFinished,
+                onError = onError,
+                onDataRetrieved = onDataRetrieved,
             )
         )
     }

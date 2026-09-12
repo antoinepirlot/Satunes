@@ -34,6 +34,7 @@ import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPl
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Album
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Artist
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.ArtistIndexes
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Genre
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Playlist
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
@@ -56,6 +57,7 @@ internal data class SubsonicResponse(
     @SerialName(value = "songsByGenre") val genre: Genre? = null,
     @SerialName(value = "searchResult3") val search3: Search3? = null,
     @SerialName(value = "artist") val artist: Artist? = null,
+    @SerialName(value = "artists") val artistsIndexes: ArtistIndexes? = null,
     @SerialName(value = "album") val album: Album? = null,
     @SerialName(value = "albumList2") val albums: AlbumsResponse? = null,
     @SerialName(value = "song") val song: Song? = null,
@@ -82,16 +84,5 @@ internal data class SubsonicResponse(
             SubsonicGenre::class.simpleName -> this.genre!!.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester)
             else -> throw IllegalStateException("No subsonic media retrieved. Class unsupported: $clazz.")
         }
-    }
-
-    inline fun <reified T : Collection<SubsonicMedia>> getSubsonicMediaList(subsonicApiRequester: SubsonicApiRequester): T {
-        return if (T::class == SubsonicMusic::class)
-            this.songs!!.toSubsonicMusicCollection(subsonicApiRequester = subsonicApiRequester) as T
-        else if (T::class == SubsonicPlaylist::class)
-            this.playlistsResponse!!.toSubsonicResponse(subsonicApiRequester = subsonicApiRequester) as T
-        else if (T::class == SubsonicAlbum::class)
-            this.albums!!.toSubsonicResponse(subsonicApiRequester = subsonicApiRequester) as T
-        else
-            throw IllegalStateException("No subsonic media retrieved. Class unsupported: ${T::class}.")
     }
 }

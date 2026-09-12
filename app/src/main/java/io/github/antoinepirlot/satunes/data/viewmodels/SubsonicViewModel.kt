@@ -346,6 +346,15 @@ class SubsonicViewModel : ViewModel() {
         }
     }
 
+    fun getArtists(
+        onDataRetrieved: (Collection<SubsonicArtist>) -> Unit
+    ) {
+        this.initRequest()
+        runIOThread {
+            _apiRequester.getArtists(onDataRetrieved = onDataRetrieved)
+        }
+    }
+
     fun getGenre(
         title: String,
         onDataRetrieved: (media: SubsonicGenre) -> Unit,

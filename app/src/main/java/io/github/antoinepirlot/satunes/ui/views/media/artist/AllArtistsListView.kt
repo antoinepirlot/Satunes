@@ -22,13 +22,18 @@ package io.github.antoinepirlot.satunes.ui.views.media.artist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.satunes.R
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
+import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
+import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButtonList
 import io.github.antoinepirlot.satunes.ui.views.media.MediaListView
 
@@ -41,11 +46,8 @@ internal fun AllArtistsListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
+    subsonicViewModel: SubsonicViewModel = viewModel()
 ) {
-    LaunchedEffect(key1 = Unit) {
-        dataViewModel.loadMediaImplList(collection = dataViewModel.getArtistSet())
-    }
-
     LaunchedEffect(key1 = dataViewModel.mediaListOnScreen.size) {
         if (dataViewModel.mediaListOnScreen.isNotEmpty())
             satunesViewModel.replaceExtraButtons(extraButtons = {
@@ -55,9 +57,29 @@ internal fun AllArtistsListView(
             satunesViewModel.clearExtraButtons()
     }
 
-    MediaListView(
-        modifier = modifier,
-        emptyViewText = stringResource(id = R.string.no_artist)
+    val view: @Composable (isLoading: Boolean) -> Unit = {
+        MediaListView(
+            modifier = modifier,
+            emptyViewText = stringResource(id = R.string.no_artist)
+        )
+    }
+
+    ModeTabSelector(
+        localView = {
+            LaunchedEffect(key1 = Unit) {
+                dataViewModel.loadMediaImplList(collection = dataViewModel.getArtistSet())
+            }
+            view(false)
+        },
+        cloudView = {
+            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+            LaunchedEffect(key1 = Unit) {
+                subsonicViewModel.getArtists(
+                    onDataRetrieved = { dataViewModel.loadMediaImplList(collection = it) }
+                )
+            }
+            view(subsonicUiState.isFetching)
+        }
     )
 }
 

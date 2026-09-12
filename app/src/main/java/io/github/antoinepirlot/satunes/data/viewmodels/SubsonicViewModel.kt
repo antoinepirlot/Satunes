@@ -48,7 +48,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.lang.Thread.sleep
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -217,8 +216,10 @@ class SubsonicViewModel : ViewModel() {
                     onDataRetrieved = { onDataRetrieved.invoke(it) },
                     onFinished = onFinished,
                 )
-            else
+            else {
                 onDataRetrieved(album)
+                onFinished?.invoke()
+            }
         else {
             runApiRequest {
                 _apiRequester.getAlbum(
@@ -415,8 +416,7 @@ class SubsonicViewModel : ViewModel() {
                 )
             }
         }
-        while (queriesInProgress > 0)
-            sleep(10) // Do not remove, without sleep, it can cause no data shown
+        while (queriesInProgress > 0); //Empty body is normal you can ignore warning as it is an active waiting
         onDataRetrieved.invoke(genre)
     }
 

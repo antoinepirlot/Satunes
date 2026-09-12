@@ -51,12 +51,26 @@ open class Genre(
 
     override fun addMusic(music: Music) {
         super.addMusic(music)
-        music.updateGenre(genre = this) //TODO it is different from the one on screen so the genre button has disappeared
+        if (music.genre != this) music.genre.removeMusic(music = music)
+        music.updateGenre(genre = this)
+        this.addAlbum(album = music.album)
     }
 
     fun addAlbum(album: Album) {
         if (!this.albumSortedSet.contains(element = album)) {
             this.albumSortedSet.add(element = album)
+            this.albumSortedSetUpdate.value = true
+        }
+    }
+
+    override fun removeMusic(music: Music) {
+        super.removeMusic(music)
+        val albumOk: SortedSet<Album> = sortedSetOf()
+        for (music: Music in this.musicCollection)
+            albumOk.add(element = music.album)
+        if (albumOk.size != this.albumSortedSet.size) {
+            albumSortedSet.clear()
+            albumSortedSet.addAll(elements = albumOk)
             this.albumSortedSetUpdate.value = true
         }
     }

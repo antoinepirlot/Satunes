@@ -44,6 +44,6 @@ internal data class GenresResponse(
         this.genres.forEach { genre: Genre ->
             collection.add(element = genre.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicGenre)
         }
-        return collection
+        return collection.sorted()
     }
 }

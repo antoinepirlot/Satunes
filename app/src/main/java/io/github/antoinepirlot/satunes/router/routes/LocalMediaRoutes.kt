@@ -18,7 +18,7 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
-package io.github.antoinepirlot.satunes.router.routes.subsonic
+package io.github.antoinepirlot.satunes.router.routes
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry

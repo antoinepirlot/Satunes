@@ -35,7 +35,7 @@ open class Genre(
     id = id ?: nextId,
     title = title
 ) {
-    private val _albumSortedSet: SortedSet<Album> = sortedSetOf()
+    val albumSortedSet: SortedSet<Album> = sortedSetOf()
 
     val albumSortedSetUpdate: MutableState<Boolean> = mutableStateOf(false)
 
@@ -47,13 +47,30 @@ open class Genre(
         nextId++
     }
 
-    fun getAlbumSet(): Set<Album> {
-        return this._albumSortedSet
+    fun getAlbumSet(): Set<Album> = this.albumSortedSet
+
+    override fun addMusic(music: Music) {
+        super.addMusic(music)
+        if (music.genre != this) music.genre.removeMusic(music = music)
+        music.updateGenre(genre = this)
+        this.addAlbum(album = music.album)
     }
 
     fun addAlbum(album: Album) {
-        if (!this._albumSortedSet.contains(element = album)) {
-            this._albumSortedSet.add(element = album)
+        if (!this.albumSortedSet.contains(element = album)) {
+            this.albumSortedSet.add(element = album)
+            this.albumSortedSetUpdate.value = true
+        }
+    }
+
+    override fun removeMusic(music: Music) {
+        super.removeMusic(music)
+        val albumOk: SortedSet<Album> = sortedSetOf()
+        for (music: Music in this.musicCollection)
+            albumOk.add(element = music.album)
+        if (albumOk.size != this.albumSortedSet.size) {
+            albumSortedSet.clear()
+            albumSortedSet.addAll(elements = albumOk)
             this.albumSortedSetUpdate.value = true
         }
     }

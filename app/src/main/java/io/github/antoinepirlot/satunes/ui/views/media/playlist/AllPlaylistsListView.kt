@@ -20,7 +20,6 @@
 
 package io.github.antoinepirlot.satunes.ui.views.media.playlist
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,14 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.antoinepirlot.jetpack_libs.models.JetpackLibsIcons
 import io.github.antoinepirlot.satunes.R
-import io.github.antoinepirlot.satunes.data.states.ModeTabSelectorUiState
-import io.github.antoinepirlot.satunes.data.states.SatunesUiState
+import io.github.antoinepirlot.satunes.data.states.SubsonicUiState
 import io.github.antoinepirlot.satunes.data.viewmodels.DataViewModel
-import io.github.antoinepirlot.satunes.data.viewmodels.ModeTabSelectorViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SatunesViewModel
 import io.github.antoinepirlot.satunes.data.viewmodels.SubsonicViewModel
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
-import io.github.antoinepirlot.satunes.models.search.ModeTabSelectorSection
 import io.github.antoinepirlot.satunes.ui.components.bars.ModeTabSelector
 import io.github.antoinepirlot.satunes.ui.components.buttons.fab.ExtraButton
 import io.github.antoinepirlot.satunes.ui.components.forms.PlaylistCreationForm
@@ -56,19 +51,16 @@ internal fun PlaylistListView(
     modifier: Modifier = Modifier,
     satunesViewModel: SatunesViewModel = viewModel(),
     subsonicViewModel: SubsonicViewModel = viewModel(),
-    modeTabSelectorViewModel: ModeTabSelectorViewModel = viewModel(),
     dataViewModel: DataViewModel = viewModel(),
 ) {
-    val satunesUiState: SatunesUiState by satunesViewModel.uiState.collectAsState()
-    val modeTabSelectorUiState: ModeTabSelectorUiState by modeTabSelectorViewModel.uiState.collectAsState()
-    val selectedSection: ModeTabSelectorSection = modeTabSelectorUiState.selectedSection
-
     var openAlertDialog by remember { mutableStateOf(false) }
 
-    val view: @Composable () -> Unit = {
+    val view: @Composable (isLoading: Boolean) -> Unit = { isLoading: Boolean ->
         MediaListView(
-            emptyViewText = stringResource(id = R.string.no_playlists),
+            modifier = modifier,
             canBeSorted = false,
+            isLoading = isLoading,
+            emptyViewText = stringResource(id = R.string.no_playlists),
         )
     }
 
@@ -90,35 +82,32 @@ internal fun PlaylistListView(
         }
     }
 
-    LaunchedEffect(key1 = selectedSection) {
-        if (selectedSection.isCloud()) {
-            val collection: Collection<SubsonicPlaylist> =
-                dataViewModel.getSubsonicPlaylists()
-            if (collection.isEmpty())
+    ModeTabSelector(
+        localView = {
+            LaunchedEffect(key1 = Unit) {
+                dataViewModel.loadMediaImplList(collection = dataViewModel.getPlaylistSet())
+            }
+            view(false)
+        },
+        cloudView = {
+            val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
+
+            LaunchedEffect(key1 = Unit) {
                 subsonicViewModel.getPlaylists(
-                    onDataRetrieved = { dataViewModel.loadMediaImplList(collection = it) }
+                    onDataRetrieved = {
+                        dataViewModel.loadMediaImplList(collection = it)
+                    }
                 )
-            else
-                dataViewModel.loadMediaImplList(collection = collection)
-        } else
-            dataViewModel.loadMediaImplList(collection = dataViewModel.getPlaylistSet())
-    }
-
-    Box(modifier = modifier) {
-        if (satunesUiState.mode.isOnline())
-            ModeTabSelector(
-                localView = view,
-                cloudView = view
-            )
-        else
-            view()
-
-        if (openAlertDialog) {
-            PlaylistCreationForm(
-                onConfirm = { openAlertDialog = false },
-                onDismissRequest = { openAlertDialog = false }
-            )
+            }
+            view(subsonicUiState.isFetching)
         }
+    )
+
+    if (openAlertDialog) {
+        PlaylistCreationForm(
+            onConfirm = { openAlertDialog = false },
+            onDismissRequest = { openAlertDialog = false }
+        )
     }
 }
 

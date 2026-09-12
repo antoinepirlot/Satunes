@@ -4,10 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
@@ -18,24 +21,27 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
+/**
+ * @file GetGenresCallback
+ * @author Antoine Pirlot (PirloTech)
+ * @since 15/07/2026
+ */
+
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
 import okhttp3.Response
 
-/**
- * @author Antoine Pirlot 14/12/2025
- */
-internal class GetArtistCallback(
+internal class GetGenresCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onDataRetrieved: (SubsonicArtist) -> Unit,
+    onDataRetrieved: (Collection<SubsonicGenre>) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback<SubsonicArtist>(
+) : SubsonicCallback<Collection<SubsonicGenre>>(
     subsonicApiRequester = subsonicApiRequester,
     onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
@@ -50,15 +56,11 @@ internal class GetArtistCallback(
 
     override fun processData(block: () -> Unit) {
         super.processData {
-            if (this.subsonicResponse!!.artist == null)
-                this.onError?.invoke(null)
-            else {
-                this.onDataRetrieved(
-                    this.subsonicResponse!!.artist!!
-                        .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester)
+            onDataRetrieved(
+                this.subsonicResponse!!.genres!!.toSubsonicResponse(
+                    subsonicApiRequester = this.subsonicApiRequester
                 )
-                block()
-            }
+            )
         }
     }
 }

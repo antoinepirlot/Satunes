@@ -37,6 +37,7 @@ import io.github.antoinepirlot.satunes.database.models.media.Album
 import io.github.antoinepirlot.satunes.database.models.media.Music
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -47,7 +48,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.lang.Thread.sleep
 
 /**
  * @author Antoine Pirlot 03/09/2025
@@ -130,16 +130,22 @@ class SubsonicViewModel : ViewModel() {
             }
     }
 
+    private fun runApiRequest(block: suspend (onFinished: () -> Unit) -> Unit) {
+        this.initRequest()
+        runIOThread {
+            block { this.finishRequest() }
+        }
+    }
+
     /**
      * Send ping to server to check if it is available and credentials corrects.
      */
     fun connect(onFinished: (Boolean) -> Unit) {
         val context: Context = MainActivity.instance.applicationContext
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             SettingsManager.updateSubsonicUrl(
                 context = context,
-                url = this@SubsonicViewModel.user.url
+                url = this@SubsonicViewModel.user.url,
             )
             SettingsManager.updateSubsonicUsername(
                 context = context,
@@ -156,11 +162,11 @@ class SubsonicViewModel : ViewModel() {
             this@SubsonicViewModel.hasBeenUpdated = false
             if (!user.isFilled()) {
                 onFinished(false)
-                return@runIOThread
+                return@runApiRequest
             }
             _apiRequester.ping(
                 onSucceed = { onFinished(true) },
-                onFinished = { this.finishRequest() },
+                onFinished = it,
                 onError = { onFinished(false) }
             )
         }
@@ -170,9 +176,8 @@ class SubsonicViewModel : ViewModel() {
      * Get random song from API
      */
     fun loadRandomSongs(onDataRetrieved: (Collection<SubsonicMusic>) -> Unit) {
-        this.initRequest()
-        runIOThread {
-            _apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved)
+        runApiRequest {
+            _apiRequester.getRandomSongs(onDataRetrieved = onDataRetrieved, onFinished = it)
         }
     }
 
@@ -186,13 +191,12 @@ class SubsonicViewModel : ViewModel() {
         onFinished: () -> Unit,
         onDataRetrieved: (Collection<SubsonicMedia>) -> Unit
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.search(
                 query = query,
                 onFinished = {
                     onFinished.invoke()
-                    this.finishRequest()
+                    it()
                 },
                 onDataRetrieved = onDataRetrieved
             )
@@ -210,21 +214,22 @@ class SubsonicViewModel : ViewModel() {
                 this.loadAlbum(
                     album = album,
                     onDataRetrieved = { onDataRetrieved.invoke(it) },
-                    onFinished = onFinished
+                    onFinished = onFinished,
                 )
-            else
+            else {
                 onDataRetrieved(album)
+                onFinished?.invoke()
+            }
         else {
-            this.initRequest()
-            runIOThread {
+            runApiRequest {
                 _apiRequester.getAlbum(
                     albumId = albumId,
                     onDataRetrieved = onDataRetrieved,
                     onError = { this@SubsonicViewModel.error = it },
                     onFinished = {
                         onFinished?.invoke()
-                        this.finishRequest()
-                    },
+                        it()
+                    }
                 )
             }
         }
@@ -238,8 +243,7 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (media: SubsonicAlbum) -> Unit,
         onFinished: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.getAlbum(
                 albumId = album.subsonicId,
                 onDataRetrieved = {
@@ -254,7 +258,7 @@ class SubsonicViewModel : ViewModel() {
                 },
                 onFinished = {
                     onFinished?.invoke()
-                    this.finishRequest()
+                    it()
                 },
                 onError = { this@SubsonicViewModel.error = it }
             )
@@ -263,29 +267,23 @@ class SubsonicViewModel : ViewModel() {
 
     fun getArtist(
         artistId: String,
-        onDataRetrieved: (media: SubsonicArtist) -> Unit,
-        onFinished: (() -> Unit)? = null
+        onDataRetrieved: (media: SubsonicArtist) -> Unit
     ) {
         val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
         if (artist != null)
             if (artist.isEmpty())
                 this.loadArtist(
                     artist = artist,
-                    onDataRetrieved = onDataRetrieved,
-                    onFinished = onFinished
+                    onDataRetrieved = onDataRetrieved
                 )
             else
                 onDataRetrieved(artist)
         else {
-            this.initRequest()
-            runIOThread {
+            runApiRequest {
                 _apiRequester.getArtist(
                     artistId = artistId,
                     onDataRetrieved = onDataRetrieved,
-                    onFinished = {
-                        onFinished?.invoke()
-                        this.finishRequest()
-                    },
+                    onFinished = it,
                     onError = { this@SubsonicViewModel.error = it }
                 )
             }
@@ -294,8 +292,7 @@ class SubsonicViewModel : ViewModel() {
 
     fun getArtistWithMusics(
         artistId: String,
-        onDataRetrieved: (media: SubsonicArtist) -> Unit,
-        onFinished: (() -> Unit)? = null
+        onDataRetrieved: (media: SubsonicArtist) -> Unit
     ) {
         val artist: SubsonicArtist? = DataManager.getSubsonicArtist(id = artistId)
         if (artist != null)
@@ -307,8 +304,7 @@ class SubsonicViewModel : ViewModel() {
                             artist = artist,
                             onDataRetrieved = onDataRetrieved
                         )
-                    },
-                    onFinished = onFinished
+                    }
                 )
             else onDataRetrieved(artist)
         else
@@ -316,8 +312,7 @@ class SubsonicViewModel : ViewModel() {
                 artistId = artistId,
                 onDataRetrieved = { artist: SubsonicArtist ->
                     this.loadArtistWithMusics(artist = artist, onDataRetrieved = onDataRetrieved)
-                },
-                onFinished = onFinished
+                }
             )
     }
 
@@ -338,10 +333,111 @@ class SubsonicViewModel : ViewModel() {
                 )
             }
         }
-        runIOThread {
-            while (queriesInProgress > 0)
-                sleep(10) // Do not remove, without sleep, it can cause no data shown
-            onDataRetrieved.invoke(artist)
+        while (queriesInProgress > 0); //Empty body is normal you can ignore warning as it is an active waiting
+        onDataRetrieved.invoke(artist)
+    }
+
+    fun getArtists(
+        onDataRetrieved: (Collection<SubsonicArtist>) -> Unit
+    ) {
+        runApiRequest {
+            _apiRequester.getArtists(
+                onDataRetrieved = onDataRetrieved,
+                onFinished = it
+            )
+        }
+    }
+
+    fun getGenre(
+        title: String,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit
+    ) {
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
+        if (genre != null)
+            if (genre.isEmpty())
+                this.loadGenre(
+                    genre = genre,
+                    onDataRetrieved = onDataRetrieved
+                )
+            else
+                onDataRetrieved(genre)
+        else {
+            runApiRequest {
+                _apiRequester.getGenre(
+                    title = title,
+                    onDataRetrieved = onDataRetrieved,
+                    onFinished = it,
+                    onError = { this@SubsonicViewModel.error = it }
+                )
+            }
+        }
+    }
+
+    fun getGenreWithMusics(
+        title: String,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit
+    ) {
+        val genre: SubsonicGenre? = DataManager.getSubsonicGenre(id = title)
+        if (genre != null)
+            if (genre.isEmpty())
+                this.loadGenre(
+                    genre = genre,
+                    onDataRetrieved = { genre: SubsonicGenre ->
+                        this.loadGenreWithMusics(
+                            genre = genre,
+                            onDataRetrieved = onDataRetrieved
+                        )
+                    }
+                )
+            else onDataRetrieved(genre)
+        else
+            this.getGenre(
+                title = title,
+                onDataRetrieved = { genre: SubsonicGenre ->
+                    this.loadGenreWithMusics(genre = genre, onDataRetrieved = onDataRetrieved)
+                }
+            )
+    }
+
+    private fun loadGenreWithMusics(
+        genre: SubsonicGenre,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit
+    ) {
+        var queriesInProgress = 0
+        genre.albumSortedSet.forEach { album: Album ->
+            if (album.isSubsonic()) {
+                queriesInProgress++
+                this.getAlbum(
+                    albumId = (album as SubsonicAlbum).subsonicId,
+                    onDataRetrieved = { album: SubsonicAlbum ->
+                        genre.addMusics(musics = album.musicCollection)
+                    },
+                    onFinished = { queriesInProgress-- },
+                )
+            }
+        }
+        while (queriesInProgress > 0); //Empty body is normal you can ignore warning as it is an active waiting
+        onDataRetrieved.invoke(genre)
+    }
+
+    /**
+     * Load genre's information and update it with the information from server.
+     */
+    private fun loadGenre(
+        genre: SubsonicGenre,
+        onDataRetrieved: (media: SubsonicGenre) -> Unit
+    ) {
+        runApiRequest {
+            _apiRequester.getGenre(
+                title = genre.title,
+                onDataRetrieved = {
+                    if (!genre.isSubsonic())
+                        onDataRetrieved.invoke(genre.toSubsonicGenre(genre = it))
+                    else onDataRetrieved(it)
+                },
+                onFinished = it,
+                onError = { this@SubsonicViewModel.error = it }
+            )
         }
     }
 
@@ -350,11 +446,9 @@ class SubsonicViewModel : ViewModel() {
      */
     fun loadArtist(
         artist: SubsonicArtist,
-        onDataRetrieved: (media: SubsonicArtist) -> Unit,
-        onFinished: (() -> Unit)? = null
+        onDataRetrieved: (media: SubsonicArtist) -> Unit
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.getArtist(
                 artistId = artist.subsonicId,
                 onDataRetrieved = {
@@ -362,10 +456,7 @@ class SubsonicViewModel : ViewModel() {
                         onDataRetrieved.invoke(artist.toSubsonicArtist(artist = it))
                     else onDataRetrieved(it)
                 },
-                onFinished = {
-                    onFinished?.invoke()
-                    this.finishRequest()
-                },
+                onFinished = it,
                 onError = { this@SubsonicViewModel.error = it }
             )
         }
@@ -388,15 +479,13 @@ class SubsonicViewModel : ViewModel() {
     fun createPlaylist(
         name: String,
         onDataRetrieved: ((SubsonicPlaylist) -> Unit)?,
-        onFinished: (() -> Unit)? = null,
         onError: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.createPlaylist(
                 title = name,
                 onDataRetrieved = { onDataRetrieved?.invoke(it) },
-                onFinished = { this.finishRequest() },
+                onFinished = it,
                 onError = onError
             )
         }
@@ -405,22 +494,16 @@ class SubsonicViewModel : ViewModel() {
     /**
      * Get all playlists from the server.
      * @param onDataRetrieved the function to invoke when data is received.
-     * @param onFinished the function to invoke when the process is finished.
      * @param onError the function to invoke when an error has occurred.
      */
     fun getPlaylists(
         onDataRetrieved: ((Collection<SubsonicPlaylist>) -> Unit)?,
-        onFinished: (() -> Unit)? = null,
         onError: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.getPlaylists(
                 onDataRetrieved = { onDataRetrieved?.invoke(it) },
-                onFinished = {
-                    this.finishRequest()
-                    onFinished?.invoke()
-                },
+                onFinished = it,
                 onError = onError,
                 onSucceed = null
             )
@@ -429,22 +512,18 @@ class SubsonicViewModel : ViewModel() {
 
     fun loadPlaylistMusics(
         id: String,
-        onFinished: (() -> Unit)? = null,
+        onSucceed: () -> Unit,
         onError: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.getPlaylist(
                 id = id,
                 onDataRetrieved = {
-                    val playlist: SubsonicPlaylist = DataManager.getSubsonicPlaylist(id = id)!!
-                    playlist.addMusics(musics = it)
+                    DataManager.addPlaylist(playlist = it)
                 },
+                onSucceed = onSucceed,
                 onError = onError,
-                onFinished = {
-                    onFinished?.invoke()
-                    this.finishRequest()
-                },
+                onFinished = it
             )
         }
     }
@@ -452,11 +531,9 @@ class SubsonicViewModel : ViewModel() {
     fun updatePlaylistMusics(
         musics: Collection<SubsonicMusic>,
         playlist: SubsonicPlaylist,
-        onFinished: (() -> Unit)? = null,
         onError: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.updatePlaylist(
                 playlistId = playlist.subsonicId,
                 musicsToAdd = this.getMusicsToAdd(playlist = playlist, collection = musics),
@@ -465,10 +542,7 @@ class SubsonicViewModel : ViewModel() {
                     collection = musics
                 ),
                 onError = onError,
-                onFinished = {
-                    onFinished?.invoke()
-                    this.finishRequest()
-                },
+                onFinished = it,
             )
         }
     }
@@ -514,13 +588,12 @@ class SubsonicViewModel : ViewModel() {
     }
 
     fun removeMusicFromPlaylist(music: SubsonicMusic, playlist: SubsonicPlaylist) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.updatePlaylist(
                 playlistId = playlist.subsonicId,
                 musicsIndexToRemove = listOf(playlist.indexOf(media = music)),
                 onSucceed = { playlist.removeMusic(music = music) },
-                onFinished = { this.finishRequest() }
+                onFinished = it
             )
         }
     }
@@ -529,14 +602,14 @@ class SubsonicViewModel : ViewModel() {
         playlist: SubsonicPlaylist,
         onRemoved: (() -> Unit)? = null
     ) {
-        this.initRequest()
-        runIOThread {
+        runApiRequest {
             _apiRequester.deletePlaylist(
                 playlistId = playlist.subsonicId,
                 onSucceed = {
                     DataManager.removePlaylist(playlist = playlist)
                     onRemoved?.invoke()
-                }
+                },
+                onFinished = it
             )
         }
     }
@@ -545,20 +618,26 @@ class SubsonicViewModel : ViewModel() {
         onDataRetrieved: (Collection<SubsonicAlbum>) -> Unit,
         resetOffset: Boolean = false
     ) {
-        this.initRequest()
-        if (resetOffset)
-            _offset = DEFAULT_OFFSET
-        runIOThread {
+        runApiRequest {
+            if (resetOffset)
+                _offset = DEFAULT_OFFSET
             _apiRequester.getAlbums(
                 offset = _offset,
                 onDataRetrieved = {
                     _offset += it.size
                     onDataRetrieved(it)
                 },
-                onFinished = {
-                    this.finishRequest()
-                }
+                onFinished = it
             )
+        }
+    }
+
+    /**
+     * Get Genres from Subsonic API
+     */
+    fun getGenres(onDataRetrieved: (Collection<SubsonicGenre>) -> Unit) {
+        runApiRequest {
+            _apiRequester.getGenres(onDataRetrieved = onDataRetrieved, onFinished = it)
         }
     }
 }

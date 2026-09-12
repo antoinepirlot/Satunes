@@ -4,10 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
@@ -20,22 +23,22 @@
 
 package io.github.antoinepirlot.satunes.internet.subsonic.models.callbacks
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.Error
 import okhttp3.Call
 import okhttp3.Response
 
 /**
- * @author Antoine Pirlot 14/12/2025
+ * @author Antoine Pirlot on 11/09/2026
  */
-internal class GetAlbumCallback(
+internal class GetArtistsCallback(
     subsonicApiRequester: SubsonicApiRequester,
-    onDataRetrieved: (SubsonicAlbum) -> Unit,
+    onDataRetrieved: (Collection<SubsonicArtist>) -> Unit,
     onSucceed: (() -> Unit)? = null,
     onFinished: (() -> Unit)? = null,
     onError: ((Error?) -> Unit)? = null,
-) : SubsonicCallback<SubsonicAlbum>(
+) : SubsonicCallback<Collection<SubsonicArtist>>(
     subsonicApiRequester = subsonicApiRequester,
     onDataRetrieved = onDataRetrieved,
     onSucceed = onSucceed,
@@ -51,8 +54,7 @@ internal class GetAlbumCallback(
     override fun processData(block: () -> Unit) {
         super.processData {
             this.onDataRetrieved(
-                this.subsonicResponse!!.album!!
-                    .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester)
+                this.subsonicResponse!!.artistsIndexes!!.toSubsonicArtistsCollection(subsonicApiRequester = subsonicApiRequester)
             )
             block()
         }

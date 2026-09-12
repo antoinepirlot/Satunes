@@ -26,6 +26,7 @@ package io.github.antoinepirlot.satunes.database.models.internet
 import android.graphics.Bitmap
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicAlbum
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicArtist
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMedia
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicPlaylist
@@ -51,10 +52,23 @@ interface ApiRequester {
      *
      * @param size the number of music to get (default 10, max 500).
      * @param onDataRetrieved the [Collection] function to run when got data from API.
+     * @param onFinished the function to run when query is completely finished.
      */
     fun getRandomSongs(
         size: Int = 10,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit
+        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onFinished: () -> Unit
+    )
+
+    /**
+     * Get Genres from API
+     *
+     * @param onDataRetrieved the function to run to retrieve a [Collection] of [SubsonicGenre].
+     * @param onFinished the function to run when query is completely finished.
+     */
+    fun getGenres(
+        onDataRetrieved: (Collection<SubsonicGenre>) -> Unit,
+        onFinished: (() -> Unit)
     )
 
     /**
@@ -81,6 +95,26 @@ interface ApiRequester {
         onFinished: (() -> Unit)? = null,
         onDataRetrieved: (SubsonicArtist) -> Unit,
         onError: ((ApiError?) -> Unit)? = null
+    )
+
+    /**
+     * Get artists from Subsonic
+     *
+     * @param onDataRetrieved the function to invoke when data has been sent by the server
+     * @param onFinished the function to invoke when the process is finished with or without errors.
+     * @param onError the function to invoke when an error occurred.
+     */
+    fun getArtists(
+        onDataRetrieved: (Collection<SubsonicArtist>) -> Unit,
+        onFinished: (() -> Unit)? = null,
+        onError: ((ApiError?) -> Unit)? = null
+    )
+
+    fun getGenre(
+        title: String,
+        onFinished: (() -> Unit)?,
+        onDataRetrieved: (SubsonicGenre) -> Unit,
+        onError: ((ApiError?) -> Unit)?
     )
 
     fun getAlbums(
@@ -171,7 +205,7 @@ interface ApiRequester {
      */
     fun getPlaylist(
         id: String,
-        onDataRetrieved: (Collection<SubsonicMusic>) -> Unit,
+        onDataRetrieved: (SubsonicPlaylist) -> Unit,
         onError: (() -> Unit)? = null,
         onFinished: (() -> Unit)? = null,
         onSucceed: (() -> Unit)? = null

@@ -4,10 +4,13 @@
  * Satunes is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
+ *
  * Satunes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with Satunes.
+ *
  * If not, see <https://www.gnu.org/licenses/>.
  *
  * *** INFORMATION ABOUT THE AUTHOR *****
@@ -18,28 +21,29 @@
  * This current project's link is: https://codeberg.org/antoinepirlot/Satunes
  */
 
+/**
+ * @file GenresResponse
+ * @author Antoine Pirlot (PirloTech)
+ * @since 15/07/2026
+ */
+
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses
 
-import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Song
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.Genre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/**
- * @author Antoine Pirlot 11/12/2025
- */
 @Serializable
-internal data class RandomSongs(
-    @SerialName(value = "song") private val songs: List<Song>
+internal data class GenresResponse(
+    @SerialName(value = "genre") val genres: Collection<Genre>
 ) {
-    fun toSubsonicMusicCollection(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicMusic> {
-        val collection: MutableCollection<SubsonicMusic> = mutableSetOf()
-        for (song: Song in songs)
-            collection.add(
-                element = song
-                    .toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicMusic
-            )
-        return collection
+    fun toSubsonicResponse(subsonicApiRequester: SubsonicApiRequester): Collection<SubsonicGenre> {
+        val collection: MutableCollection<SubsonicGenre> = mutableListOf()
+        this.genres.forEach { genre: Genre ->
+            collection.add(element = genre.toSubsonicMedia(subsonicApiRequester = subsonicApiRequester) as SubsonicGenre)
+        }
+        return collection.sorted()
     }
 }

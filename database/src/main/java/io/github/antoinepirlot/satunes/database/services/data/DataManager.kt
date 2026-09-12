@@ -415,8 +415,8 @@ object DataManager {
 
     @Synchronized
     fun addPlaylist(playlist: SubsonicPlaylist): SubsonicPlaylist {
-        if (!_subsonicPlaylistMapById.contains(key = playlist.subsonicId))
-            _subsonicPlaylistMapById[playlist.subsonicId] = playlist
+        _subsonicPlaylistMapById.remove(key = playlist.subsonicId)
+        _subsonicPlaylistMapById[playlist.subsonicId] = playlist
         return _subsonicPlaylistMapById[playlist.subsonicId]!!
     }
 

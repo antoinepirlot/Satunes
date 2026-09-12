@@ -21,7 +21,10 @@
 package io.github.antoinepirlot.satunes.database.models.media.subsonic
 
 import io.github.antoinepirlot.satunes.database.models.internet.ApiRequester
+import io.github.antoinepirlot.satunes.database.models.media.Artist
 import io.github.antoinepirlot.satunes.database.models.media.Genre
+import io.github.antoinepirlot.satunes.database.models.media.Music
+import io.github.antoinepirlot.satunes.database.services.data.DataManager
 
 /**
  * @author Antoine Pirlot 11/12/2025
@@ -40,6 +43,10 @@ class SubsonicGenre(
 
     override var downloadedMusics: Set<SubsonicMusic> = mutableSetOf()
 
+    init {
+        DataManager.addGenre(genre = this)
+    }
+
     override fun equals(other: Any?): Boolean {
         return if (this.javaClass == other?.javaClass) this.subsonicId == (other as SubsonicGenre).subsonicId
         else super.equals(other)
@@ -53,5 +60,23 @@ class SubsonicGenre(
 
     override fun removeDownload() {
         TODO("Not yet implemented")
+    }
+
+    /**
+     * Transform this [Artist] to [SubsonicArtist].
+     * After that, this [Artist] can't no more be used
+     */
+    fun toSubsonicGenre(genre: SubsonicGenre): SubsonicGenre {
+        val newGenre = SubsonicGenre(
+            id = this.id,
+            subsonicId = genre.subsonicId,
+            title = this.title,
+            apiRequester = _apiRequester
+        )
+        for (music: Music in this.musicSortedSet)
+            music.updateGenre(genre = newGenre)
+
+        DataManager.addGenre(genre = newGenre)
+        return newGenre
     }
 }

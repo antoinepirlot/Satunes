@@ -21,13 +21,14 @@
 package io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media
 
 import androidx.core.net.toUri
+import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicGenre
 import io.github.antoinepirlot.satunes.database.models.media.subsonic.SubsonicMusic
 import io.github.antoinepirlot.satunes.database.services.data.DataManager
 import io.github.antoinepirlot.satunes.internet.subsonic.SubsonicApiRequester
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateFolder
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicAlbum
 import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicArtist
-import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getSubsonicGenre
+import io.github.antoinepirlot.satunes.internet.subsonic.models.responses.media.utils.getOrCreateSubsonicGenre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -55,6 +56,7 @@ internal data class Song constructor(
     @SerialName(value = "bitrate") val bitrate: Int? = null,
     @SerialName(value = "size") val size: Int = 0,
     @SerialName(value = "year") val year: Int? = null,
+    @SerialName(value = "genres") val genres: Collection<Genre>
 ) : SubsonicData {
     /**
      * Convert this object [Song] to [SubsonicMusic] object
@@ -64,6 +66,9 @@ internal data class Song constructor(
             command = "stream",
             parameters = arrayOf("id=$id")
         )
+        //Do not add this in getOrCreateSubsonicGenre as songs param as it will create a indefinite loop
+        val genre: SubsonicGenre =
+            getOrCreateSubsonicGenre(title = if (genres.isEmpty()) null else genres.first().getRightTitle())
         return DataManager.getSubsonicMusic(id = id) ?: DataManager.addMusic(
             music = SubsonicMusic(
                 subsonicId = this.id,
@@ -83,7 +88,7 @@ internal data class Song constructor(
                     artistId = this.artistId,
                     artistTitle = this.artistTitle
                 ), //Must be after artist, otherwise album is not added in artist
-                genre = getSubsonicGenre(),
+                genre = genre,
                 uri = url.toUri(),
                 apiRequester = subsonicApiRequester
             )

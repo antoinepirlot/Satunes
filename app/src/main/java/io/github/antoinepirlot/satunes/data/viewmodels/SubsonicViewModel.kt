@@ -512,6 +512,7 @@ class SubsonicViewModel : ViewModel() {
 
     fun loadPlaylistMusics(
         id: String,
+        onSucceed: () -> Unit,
         onError: (() -> Unit)? = null
     ) {
         runApiRequest {
@@ -520,6 +521,7 @@ class SubsonicViewModel : ViewModel() {
                 onDataRetrieved = {
                     DataManager.addPlaylist(playlist = it)
                 },
+                onSucceed = onSucceed,
                 onError = onError,
                 onFinished = it
             )

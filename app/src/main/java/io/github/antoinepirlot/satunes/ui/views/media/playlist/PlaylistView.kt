@@ -55,10 +55,13 @@ internal fun PlaylistView(
     val subsonicUiState: SubsonicUiState by subsonicViewModel.uiState.collectAsState()
     val isLoading: Boolean = subsonicUiState.isFetching
 
-    LaunchedEffect(key1 = Unit) {
-        if (playlist.isSubsonic())
-            subsonicViewModel.loadPlaylistMusics(id = (playlist as SubsonicPlaylist).subsonicId)
-    }
+    if (playlist.isSubsonic())
+        LaunchedEffect(key1 = Unit) {
+            subsonicViewModel.loadPlaylistMusics(
+                id = (playlist as SubsonicPlaylist).subsonicId,
+                onSucceed = { dataViewModel.loadMediaImplList(collection = playlist.musicCollection) }
+            )
+        }
 
     LaunchedEffect(key1 = playlist.musicCollection.size) {
         if (!isLoading)
